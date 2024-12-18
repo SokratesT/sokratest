@@ -11,7 +11,6 @@ import { testAction } from "./test-action";
 export default function ChatSection() {
   const { backend } = useClientConfig();
   const handler = useChat({
-    // api: "http://127.0.0.1:8000/api/chat",
     api: `${backend}/api/chat`,
     onError: (error: unknown) => {
       if (!(error instanceof Error)) throw error;
