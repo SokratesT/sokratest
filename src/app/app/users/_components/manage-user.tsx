@@ -70,8 +70,6 @@ const ManageUser = ({ user }: { user: UserWithRole }) => {
   };
 
   const handleRoleChange = async (role: string) => {
-    console.log(role);
-
     const res = await authClient.admin.setRole({
       userId: user.id,
       role,

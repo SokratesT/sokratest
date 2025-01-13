@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { date, json, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 
@@ -15,3 +15,10 @@ export const posts = pgTable("posts", {
   createdAt: date("created_at").default("now()"),
   updatedAt: date("updated_at").default("now()"),
 });
+
+export const postsRelations = relations(posts, ({ one, many }) => ({
+  user: one(user, {
+    fields: [posts.author],
+    references: [user.id],
+  }),
+}));

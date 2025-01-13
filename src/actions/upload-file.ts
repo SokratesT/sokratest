@@ -10,8 +10,6 @@ export const saveFileInfoInDB = async (
   bucket: string,
   fileType: string,
 ) => {
-  console.log(JSON.stringify(filesInfo));
-
   await db.insert(files).values(
     filesInfo.map((file) => ({
       id: file.id,

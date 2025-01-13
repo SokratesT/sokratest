@@ -3,7 +3,6 @@
 import { clientEnv } from "@/lib/env/client";
 
 export const testAction = async () => {
-  console.log("Test Action");
   const res = await fetch(`${clientEnv.NEXT_PUBLIC_CHAT_API}/api/generate`, {
     method: "POST",
     headers: {

@@ -1,13 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { db } from "@/db/drizzle";
-import { posts } from "@/db/schema/posts";
-import { asc } from "drizzle-orm";
-import Link from "next/link";
-import { TipTapReader } from "./_components/tiptap-reader";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { user } from "@/db/schema/auth";
-import { eq } from "drizzle-orm";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { db } from "@/db/drizzle";
+import { user } from "@/db/schema/auth";
+import { posts } from "@/db/schema/posts";
+import { asc, eq } from "drizzle-orm";
+import Link from "next/link";
 import { PostActions } from "./add/_components/post-actions";
 
 const PostsPage = async () => {

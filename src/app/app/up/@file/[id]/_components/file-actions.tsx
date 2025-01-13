@@ -49,11 +49,10 @@ const FileActions = ({
         <div className="flex h-full justify-center gap-2">
           <Button
             variant="destructive"
-            onClick={() =>
-              generateEmbedding(filePath).then((embedding) => {
-                console.log(embedding);
-              })
-            }
+            onClick={async () => {
+              const res = await generateEmbedding(filePath, fileInfo.id);
+              console.log(JSON.stringify(res));
+            }}
           >
             Generate Embedding
           </Button>

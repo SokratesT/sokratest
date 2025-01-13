@@ -10,8 +10,6 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 export const createPost = async (post: PostSchemaType) => {
-  console.log(JSON.stringify(post));
-
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
