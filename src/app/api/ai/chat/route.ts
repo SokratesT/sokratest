@@ -1,36 +1,128 @@
-import { clientEnv } from "@/lib/env/client";
-import { NextResponse } from "next/server";
+import { generateTitleFromUserMessage } from "@/actions/ai-actions";
+import { saveChat, saveMessages } from "@/db/queries/ai-queries";
+import { customModel } from "@/lib/ai";
+import {
+  generateUUID,
+  getMostRecentUserMessage,
+  sanitizeResponseMessages,
+} from "@/lib/ai/utils";
+import { auth } from "@/lib/auth";
+import { queryRagTool } from "@/lib/tools/queryRagTool";
+import {
+  type Message,
+  createDataStreamResponse,
+  smoothStream,
+  streamText,
+} from "ai";
+import { headers } from "next/headers";
 
-export async function POST(req: Request) {
-  const body = await req.json();
+export const maxDuration = 30;
 
-  try {
-    const response = await fetch(`${clientEnv.NEXT_PUBLIC_CHAT_API}/api/chat`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+export async function POST(request: Request) {
+  const {
+    id,
+    messages,
+    modelId,
+  }: { id: string; messages: Array<Message>; modelId: string } =
+    await request.json();
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+  const userMessageId = generateUUID();
 
-    // Check if the response is a stream
-    const contentType = response.headers.get("Content-Type");
+  const session = await auth.api.getSession({ headers: await headers() });
 
-    // TODO: Implement checking for the content type
-    return new NextResponse(response.body, {
-      headers: {
-        "Content-Type": "text/event-stream",
-      },
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    return NextResponse.json(
-      { error: "An error occurred while processing your request." },
-      { status: 500 },
-    );
+  if (!session || !session.user || !session.user.id) {
+    return new Response("Unauthorized", { status: 401 });
   }
+
+  const userMessage = getMostRecentUserMessage(messages);
+
+  if (!userMessage) {
+    return new Response("No user message found", { status: 400 });
+  }
+
+  if (!messages || messages.length === 1) {
+    const title = await generateTitleFromUserMessage({ message: userMessage });
+    await saveChat({ id, userId: session.user.id, title });
+  }
+
+  await saveMessages({
+    messages: [
+      {
+        ...userMessage,
+        createdAt: new Date(),
+        chat: id,
+      },
+    ],
+  });
+
+  const systemPrompt = `You are a Socratic tutor. Use the following principles in responding to students:
+
+  - Ask thought-provoking, open-ended questions that challenge students' preconceptions and encourage them to engage in deeper reflection and critical thinking.
+  - Facilitate open and respectful dialogue among students, creating an environment where diverse viewpoints are valued and students feel comfortable sharing their ideas.
+  - Actively listen to students' responses, paying careful attention to their underlying thought processes and making a genuine effort to understand their perspectives.
+  - Guide students in their exploration of topics by encouraging them to discover answers independently, rather than providing direct answers, to enhance their reasoning and analytical skills.
+  - Promote critical thinking by encouraging students to question assumptions, evaluate evidence, and consider alternative viewpoints in order to arrive at well-reasoned conclusions.
+  - Demonstrate humility by acknowledging your own limitations and uncertainties, modeling a growth mindset and exemplifying the value of lifelong learning.
+  - Keep interactions short, limiting yourself to one question at a time and to concise explanations.
+
+  You can use tools to get additional context about the query. Use this to expand your knowledge and provide better responses.
+  In your response, ALWAYS include citations by referencing the fileId that certain information correspond to like this: <fileId:{fileId}>
+
+  Below is you actual task and the conversation so far:`;
+
+  return createDataStreamResponse({
+    execute: async (dataStream) => {
+      dataStream.writeData({
+        type: "user-message-id",
+        content: userMessageId,
+      });
+
+      const result = streamText({
+        model: customModel({ mode: "saia" }),
+        messages,
+        experimental_transform: smoothStream(),
+        // maxSteps: 5,
+        experimental_toolCallStreaming: true,
+        system:
+          "You are a helpful assistant. You can use tools to help the user.",
+        // system: systemPrompt,
+        tools: {
+          //generateJoke: jokeTool(dataStream),
+          queryRag: queryRagTool(dataStream),
+        },
+        onStepFinish: ({ toolCalls, finishReason }) => {
+          if (toolCalls?.some((call) => call.toolName === "queryRag")) {
+            console.log("queryRag tool call finished");
+          }
+          return;
+        },
+        onFinish: async ({ response }) => {
+          if (session.user?.id) {
+            try {
+              const responseMessagesWithoutIncompleteToolCalls =
+                sanitizeResponseMessages(response.messages);
+
+              await saveMessages({
+                messages: responseMessagesWithoutIncompleteToolCalls.map(
+                  (message) => {
+                    return {
+                      id: message.id,
+                      chat: id,
+                      role: message.role,
+                      content: message.content,
+                      createdAt: new Date(),
+                    };
+                  },
+                ),
+              });
+            } catch (error) {
+              console.error("Failed to save chat");
+            }
+          }
+        },
+      });
+
+      result.mergeIntoDataStream(dataStream);
+    },
+  });
 }

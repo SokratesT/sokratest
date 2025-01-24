@@ -10,8 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import { ReactNode, useId, useState } from "react";
-import { ControllerRenderProps } from "react-hook-form";
+import { type ReactNode, useId, useState } from "react";
+import type { ControllerRenderProps } from "react-hook-form";
 
 type InputTypes = "number" | "text" | "email";
 
@@ -44,7 +44,6 @@ const FormInputField = ({
   disabled = false,
   required = false,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   field: ControllerRenderProps<any, any>;
   inputType: InputTypes;
   placeholder: string;
@@ -60,7 +59,7 @@ const FormInputField = ({
 }): ReactNode => {
   const [disableField, setDisableField] = useState<boolean>(false);
   const [visible, setVisible] = useState(
-    showSwitch ? (field.value ? true : false) : true,
+    showSwitch ? Boolean(field.value) : true,
   );
 
   const labelId = useId();
@@ -139,7 +138,7 @@ const FormInputField = ({
             />
             {unit && (
               <div className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-0">
-                <div className="inline-flex h-full min-w-14 items-center justify-center whitespace-nowrap rounded-md rounded-l-none border-l p-1 font-mono text-sm text-muted-foreground">
+                <div className="inline-flex h-full min-w-14 items-center justify-center whitespace-nowrap rounded-md rounded-l-none border-l p-1 font-mono text-muted-foreground text-sm">
                   {unit}
                 </div>
               </div>
@@ -156,7 +155,7 @@ const FormInputField = ({
           />
           <label
             htmlFor={labelId}
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             {optOutLabel}
           </label>

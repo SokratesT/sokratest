@@ -1,0 +1,38 @@
+{
+  "next": {
+    "entry": [
+      "next.config.{js,ts,cjs,mjs}",
+      "{instrumentation,middleware}.{js,ts}",
+      "app/global-error.{js,jsx,ts,tsx}",
+      "app/**/{error,layout,loading,not-found,page,template,default}.{js,jsx,ts,tsx}",
+      "app/**/route.{js,jsx,ts,tsx}",
+      "app/{manifest,sitemap,robots}.{js,ts}",
+      "app/**/{icon,apple-icon}.{js,jsx,ts,tsx}",
+      "app/**/{opengraph,twitter}-image.{js,jsx,ts,tsx}",
+      "pages/**/*.{js,jsx,ts,tsx}",
+      "src/{instrumentation,middleware}.{js,ts}",
+      "src/app/global-error.{js,jsx,ts,tsx}",
+      "src/app/**/{error,layout,loading,not-found,page,template,default}.{js,jsx,ts,tsx}",
+      "src/app/**/route.{js,jsx,ts,tsx}",
+      "src/app/{manifest,sitemap,robots}.{js,ts}",
+      "src/app/**/{icon,apple-icon}.{js,jsx,ts,tsx}",
+      "src/app/**/{opengraph,twitter}-image.{js,jsx,ts,tsx}",
+      "src/pages/**/*.{js,jsx,ts,tsx}"
+    ]
+  },
+  "drizzle": {
+    "config": ["drizzle.config.{ts,js,json}"]
+  },
+  "tailwind": {
+    "entry": ["tailwind.config.{js,cjs,mjs,ts}"]
+  },
+  "postcss": {
+    "config": [
+      "package.json",
+      "postcss.config.json",
+      ".postcssrc",
+      ".postcssrc.{json,js,cjs,mjs,ts,mts,cts,yaml,yml}",
+      "postcss.config.{js,cjs,mjs,ts,mts,cts}"
+    ]
+  }
+}

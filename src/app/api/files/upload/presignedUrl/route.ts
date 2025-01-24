@@ -1,6 +1,6 @@
-import { PresignedUrlProp, ShortFileProp } from "@/lib/files/types";
+import type { PresignedUrlProp, ShortFileProp } from "@/lib/files/types";
 import { createPresignedUrlToUpload } from "@/lib/s3-file-management";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
   const files = (await req.json()) as ShortFileProp[];

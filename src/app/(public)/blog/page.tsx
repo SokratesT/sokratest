@@ -19,13 +19,13 @@ const PostsPage = async () => {
   return (
     <div className="container mx-auto flex flex-col gap-14">
       <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <h4 className="font-regular max-w-xl text-3xl tracking-tighter md:text-5xl">
+        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
           Posts
         </h4>
         {session && session.user.role === "admin" && (
           <Link href={routes.app.sub.posts.path}>
             <Button className="gap-4">
-              Manage Posts <MoveRight className="h-4 w-4" />
+              Manage Posts <MoveRight className="size-4" />
             </Button>
           </Link>
         )}
@@ -34,13 +34,13 @@ const PostsPage = async () => {
         {queryPosts.map((post) => (
           <Link href={`/blog/${post.id}`} key={post.id}>
             <div className="flex cursor-pointer flex-col gap-2 hover:opacity-75">
-              <div className="mb-4 aspect-video rounded-md bg-muted"></div>
+              <div className="mb-4 aspect-video rounded-md bg-muted" />
               <h3 className="text-xl tracking-tight">{post.title}</h3>
               <p className="text-base text-muted-foreground">
                 Our goal is to streamline SMB trade, making it easier and faster
                 than ever.
               </p>
-              <p className="text-sm text-muted-foreground">{post.createdAt}</p>
+              <p className="text-muted-foreground text-sm">{post.createdAt}</p>
             </div>
           </Link>
         ))}

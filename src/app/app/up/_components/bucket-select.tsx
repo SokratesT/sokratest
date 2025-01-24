@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { searchParamsParser, urlKeys } from "@/lib/searchParams";
+import { searchParamsParser, urlKeys } from "@/lib/nuqs/search-params.bucket";
 import { buckets } from "@/settings/buckets";
 import { useQueryStates } from "nuqs";
 

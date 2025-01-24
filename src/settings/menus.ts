@@ -1,8 +1,6 @@
 import {
-  CalendarIcon,
   FilesIcon,
   HomeIcon,
-  InboxIcon,
   MessagesSquareIcon,
   NewspaperIcon,
   SettingsIcon,

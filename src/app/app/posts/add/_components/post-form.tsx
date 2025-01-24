@@ -6,10 +6,10 @@ import { MinimalTiptapEditor } from "@/components/minimal-tiptap";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
-import { posts } from "@/db/schema/posts";
-import { postSchema, PostSchemaType } from "@/lib/schemas/post";
+import type { posts } from "@/db/schema/posts";
+import { type PostSchemaType, postSchema } from "@/lib/schemas/post";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InferSelectModel } from "drizzle-orm";
+import type { InferSelectModel } from "drizzle-orm";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 

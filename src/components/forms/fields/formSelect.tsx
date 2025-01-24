@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useId, useState } from "react";
-import { ControllerRenderProps } from "react-hook-form";
+import type { ControllerRenderProps } from "react-hook-form";
 
 /**
  * Renders a form select component with options and optional opt-out label.
@@ -40,7 +40,6 @@ const FormSelect = ({
   className,
   required = false,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   field: ControllerRenderProps<any, any>;
   options: { value: string; label: string }[];
   placeholder: string;
@@ -122,7 +121,7 @@ const FormSelect = ({
           />
           <label
             htmlFor={labelId}
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             {optOutLabel}
           </label>

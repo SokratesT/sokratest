@@ -1,9 +1,9 @@
 import { Auth } from "@/components/auth";
 import { auth } from "@/lib/auth";
 import { routes } from "@/settings/routes";
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Authenticate",

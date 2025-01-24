@@ -1,11 +1,11 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { posts } from "@/db/schema/posts";
+import { type Post, posts } from "@/db/schema/posts";
 import { auth } from "@/lib/auth";
-import { PostSchemaType } from "@/lib/schemas/post";
+import type { PostSchemaType } from "@/lib/schemas/post";
 import { routes } from "@/settings/routes";
-import { eq, sql } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
@@ -16,12 +16,12 @@ export const createPost = async (post: PostSchemaType) => {
     throw new Error("Not authenticated");
   }
 
-  await db.insert(posts).values({ ...post, author: session?.user.id });
+  await db.insert(posts).values({ ...post, author: session.user.id });
 
   revalidatePath(routes.app.sub.posts.path);
 };
 
-export const updatePost = async (post: PostSchemaType, postId: string) => {
+export const updatePost = async (post: PostSchemaType, postId: Post["id"]) => {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
@@ -36,14 +36,14 @@ export const updatePost = async (post: PostSchemaType, postId: string) => {
   revalidatePath(routes.app.sub.posts.path);
 };
 
-export const deletePost = async (postId: string) => {
+export const deletePosts = async (postId: Post["id"][]) => {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
     throw new Error("Not authenticated");
   }
 
-  await db.delete(posts).where(eq(posts.id, postId));
+  await db.delete(posts).where(inArray(posts.id, postId));
 
   revalidatePath(routes.app.sub.posts.path);
 };

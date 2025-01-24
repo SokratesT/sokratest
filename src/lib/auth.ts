@@ -3,9 +3,9 @@ import { account, session, user, verification } from "@/db/schema/auth";
 import { serverEnv } from "@/lib/env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import nodemailer from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { admin } from "better-auth/plugins";
+import { createTransport } from "nodemailer";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
 export const auth = betterAuth({
   plugins: [admin()],
@@ -50,7 +50,7 @@ async function sendEmail({
   subject: string;
   text: string;
 }) {
-  const transporter = nodemailer.createTransport(smtpConfig);
+  const transporter = createTransport(smtpConfig);
 
   const mailOptions = {
     from: "test@example.com",

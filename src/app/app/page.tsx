@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { auth } from "@/lib/auth";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {

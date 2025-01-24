@@ -10,14 +10,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ShortFileProp } from "@/lib/files/types";
+import type { ShortFileProp } from "@/lib/files/types";
 import { getPresignedUrls, handleUpload } from "@/lib/files/uploadHelpers";
 import { getErrorMessage } from "@/lib/handle-error";
+import { searchParamsParser, urlKeys } from "@/lib/nuqs/search-params.bucket";
 import {
+  type FileUploadSchemaType,
   fileUploadSchema,
-  FileUploadSchemaType,
 } from "@/lib/schemas/file-upload";
-import { searchParamsParser, urlKeys } from "@/lib/searchParams";
 import { buckets } from "@/settings/buckets";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";

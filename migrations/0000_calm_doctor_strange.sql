@@ -8,7 +8,7 @@ CREATE TABLE "data_embeddings" (
 	"embedding" vector(1024),
 	"text" text NOT NULL,
 	"node_id" text NOT NULL,
-	"metadata_" json NOT NULL,
+	"metadata" json NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint

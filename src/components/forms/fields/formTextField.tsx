@@ -7,8 +7,8 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { ReactNode } from "react";
-import { ControllerRenderProps } from "react-hook-form";
+import type { ReactNode } from "react";
+import type { ControllerRenderProps } from "react-hook-form";
 
 /**
  * Renders a form text field component.
@@ -28,7 +28,6 @@ const FormTextField = ({
   className,
   required = false,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   field: ControllerRenderProps<any, any>;
   placeholder: string;
   label?: string;
@@ -46,7 +45,7 @@ const FormTextField = ({
     <FormControl>
       <Textarea
         placeholder={placeholder}
-        className="text-md resize-none md:text-sm"
+        className="resize-none text-md md:text-sm"
         {...field}
       />
     </FormControl>

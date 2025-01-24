@@ -1,19 +1,19 @@
 "use client";
 
-import * as React from "react";
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useControllableState } from "@/hooks/use-controllable-state";
+import { cn } from "@/lib/utils";
+import { convert } from "convert";
 import { FileText, Upload, X } from "lucide-react";
+import Image from "next/image";
+import * as React from "react";
 import Dropzone, {
   type DropzoneProps,
   type FileRejection,
 } from "react-dropzone";
 import { toast } from "sonner";
-import convert from "convert";
-import { cn } from "@/lib/utils";
-import { useControllableState } from "@/hooks/use-controllable-state";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -200,7 +200,7 @@ export function FileUploader(props: FileUploaderProps) {
           <div
             {...getRootProps()}
             className={cn(
-              "group relative grid h-52 w-full cursor-pointer place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-5 py-2.5 text-center transition hover:bg-muted/25",
+              "group relative grid h-52 w-full cursor-pointer place-items-center rounded-lg border-2 border-muted-foreground/25 border-dashed px-5 py-2.5 text-center transition hover:bg-muted/25",
               "ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               isDragActive && "border-muted-foreground/50",
               isDisabled && "pointer-events-none opacity-60",
@@ -233,10 +233,10 @@ export function FileUploader(props: FileUploaderProps) {
                   <p className="font-medium text-muted-foreground">
                     Drag {`'n'`} drop files here, or click to select files
                   </p>
-                  <p className="text-sm text-muted-foreground/70">
+                  <p className="text-muted-foreground/70 text-sm">
                     You can upload
                     {maxFileCount > 1
-                      ? ` ${maxFileCount === Infinity ? "multiple" : maxFileCount}
+                      ? ` ${maxFileCount === Number.POSITIVE_INFINITY ? "multiple" : maxFileCount}
                       files (up to ${convert(maxSize, "bytes").to("MiB").toLocaleString()} MB each)`
                       : ` a file with ${convert(maxSize, "bytes").to("MiB").toLocaleString()} MB`}
                   </p>
@@ -251,7 +251,7 @@ export function FileUploader(props: FileUploaderProps) {
           <div className="flex max-h-48 flex-col gap-4">
             {files?.map((file, index) => (
               <FileCard
-                key={index}
+                key={`${file.name}-${file.lastModified}`}
                 file={file}
                 onRemove={() => onRemove(index)}
                 progress={progresses?.[file.name]}
@@ -277,11 +277,11 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
         {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
         <div className="flex w-full flex-col gap-2">
           <div className="flex flex-col gap-px">
-            <p className="line-clamp-1 text-sm font-medium text-foreground/80">
+            <p className="line-clamp-1 font-medium text-foreground/80 text-sm">
               {file.name}
             </p>
-            <p className="text-xs text-muted-foreground">
-              {convert(file.size, "bytes").to("MiB").toLocaleString() + " MB"}
+            <p className="text-muted-foreground text-xs">
+              {`${convert(file.size, "bytes").to("MiB").toLocaleString()} MB`}
             </p>
           </div>
           {progress ? <Progress value={progress} /> : null}

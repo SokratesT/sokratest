@@ -7,7 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import type { toggleVariants } from "@/components/ui/toggle";
-import { Editor } from "@tiptap/react";
+import type { Editor } from "@tiptap/react";
 import type { VariantProps } from "class-variance-authority";
 import { ImageIcon } from "lucide-react";
 import { useState } from "react";

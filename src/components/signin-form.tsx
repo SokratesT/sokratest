@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
-import { loginSchema, LoginSchemaType } from "@/lib/schemas/login";
+import { type LoginSchemaType, loginSchema } from "@/lib/schemas/login";
 import { routes } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";

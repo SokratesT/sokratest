@@ -8,8 +8,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { ReactNode, useState } from "react";
-import { ControllerRenderProps } from "react-hook-form";
+import { type ReactNode, useState } from "react";
+import type { ControllerRenderProps } from "react-hook-form";
 
 /**
  * FormPasswordField component.
@@ -30,7 +30,6 @@ const FormPasswordField = ({
   showTogglePassword = false,
   className,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   field: ControllerRenderProps<any, any>;
   placeholder: string;
   label?: string;

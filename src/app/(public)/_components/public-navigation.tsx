@@ -19,7 +19,7 @@ const PublicNavigation = () => {
   const [isOpen, setOpen] = useState(false);
 
   return (
-    <header className="left-0 top-0 z-40 w-full bg-background">
+    <header className="top-0 left-0 z-40 w-full bg-background">
       <div className="container relative mx-auto flex min-h-20 flex-row items-center gap-4 lg:grid lg:grid-cols-3">
         <div className="hidden flex-row items-center justify-start gap-4 lg:flex">
           <NavigationMenu className="flex items-start justify-start">
@@ -34,7 +34,7 @@ const PublicNavigation = () => {
                     </>
                   ) : (
                     <>
-                      <NavigationMenuTrigger className="text-sm font-medium">
+                      <NavigationMenuTrigger className="font-medium text-sm">
                         {item.title}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent className="!w-[450px] p-4">
@@ -42,7 +42,7 @@ const PublicNavigation = () => {
                           <div className="flex h-full flex-col justify-between">
                             <div className="flex flex-col">
                               <p className="text-base">{item.title}</p>
-                              <p className="text-sm text-muted-foreground">
+                              <p className="text-muted-foreground text-sm">
                                 {item.description}
                               </p>
                             </div>
@@ -58,7 +58,7 @@ const PublicNavigation = () => {
                                 className="flex flex-row items-center justify-between rounded px-4 py-2 hover:bg-muted"
                               >
                                 <span>{subItem.title}</span>
-                                <MoveRight className="h-4 w-4 text-muted-foreground" />
+                                <MoveRight className="size-4 text-muted-foreground" />
                               </NavigationMenuLink>
                             ))}
                           </div>
@@ -78,16 +78,16 @@ const PublicNavigation = () => {
           <Button variant="ghost" className="hidden md:inline">
             Learn more
           </Button>
-          <div className="hidden border-r md:inline"></div>
+          <div className="hidden border-r md:inline" />
 
           <NavigationAuthButtons />
         </div>
         <div className="flex w-12 shrink items-end justify-end lg:hidden">
           <Button variant="ghost" onClick={() => setOpen(!isOpen)}>
-            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </Button>
           {isOpen && (
-            <div className="container absolute right-0 top-20 flex w-full flex-col gap-8 border-t bg-background py-4 shadow-lg">
+            <div className="container absolute top-20 right-0 flex w-full flex-col gap-8 border-t bg-background py-4 shadow-lg">
               {navigationItems.map((item) => (
                 <div key={item.title}>
                   <div className="flex flex-col gap-2">
@@ -97,24 +97,23 @@ const PublicNavigation = () => {
                         className="flex items-center justify-between"
                       >
                         <span className="text-lg">{item.title}</span>
-                        <MoveRight className="h-4 w-4 stroke-1 text-muted-foreground" />
+                        <MoveRight className="size-4 stroke-1 text-muted-foreground" />
                       </Link>
                     ) : (
                       <p className="text-lg">{item.title}</p>
                     )}
-                    {item.items &&
-                      item.items.map((subItem) => (
-                        <Link
-                          key={subItem.title}
-                          href={subItem.href}
-                          className="flex items-center justify-between"
-                        >
-                          <span className="text-muted-foreground">
-                            {subItem.title}
-                          </span>
-                          <MoveRight className="h-4 w-4 stroke-1" />
-                        </Link>
-                      ))}
+                    {item.items?.map((subItem) => (
+                      <Link
+                        key={subItem.title}
+                        href={subItem.href}
+                        className="flex items-center justify-between"
+                      >
+                        <span className="text-muted-foreground">
+                          {subItem.title}
+                        </span>
+                        <MoveRight className="size-4 stroke-1" />
+                      </Link>
+                    ))}
                   </div>
                 </div>
               ))}

@@ -1,7 +1,6 @@
 import { saveFileInfoInDB } from "@/actions/upload-file";
-import { PresignedUrlProp, ShortFileProp } from "./types";
-import { serverEnv } from "../env/server";
 import { clientEnv } from "../env/client";
+import type { PresignedUrlProp, ShortFileProp } from "./types";
 
 /**
  * Gets presigned urls for uploading files to S3
@@ -95,6 +94,8 @@ export async function getPresignedUrl(file: FileProps) {
   const response = await fetch(
     `${clientEnv.NEXT_PUBLIC_BASE_URL}/api/files/download/presignedUrl/${file.id}`,
   );
+
+  console.log(response);
 
   return (await response.json()) as string;
 }

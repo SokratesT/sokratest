@@ -10,8 +10,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { sidebarMenu } from "@/settings/menus";
-import { NavUser } from "./nav-user";
 import Link from "next/link";
+import { NavUser } from "./nav-user";
 
 const AppSidebar = async () => {
   return (

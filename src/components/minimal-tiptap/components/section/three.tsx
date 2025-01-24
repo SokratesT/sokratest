@@ -125,9 +125,9 @@ const MemoizedColorPicker = React.memo<{
     }}
     className="gap-1.5"
   >
-    {palette.colors.map((color, index) => (
+    {palette.colors.map((color) => (
       <MemoizedColorButton
-        key={index}
+        key={`${color.label}-${color.cssVar}`}
         inverse={inverse}
         color={color}
         isSelected={selectedColor === color.cssVar}
@@ -196,9 +196,9 @@ export const SectionThree: React.FC<SectionThreeProps> = ({
       </PopoverTrigger>
       <PopoverContent align="start" className="w-full">
         <div className="space-y-1.5">
-          {COLORS.map((palette, index) => (
+          {COLORS.map((palette) => (
             <MemoizedColorPicker
-              key={index}
+              key={palette.label}
               palette={palette}
               inverse={palette.inverse}
               selectedColor={selectedColor}

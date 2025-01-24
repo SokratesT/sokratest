@@ -3,7 +3,7 @@
 import { Placeholder } from "@/components/placeholder";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { files } from "@/db/schema/files";
+import type { files } from "@/db/schema/files";
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -25,7 +25,7 @@ const FileViewer = ({ fileInfo }: { fileInfo: typeof files.$inferSelect }) => {
 
   if (!filePath || isLoading) {
     return (
-      <div className="flex h-full w-full items-center justify-center">
+      <div className="flex size-full items-center justify-center">
         <LoadingSpinner />
       </div>
     );
@@ -34,7 +34,7 @@ const FileViewer = ({ fileInfo }: { fileInfo: typeof files.$inferSelect }) => {
   return (
     <div className="flex h-full max-h-[calc(100svh-5.5rem)] flex-col">
       <FileActions fileInfo={fileInfo} filePath={filePath} />
-      <div className="h-full max-h-[calc(100svh-10.5rem)] w-full">
+      <div className="size-full max-h-[calc(100svh-10.5rem)]">
         <Viewport fileType={fileInfo.fileType} filePath={filePath} />
       </div>
     </div>
@@ -57,7 +57,7 @@ const Viewport = ({
       return (
         <>
           {isLoading && (
-            <div className="flex h-full w-full items-center justify-center">
+            <div className="flex size-full items-center justify-center">
               <LoadingSpinner />
             </div>
           )}
@@ -84,7 +84,7 @@ const Viewport = ({
     case "video":
       return (
         <Card className="h-full overflow-hidden">
-          <iframe src={filePath} className="h-full w-full" />
+          <iframe title={filePath} src={filePath} className="size-full" />
         </Card>
       );
     default:

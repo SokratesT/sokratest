@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { files } from "@/db/schema/files";
+import type { files } from "@/db/schema/files";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";

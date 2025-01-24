@@ -14,22 +14,20 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-  SidebarInput,
 } from "@/components/ui/sidebar";
 import { db } from "@/db/drizzle";
 import { files } from "@/db/schema/files";
-import { searchParamsCache } from "@/lib/searchParams";
+import { searchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { buckets } from "@/settings/buckets";
 import { routes } from "@/settings/routes";
-import { count, desc, eq, ilike } from "drizzle-orm";
+import { and, count, desc, eq, ilike } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import { SearchParams } from "nuqs/server";
+import type { SearchParams } from "nuqs/server";
+import UploadComponent from "./UploadComponent";
 import { BucketSelect } from "./bucket-select";
 import { DefaultPagination } from "./default-pagination";
 import { FileListEntry } from "./file-list-entry";
-import UploadComponent from "./UploadComponent";
 import { SearchInput } from "./search-input";
-import { gt, lt, and } from "drizzle-orm";
 
 const FileSidebar = async ({
   searchParams,
@@ -64,7 +62,7 @@ const FileSidebar = async ({
   return (
     <Sidebar
       collapsible="none"
-      className="hidden h-full max-h-full w-full flex-1 border-r md:flex"
+      className="hidden size-full max-h-full flex-1 border-r md:flex"
     >
       <SidebarHeader className="gap-3.5 border-b p-4">
         <div className="flex w-full items-center justify-between gap-2">

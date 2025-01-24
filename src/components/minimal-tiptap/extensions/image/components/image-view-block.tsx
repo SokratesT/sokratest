@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
-import { NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
+import { type NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { InfoIcon, TrashIcon } from "lucide-react";
+import Image from "next/image";
 import * as React from "react";
 import { Controlled as ControlledZoom } from "react-medium-image-zoom";
 import { Spinner } from "../../../components/spinner";
@@ -12,7 +13,6 @@ import type { UploadReturnType } from "../image";
 import { ActionButton, ActionWrapper, ImageActions } from "./image-actions";
 import { ImageOverlay } from "./image-overlay";
 import { ResizeHandle } from "./resize-handle";
-import Image from "next/image";
 
 const MAX_HEIGHT = 600;
 const MIN_HEIGHT = 120;
@@ -78,12 +78,12 @@ export const ImageViewBlock: React.FC<NodeViewProps> = ({
     imageState.naturalSize.width / imageState.naturalSize.height;
   const maxWidth = MAX_HEIGHT * aspectRatio;
   const containerMaxWidth = containerRef.current
-    ? parseFloat(
+    ? Number.parseFloat(
         getComputedStyle(containerRef.current).getPropertyValue(
           "--editor-width",
         ),
       )
-    : Infinity;
+    : Number.POSITIVE_INFINITY;
 
   const { isLink, onView, onDownload, onCopy, onCopyLink, onRemoveImg } =
     useImageActions({
@@ -236,7 +236,7 @@ export const ImageViewBlock: React.FC<NodeViewProps> = ({
           className={cn(
             "relative flex h-full cursor-default flex-col items-center gap-2 rounded",
             {
-              "outline outline-2 outline-offset-1 outline-primary":
+              "outline outline-2 outline-primary outline-offset-1":
                 selected || isResizing,
             },
           )}
@@ -252,7 +252,7 @@ export const ImageViewBlock: React.FC<NodeViewProps> = ({
               {imageState.error && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <InfoIcon className="size-8 text-destructive" />
-                  <p className="mt-2 text-sm text-muted-foreground">
+                  <p className="mt-2 text-muted-foreground text-sm">
                     Failed to load image
                   </p>
                 </div>

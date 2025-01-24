@@ -1,8 +1,7 @@
 "use client";
 
-import useMinimalTiptapEditor from "@/components/minimal-tiptap/hooks/use-minimal-tiptap";
-import { Content, EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import { useMinimalTiptapEditor } from "@/components/minimal-tiptap/hooks/use-minimal-tiptap";
+import { type Content, EditorContent } from "@tiptap/react";
 
 const TipTapReader = ({ content }: { content: Content }) => {
   const editor = useMinimalTiptapEditor({

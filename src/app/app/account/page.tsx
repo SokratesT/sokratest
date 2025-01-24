@@ -1,7 +1,7 @@
 import { ProfileForm } from "@/components/forms/profile-form";
 import { SendVerificationEmail } from "@/components/send-verification-email";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Profile",

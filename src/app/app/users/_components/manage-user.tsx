@@ -14,8 +14,8 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { DEFAULT_ROLE, roles } from "@/settings/roles";
 import { routes } from "@/settings/routes";
-import { Session } from "better-auth";
-import { UserWithRole } from "better-auth/plugins";
+import type { Session } from "better-auth";
+import type { UserWithRole } from "better-auth/plugins";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -38,7 +38,7 @@ const ManageUser = ({ user }: { user: UserWithRole }) => {
     const res = await authClient.admin.banUser({ userId });
 
     if (res.error) {
-      toast.error("Failed to ban user: " + res.error.message);
+      toast.error(`Failed to ban user: ${res.error.message}`);
     } else {
       toast.success("User banned");
       revalidatePathFromClient(routes.app.sub.users.path);
@@ -49,7 +49,7 @@ const ManageUser = ({ user }: { user: UserWithRole }) => {
     const res = await authClient.admin.unbanUser({ userId });
 
     if (res.error) {
-      toast.error("Failed to unban user: " + res.error.message);
+      toast.error(`Failed to unban user: ${res.error.message}`);
     } else {
       toast.success("User unbanned");
       revalidatePathFromClient(routes.app.sub.users.path);
@@ -62,7 +62,7 @@ const ManageUser = ({ user }: { user: UserWithRole }) => {
     });
 
     if (res.error) {
-      toast.error("Failed to revoke session: " + res.error.message);
+      toast.error(`Failed to revoke session: ${res.error.message}`);
     } else {
       toast.success("Session revoked");
       revalidatePathFromClient(routes.app.sub.users.path);
@@ -76,7 +76,7 @@ const ManageUser = ({ user }: { user: UserWithRole }) => {
     });
 
     if (res.error) {
-      toast.error("Failed to update user role: " + res.error.message);
+      toast.error(`Failed to update user role: ${res.error.message}`);
     } else {
       toast.success("User role updated");
       revalidatePathFromClient(routes.app.sub.users.path);
@@ -87,7 +87,7 @@ const ManageUser = ({ user }: { user: UserWithRole }) => {
     const res = await authClient.admin.removeUser({ userId });
 
     if (res.error) {
-      toast.error("Failed to delete user: " + res.error.message);
+      toast.error(`Failed to delete user: ${res.error.message}`);
     } else {
       toast.success("User deleted");
       revalidatePathFromClient(routes.app.sub.users.path);
@@ -130,26 +130,25 @@ const ManageUser = ({ user }: { user: UserWithRole }) => {
       <h1 className="font-semibold">Sessions</h1>
       <ScrollArea className="max-h-96">
         <div className="flex flex-col gap-2">
-          {sessions &&
-            sessions.map((session) => (
-              <Card key={session.id}>
-                <CardHeader className="text-sm">
-                  <CardTitle>{session.createdAt.toISOString()}</CardTitle>
-                </CardHeader>
-                <CardContent className="text-xs">
-                  <p>ID: {session.id}</p>
-                  <p>Agent: {session.userAgent}</p>
-                  <p>IP: {session.ipAddress}</p>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => handleRevokeSession(session.token)}
-                  >
-                    Revoke
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+          {sessions?.map((session) => (
+            <Card key={session.id}>
+              <CardHeader className="text-sm">
+                <CardTitle>{session.createdAt.toISOString()}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-xs">
+                <p>ID: {session.id}</p>
+                <p>Agent: {session.userAgent}</p>
+                <p>IP: {session.ipAddress}</p>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => handleRevokeSession(session.token)}
+                >
+                  Revoke
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </ScrollArea>
       <Button variant="destructive" onClick={() => handleDeleteUser(user.id)}>

@@ -1,10 +1,10 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { searchParamsParser, urlKeys } from "@/lib/searchParams";
+import { searchParamsParser, urlKeys } from "@/lib/nuqs/search-params.bucket";
 import { cn } from "@/lib/utils";
 import { useQueryStates } from "nuqs";
-import { useDebouncedCallback } from "use-debounce";
+import { useDebounceCallback } from "usehooks-ts";
 
 const SearchInput = () => {
   const [{ search, page }, setQuery] = useQueryStates(
@@ -12,7 +12,7 @@ const SearchInput = () => {
     urlKeys,
   );
 
-  const handleSearch = useDebouncedCallback((search: string) => {
+  const handleSearch = useDebounceCallback((search: string) => {
     setQuery({ search });
     if (page !== 1) {
       setQuery({ page: 1 });

@@ -1,6 +1,6 @@
+import { type BucketName, buckets } from "@/settings/buckets";
 import * as Minio from "minio";
 import { serverEnv } from "./env/server";
-import { BucketName, buckets } from "@/settings/buckets";
 
 // Create a new Minio client with the S3 endpoint, access key, and secret key
 export const s3Client = new Minio.Client({
@@ -37,7 +37,7 @@ export async function createPresignedUrlToUpload({
   path?: string;
   expiry?: number;
 }) {
-  const filePath = path ? path + "/" + fileName : fileName;
+  const filePath = path ? `${path}/${fileName}` : fileName;
 
   // Create bucket if it doesn't exist
   await createBucketIfNotExists(bucketName);
@@ -56,7 +56,12 @@ export async function createPresignedUrlToDownload({
   path?: string;
   expiry?: number;
 }) {
-  const filePath = path ? path + "/" + fileName : fileName;
+  const filePath = path ? `${path}/${fileName}` : fileName;
+
+  console.log(
+    "URL: ",
+    s3Client.presignedUrl("GET", "sokratest", filePath, expiry),
+  );
 
   return await s3Client.presignedGetObject(bucketName, filePath, expiry);
 }
@@ -76,7 +81,7 @@ export async function deleteFileFromBucket({
   fileName: string;
   path?: string;
 }) {
-  const filePath = path ? path + "/" + fileName : fileName;
+  const filePath = path ? `${path}/${fileName}` : fileName;
 
   try {
     await s3Client.removeObject(bucketName, filePath);

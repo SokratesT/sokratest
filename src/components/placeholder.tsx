@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { CircleHelpIcon, LucideIcon } from "lucide-react";
-import { ReactNode } from "react";
+import { CircleHelpIcon, type LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 
 const Placeholder = ({
   children,

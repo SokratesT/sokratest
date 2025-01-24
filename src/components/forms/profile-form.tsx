@@ -4,7 +4,7 @@ import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { authClient } from "@/lib/auth-client";
-import { profileSchema, ProfileSchemaType } from "@/lib/schemas/profile";
+import { type ProfileSchemaType, profileSchema } from "@/lib/schemas/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

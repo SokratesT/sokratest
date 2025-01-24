@@ -1,4 +1,4 @@
-import { SearchParams } from "nuqs/server";
+import type { SearchParams } from "nuqs/server";
 import { FileSidebar } from "./_components/file-sidebar";
 
 export default async function FilesPage({

@@ -6,7 +6,7 @@ import {
   PaginationContent,
   PaginationItem,
 } from "@/components/ui/pagination";
-import { searchParamsParser, urlKeys } from "@/lib/searchParams";
+import { searchParamsParser, urlKeys } from "@/lib/nuqs/search-params.bucket";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useQueryStates } from "nuqs";
 

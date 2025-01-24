@@ -2,7 +2,7 @@ import { db } from "@/db/drizzle";
 import { files } from "@/db/schema/files";
 import { createPresignedUrlToDownload } from "@/lib/s3-file-management";
 import { eq } from "drizzle-orm";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
   req: NextRequest,
@@ -32,6 +32,8 @@ export const GET = async (
     bucketName: fileObject.bucket,
     fileName: fileObject?.fileName,
   });
+
+  console.log("Presigned URL: ", presignedUrl);
 
   return new NextResponse(JSON.stringify(presignedUrl), {
     status: 200,

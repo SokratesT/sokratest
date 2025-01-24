@@ -1,4 +1,4 @@
-import { BucketName } from "@/settings/buckets";
+import type { BucketName } from "@/settings/buckets";
 
 export interface ShortFileProp {
   id: string;

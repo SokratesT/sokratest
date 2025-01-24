@@ -7,8 +7,8 @@ import {
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import { ReactNode } from "react";
-import { ControllerRenderProps } from "react-hook-form";
+import type { ReactNode } from "react";
+import type { ControllerRenderProps } from "react-hook-form";
 
 /**
  * Renders a form switch component.
@@ -28,7 +28,6 @@ const FormSwitch = ({
   className,
   required = false,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   field: ControllerRenderProps<any, any>;
   label?: string;
   description?: string;

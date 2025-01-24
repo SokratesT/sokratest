@@ -29,7 +29,7 @@ const Auth = ({ className }: { className: string }) => {
           <CardContent>
             <SignInForm />
           </CardContent>
-          <CardFooter className="text-sm text-muted-foreground">
+          <CardFooter className="text-muted-foreground text-sm">
             Create a new account?
           </CardFooter>
         </Card>
@@ -43,7 +43,7 @@ const Auth = ({ className }: { className: string }) => {
           <CardContent>
             <SignUpForm />
           </CardContent>
-          <CardFooter className="text-sm text-muted-foreground">
+          <CardFooter className="text-muted-foreground text-sm">
             Already have an account?
           </CardFooter>
         </Card>

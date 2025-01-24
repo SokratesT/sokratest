@@ -6,10 +6,11 @@ import { auth } from "@/lib/auth";
 import { clientEnv } from "@/lib/env/client";
 import { headers } from "next/headers";
 
+// FIXME: Update embedding interface
 interface Embedding {
   embedding: {
     node: Node;
-    metadata: {};
+    metadata: any;
   }[];
 }
 
@@ -17,7 +18,6 @@ interface Node {
   id_: string;
   embedding: number[];
   text: string;
-  extra_info: {};
   start_char_idx: number;
   end_char_idx: number;
 }
@@ -45,7 +45,7 @@ export const generateEmbedding = async (url: string, documentId: string) => {
 };
 
 const saveEmbedding = async (
-  embedding: { node: Node; metadata: {} },
+  embedding: { node: Node; metadata: any },
   documentId: string,
 ) => {
   const session = await auth.api.getSession({ headers: await headers() });

@@ -2,12 +2,15 @@
 
 import { deleteFileInfoFromDB } from "@/actions/delete-file";
 import { generateEmbedding } from "@/actions/generate-embedding";
+import { myTask } from "@/actions/test-trigger";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { files } from "@/db/schema/files";
+import type { files } from "@/db/schema/files";
 import { cn } from "@/lib/utils";
-import convert from "convert";
+import { convert } from "convert";
+import { useState } from "react";
+import { TriggerProgress } from "./trigger-progress";
 
 const FileActions = ({
   fileInfo,
@@ -18,12 +21,17 @@ const FileActions = ({
   filePath: string;
   className?: string;
 }) => {
+  const [run, setRun] = useState<{
+    id: string;
+    publicAccessToken: string;
+  } | null>(null);
+
   return (
     <div className={cn("flex min-h-20 pb-0", className)}>
       <div className="flex max-h-20 w-full justify-between gap-2 p-2">
         <div className="flex flex-col justify-between">
           <p className="font-bold">{fileInfo.originalName}</p>
-          <div className="flex gap-4 text-sm text-muted-foreground">
+          <div className="flex gap-4 text-muted-foreground text-sm">
             <Badge variant="outline">
               Date
               <Separator orientation="vertical" className="mx-1" />{" "}
@@ -56,6 +64,26 @@ const FileActions = ({
           >
             Generate Embedding
           </Button>
+          <Button
+            onClick={() =>
+              myTask(filePath, fileInfo.id).then(
+                (res) =>
+                  res.handle &&
+                  setRun({
+                    id: res.handle.id,
+                    publicAccessToken: res.handle.publicAccessToken,
+                  }),
+              )
+            }
+          >
+            Test Trigger
+          </Button>
+          {run && (
+            <TriggerProgress
+              runId={run.id}
+              publicAccessToken={run.publicAccessToken}
+            />
+          )}
           <Button
             variant="destructive"
             onClick={() => deleteFileInfoFromDB([fileInfo])}
