@@ -105,7 +105,7 @@ const ChatInput = React.forwardRef<HTMLTextAreaElement, ChatInputProps>(
         value={input}
         onChange={handleInput}
         className={cn(
-          "!text-base max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-10 dark:border-zinc-700",
+          "text-base! max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-10 dark:border-zinc-700",
           className,
         )}
         rows={props.rows ?? 2}

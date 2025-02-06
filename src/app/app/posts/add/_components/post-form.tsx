@@ -65,7 +65,7 @@ const PostForm = ({ post }: { post?: InferSelectModel<typeof posts> }) => {
             placeholder="Type your description here..."
             // autofocus={true}
             editable={true}
-            editorClassName="focus:outline-none"
+            editorClassName="focus:outline-hidden"
           />
         </div>
         <Button type="submit">Save Post</Button>

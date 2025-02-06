@@ -42,7 +42,7 @@ const ChatMessageList = React.forwardRef<HTMLDivElement, ChatMessageListProps>(
 
         {!isAtBottom && (
           <>
-            <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-24 bg-gradient-to-t from-background to-transparent" />
+            <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-24 bg-linear-to-t from-background to-transparent" />
             <Button
               onClick={scrollToBottom}
               size="icon"
