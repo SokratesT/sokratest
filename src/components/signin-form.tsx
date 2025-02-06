@@ -1,21 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form, FormField } from "@/components/ui/form";
 import { authClient } from "@/lib/auth-client";
 import { type LoginSchemaType, loginSchema } from "@/lib/schemas/login";
 import { routes } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { FormInputField } from "./forms/fields/formInputField";
+import { FormPasswordField } from "./forms/fields/formPasswordField";
 
 export function SignInForm() {
   const router = useRouter();
@@ -58,29 +52,27 @@ export function SignInForm() {
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="your@email.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <FormInputField
+              field={field}
+              placeholder="your@email.com"
+              label="Email"
+              inputType="email"
+            />
           )}
         />
         <FormField
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input placeholder="********" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <FormPasswordField
+              field={field}
+              placeholder="*******"
+              label="Password"
+              showTogglePassword
+            />
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Login</Button>
       </form>
     </Form>
   );

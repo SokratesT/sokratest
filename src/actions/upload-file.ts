@@ -22,7 +22,7 @@ export const saveFileInfoInDB = async (
     filesInfo.map((file) => ({
       id: file.id,
       bucket,
-      title: "test",
+      title: file.originalFileName,
       filename: file.id,
       originalName: file.originalFileName,
       size: file.fileSize,

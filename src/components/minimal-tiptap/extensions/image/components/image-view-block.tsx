@@ -252,7 +252,7 @@ export const ImageViewBlock: React.FC<NodeViewProps> = ({
               {imageState.error && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <InfoIcon className="size-8 text-destructive" />
-                  <p className="mt-2 text-muted-foreground text-sm">
+                  <p className="mt-2 text-sm text-muted-foreground">
                     Failed to load image
                   </p>
                 </div>

@@ -41,19 +41,15 @@ const DataTable = <TData, TValue>({
   const [pagination, setPagination] =
     usePaginationSearchParams(startTransition);
 
-  // TODO: Move hook to nuqs file
-  /* const [sorting, setSorting] = useQueryState(
-    "sort",
-    parseAsJson(sortingSchema.parse).withOptions({
-      shallow: false,
-      startTransition,
-    }),
-  ); */
-
   const [sorting, setSorting] = useSortingSearchParams(startTransition);
 
   const tableData = useMemo(
-    () => (isLoading ? Array(pagination.pageSize).fill({}) : data),
+    () =>
+      isLoading
+        ? Array(
+            pagination.pageSize > rowCount ? rowCount : pagination.pageSize,
+          ).fill({})
+        : data,
     [isLoading, data, pagination.pageSize],
   );
 

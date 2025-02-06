@@ -3,15 +3,17 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { logger, task, wait } from "@trigger.dev/sdk/v3";
 
-import { Document } from "@llamaindex/core/schema";
-
 import { createOpenAI } from "@ai-sdk/openai";
+// import * as mupdfjs from "mupdf/mupdfjs";
 import { OllamaEmbedding } from "@llamaindex/ollama";
 import { PDFReader } from "@llamaindex/readers/pdf";
 import { embedMany } from "ai";
 
-/* VectorStoreIndex */
+import { SentenceSplitter } from "@llamaindex/core/node-parser";
+import type { MetadataMode } from "llamaindex/Node";
+import { IngestionPipeline } from "llamaindex/ingestion/IngestionPipeline";
 
+// SimpleDirectoryReader,
 interface Payload {
   url: string;
   documentId: string;
@@ -22,7 +24,6 @@ const embeddingModel = new OllamaEmbedding({
 });
 
 const openai = createOpenAI({
-  // custom settings, e.g.
   compatibility: "compatible",
   baseURL: "http://localhost:11434/v1",
   apiKey: "ollama",
@@ -33,70 +34,44 @@ export const helloWorldTask = task({
   id: "hello-world",
   maxDuration: 300, // Stop executing after 300 secs (5 mins) of compute
   run: async (payload: Payload, { ctx }) => {
-    logger.log("Hello, world! Test:", { payload: payload.url, ctx });
-
     const signedUrl = payload.url;
 
     // Temporary file path to save the downloaded file
-    const fileName = "downloaded-file.txt"; // Change as needed
+    const fileName = "downloaded-file.pdf"; // Change as needed
     const filePath = path.join("/tmp", fileName); // Use a temporary directory
 
     try {
       // Step 1: Download the file
       logger.log("Downloading file from:", { signedUrl });
       await downloadFile(signedUrl, filePath);
+      await wait.for({ seconds: 5 });
       logger.log("File downloaded successfully:", { filePath });
 
       // Step 2: Process the file (example: load it as a Document)
       logger.log("Processing file...");
-      const fileContent = await fs.readFile(filePath);
+      // const fileContent = await fs.readFile(filePath);
 
-      const f = new PDFReader();
-      const content = await f.loadDataAsContent(fileContent);
+      const reader = new PDFReader();
+      const documents = await reader.loadData(filePath);
 
-      const documents = content.map((c) => new Document({ text: c.text }));
-
-      // const document = new Document({ text: "Test", id_: "1" });
-      /* const document = new Document({
-        text: fileContent,
-        metadata: { source: "downloaded" }, // Add metadata as needed
-      }); */
-      logger.log("File processed into Document:", { documents });
-
-      // Step 3: Build the index
-      logger.log("Building index...");
-      /* const pipeline = new IngestionPipeline({
+      const pipeline = new IngestionPipeline({
         transformations: [
-          // new SentenceSplitter({ chunkSize: 1024, chunkOverlap: 20 }),
-          // new TitleExtractor(),
-          embeddingModel,
+          new SentenceSplitter({ chunkSize: 512, chunkOverlap: 64 }),
         ],
       });
 
-      const pipelineResult = await logger.trace(
-        "pipeline.run",
-        async (span) => {
-          span.setAttribute("pipeline.id", "1");
-          return pipeline.run({ documents: documents });
-        },
-      ); */
+      // run the pipeline
+      const nodes = await pipeline.run({ documents });
 
-      // 'embedding' is a single embedding object (number[])
+      logger.log("File processed into Text:", { nodes });
+
+      // Step 3: Build the index
+      logger.log("Building index...");
+
       const embedResults = await embedMany({
         model: openai.embedding("mxbai-embed-large:latest"),
-        values: documents.map((d) => d.text),
+        values: nodes.map((d) => d.getContent("NONE" as MetadataMode)),
       });
-
-      // const res = await pipeline.run({ documents: documents });
-
-      // logger.info("RES:", { res });
-
-      /* const embedding = await logger.trace("embed-text", async (span) => {
-        span.setAttribute("embed.id", "1");
-        return embeddingModel.getTextEmbeddingsBatch(
-          document.map((d) => d.text),
-        );
-      }); */
 
       logger.log("Index built successfully.");
 
@@ -113,6 +88,7 @@ export const helloWorldTask = task({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            status: "success",
             documentId: payload.documentId,
             embedResults,
           }),
@@ -126,11 +102,32 @@ export const helloWorldTask = task({
         response: await response.json(),
       };
     } catch (error) {
+      await fetch(`${"http://localhost:3000"}/api/ai/save-embedding`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: "failed",
+          documentId: payload.documentId,
+        }),
+      });
+
       logger.error("Error occurred:", { error });
       throw error;
     }
   },
 });
+
+/* async function loadRemoteFile(url: string) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    console.error(`Cannot fetch document: ${response.statusText}`);
+    return;
+  }
+  const data = await response.arrayBuffer();
+  return mupdfjs.PDFDocument.openDocument(data, url);
+} */
 
 // Helper function to download a file using fetch
 async function downloadFile(

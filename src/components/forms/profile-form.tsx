@@ -22,6 +22,7 @@ const ProfileForm = () => {
     },
   });
 
+  // FIXME: Pass data as props instead of this shit?
   useEffect(() => {
     form.reset({
       email: data?.user.email,

@@ -4,17 +4,20 @@ import type { Table } from "@tanstack/react-table";
 import type React from "react";
 import { createContext, useContext } from "react";
 
-type TableContextType = {
-  table: Table<any> | null;
+const TableContext = createContext<{ table: Table<any> } | null>(null);
+
+export const useTable = () => {
+  const context = useContext(TableContext);
+  if (!context) {
+    throw new Error("useTable must be used within a TableProvider");
+  }
+  return context;
 };
 
-const TableContext = createContext<TableContextType>({ table: null });
-
-export const useTable = () => useContext(TableContext);
-
-const TableProvider: React.FC<
-  TableContextType & { children: React.ReactNode }
-> = ({ table, children }) => (
+const TableProvider: React.FC<{
+  children: React.ReactNode;
+  table: Table<any>;
+}> = ({ table, children }) => (
   <TableContext.Provider value={{ table }}>{children}</TableContext.Provider>
 );
 

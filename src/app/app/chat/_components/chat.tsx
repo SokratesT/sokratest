@@ -86,7 +86,7 @@ const Chat = ({
             </Button>
           </div>
 
-          <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">
+          <div className="absolute bottom-0 right-0 flex w-fit flex-row justify-end p-2">
             {isLoading ? (
               <StopButton stop={stop} setMessages={setMessages} />
             ) : (

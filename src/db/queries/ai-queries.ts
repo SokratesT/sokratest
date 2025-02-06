@@ -3,7 +3,7 @@ import "server-only";
 import { and, asc, desc, eq, gte } from "drizzle-orm";
 
 import { user } from "../schema/auth";
-import { chats as chat, vote } from "../schema/chat";
+import { chats as chat } from "../schema/chat";
 
 import type { User } from "better-auth";
 
@@ -51,7 +51,6 @@ export async function saveChat({
 
 export async function deleteChatById({ id }: { id: string }) {
   try {
-    await db.delete(vote).where(eq(vote.chatId, id));
     await db.delete(message).where(eq(message.chat, id));
 
     return await db.delete(chat).where(eq(chat.id, id));
@@ -102,47 +101,6 @@ export async function getMessagesByChatId({ id }: { id: string }) {
       .orderBy(asc(message.createdAt));
   } catch (error) {
     console.error("Failed to get messages by chat id from database", error);
-    throw error;
-  }
-}
-
-export async function voteMessage({
-  chatId,
-  messageId,
-  type,
-}: {
-  chatId: string;
-  messageId: string;
-  type: "up" | "down";
-}) {
-  try {
-    const [existingVote] = await db
-      .select()
-      .from(vote)
-      .where(and(eq(vote.messageId, messageId)));
-
-    if (existingVote) {
-      return await db
-        .update(vote)
-        .set({ isUpvoted: type === "up" })
-        .where(and(eq(vote.messageId, messageId), eq(vote.chatId, chatId)));
-    }
-    return await db.insert(vote).values({
-      chatId,
-      messageId,
-      isUpvoted: type === "up",
-    });
-  } catch (error) {
-    console.error("Failed to upvote message in database", error);
-    throw error;
-  }
-}
-
-export async function getVotesByChatId({ id }: { id: string }) {
-  try {
-    return await db.select().from(vote).where(eq(vote.chatId, id));
-  } catch (error) {
-    console.error("Failed to get votes by chat id from database", error);
     throw error;
   }
 }

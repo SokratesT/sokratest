@@ -35,7 +35,7 @@ const ChatMessageList = React.forwardRef<HTMLDivElement, ChatMessageListProps>(
           onTouchMove={disableAutoScroll}
           {...props}
         >
-          <div className="mx-auto flex max-w-[800px] flex-col gap-6">
+          <div className="mx-auto flex w-full max-w-[800px] flex-col gap-6">
             {children}
           </div>
         </div>

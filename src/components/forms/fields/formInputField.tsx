@@ -138,7 +138,7 @@ const FormInputField = ({
             />
             {unit && (
               <div className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-0">
-                <div className="inline-flex h-full min-w-14 items-center justify-center whitespace-nowrap rounded-md rounded-l-none border-l p-1 font-mono text-muted-foreground text-sm">
+                <div className="inline-flex h-full min-w-14 items-center justify-center whitespace-nowrap rounded-md rounded-l-none border-l p-1 font-mono text-sm text-muted-foreground">
                   {unit}
                 </div>
               </div>
@@ -155,7 +155,7 @@ const FormInputField = ({
           />
           <label
             htmlFor={labelId}
-            className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             {optOutLabel}
           </label>

@@ -11,14 +11,14 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
-const Auth = ({ className }: { className: string }) => {
+const Auth = ({ className }: { className?: string }) => {
   return (
-    <Tabs defaultValue="account" className={cn(className)}>
+    <Tabs defaultValue="login" className={cn(className)}>
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="account">Login</TabsTrigger>
-        <TabsTrigger value="password">Sign Up</TabsTrigger>
+        <TabsTrigger value="login">Login</TabsTrigger>
+        <TabsTrigger value="signup">Sign Up</TabsTrigger>
       </TabsList>
-      <TabsContent value="account">
+      <TabsContent value="login">
         <Card>
           <CardHeader>
             <CardTitle>Login</CardTitle>
@@ -29,12 +29,12 @@ const Auth = ({ className }: { className: string }) => {
           <CardContent>
             <SignInForm />
           </CardContent>
-          <CardFooter className="text-muted-foreground text-sm">
+          <CardFooter className="text-sm text-muted-foreground">
             Create a new account?
           </CardFooter>
         </Card>
       </TabsContent>
-      <TabsContent value="password">
+      <TabsContent value="signup">
         <Card>
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
@@ -43,7 +43,7 @@ const Auth = ({ className }: { className: string }) => {
           <CardContent>
             <SignUpForm />
           </CardContent>
-          <CardFooter className="text-muted-foreground text-sm">
+          <CardFooter className="text-sm text-muted-foreground">
             Already have an account?
           </CardFooter>
         </Card>

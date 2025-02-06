@@ -6,7 +6,6 @@ import type {
 } from "ai";
 
 import type { Message as DBMessage } from "@/db/schema/chat";
-import type { Document } from "@/db/schema/files";
 
 interface ApplicationError extends Error {
   info: string;
@@ -37,6 +36,7 @@ export function getLocalStorage(key: string) {
   return [];
 }
 
+//TODO: Replace this in codebase
 export function generateUUID(): string {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
@@ -202,16 +202,6 @@ export function sanitizeUIMessages(messages: Array<Message>): Array<Message> {
 export function getMostRecentUserMessage(messages: Array<Message>) {
   const userMessages = messages.filter((message) => message.role === "user");
   return userMessages.at(-1);
-}
-
-export function getDocumentTimestampByIndex(
-  documents: Array<Document>,
-  index: number,
-) {
-  if (!documents) return new Date();
-  if (index > documents.length) return new Date();
-
-  return documents[index].createdAt;
 }
 
 export function getMessageIdFromAnnotations(message: Message) {

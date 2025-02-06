@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     await saveChat({ id, userId: session.user.id, title });
   }
 
-  await saveMessages({
+  /* await saveMessages({
     messages: [
       {
         ...userMessage,
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
         chat: id,
       },
     ],
-  });
+  }); */
 
   const systemPrompt = `You are a Socratic tutor. Use the following principles in responding to students:
 
@@ -78,22 +78,31 @@ export async function POST(request: Request) {
       });
 
       const result = streamText({
-        model: customModel({ mode: "saia" }),
+        model: customModel({
+          /* model: {
+            id: "deepseek-r1:14b",
+            label: "Deepseek R1",
+            apiIdentifier: "llama-3.3-70b-instruct",
+            description: "Local R1",
+          }, */
+          mode: "local",
+        }),
         messages,
         experimental_transform: smoothStream(),
-        // maxSteps: 5,
+        experimental_telemetry: { isEnabled: true },
+        maxSteps: 1,
         experimental_toolCallStreaming: true,
         system:
           "You are a helpful assistant. You can use tools to help the user.",
         // system: systemPrompt,
         tools: {
-          //generateJoke: jokeTool(dataStream),
+          // generateFinalResponse: finalResponseTool(dataStream, messages),
           queryRag: queryRagTool(dataStream),
         },
         onStepFinish: ({ toolCalls, finishReason }) => {
-          if (toolCalls?.some((call) => call.toolName === "queryRag")) {
+          /* if (toolCalls?.some((call) => call.toolName === "queryRag")) {
             console.log("queryRag tool call finished");
-          }
+          } */
           return;
         },
         onFinish: async ({ response }) => {

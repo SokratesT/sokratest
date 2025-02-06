@@ -41,7 +41,7 @@ const PostsDataTableSelectActions = () => {
           onClick={handleDelete}
           disabled={table.getSelectedRowModel().rows.length === 0}
         >
-          Delete selected posts
+          Delete selected
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -19,7 +19,7 @@ const PublicNavigation = () => {
   const [isOpen, setOpen] = useState(false);
 
   return (
-    <header className="top-0 left-0 z-40 w-full bg-background">
+    <header className="left-0 top-0 z-40 w-full bg-background">
       <div className="container relative mx-auto flex min-h-20 flex-row items-center gap-4 lg:grid lg:grid-cols-3">
         <div className="hidden flex-row items-center justify-start gap-4 lg:flex">
           <NavigationMenu className="flex items-start justify-start">
@@ -34,7 +34,7 @@ const PublicNavigation = () => {
                     </>
                   ) : (
                     <>
-                      <NavigationMenuTrigger className="font-medium text-sm">
+                      <NavigationMenuTrigger className="text-sm font-medium">
                         {item.title}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent className="!w-[450px] p-4">
@@ -42,7 +42,7 @@ const PublicNavigation = () => {
                           <div className="flex h-full flex-col justify-between">
                             <div className="flex flex-col">
                               <p className="text-base">{item.title}</p>
-                              <p className="text-muted-foreground text-sm">
+                              <p className="text-sm text-muted-foreground">
                                 {item.description}
                               </p>
                             </div>
@@ -87,7 +87,7 @@ const PublicNavigation = () => {
             {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </Button>
           {isOpen && (
-            <div className="container absolute top-20 right-0 flex w-full flex-col gap-8 border-t bg-background py-4 shadow-lg">
+            <div className="container absolute right-0 top-20 flex w-full flex-col gap-8 border-t bg-background py-4 shadow-lg">
               {navigationItems.map((item) => (
                 <div key={item.title}>
                   <div className="flex flex-col gap-2">

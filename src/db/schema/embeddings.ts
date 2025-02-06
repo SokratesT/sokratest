@@ -11,7 +11,7 @@ import { files } from "./files";
 export const embeddings = pgTable("data_embeddings", {
   id: uuid("id").primaryKey().defaultRandom(),
   fileId: uuid("file_id")
-    .references(() => files.id)
+    .references(() => files.id, { onDelete: "cascade" })
     .notNull(),
   embedding: vector("embedding", { dimensions: 1024 }),
   text: text("text").notNull(), // The text chunk this embedding represents

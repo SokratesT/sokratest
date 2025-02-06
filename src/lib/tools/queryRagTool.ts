@@ -1,22 +1,28 @@
 import { db } from "@/db/drizzle";
 import { embeddings } from "@/db/schema/embeddings";
 import { createOpenAI } from "@ai-sdk/openai";
-import { type DataStreamWriter, embed, tool } from "ai";
+import { type DataStreamWriter, embed, streamText, tool } from "ai";
 import { cosineDistance, desc, gt, sql } from "drizzle-orm";
 import { z } from "zod";
+import { customModel } from "../ai";
 import { generateUUID } from "../ai/utils";
 
 export const queryRagTool = (dataStream: DataStreamWriter) =>
   tool({
     description:
-      // "Create a document for a writing or content creation activities like image generation. This tool will call other functions that will generate the contents of the document based on the title and kind.",
-      "Use this tool to respond to questions. It will return a some documents, which you should use to respond to the query.",
+      "Use this tool to respond to questions. It will return some documents, which you should use to respond to the query.",
     parameters: z.object({
-      query: z.string(),
+      query: z
+        .string()
+        .describe(
+          "A detailed query to retrieve information about the user's latest question that takes the context of the current conversation into account.",
+        ),
     }),
     execute: async ({ query }, { toolCallId }) => {
       const id = generateUUID();
-      const draftText = "";
+      let draftText = "";
+
+      console.log("QUERY: ", query);
 
       dataStream.writeData({
         type: "id",
@@ -71,7 +77,7 @@ export const queryRagTool = (dataStream: DataStreamWriter) =>
             fileId: embeddings.fileId,
           })
           .from(embeddings)
-          .where(gt(similarity, 0.0))
+          .where(gt(similarity, 0.6))
           .orderBy((t) => desc(t.similarity))
           .limit(5);
 
@@ -83,19 +89,24 @@ export const queryRagTool = (dataStream: DataStreamWriter) =>
         dataStream.writeMessageAnnotation({ ...doc, type: "reference" });
       });
 
-      const cont = context.map((doc) =>
-        JSON.stringify({
-          fileId: doc.fileId,
-          text: doc.text,
-          similarity: doc.similarity,
-        }),
-      );
+      const cont = context.map((doc) => ({
+        fileId: doc.fileId,
+        text: doc.text,
+        similarity: doc.similarity,
+      }));
 
-      /* const { fullStream } = streamText({
-        model: customModel({ mode: "local" }),
-        system: `Respond to the query using the provided context. In your response, include citations by referencing the fileId that certain information correspond to like this: <fileId:{fileId}> \n The context: ${cont.join(
-          "\n",
-        )}`,
+      const { fullStream } = streamText({
+        model: customModel({
+          model: {
+            id: "deepseek-r1:14b",
+            label: "Deepseek R1",
+            apiIdentifier: "deepseek-r1:14b",
+            description: "Local R1",
+          },
+          mode: "local",
+        }),
+        experimental_telemetry: { isEnabled: true },
+        system: `Respond to the query using the provided context. In your response, include citations by referencing the fileId that certain information correspond to like this: <fileId:{fileId}> \n The context: ${JSON.stringify(cont)}`,
         prompt: query,
       });
 
@@ -107,9 +118,11 @@ export const queryRagTool = (dataStream: DataStreamWriter) =>
             content: chunk.textDelta,
           });
         }
-      } */
+        console.log(chunk);
+      }
       dataStream.writeData({ type: "finish", content: "" });
 
-      return cont.join("\n");
+      /* return JSON.stringify(cont); */
+      return draftText;
     },
   });

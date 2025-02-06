@@ -90,9 +90,9 @@ interface FileProps {
   id: string;
 }
 
-export async function getPresignedUrl(file: FileProps) {
+export async function getPresignedUrl(fileId: string) {
   const response = await fetch(
-    `${clientEnv.NEXT_PUBLIC_BASE_URL}/api/files/download/presignedUrl/${file.id}`,
+    `${clientEnv.NEXT_PUBLIC_BASE_URL}/api/files/download/presignedUrl/${fileId}`,
   );
 
   console.log(response);
@@ -101,7 +101,7 @@ export async function getPresignedUrl(file: FileProps) {
 }
 
 export const downloadFile = async (file: FileProps) => {
-  const presignedUrl = await getPresignedUrl(file);
+  const presignedUrl = await getPresignedUrl(file.id);
   window.open(presignedUrl, "_blank");
 };
 

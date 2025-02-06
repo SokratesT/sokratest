@@ -25,7 +25,7 @@ export const routes = {
       },
       up: {
         name: "Upload",
-        path: "/app/up",
+        path: "/app/repo",
       },
       users: {
         name: "Users",

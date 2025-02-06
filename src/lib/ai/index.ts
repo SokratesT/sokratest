@@ -51,6 +51,12 @@ export const customModel = ({
         apiIdentifier: "llama3.1:latest",
         description: "Local Llama",
       },
+      {
+        id: "deepseek-r1:14b",
+        label: "Deepseek R1",
+        apiIdentifier: "deepseek-r1:14b",
+        description: "Local R1",
+      },
     ];
 
     defaultModel = models[0];

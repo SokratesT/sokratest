@@ -1,12 +1,16 @@
 import { db } from "@/db/drizzle";
 import { embeddings } from "@/db/schema/embeddings";
+import { files } from "@/db/schema/files";
 import type { EmbedManyResult } from "ai";
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
 interface Response {
+  status: "failed" | "success";
   documentId: string;
-  embedResults: EmbedManyResult<string>;
+  embedResults?: EmbedManyResult<string>;
 }
 
 interface Node {
@@ -21,12 +25,19 @@ interface Node {
 export const POST = async (req: NextRequest) => {
   const res = (await req.json()) as Response;
 
-  const result = await saveEmbedding(res.embedResults, res.documentId);
+  if (res.status === "failed" || !res.embedResults) {
+    await db
+      .update(files)
+      .set({ embeddingStatus: "failed" })
+      .where(eq(files.id, res.documentId));
 
+    return NextResponse.json({ state: { success: false } }, { status: 200 });
+  }
+
+  const result = await saveEmbedding(res.embedResults, res.documentId);
   return NextResponse.json({ state: result }, { status: 200 });
 };
 
-// TODO: Don't save each node separately, batch insert them.
 const saveEmbedding = async (
   embedResults: EmbedManyResult<string>,
   documentId: string,
@@ -36,7 +47,12 @@ const saveEmbedding = async (
   const embeds = transformData(embedResults, documentId);
 
   await db.insert(embeddings).values(embeds);
+  await db
+    .update(files)
+    .set({ embeddingStatus: "done" })
+    .where(eq(files.id, documentId));
 
+  revalidatePath("/app/repo");
   return { success: true };
 };
 

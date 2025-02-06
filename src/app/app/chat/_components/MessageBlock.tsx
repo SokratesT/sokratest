@@ -48,6 +48,9 @@ const MessageBlock = ({
     { icon: CopyIcon, type: "Copy" },
   ];
 
+  // Temporarily disables displaying tool invocations
+  /* if (message.toolInvocations) return null; */
+
   return (
     <ChatBubble
       variant={variant}
@@ -73,7 +76,6 @@ const MessageBlock = ({
           )}
         >
           <Markdown>{message.content as string}</Markdown>
-          <p className="font-bold">Tools</p>
 
           {message.toolInvocations?.map((tool) => {
             return (
@@ -84,8 +86,10 @@ const MessageBlock = ({
               />
             );
           })}
-          <p className="font-bold">Annotations</p>
-          <AnnotationBlock annotations={message.annotations} />
+
+          {message.annotations && (
+            <AnnotationBlock annotations={message.annotations} />
+          )}
 
           {message.role === "user" && (
             <ChatBubbleActionWrapper

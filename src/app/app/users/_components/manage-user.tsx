@@ -1,6 +1,7 @@
 "use client";
 
 import { revalidatePathFromClient } from "@/actions/revalidate-helper";
+import { Placeholder } from "@/components/placeholder";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -22,6 +23,7 @@ import { toast } from "sonner";
 const ManageUser = ({ user }: { user: UserWithRole }) => {
   const [sessions, setSessions] = useState<Session[] | undefined>(undefined);
 
+  // FIXME: Wtf? Why would this need a useEffect?
   useEffect(() => {
     const getSessions = async () => {
       const sessions = await authClient.admin.listUserSessions({
@@ -95,21 +97,21 @@ const ManageUser = ({ user }: { user: UserWithRole }) => {
   };
 
   return (
-    <div>
-      {!user.banned && (
-        <Button
-          size="sm"
-          variant="destructive"
-          onClick={() => handleBanUser(user.id)}
-        >
-          Ban User
+    <div className="mt-4 flex flex-col gap-4">
+      <div className="flex gap-2">
+        {!user.banned && (
+          <Button variant="destructive" onClick={() => handleBanUser(user.id)}>
+            Ban User
+          </Button>
+        )}
+        {user.banned && (
+          <Button onClick={() => handleUnbanUser(user.id)}>Unban User</Button>
+        )}
+
+        <Button variant="destructive" onClick={() => handleDeleteUser(user.id)}>
+          Delete User
         </Button>
-      )}
-      {user.banned && (
-        <Button size="sm" onClick={() => handleUnbanUser(user.id)}>
-          Unban User
-        </Button>
-      )}
+      </div>
 
       <Select
         onValueChange={(value) => handleRoleChange(value)}
@@ -127,33 +129,36 @@ const ManageUser = ({ user }: { user: UserWithRole }) => {
         </SelectContent>
       </Select>
 
-      <h1 className="font-semibold">Sessions</h1>
-      <ScrollArea className="max-h-96">
-        <div className="flex flex-col gap-2">
-          {sessions?.map((session) => (
-            <Card key={session.id}>
-              <CardHeader className="text-sm">
-                <CardTitle>{session.createdAt.toISOString()}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-xs">
-                <p>ID: {session.id}</p>
-                <p>Agent: {session.userAgent}</p>
-                <p>IP: {session.ipAddress}</p>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => handleRevokeSession(session.token)}
-                >
-                  Revoke
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </ScrollArea>
-      <Button variant="destructive" onClick={() => handleDeleteUser(user.id)}>
-        Delete User
-      </Button>
+      {sessions && sessions.length > 0 ? (
+        <>
+          <h1 className="font-semibold">Sessions</h1>
+          <ScrollArea className="max-h-96">
+            <div className="flex flex-col gap-2">
+              {sessions?.map((session) => (
+                <Card key={session.id}>
+                  <CardHeader className="text-sm">
+                    <CardTitle>{session.createdAt.toISOString()}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-xs">
+                    <p>ID: {session.id}</p>
+                    <p>Agent: {session.userAgent}</p>
+                    <p>IP: {session.ipAddress}</p>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => handleRevokeSession(session.token)}
+                    >
+                      Revoke
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </ScrollArea>
+        </>
+      ) : (
+        <Placeholder>No active sessions</Placeholder>
+      )}
     </div>
   );
 };

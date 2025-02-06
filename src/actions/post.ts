@@ -36,14 +36,14 @@ export const updatePost = async (post: PostSchemaType, postId: Post["id"]) => {
   revalidatePath(routes.app.sub.posts.path);
 };
 
-export const deletePosts = async (postId: Post["id"][]) => {
+export const deletePosts = async (postIds: Post["id"][]) => {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
     throw new Error("Not authenticated");
   }
 
-  await db.delete(posts).where(inArray(posts.id, postId));
+  await db.delete(posts).where(inArray(posts.id, postIds));
 
   revalidatePath(routes.app.sub.posts.path);
 };
