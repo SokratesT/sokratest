@@ -1,12 +1,11 @@
 "use client";
 
 import { deleteFileInfoFromDB } from "@/actions/delete-file";
-import { testAction } from "@/actions/test-action";
 import { enqueueEmbeddings } from "@/actions/test-trigger";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import type { File } from "@/db/schema/files";
+import type { FileRepository } from "@/db/schema/fileRepository";
 import { cn } from "@/lib/utils";
 import { convert } from "convert";
 import Link from "next/link";
@@ -16,7 +15,7 @@ const FileActions = ({
   filePath,
   className,
 }: {
-  fileInfo: File;
+  fileInfo: FileRepository;
   filePath: string;
   className?: string;
 }) => {
@@ -29,7 +28,7 @@ const FileActions = ({
             <Badge variant="outline">
               Date
               <Separator orientation="vertical" className="mx-1" />{" "}
-              {fileInfo.createdAt}
+              {fileInfo.createdAt?.getDate()}
             </Badge>
             <Badge variant="outline">
               Size
@@ -51,12 +50,9 @@ const FileActions = ({
         <div className="flex h-full justify-center gap-2">
           <Button
             onClick={() => enqueueEmbeddings([fileInfo.id])}
-            disabled={fileInfo.embeddingStatus === "pending"}
+            disabled={fileInfo.embeddingStatus === "processing"}
           >
             Generate Embedding
-          </Button>
-          <Button onClick={() => testAction(filePath)}>
-            Test Unstructured
           </Button>
           <Button
             variant="destructive"

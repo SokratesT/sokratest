@@ -14,9 +14,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { File } from "@/db/schema/files";
+import type { FileRepository } from "@/db/schema/fileRepository";
 import { cn } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
+import { convert } from "convert";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -31,7 +32,7 @@ const handleEnqueueEmbedding = async (id: string) => {
   toast.success("Enqueued for embedding");
 };
 
-export const columns: ColumnDef<File>[] = [
+export const columns: ColumnDef<FileRepository>[] = [
   {
     id: "select",
     size: 32,
@@ -57,16 +58,19 @@ export const columns: ColumnDef<File>[] = [
   },
   {
     size: 500,
-    accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
-    ),
-  },
-  {
     accessorKey: "filename",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="File Name" />
     ),
+  },
+  {
+    accessorKey: "size",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="File Size" />
+    ),
+    cell: ({ row }) => {
+      return convert(row.original.size, "bytes").to("best").toString(2);
+    },
   },
   {
     accessorKey: "embeddingStatus",
@@ -80,7 +84,7 @@ export const columns: ColumnDef<File>[] = [
             "bg-emerald-600": row.original.embeddingStatus === "done",
             "bg-red-600": row.original.embeddingStatus === "failed",
             "bg-cyan-600": row.original.embeddingStatus === "outstanding",
-            "bg-yellow-600": row.original.embeddingStatus === "pending",
+            "bg-yellow-600": row.original.embeddingStatus === "processing",
           })}
         >
           {row.original.embeddingStatus}

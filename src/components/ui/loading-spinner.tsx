@@ -13,7 +13,7 @@ const LoadingSpinner = ({
   return (
     <div
       data-slot="loading-spinner"
-      className={cn(spinnerVariants, className)}
+      className={cn(spinnerVariants, "mx-auto", className)}
       {...props}
     />
   );

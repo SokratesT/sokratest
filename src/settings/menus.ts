@@ -1,4 +1,5 @@
 import {
+  BookMarkedIcon,
   Building2Icon,
   FilesIcon,
   HomeIcon,
@@ -30,6 +31,11 @@ export const sidebarMenu = [
     title: "Files",
     url: routes.app.sub.up.path,
     icon: FilesIcon,
+  },
+  {
+    title: "Courses",
+    url: routes.app.sub.courses.path,
+    icon: BookMarkedIcon,
   },
   {
     title: "Users",

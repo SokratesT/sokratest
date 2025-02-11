@@ -2,7 +2,6 @@ import { createWriteStream, openAsBlob } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createOpenAI } from "@ai-sdk/openai";
-import { OllamaEmbedding } from "@llamaindex/ollama";
 import { logger, task, wait } from "@trigger.dev/sdk/v3";
 import { embedMany } from "ai";
 import { UnstructuredClient } from "unstructured-client";
@@ -14,10 +13,6 @@ interface Payload {
   documentId: string;
 }
 
-const embeddingModel = new OllamaEmbedding({
-  model: "nomic-embed-text:latest",
-});
-
 const openai = createOpenAI({
   compatibility: "compatible",
   baseURL: "http://localhost:11434/v1",
@@ -26,7 +21,7 @@ const openai = createOpenAI({
 });
 
 const unstructuredClient = new UnstructuredClient({
-  serverURL: "http://localhost:8000",
+  serverURL: "http://localhost:9500",
   /* security: {
     apiKeyAuth: "YOUR_API_KEY",
   }, */
@@ -63,14 +58,12 @@ export const helloWorldTask = task({
           overlap: 64,
           // splitPdfPageRange: [1, 6],
           // strategy: Strategy.HiRes,
-          languages: ["deu"],
+          // languages: ["deu"],
           // splitPdfPage: false,
-          combineUnderNChars: 512,
-          maxCharacters: 1024,
+          combineUnderNChars: 1024,
+          maxCharacters: 2048,
         },
       });
-
-      const elements = res.elements?.map((e) => e.type);
 
       logger.log("File processed successfully:", { res });
 

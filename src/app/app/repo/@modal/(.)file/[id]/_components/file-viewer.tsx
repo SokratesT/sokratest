@@ -3,14 +3,14 @@
 import { Placeholder } from "@/components/placeholder";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import type { files } from "@/db/schema/files";
+import type { FileRepository } from "@/db/schema/fileRepository";
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FileActions } from "./file-actions";
 
-const FileViewer = ({ fileInfo }: { fileInfo: typeof files.$inferSelect }) => {
+const FileViewer = ({ fileInfo }: { fileInfo: FileRepository }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [filePath, setFilePath] = useState<string | undefined>(undefined);
 

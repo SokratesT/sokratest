@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { files } from "@/db/schema/files";
+import { fileRepository } from "@/db/schema/fileRepository";
 import { createPresignedUrlToDownload } from "@/lib/s3-file-management";
 import { eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
@@ -18,9 +18,13 @@ export const GET = async (
 
   // Get the file name in bucket from the database
   const [fileObject] = await db
-    .select({ id: files.id, fileName: files.filename, bucket: files.bucket })
-    .from(files)
-    .where(eq(files.id, id));
+    .select({
+      id: fileRepository.id,
+      fileName: fileRepository.filename,
+      bucket: fileRepository.bucket,
+    })
+    .from(fileRepository)
+    .where(eq(fileRepository.id, id));
 
   if (!fileObject) {
     return new NextResponse("Item not found", {

@@ -7,14 +7,14 @@ import {
   uuid,
   vector,
 } from "drizzle-orm/pg-core";
-import { files } from "./files";
+import { fileRepository } from "./fileRepository";
 
 export const embeddings = pgTable(
   "data_embeddings",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     fileId: uuid("file_id")
-      .references(() => files.id, { onDelete: "cascade" })
+      .references(() => fileRepository.id, { onDelete: "cascade" })
       .notNull(),
     embedding: vector("embedding", { dimensions: 1024 }),
     text: text("text").notNull(), // The text chunk this embedding represents

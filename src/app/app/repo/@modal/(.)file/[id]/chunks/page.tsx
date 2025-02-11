@@ -1,17 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/db/drizzle";
 import { embeddings } from "@/db/schema/embeddings";
-import { files } from "@/db/schema/files";
+import type { FileRepository } from "@/db/schema/fileRepository";
 import { eq } from "drizzle-orm";
 
 const EditPostPage = async ({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: FileRepository["id"] }>;
 }) => {
   const { id } = await params;
 
-  const [queryFile] = await db.select().from(files).where(eq(files.id, id));
   const queryFileChunks = await db
     .select()
     .from(embeddings)

@@ -27,7 +27,7 @@ export const session = pgTable("session", {
     .notNull()
     .references(() => user.id),
   impersonatedBy: text("impersonated_by"),
-  activeOrganizationId: text("active_organization_id"),
+  activeOrganizationId: uuid("active_organization_id"),
 });
 
 export const account = pgTable("account", {
@@ -58,7 +58,7 @@ export const verification = pgTable("verification", {
 });
 
 export const organization = pgTable("organization", {
-  id: text("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   slug: text("slug").unique(),
   logo: text("logo"),
@@ -68,7 +68,7 @@ export const organization = pgTable("organization", {
 
 export const member = pgTable("member", {
   id: text("id").primaryKey(),
-  organizationId: text("organization_id")
+  organizationId: uuid("organization_id")
     .notNull()
     .references(() => organization.id),
   userId: uuid("user_id")
@@ -80,7 +80,7 @@ export const member = pgTable("member", {
 
 export const invitation = pgTable("invitation", {
   id: text("id").primaryKey(),
-  organizationId: text("organization_id")
+  organizationId: uuid("organization_id")
     .notNull()
     .references(() => organization.id),
   email: text("email").notNull(),

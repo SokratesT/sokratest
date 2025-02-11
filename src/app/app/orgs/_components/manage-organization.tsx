@@ -17,10 +17,10 @@ const ManageOrganization = ({
     const res = await authClient.organization.delete({ organizationId });
 
     if (res.error) {
-      toast.error(`Failed to delete user: ${res.error.message}`);
+      toast.error(`Failed to delete organisation: ${res.error.message}`);
     } else {
-      toast.success("User deleted");
-      revalidatePathFromClient(routes.app.sub.users.path);
+      toast.success("Organisation deleted");
+      revalidatePathFromClient(routes.app.sub.organizations.path);
     }
   };
 
@@ -31,7 +31,7 @@ const ManageOrganization = ({
           variant="destructive"
           onClick={() => handleDeleteOrganization(organization.id)}
         >
-          Delete User
+          Delete Organisation
         </Button>
       </div>
     </div>

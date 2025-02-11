@@ -84,7 +84,7 @@ const ProfileForm = () => {
           )}
         />
         <Button type="submit" disabled={loading || submitting}>
-          Save
+          Save Profile
         </Button>
       </form>
     </Form>

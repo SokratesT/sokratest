@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { PageTitle } from "@/components/page-title";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -33,11 +34,14 @@ const AppLayout = async ({ children }: { children: React.ReactNode }) => {
             <Separator orientation="vertical" className="mr-2 h-4" />
             <PageTitle />
           </div>
-          <Button size="icon" className="size-8" variant="outline" asChild>
-            <Link href={routes.root.path}>
-              <ArrowLeftToLine />
-            </Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button size="icon" className="size-8" variant="outline" asChild>
+              <Link href={routes.root.path}>
+                <ArrowLeftToLine />
+              </Link>
+            </Button>
+            <ThemeSwitcher />
+          </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
       </SidebarInset>

@@ -18,6 +18,7 @@ import {
 } from "better-auth/plugins";
 import { createTransport } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
+import { v4 as uuidv4 } from "uuid";
 
 export const auth = betterAuth({
   plugins: [admin(), username(), organizationPlugin()],
@@ -45,7 +46,7 @@ export const auth = betterAuth({
   },
   advanced: {
     // TODO: Adjust schema to auto generate UUIDs
-    generateId: false,
+    generateId: () => uuidv4(),
   },
 });
 

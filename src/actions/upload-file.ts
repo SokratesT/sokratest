@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { files } from "@/db/schema/files";
+import { fileRepository } from "@/db/schema/fileRepository";
 import { auth } from "@/lib/auth";
 import type { PresignedUrlProp } from "@/lib/files/types";
 import { revalidatePath } from "next/cache";
@@ -18,15 +18,15 @@ export const saveFileInfoInDB = async (
     throw new Error("Not authenticated");
   }
 
-  await db.insert(files).values(
+  await db.insert(fileRepository).values(
     filesInfo.map((file) => ({
       id: file.id,
       bucket,
-      title: file.originalFileName,
+      prefix: "", // TODO: Implement prefix handling
       filename: file.id,
       originalName: file.originalFileName,
       size: file.fileSize,
-      userId: session?.user.id,
+      uploadedBy: session?.user.id,
       fileType,
     })),
   );

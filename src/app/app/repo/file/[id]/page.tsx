@@ -1,18 +1,24 @@
 import { db } from "@/db/drizzle";
-import { files } from "@/db/schema/files";
+import {
+  type FileRepository,
+  fileRepository,
+} from "@/db/schema/fileRepository";
 import { eq } from "drizzle-orm";
 import { FileViewer } from "../../@modal/(.)file/[id]/_components/file-viewer";
 
-const EditPostPage = async ({
+const EditFilePage = async ({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: FileRepository["id"] }>;
 }) => {
   const { id } = await params;
 
-  const [queryFile] = await db.select().from(files).where(eq(files.id, id));
+  const [queryFile] = await db
+    .select()
+    .from(fileRepository)
+    .where(eq(fileRepository.id, id));
 
   return <FileViewer fileInfo={queryFile} />;
 };
 
-export default EditPostPage;
+export default EditFilePage;

@@ -1,7 +1,10 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { type File, files } from "@/db/schema/files";
+import {
+  type FileRepository,
+  fileRepository,
+} from "@/db/schema/fileRepository";
 import { auth } from "@/lib/auth";
 import { deleteFileFromBucket } from "@/lib/s3-file-management";
 import { routes } from "@/settings/routes";
@@ -10,7 +13,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 // TODO: This function should get the bucket instead of looking up files
-export const deleteFileInfoFromDB = async (fileIds: File["id"][]) => {
+export const deleteFileInfoFromDB = async (fileIds: FileRepository["id"][]) => {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
@@ -19,8 +22,8 @@ export const deleteFileInfoFromDB = async (fileIds: File["id"][]) => {
 
   const filesToDelete = await db
     .select()
-    .from(files)
-    .where(inArray(files.id, fileIds));
+    .from(fileRepository)
+    .where(inArray(fileRepository.id, fileIds));
 
   Promise.all(
     filesToDelete.map(async (file) => {
@@ -31,7 +34,7 @@ export const deleteFileInfoFromDB = async (fileIds: File["id"][]) => {
     }),
   );
 
-  await db.delete(files).where(inArray(files.id, fileIds));
+  await db.delete(fileRepository).where(inArray(fileRepository.id, fileIds));
 
   revalidatePath(routes.app.sub.up.path);
 };

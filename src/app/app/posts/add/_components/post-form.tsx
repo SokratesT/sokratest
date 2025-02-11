@@ -5,15 +5,14 @@ import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
-import type { posts } from "@/db/schema/posts";
+import type { Post } from "@/db/schema/posts";
 import { type PostSchemaType, postSchema } from "@/lib/schemas/post";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { InferSelectModel } from "drizzle-orm";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ForwardRefEditor } from "../../_mdx-components/editor";
 
-const PostForm = ({ post }: { post?: InferSelectModel<typeof posts> }) => {
+const PostForm = ({ post }: { post?: Post }) => {
   const form = useForm<PostSchemaType>({
     resolver: zodResolver(postSchema),
     defaultValues: {

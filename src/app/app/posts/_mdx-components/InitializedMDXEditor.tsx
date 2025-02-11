@@ -1,4 +1,5 @@
 "use client";
+
 import {
   BlockTypeSelect,
   BoldItalicUnderlineToggles,
@@ -19,10 +20,8 @@ import {
   thematicBreakPlugin,
   toolbarPlugin,
 } from "@mdxeditor/editor";
-// InitializedMDXEditor.tsx
 import type { ForwardedRef } from "react";
 
-// Only import this to the next file
 export default function InitializedMDXEditor({
   editorRef,
   ...props
@@ -31,7 +30,6 @@ export default function InitializedMDXEditor({
     <MDXEditor
       contentEditableClassName="prose"
       plugins={[
-        // Example Plugin Usage
         headingsPlugin(),
         linkPlugin(),
         listsPlugin(),
@@ -40,10 +38,9 @@ export default function InitializedMDXEditor({
         markdownShortcutPlugin(),
         linkDialogPlugin(),
         toolbarPlugin({
-          toolbarClassName: "my-classname",
+          toolbarClassName: "mdx-toolbar",
           toolbarContents: () => (
             <>
-              {" "}
               <BoldItalicUnderlineToggles options={["Bold", "Italic"]} />
               <BlockTypeSelect />
               <ListsToggle />

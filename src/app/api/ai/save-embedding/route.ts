@@ -1,6 +1,6 @@
 import { db } from "@/db/drizzle";
 import { embeddings } from "@/db/schema/embeddings";
-import { files } from "@/db/schema/files";
+import { fileRepository } from "@/db/schema/fileRepository";
 import type { EmbedManyResult } from "ai";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -27,9 +27,9 @@ export const POST = async (req: NextRequest) => {
 
   if (res.status === "failed" || !res.embedResults) {
     await db
-      .update(files)
+      .update(fileRepository)
       .set({ embeddingStatus: "failed" })
-      .where(eq(files.id, res.documentId));
+      .where(eq(fileRepository.id, res.documentId));
 
     return NextResponse.json({ state: { success: false } }, { status: 200 });
   }
@@ -51,9 +51,9 @@ const saveEmbedding = async (
 
   await db.insert(embeddings).values(embeds);
   await db
-    .update(files)
+    .update(fileRepository)
     .set({ embeddingStatus: "done" })
-    .where(eq(files.id, documentId));
+    .where(eq(fileRepository.id, documentId));
 
   return { success: true };
 };

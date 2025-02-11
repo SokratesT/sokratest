@@ -1,8 +1,13 @@
-// src/db/drizzle.ts
-import { files } from "@/db/schema/files";
 import { serverEnv } from "@/lib/env/server";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
+
+import * as auth from "./schema/auth";
+import * as chat from "./schema/chat";
+import * as courses from "./schema/courses";
+import * as embeddings from "./schema/embeddings";
+import * as fileRepository from "./schema/fileRepository";
+import * as posts from "./schema/posts";
 
 const pool = new Pool({
   connectionString: serverEnv.DATABASE_URL,
@@ -10,6 +15,11 @@ const pool = new Pool({
 
 export const db = drizzle(pool, {
   schema: {
-    files,
+    auth,
+    courses,
+    embeddings,
+    chat,
+    fileRepository,
+    posts,
   },
 });

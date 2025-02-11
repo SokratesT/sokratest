@@ -5,15 +5,17 @@ import type {
 } from "drizzle-orm";
 import type * as auth from "./schema/auth";
 import type * as chat from "./schema/chat";
+import type * as courses from "./schema/courses";
 import type * as embeddings from "./schema/embeddings";
-import type * as files from "./schema/files";
+import type * as fileRepository from "./schema/fileRepository";
 import type * as posts from "./schema/posts";
 
 type Schema = typeof auth &
-  typeof posts &
   typeof chat &
+  typeof courses &
   typeof embeddings &
-  typeof files;
+  typeof fileRepository &
+  typeof posts;
 type TSchema = ExtractTablesWithRelations<Schema>;
 
 export type IncludeRelation<TableName extends keyof TSchema> = DBQueryConfig<

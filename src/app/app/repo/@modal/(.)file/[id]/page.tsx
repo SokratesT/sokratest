@@ -1,14 +1,22 @@
 import { InterceptingModal } from "@/app/app/posts/@modal/(.)edit/[id]/_components/intercepting-modal";
 import { Placeholder } from "@/components/placeholder";
 import { db } from "@/db/drizzle";
-import { files } from "@/db/schema/files";
+import {
+  type FileRepository,
+  fileRepository,
+} from "@/db/schema/fileRepository";
 import { eq } from "drizzle-orm";
 import { FileViewer } from "./_components/file-viewer";
 
-const FilePage = async ({ params }: { params: Promise<{ id: string }> }) => {
+const FilePage = async ({
+  params,
+}: { params: Promise<{ id: FileRepository["id"] }> }) => {
   const { id } = await params;
 
-  const [file] = await db.select().from(files).where(eq(files.id, id));
+  const [file] = await db
+    .select()
+    .from(fileRepository)
+    .where(eq(fileRepository.id, id));
 
   if (!file) {
     return <Placeholder>No such file</Placeholder>;

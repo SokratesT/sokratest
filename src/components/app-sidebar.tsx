@@ -5,6 +5,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -12,10 +13,14 @@ import {
 import { sidebarMenu } from "@/settings/menus";
 import Link from "next/link";
 import { NavUser } from "./nav-user";
+import { OrganizationSwitcher } from "./organization-switcher";
 
 const AppSidebar = async () => {
   return (
     <Sidebar>
+      <SidebarHeader>
+        <OrganizationSwitcher />
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>

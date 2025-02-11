@@ -1,9 +1,9 @@
-import { type InferSelectModel, relations, sql } from "drizzle-orm";
+import { type InferSelectModel, relations } from "drizzle-orm";
 import { date, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 
 export const posts = pgTable("posts", {
-  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(),
   author: uuid("author")
     .notNull()
