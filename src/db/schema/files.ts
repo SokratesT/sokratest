@@ -25,7 +25,7 @@ export const files = pgTable("files", {
   createdAt: date("created_at").default("now()"),
   size: integer("size").notNull(),
   fileType: text("file_type").notNull(),
-  userId: text("userId")
+  userId: uuid("user_id")
     .notNull()
     .references(() => user.id),
   embeddingStatus: embeddingStatusEnum().default("outstanding").notNull(),

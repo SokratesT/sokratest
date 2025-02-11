@@ -121,7 +121,7 @@ const FormSelect = ({
           />
           <label
             htmlFor={labelId}
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             {optOutLabel}
           </label>

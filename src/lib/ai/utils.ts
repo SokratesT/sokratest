@@ -1,49 +1,10 @@
+import type { Message as DBMessage } from "@/db/schema/chat";
 import type {
   CoreAssistantMessage,
   CoreToolMessage,
   Message,
   ToolInvocation,
 } from "ai";
-
-import type { Message as DBMessage } from "@/db/schema/chat";
-
-interface ApplicationError extends Error {
-  info: string;
-  status: number;
-}
-
-export const fetcher = async (url: string) => {
-  const res = await fetch(url);
-
-  if (!res.ok) {
-    const error = new Error(
-      "An error occurred while fetching the data.",
-    ) as ApplicationError;
-
-    error.info = await res.json();
-    error.status = res.status;
-
-    throw error;
-  }
-
-  return res.json();
-};
-
-export function getLocalStorage(key: string) {
-  if (typeof window !== "undefined") {
-    return JSON.parse(localStorage.getItem(key) || "[]");
-  }
-  return [];
-}
-
-//TODO: Replace this in codebase
-export function generateUUID(): string {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
 
 function addToolMessageToChat({
   toolMessage,
@@ -202,14 +163,4 @@ export function sanitizeUIMessages(messages: Array<Message>): Array<Message> {
 export function getMostRecentUserMessage(messages: Array<Message>) {
   const userMessages = messages.filter((message) => message.role === "user");
   return userMessages.at(-1);
-}
-
-export function getMessageIdFromAnnotations(message: Message) {
-  if (!message.annotations) return message.id;
-
-  const [annotation] = message.annotations;
-  if (!annotation) return message.id;
-
-  // @ts-expect-error messageIdFromServer is not defined in MessageAnnotation
-  return annotation.messageIdFromServer;
 }

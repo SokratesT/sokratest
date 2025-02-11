@@ -1,17 +1,12 @@
-import { createWriteStream } from "node:fs";
+import { createWriteStream, openAsBlob } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { logger, task, wait } from "@trigger.dev/sdk/v3";
-
 import { createOpenAI } from "@ai-sdk/openai";
-// import * as mupdfjs from "mupdf/mupdfjs";
 import { OllamaEmbedding } from "@llamaindex/ollama";
-import { PDFReader } from "@llamaindex/readers/pdf";
+import { logger, task, wait } from "@trigger.dev/sdk/v3";
 import { embedMany } from "ai";
-
-import { SentenceSplitter } from "@llamaindex/core/node-parser";
-import type { MetadataMode } from "llamaindex/Node";
-import { IngestionPipeline } from "llamaindex/ingestion/IngestionPipeline";
+import { UnstructuredClient } from "unstructured-client";
+import { ChunkingStrategy } from "unstructured-client/sdk/models/shared";
 
 // SimpleDirectoryReader,
 interface Payload {
@@ -30,9 +25,16 @@ const openai = createOpenAI({
   name: "ollama",
 });
 
+const unstructuredClient = new UnstructuredClient({
+  serverURL: "http://localhost:8000",
+  /* security: {
+    apiKeyAuth: "YOUR_API_KEY",
+  }, */
+});
+
 export const helloWorldTask = task({
   id: "hello-world",
-  maxDuration: 300, // Stop executing after 300 secs (5 mins) of compute
+  maxDuration: 3000, // Stop executing after 300 secs (5 mins) of compute
   run: async (payload: Payload, { ctx }) => {
     const signedUrl = payload.url;
 
@@ -51,26 +53,51 @@ export const helloWorldTask = task({
       logger.log("Processing file...");
       // const fileContent = await fs.readFile(filePath);
 
-      const reader = new PDFReader();
-      const documents = await reader.loadData(filePath);
+      const res = await unstructuredClient.general.partition({
+        partitionParameters: {
+          files: {
+            content: await openAsBlob(filePath),
+            fileName,
+          },
+          chunkingStrategy: ChunkingStrategy.ByTitle,
+          overlap: 64,
+          // splitPdfPageRange: [1, 6],
+          // strategy: Strategy.HiRes,
+          languages: ["deu"],
+          // splitPdfPage: false,
+          combineUnderNChars: 512,
+          maxCharacters: 1024,
+        },
+      });
 
-      const pipeline = new IngestionPipeline({
+      const elements = res.elements?.map((e) => e.type);
+
+      logger.log("File processed successfully:", { res });
+
+      // const reader = new PDFReader();
+      // const documents = await reader.loadData(filePath);
+
+      /* const pipeline = new IngestionPipeline({
         transformations: [
           new SentenceSplitter({ chunkSize: 512, chunkOverlap: 64 }),
         ],
-      });
+      }); */
 
       // run the pipeline
-      const nodes = await pipeline.run({ documents });
+      // const nodes = await pipeline.run({ documents });
 
-      logger.log("File processed into Text:", { nodes });
+      // logger.log("File processed into Text:", { nodes });
 
       // Step 3: Build the index
       logger.log("Building index...");
 
+      if (!res.elements) {
+        throw new Error("No elements found in the response.");
+      }
+
       const embedResults = await embedMany({
         model: openai.embedding("mxbai-embed-large:latest"),
-        values: nodes.map((d) => d.getContent("NONE" as MetadataMode)),
+        values: res.elements.map((d) => d.text),
       });
 
       logger.log("Index built successfully.");

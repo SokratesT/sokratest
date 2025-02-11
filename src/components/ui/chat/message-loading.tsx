@@ -1,5 +1,5 @@
 // @hidden
-export default function MessageLoading() {
+export const MessageLoading = () => {
   return (
     <svg
       width="24"
@@ -42,4 +42,4 @@ export default function MessageLoading() {
       </circle>
     </svg>
   );
-}
+};

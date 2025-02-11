@@ -23,8 +23,10 @@ import { UsersDataTableSelectActions } from "./_components/users-data-table-sele
 
 type User = InferSelectModel<typeof user>;
 
+// TODO: Centralise this in a shared file
+
 // Type guard function
-export function isValidColumnId(id: string): id is keyof User {
+function isValidColumnId(id: string): id is keyof User {
   return ["name", "email", "role"].includes(id);
 }
 
@@ -65,7 +67,7 @@ const UsersPage = async ({
   return (
     <div className="flex flex-col gap-14">
       <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <h4 className="font-regular max-w-xl text-3xl tracking-tighter md:text-5xl">
+        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
           Users
         </h4>
         <div className="flex gap-2">

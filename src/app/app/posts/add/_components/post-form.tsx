@@ -2,7 +2,6 @@
 
 import { createPost, updatePost } from "@/actions/post";
 import { FormInputField } from "@/components/forms/fields/formInputField";
-import { MinimalTiptapEditor } from "@/components/minimal-tiptap";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
@@ -12,14 +11,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { InferSelectModel } from "drizzle-orm";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { ForwardRefEditor } from "../../_mdx-components/editor";
 
 const PostForm = ({ post }: { post?: InferSelectModel<typeof posts> }) => {
   const form = useForm<PostSchemaType>({
     resolver: zodResolver(postSchema),
     defaultValues: {
       title: post?.title ?? undefined,
+      // TODO: Rename property to markdown
       html: post?.html ?? undefined,
-      /* json: undefined, */
     },
   });
 
@@ -53,19 +53,12 @@ const PostForm = ({ post }: { post?: InferSelectModel<typeof posts> }) => {
         />
         <div className="space-y-2">
           <Label>Content</Label>
-          <MinimalTiptapEditor
-            value={form.getValues("html")}
-            onChange={(content) => {
-              form.setValue("html", (content as string) ?? "");
-              /* form.setValue("json", JSON.stringify(content)); */
+          <ForwardRefEditor
+            markdown={form.getValues("html")}
+            onChange={(markdown) => {
+              form.setValue("html", markdown);
             }}
-            className="w-full"
-            editorContentClassName="p-5"
-            output="html"
             placeholder="Type your description here..."
-            // autofocus={true}
-            editable={true}
-            editorClassName="focus:outline-hidden"
           />
         </div>
         <Button type="submit">Save Post</Button>

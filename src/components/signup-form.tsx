@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { FormInputField } from "./forms/fields/formInputField";
 import { FormPasswordField } from "./forms/fields/formPasswordField";
 
-export function SignUpForm() {
+const SignUpForm = () => {
   const router = useRouter();
 
   const form = useForm<SignupSchemaType>({
@@ -105,4 +105,6 @@ export function SignUpForm() {
       </Form>
     </>
   );
-}
+};
+
+export { SignUpForm };

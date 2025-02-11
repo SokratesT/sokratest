@@ -5,7 +5,7 @@ import { user } from "./auth";
 export const posts = pgTable("posts", {
   id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
   title: text("title").notNull(),
-  author: text("author")
+  author: uuid("author")
     .notNull()
     .references(() => user.id),
   html: text("text").notNull(),

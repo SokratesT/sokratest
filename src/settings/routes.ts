@@ -31,6 +31,10 @@ export const routes = {
         name: "Users",
         path: "/app/users",
       },
+      organizations: {
+        name: "Organisations",
+        path: "/app/orgs",
+      },
       posts: {
         name: "Posts",
         path: "/app/posts",

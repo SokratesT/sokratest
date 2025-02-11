@@ -7,7 +7,7 @@ import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { useStreamingText } from "@/hooks/ai/useStreamingText";
 import { type Message, useChat } from "ai/react";
 import { MicIcon, PaperclipIcon } from "lucide-react";
-import { MessageBlock } from "./MessageBlock";
+import { MessageBlock } from "./message-block";
 
 type DataStreamDelta = {
   type:
@@ -86,7 +86,7 @@ const Chat = ({
             </Button>
           </div>
 
-          <div className="absolute bottom-0 right-0 flex w-fit flex-row justify-end p-2">
+          <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">
             {isLoading ? (
               <StopButton stop={stop} setMessages={setMessages} />
             ) : (

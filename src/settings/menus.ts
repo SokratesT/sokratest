@@ -1,4 +1,5 @@
 import {
+  Building2Icon,
   FilesIcon,
   HomeIcon,
   MessagesSquareIcon,
@@ -34,6 +35,11 @@ export const sidebarMenu = [
     title: "Users",
     url: routes.app.sub.users.path,
     icon: UsersIcon,
+  },
+  {
+    title: "Organisations",
+    url: routes.app.sub.organizations.path,
+    icon: Building2Icon,
   },
 ];
 

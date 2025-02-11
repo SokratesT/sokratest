@@ -2,12 +2,10 @@ import { generateTitleFromUserMessage } from "@/actions/ai-actions";
 import { saveChat, saveMessages } from "@/db/queries/ai-queries";
 import { customModel } from "@/lib/ai";
 import {
-  generateUUID,
   getMostRecentUserMessage,
   sanitizeResponseMessages,
 } from "@/lib/ai/utils";
 import { auth } from "@/lib/auth";
-import { queryRagTool } from "@/lib/tools/queryRagTool";
 import {
   type Message,
   createDataStreamResponse,
@@ -15,6 +13,7 @@ import {
   streamText,
 } from "ai";
 import { headers } from "next/headers";
+import { v4 as uuidv4 } from "uuid";
 
 export const maxDuration = 30;
 
@@ -26,7 +25,7 @@ export async function POST(request: Request) {
   }: { id: string; messages: Array<Message>; modelId: string } =
     await request.json();
 
-  const userMessageId = generateUUID();
+  const userMessageId = uuidv4();
 
   const session = await auth.api.getSession({ headers: await headers() });
 
@@ -45,6 +44,7 @@ export async function POST(request: Request) {
     await saveChat({ id, userId: session.user.id, title });
   }
 
+  // TODO: Save user messages
   /* await saveMessages({
     messages: [
       {
@@ -79,26 +79,26 @@ export async function POST(request: Request) {
 
       const result = streamText({
         model: customModel({
-          /* model: {
+          model: {
             id: "deepseek-r1:14b",
             label: "Deepseek R1",
-            apiIdentifier: "llama-3.3-70b-instruct",
+            apiIdentifier: "deepseek-r1:14b",
             description: "Local R1",
-          }, */
+          },
           mode: "local",
         }),
         messages,
         experimental_transform: smoothStream(),
         experimental_telemetry: { isEnabled: true },
-        maxSteps: 1,
-        experimental_toolCallStreaming: true,
-        system:
-          "You are a helpful assistant. You can use tools to help the user.",
-        // system: systemPrompt,
-        tools: {
+        // maxSteps: 1,
+        // experimental_toolCallStreaming: true,
+        /* system:
+          "You are a helpful assistant. You can use tools to help the user.", */
+        system: systemPrompt,
+        /* tools: {
           // generateFinalResponse: finalResponseTool(dataStream, messages),
           queryRag: queryRagTool(dataStream),
-        },
+        }, */
         onStepFinish: ({ toolCalls, finishReason }) => {
           /* if (toolCalls?.some((call) => call.toolName === "queryRag")) {
             console.log("queryRag tool call finished");
@@ -131,7 +131,7 @@ export async function POST(request: Request) {
         },
       });
 
-      result.mergeIntoDataStream(dataStream);
+      result.mergeIntoDataStream(dataStream, { sendReasoning: true });
     },
   });
 }

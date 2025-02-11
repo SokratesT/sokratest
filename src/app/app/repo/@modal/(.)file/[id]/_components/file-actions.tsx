@@ -1,36 +1,31 @@
 "use client";
 
 import { deleteFileInfoFromDB } from "@/actions/delete-file";
+import { testAction } from "@/actions/test-action";
 import { enqueueEmbeddings } from "@/actions/test-trigger";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import type { files } from "@/db/schema/files";
+import type { File } from "@/db/schema/files";
 import { cn } from "@/lib/utils";
 import { convert } from "convert";
 import Link from "next/link";
-import { useState } from "react";
 
 const FileActions = ({
   fileInfo,
   filePath,
   className,
 }: {
-  fileInfo: typeof files.$inferSelect;
+  fileInfo: File;
   filePath: string;
   className?: string;
 }) => {
-  const [run, setRun] = useState<{
-    id: string;
-    publicAccessToken: string;
-  } | null>(null);
-
   return (
     <div className={cn("flex min-h-20 pb-0", className)}>
       <div className="flex w-full flex-wrap justify-between gap-2 p-2">
         <div className="flex flex-col justify-between">
           <p className="font-bold">{fileInfo.originalName}</p>
-          <div className="flex gap-4 text-sm text-muted-foreground">
+          <div className="flex gap-4 text-muted-foreground text-sm">
             <Badge variant="outline">
               Date
               <Separator orientation="vertical" className="mx-1" />{" "}
@@ -59,6 +54,9 @@ const FileActions = ({
             disabled={fileInfo.embeddingStatus === "pending"}
           >
             Generate Embedding
+          </Button>
+          <Button onClick={() => testAction(filePath)}>
+            Test Unstructured
           </Button>
           <Button
             variant="destructive"

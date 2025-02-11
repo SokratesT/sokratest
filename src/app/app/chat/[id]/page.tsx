@@ -1,13 +1,12 @@
-import { Chat } from "@/app/app/chat/_components/Chat";
+import { Chat } from "@/app/app/chat/_components/chat";
 import { getChatById, getMessagesByChatId } from "@/db/queries/ai-queries";
 import { DEFAULT_MODEL, models } from "@/lib/ai/models";
 import { convertToUIMessages } from "@/lib/ai/utils";
 import { auth } from "@/lib/auth";
 import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
-// import { DataStreamHandler } from "../_components/data-stream-handler";
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
+const SingleChatPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;
   const { id } = params;
   const chat = await getChatById({ id });
@@ -32,7 +31,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     id,
   });
 
-  // TODO: Change to database lookup
+  // TODO: Change to database lookup and implement Model propagation (courses feature)
   const cookieStore = await cookies();
   const modelIdFromCookie = cookieStore.get("model-id")?.value;
   const selectedModelId =
@@ -47,4 +46,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       />
     </div>
   );
-}
+};
+
+export default SingleChatPage;

@@ -1,4 +1,4 @@
-import UploadComponent from "../_components/UploadComponent";
+import { UploadComponent } from "../_components/upload-component";
 
 const AddFilePage = () => {
   return (

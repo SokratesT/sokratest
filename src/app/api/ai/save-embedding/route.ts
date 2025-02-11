@@ -35,6 +35,9 @@ export const POST = async (req: NextRequest) => {
   }
 
   const result = await saveEmbedding(res.embedResults, res.documentId);
+  revalidatePath("/app/repo");
+  // res.
+
   return NextResponse.json({ state: result }, { status: 200 });
 };
 
@@ -52,7 +55,6 @@ const saveEmbedding = async (
     .set({ embeddingStatus: "done" })
     .where(eq(files.id, documentId));
 
-  revalidatePath("/app/repo");
   return { success: true };
 };
 

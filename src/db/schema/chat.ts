@@ -12,7 +12,7 @@ import { user } from "./auth";
 export const chats = pgTable("chats", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: varchar("title", { length: 255 }),
-  user: text("user")
+  user: uuid("user")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull().defaultNow(),

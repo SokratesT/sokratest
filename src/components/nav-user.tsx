@@ -27,7 +27,7 @@ import { Skeleton } from "./ui/skeleton";
 
 const userInitial = (name: string) => name[0].toUpperCase();
 
-export function NavUser() {
+const NavUser = () => {
   const router = useRouter();
 
   const [isClient, setIsClient] = useState(false);
@@ -124,4 +124,6 @@ export function NavUser() {
       </SidebarMenuItem>
     </SidebarMenu>
   );
-}
+};
+
+export { NavUser };

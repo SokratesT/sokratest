@@ -13,10 +13,10 @@ const LandingPage = () => (
             <Badge variant="outline">We&apos;re live!</Badge>
           </div>
           <div className="flex flex-col gap-4">
-            <h1 className="font-regular max-w-lg text-left text-5xl tracking-tighter md:text-7xl">
+            <h1 className="max-w-lg text-left font-regular text-5xl tracking-tighter md:text-7xl">
               Enhance your learning with AI!
             </h1>
-            <p className="max-w-md text-left text-xl leading-relaxed tracking-tight text-muted-foreground">
+            <p className="max-w-md text-left text-muted-foreground text-xl leading-relaxed tracking-tight">
               SokratesT helps you learn better with AI. We provide you with the
               best learning experience. Sign up now and start learning!
             </p>

@@ -25,13 +25,14 @@ interface PostWithAuthor extends Post {
   name: string | null;
 }
 
-export type User = InferSelectModel<typeof user>;
+// TODO: Centralise this in a shared file
+type User = InferSelectModel<typeof user>;
 
 // Define valid column keys
-export type ValidPostWithAuthorColumnId = keyof PostWithAuthor;
+type ValidPostWithAuthorColumnId = keyof PostWithAuthor;
 
 // Type guard function
-export function isValidColumnId(
+function isValidColumnId(
   id: string,
 ): id is ValidPostWithAuthorColumnId | keyof User {
   return ["title", "name", "createdAt"].includes(id);
@@ -73,7 +74,7 @@ const PostsPage = async ({
   return (
     <div className="flex flex-col gap-14">
       <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <h4 className="font-regular max-w-xl text-3xl tracking-tighter md:text-5xl">
+        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
           Posts
         </h4>
         <div className="flex gap-2">

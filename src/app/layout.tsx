@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import "@mdxeditor/editor/style.css";
+import { Providers } from "@/app/providers";
 import { Toaster } from "@/components/ui/sonner";
-import { Providers } from "./app/providers";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

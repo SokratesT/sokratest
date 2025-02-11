@@ -15,8 +15,10 @@ import { columns } from "./_components/columns";
 import { FilesDataTableSelectActions } from "./_components/files-data-table-select-actions";
 import { SearchInput } from "./_components/search-input";
 
+// TODO: Centralise this in a shared file
+
 // Type guard function
-export function isValidColumnId(id: string): id is keyof File {
+function isValidColumnId(id: string): id is keyof File {
   return ["title", "filename", "createdAt"].includes(id);
 }
 
@@ -57,7 +59,7 @@ const FilesPage = async ({
   return (
     <div className="flex flex-col gap-14">
       <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <h4 className="font-regular max-w-xl text-3xl tracking-tighter md:text-5xl">
+        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
           Files
         </h4>
         <div className="flex gap-2">

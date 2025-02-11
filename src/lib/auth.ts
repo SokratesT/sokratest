@@ -1,14 +1,26 @@
 import { db } from "@/db/drizzle";
-import { account, session, user, verification } from "@/db/schema/auth";
+import {
+  account,
+  invitation,
+  member,
+  organization,
+  session,
+  user,
+  verification,
+} from "@/db/schema/auth";
 import { serverEnv } from "@/lib/env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin } from "better-auth/plugins";
+import {
+  admin,
+  organization as organizationPlugin,
+  username,
+} from "better-auth/plugins";
 import { createTransport } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
 export const auth = betterAuth({
-  plugins: [admin()],
+  plugins: [admin(), username(), organizationPlugin()],
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {
@@ -16,6 +28,9 @@ export const auth = betterAuth({
       account,
       session,
       verification,
+      organization,
+      member,
+      invitation,
     },
   }),
   emailAndPassword: { enabled: true },
@@ -27,6 +42,10 @@ export const auth = betterAuth({
         text: `Click the link to verify your email: ${url}`,
       });
     },
+  },
+  advanced: {
+    // TODO: Adjust schema to auto generate UUIDs
+    generateId: false,
   },
 });
 

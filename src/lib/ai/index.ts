@@ -1,8 +1,6 @@
+import { serverEnv } from "@/lib/env/server";
 import { type OpenAIProvider, createOpenAI } from "@ai-sdk/openai";
-import { experimental_wrapLanguageModel as wrapLanguageModel } from "ai";
-
-import { serverEnv } from "../env/server";
-import { customMiddleware } from "./custom-middleware";
+import { extractReasoningMiddleware, wrapLanguageModel } from "ai";
 import type { Model } from "./models";
 
 export const customModel = ({
@@ -66,8 +64,6 @@ export const customModel = ({
 
   return wrapLanguageModel({
     model: openai(activeModel.apiIdentifier),
-    middleware: customMiddleware,
+    middleware: extractReasoningMiddleware({ tagName: "think" }),
   });
 };
-
-// export const imageGenerationModel = openai.image("dall-e-3");

@@ -84,8 +84,6 @@ const ExpandableChat: React.FC<ExpandableChatProps> = ({
   );
 };
 
-ExpandableChat.displayName = "ExpandableChat";
-
 const ExpandableChatHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
   ...props
@@ -96,21 +94,15 @@ const ExpandableChatHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   />
 );
 
-ExpandableChatHeader.displayName = "ExpandableChatHeader";
-
 const ExpandableChatBody: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
   ...props
 }) => <div className={cn("grow overflow-y-auto", className)} {...props} />;
 
-ExpandableChatBody.displayName = "ExpandableChatBody";
-
 const ExpandableChatFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
   ...props
 }) => <div className={cn("border-t p-4", className)} {...props} />;
-
-ExpandableChatFooter.displayName = "ExpandableChatFooter";
 
 interface ExpandableChatToggleProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -142,8 +134,6 @@ const ExpandableChatToggle: React.FC<ExpandableChatToggleProps> = ({
     )}
   </Button>
 );
-
-ExpandableChatToggle.displayName = "ExpandableChatToggle";
 
 export {
   ExpandableChat,

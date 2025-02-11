@@ -36,13 +36,6 @@ export async function enqueueEmbeddings(documentIds: string[]) {
       })),
     );
 
-    /* await inngest.send({
-      name: "test/hello.world",
-      data: {
-        email: "testUser@example.com",
-      },
-    }); */
-
     revalidatePath("/app/repo");
   } catch (error) {
     console.error(error);
