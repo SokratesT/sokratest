@@ -28,7 +28,7 @@ export default function InitializedMDXEditor({
 }: { editorRef: ForwardedRef<MDXEditorMethods> | null } & MDXEditorProps) {
   return (
     <MDXEditor
-      contentEditableClassName="prose"
+      contentEditableClassName="dark dark-editor"
       plugins={[
         headingsPlugin(),
         linkPlugin(),

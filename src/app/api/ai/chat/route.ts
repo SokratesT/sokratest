@@ -13,7 +13,6 @@ import {
   streamText,
 } from "ai";
 import { headers } from "next/headers";
-import { v4 as uuidv4 } from "uuid";
 
 export const maxDuration = 30;
 
@@ -24,8 +23,6 @@ export async function POST(request: Request) {
     modelId,
   }: { id: string; messages: Array<Message>; modelId: string } =
     await request.json();
-
-  const userMessageId = uuidv4();
 
   const session = await auth.api.getSession({ headers: await headers() });
 
@@ -45,7 +42,7 @@ export async function POST(request: Request) {
   }
 
   // TODO: Save user messages
-  /* await saveMessages({
+  await saveMessages({
     messages: [
       {
         ...userMessage,
@@ -53,9 +50,11 @@ export async function POST(request: Request) {
         chat: id,
       },
     ],
-  }); */
+  });
 
-  const systemPrompt = `You are a Socratic tutor. Use the following principles in responding to students:
+  const createSystemPrompt = (
+    context: string,
+  ) => `You are a Socratic tutor. Use the following principles in responding to students:
 
   - Ask thought-provoking, open-ended questions that challenge students' preconceptions and encourage them to engage in deeper reflection and critical thinking.
   - Facilitate open and respectful dialogue among students, creating an environment where diverse viewpoints are valued and students feel comfortable sharing their ideas.
@@ -65,25 +64,24 @@ export async function POST(request: Request) {
   - Demonstrate humility by acknowledging your own limitations and uncertainties, modeling a growth mindset and exemplifying the value of lifelong learning.
   - Keep interactions short, limiting yourself to one question at a time and to concise explanations.
 
-  You can use tools to get additional context about the query. Use this to expand your knowledge and provide better responses.
   In your response, ALWAYS include citations by referencing the fileId that certain information correspond to like this: <fileId:{fileId}>
 
-  Below is you actual task and the conversation so far:`;
+  Below is the retrieved context:
+  ${context}`;
 
   return createDataStreamResponse({
     execute: async (dataStream) => {
-      dataStream.writeData({
-        type: "user-message-id",
-        content: userMessageId,
-      });
+      // const relevantChunks = await getRelevantChunks(messages);
+
+      // relevantChunks.map((chunk) => dataStream.writeMessageAnnotation(chunk));
 
       const result = streamText({
         model: customModel({
           model: {
-            id: "deepseek-r1:14b",
-            label: "Deepseek R1",
-            apiIdentifier: "deepseek-r1:14b",
-            description: "Local R1",
+            id: "llama3.1",
+            label: "Llama 3.1",
+            apiIdentifier: "llama3.1:latest",
+            description: "Local Llama",
           },
           mode: "local",
         }),
@@ -94,7 +92,12 @@ export async function POST(request: Request) {
         // experimental_toolCallStreaming: true,
         /* system:
           "You are a helpful assistant. You can use tools to help the user.", */
-        system: systemPrompt,
+        /* system: createSystemPrompt(
+          JSON.stringify(
+            relevantChunks.map((c) => ({ fileId: c.fileId, text: c.text })),
+          ),
+        ), */
+        system: "You are a helpful assistant.",
         /* tools: {
           // generateFinalResponse: finalResponseTool(dataStream, messages),
           queryRag: queryRagTool(dataStream),
@@ -105,11 +108,16 @@ export async function POST(request: Request) {
           } */
           return;
         },
-        onFinish: async ({ response }) => {
+        onFinish: async ({ response, reasoning }) => {
           if (session.user?.id) {
             try {
               const responseMessagesWithoutIncompleteToolCalls =
-                sanitizeResponseMessages(response.messages);
+                sanitizeResponseMessages({
+                  messages: response.messages,
+                  reasoning,
+                  // annotations: relevantChunks ??,
+                  annotations: undefined,
+                });
 
               await saveMessages({
                 messages: responseMessagesWithoutIncompleteToolCalls.map(

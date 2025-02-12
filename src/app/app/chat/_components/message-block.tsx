@@ -64,6 +64,7 @@ const MessageBlock = ({
     >
       {variant === "received" && (
         <ChatBubbleAvatar
+          className="mt-4"
           Fallback={message.role === "user" ? UserIcon : BotIcon}
         />
       )}
@@ -82,9 +83,9 @@ const MessageBlock = ({
             "sticky",
           )}
         >
-          {message.parts?.map((part) => {
-            if (part.type === "reasoning") {
-              return (
+          {message.parts?.map((part) => (
+            <div key={part.type + message.id}>
+              {part.type === "reasoning" && (
                 <Accordion
                   type="single"
                   collapsible
@@ -104,11 +105,19 @@ const MessageBlock = ({
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
-              );
-            }
+              )}
 
-            if (part.type === "tool-invocation")
-              return (
+              {part.type === "text" && variant === "sent" && (
+                <div>{part.text}</div>
+              )}
+
+              {part.type === "text" && variant === "received" && (
+                <Markdown className="text-secondary-foreground">
+                  {part.text}
+                </Markdown>
+              )}
+
+              {part.type === "tool-invocation" && (
                 <ToolBlock
                   key={part.toolInvocation.toolCallId}
                   tool={part.toolInvocation}
@@ -116,14 +125,9 @@ const MessageBlock = ({
                     toolStream?.[part.toolInvocation.toolCallId]?.content
                   }
                 />
-              );
-          })}
-
-          {variant === "sent" ? (
-            <div>{message.content}</div>
-          ) : (
-            <Markdown>{message.content}</Markdown>
-          )}
+              )}
+            </div>
+          ))}
 
           {message.annotations && (
             <AnnotationBlock annotations={message.annotations} />

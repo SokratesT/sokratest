@@ -101,7 +101,12 @@ const NonMemoizedMarkdown = ({
   className,
 }: { children: string; className?: string }) => {
   return (
-    <div className={cn("prose w-full max-w-full whitespace-normal", className)}>
+    <div
+      className={cn(
+        "prose dark:prose-invert w-full max-w-full whitespace-normal",
+        className,
+      )}
+    >
       <ReactMarkdown remarkPlugins={remarkPlugins} components={components}>
         {children}
       </ReactMarkdown>

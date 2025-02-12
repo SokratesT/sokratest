@@ -110,7 +110,7 @@ const ChatInput = ({
       value={input}
       onChange={handleInput}
       className={cn(
-        "max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-10 text-base! dark:border-zinc-700",
+        "max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-10 text-base! dark:bg-secondary",
         className,
       )}
       rows={props.rows ?? 2}

@@ -18,7 +18,7 @@ const PostForm = ({ post }: { post?: Post }) => {
     defaultValues: {
       title: post?.title ?? undefined,
       // TODO: Rename property to markdown
-      html: post?.html ?? undefined,
+      html: post?.html ?? "",
     },
   });
 
@@ -45,7 +45,7 @@ const PostForm = ({ post }: { post?: Post }) => {
             <FormInputField
               field={field}
               label="Title"
-              placeholder=""
+              placeholder="Post title"
               inputType="text"
             />
           )}
@@ -57,7 +57,7 @@ const PostForm = ({ post }: { post?: Post }) => {
             onChange={(markdown) => {
               form.setValue("html", markdown);
             }}
-            placeholder="Type your description here..."
+            placeholder="Type your post here..."
           />
         </div>
         <Button type="submit">Save Post</Button>

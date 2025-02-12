@@ -7,12 +7,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <NuqsAdapter>
       <PostHogProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <TooltipProvider>{children}</TooltipProvider>
         </ThemeProvider>
       </PostHogProvider>

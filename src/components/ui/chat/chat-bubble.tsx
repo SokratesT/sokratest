@@ -162,15 +162,17 @@ const ChatBubbleAction: React.FC<ChatBubbleActionProps> = ({
   ...props
 }) => (
   <Tooltip delayDuration={1000}>
-    <Button
-      variant={variant}
-      size={size}
-      className={className}
-      onClick={onClick}
-      {...props}
-    >
-      <TooltipTrigger asChild>{icon}</TooltipTrigger>
-    </Button>
+    <TooltipTrigger asChild>
+      <Button
+        variant={variant}
+        size={size}
+        className={className}
+        onClick={onClick}
+        {...props}
+      >
+        {icon}
+      </Button>
+    </TooltipTrigger>
 
     {actionLabel && (
       <TooltipContent>
@@ -207,11 +209,11 @@ const ChatBubbleActionWrapper = ({
 
 export {
   ChatBubble,
+  ChatBubbleAction,
+  ChatBubbleActionWrapper,
   ChatBubbleAvatar,
   ChatBubbleMessage,
   ChatBubbleTimestamp,
-  chatBubbleVariant,
   chatBubbleMessageVariants,
-  ChatBubbleAction,
-  ChatBubbleActionWrapper,
+  chatBubbleVariant,
 };
