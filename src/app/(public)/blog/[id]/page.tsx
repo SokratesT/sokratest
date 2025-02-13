@@ -1,4 +1,4 @@
-import { Markdown } from "@/app/app/chat/_components/markdown";
+import { PlateEditor } from "@/components/editor/plate-editor";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -49,7 +49,7 @@ const EditPostPage = async ({
       </div>
       <Card className="mx-auto max-w-full lg:max-w-[60%]">
         <CardContent className="p-4">
-          <Markdown>{queryPost.html}</Markdown>
+          <PlateEditor options={{ value: queryPost.html }} readOnly />
         </CardContent>
       </Card>
     </div>

@@ -1,6 +1,7 @@
 import { createWriteStream, openAsBlob } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { serverEnv } from "@/lib/env/server";
 import { createOpenAI } from "@ai-sdk/openai";
 import { logger, task, wait } from "@trigger.dev/sdk/v3";
 import { embedMany } from "ai";
@@ -21,9 +22,9 @@ const openai = createOpenAI({
 });
 
 const unstructuredClient = new UnstructuredClient({
-  serverURL: "http://localhost:9500",
+  serverURL: serverEnv.UNSTRUCTURED_API_URL,
   /* security: {
-    apiKeyAuth: "YOUR_API_KEY",
+    apiKeyAuth: serverEnv.UNSTRUCTURED_SECRET_KEY,
   }, */
 });
 
@@ -66,20 +67,6 @@ export const helloWorldTask = task({
       });
 
       logger.log("File processed successfully:", { res });
-
-      // const reader = new PDFReader();
-      // const documents = await reader.loadData(filePath);
-
-      /* const pipeline = new IngestionPipeline({
-        transformations: [
-          new SentenceSplitter({ chunkSize: 512, chunkOverlap: 64 }),
-        ],
-      }); */
-
-      // run the pipeline
-      // const nodes = await pipeline.run({ documents });
-
-      // logger.log("File processed into Text:", { nodes });
 
       // Step 3: Build the index
       logger.log("Building index...");
@@ -138,16 +125,6 @@ export const helloWorldTask = task({
     }
   },
 });
-
-/* async function loadRemoteFile(url: string) {
-  const response = await fetch(url);
-  if (!response.ok) {
-    console.error(`Cannot fetch document: ${response.statusText}`);
-    return;
-  }
-  const data = await response.arrayBuffer();
-  return mupdfjs.PDFDocument.openDocument(data, url);
-} */
 
 // Helper function to download a file using fetch
 async function downloadFile(

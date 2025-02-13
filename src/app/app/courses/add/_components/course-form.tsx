@@ -1,7 +1,7 @@
 "use client";
 
 import { createCourse, updateCourse } from "@/actions/course";
-import { ForwardRefEditor } from "@/app/app/posts/_mdx-components/editor";
+import { PlateEditor } from "@/components/editor/plate-editor";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormSelect } from "@/components/forms/fields/formSelect";
 import { Placeholder } from "@/components/placeholder";
@@ -94,12 +94,10 @@ const CourseForm = ({ course }: { course?: Course }) => {
               Course Description
               <span className="bold text-muted-foreground"> *</span>
             </Label>
-            <ForwardRefEditor
-              markdown={form.getValues("description")}
-              onChange={(markdown) => {
-                form.setValue("description", markdown);
-              }}
-              placeholder="Type your description here..."
+
+            <PlateEditor
+              options={{ value: form.getValues("description") }}
+              onChange={(value) => form.setValue("description", value)}
             />
           </div>
           <Button type="submit">Save Course</Button>

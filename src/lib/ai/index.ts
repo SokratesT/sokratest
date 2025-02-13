@@ -32,6 +32,12 @@ export const customModel = ({
         apiIdentifier: "llama-3.3-70b-instruct",
         description: "Model description for 3.3 70b",
       },
+      {
+        id: "deepseek-r1-distill-llama-70b",
+        label: "Deepseek R1 (70b)",
+        apiIdentifier: "deepseek-r1-distill-llama-70b",
+        description: "Model description for Deepseek R1",
+      },
     ];
     defaultModel = models[1];
   } else {

@@ -39,7 +39,7 @@ const SingleChatPage = async (props: { params: Promise<{ id: string }> }) => {
     DEFAULT_MODEL.id;
 
   return (
-    <div className="-m-4 h-[calc(100dvh-60px)]">
+    <div className="-m-6 h-[calc(100dvh-56px)]">
       <Chat
         id={chat.id}
         initialMessages={convertToUIMessages(messagesFromDb)}

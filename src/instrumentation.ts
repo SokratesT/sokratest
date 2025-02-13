@@ -3,7 +3,7 @@ import { LangfuseExporter } from "langfuse-vercel";
 
 export function register() {
   registerOTel({
-    serviceName: "langfuse-vercel-ai-nextjs-example",
+    serviceName: "langfuse-sokratest-next",
     traceExporter: new LangfuseExporter(),
   });
 }

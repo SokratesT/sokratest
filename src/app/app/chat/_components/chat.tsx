@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { SendButton, StopButton } from "@/components/ui/chat/chat-buttons";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
-import { useStreamingText } from "@/hooks/ai/useStreamingText";
-import { type Message, useChat } from "ai/react";
+import { useStreamingText } from "@/hooks/use-streaming-text";
+import { type Message, useChat } from "@ai-sdk/react";
 import { MicIcon, PaperclipIcon } from "lucide-react";
 import { MessageBlock } from "./message-block";
 

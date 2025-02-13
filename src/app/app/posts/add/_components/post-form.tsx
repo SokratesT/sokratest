@@ -1,6 +1,7 @@
 "use client";
 
 import { createPost, updatePost } from "@/actions/post";
+import { PlateEditor } from "@/components/editor/plate-editor";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
@@ -10,7 +11,6 @@ import { type PostSchemaType, postSchema } from "@/lib/schemas/post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { ForwardRefEditor } from "../../_mdx-components/editor";
 
 const PostForm = ({ post }: { post?: Post }) => {
   const form = useForm<PostSchemaType>({
@@ -52,12 +52,10 @@ const PostForm = ({ post }: { post?: Post }) => {
         />
         <div className="space-y-2">
           <Label>Content</Label>
-          <ForwardRefEditor
-            markdown={form.getValues("html")}
-            onChange={(markdown) => {
-              form.setValue("html", markdown);
-            }}
-            placeholder="Type your post here..."
+
+          <PlateEditor
+            options={{ value: form.getValues("html") }}
+            onChange={(value) => form.setValue("html", value)}
           />
         </div>
         <Button type="submit">Save Post</Button>

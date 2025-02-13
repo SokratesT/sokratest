@@ -23,6 +23,8 @@ import {
   ThumbsUpIcon,
   UserIcon,
 } from "lucide-react";
+import { toast } from "sonner";
+import { useCopyToClipboard } from "usehooks-ts";
 import { Markdown } from "../../chat/_components/markdown";
 import { AnnotationBlock } from "./annotation-block";
 import { ToolBlock } from "./tool-blocks/tool-block";
@@ -40,18 +42,39 @@ const MessageBlock = ({
   message: Message;
   toolStream: ToolStream | null;
 }) => {
+  const [, copy] = useCopyToClipboard();
+
+  const handleCopy = (text: string) => () => {
+    copy(text)
+      .then(() => {
+        toast.success("Copied to clipboard!");
+      })
+      .catch((error) => {
+        toast.error("Failed to copy to clipboard");
+        console.error("Failed to copy to clipboard", error);
+      });
+  };
+
   const variant = message.role === "user" ? "sent" : "received";
 
   const actionIcons = [
-    { icon: CopyIcon, type: "Copy" },
-    { icon: RefreshCcwIcon, type: "Regenerate" },
-    { icon: ThumbsUpIcon, type: "Like" },
-    { icon: ThumbsDownIcon, type: "Dislike" },
+    { icon: CopyIcon, type: "Copy", fn: handleCopy(message.content) },
+    {
+      icon: RefreshCcwIcon,
+      type: "Regenerate",
+      fn: () => console.log("Regenerate clicked"),
+    },
+    { icon: ThumbsUpIcon, type: "Like", fn: () => console.log("Like clicked") },
+    {
+      icon: ThumbsDownIcon,
+      type: "Dislike",
+      fn: () => console.log("Dislike clicked"),
+    },
   ];
 
   const userActionIcons = [
-    { icon: PencilIcon, type: "Edit" },
-    { icon: CopyIcon, type: "Copy" },
+    { icon: PencilIcon, type: "Edit", fn: () => console.log("Edit clicked") },
+    { icon: CopyIcon, type: "Copy", fn: handleCopy(message.content) },
   ];
 
   // Temporarily disables displaying tool invocations
@@ -137,34 +160,26 @@ const MessageBlock = ({
               variant="sent"
               className="w-full gap-2 pt-2"
             >
-              {userActionIcons.map(({ icon: Icon, type }) => (
+              {userActionIcons.map(({ icon: Icon, type, fn }) => (
                 <ChatBubbleAction
                   className="size-6 text-primary"
                   actionLabel={type}
                   key={type}
                   icon={<Icon className="size-3" />}
-                  onClick={() =>
-                    console.log(
-                      `Action ${type} clicked for message ${message.id}`,
-                    )
-                  }
+                  onClick={() => fn()}
                 />
               ))}
             </ChatBubbleActionWrapper>
           )}
           {message.role === "assistant" && (
             <ChatBubbleActionWrapper variant="received" className="gap-2 pt-2">
-              {actionIcons.map(({ icon: Icon, type }) => (
+              {actionIcons.map(({ icon: Icon, type, fn }) => (
                 <ChatBubbleAction
                   className="size-6"
                   actionLabel={type}
                   key={type}
                   icon={<Icon className="size-3" />}
-                  onClick={() =>
-                    console.log(
-                      `Action ${type} clicked for message ${message.id}`,
-                    )
-                  }
+                  onClick={fn}
                 />
               ))}
             </ChatBubbleActionWrapper>
