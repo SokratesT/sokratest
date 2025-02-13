@@ -1,5 +1,5 @@
 import { type InferSelectModel, relations } from "drizzle-orm";
-import { date, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { organization } from "./auth";
 
 export const courses = pgTable("courses", {
@@ -8,9 +8,9 @@ export const courses = pgTable("courses", {
   organizationId: uuid("organization_id")
     .notNull()
     .references(() => organization.id),
-  description: text("description").notNull(),
-  createdAt: date("created_at").default("now()"),
-  updatedAt: date("updated_at").default("now()"),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export type Course = InferSelectModel<typeof courses>;

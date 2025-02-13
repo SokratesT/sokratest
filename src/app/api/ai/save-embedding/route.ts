@@ -1,6 +1,6 @@
 import { db } from "@/db/drizzle";
 import { embeddings } from "@/db/schema/embeddings";
-import { fileRepository } from "@/db/schema/fileRepository";
+import { fileRepository } from "@/db/schema/file-repository";
 import type { EmbedManyResult } from "ai";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";

@@ -2,7 +2,7 @@ import { db } from "@/db/drizzle";
 import {
   type FileRepository,
   fileRepository,
-} from "@/db/schema/fileRepository";
+} from "@/db/schema/file-repository";
 import { eq } from "drizzle-orm";
 import { FileViewer } from "../../@modal/(.)file/[id]/_components/file-viewer";
 

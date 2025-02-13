@@ -20,9 +20,7 @@ export const fileRepository = pgTable("file_repository", {
   id: uuid("id").primaryKey().defaultRandom(),
   bucket: text("bucket").notNull(),
   prefix: text("prefix").notNull(),
-  filename: text("filename").notNull().unique(),
-  originalName: text("original_name").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
+  filename: text("filename").notNull(),
   size: integer("size").notNull(),
   // TODO: Should probably be an enum
   fileType: text("file_type").notNull(),
@@ -30,6 +28,8 @@ export const fileRepository = pgTable("file_repository", {
     .notNull()
     .references(() => user.id),
   embeddingStatus: embeddingStatusEnum().default("outstanding").notNull(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export type FileRepository = InferSelectModel<typeof fileRepository>;

@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { FileRepository } from "@/db/schema/fileRepository";
+import type { FileRepository } from "@/db/schema/file-repository";
 import { cn } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import { convert } from "convert";

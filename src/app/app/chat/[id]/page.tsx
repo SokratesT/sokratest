@@ -22,7 +22,7 @@ const SingleChatPage = async (props: { params: Promise<{ id: string }> }) => {
       return notFound();
     }
 
-    if (session.user.id !== chat.user) {
+    if (session.user.id !== chat.userId) {
       return notFound();
     }
   }

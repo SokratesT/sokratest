@@ -1,18 +1,11 @@
 "use server";
 
-import { type Message, generateText } from "ai";
-import { cookies } from "next/headers";
-
 import {
   deleteMessagesByChatIdAfterTimestamp,
   getMessageById,
 } from "@/db/queries/ai-queries";
 import { customModel } from "@/lib/ai";
-
-export async function saveModelId(model: string) {
-  const cookieStore = await cookies();
-  cookieStore.set("model-id", model);
-}
+import { type Message, generateText } from "ai";
 
 export async function generateTitleFromUserMessage({
   message,
@@ -36,7 +29,7 @@ export async function deleteTrailingMessages({ id }: { id: string }) {
   const [message] = await getMessageById({ id });
 
   await deleteMessagesByChatIdAfterTimestamp({
-    chatId: message.chat,
+    chatId: message.chatId,
     timestamp: message.createdAt,
   });
 }

@@ -5,7 +5,7 @@ import { enqueueEmbeddings } from "@/actions/test-trigger";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import type { FileRepository } from "@/db/schema/fileRepository";
+import type { FileRepository } from "@/db/schema/file-repository";
 import { cn } from "@/lib/utils";
 import { convert } from "convert";
 import Link from "next/link";
@@ -23,7 +23,7 @@ const FileActions = ({
     <div className={cn("flex min-h-20 pb-0", className)}>
       <div className="flex w-full flex-wrap justify-between gap-2 p-2">
         <div className="flex flex-col justify-between">
-          <p className="font-bold">{fileInfo.originalName}</p>
+          <p className="font-bold">{fileInfo.filename}</p>
           <div className="flex gap-4 text-muted-foreground text-sm">
             <Badge variant="outline">
               Date

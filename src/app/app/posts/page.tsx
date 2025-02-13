@@ -66,7 +66,7 @@ const PostsPage = async ({
     .from(posts)
     .limit(pageSize)
     .orderBy(...sortOrder)
-    .leftJoin(user, eq(posts.author, user.id))
+    .leftJoin(user, eq(posts.userId, user.id))
     .offset(pageIndex * pageSize);
 
   const [rowCount] = await db.select({ count: count() }).from(posts);

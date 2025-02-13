@@ -1,24 +1,23 @@
 import { type InferSelectModel, relations } from "drizzle-orm";
-import { date, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 
 export const posts = pgTable("posts", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(),
-  author: uuid("author")
+  content: text("text").notNull(),
+  userId: uuid("user_id")
     .notNull()
     .references(() => user.id),
-  html: text("text").notNull(),
-  /* json: json("json").notNull(), */
-  createdAt: date("created_at").default("now()"),
-  updatedAt: date("updated_at").default("now()"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export type Post = InferSelectModel<typeof posts>;
 
 export const postsRelations = relations(posts, ({ one, many }) => ({
   user: one(user, {
-    fields: [posts.author],
+    fields: [posts.userId],
     references: [user.id],
   }),
 }));

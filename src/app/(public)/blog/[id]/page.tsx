@@ -19,7 +19,7 @@ const EditPostPage = async ({
   const [author] = await db
     .select({ name: user.name })
     .from(user)
-    .where(eq(user.id, queryPost.author));
+    .where(eq(user.id, queryPost.userId));
 
   return (
     <div>
@@ -41,15 +41,19 @@ const EditPostPage = async ({
               ever.
             </p>
             <div className="flex justify-center gap-2">
-              <Badge variant="outline">Created: {queryPost.createdAt}</Badge>
-              <Badge variant="outline">Updated: {queryPost.updatedAt}</Badge>
+              <Badge variant="outline">
+                Created: {queryPost.createdAt?.getDate()}
+              </Badge>
+              <Badge variant="outline">
+                Updated: {queryPost.updatedAt?.getDate()}
+              </Badge>
             </div>
           </div>
         </div>
       </div>
       <Card className="mx-auto max-w-full lg:max-w-[60%]">
         <CardContent className="p-4">
-          <PlateEditor options={{ value: queryPost.html }} readOnly />
+          <PlateEditor options={{ value: queryPost.content }} readOnly />
         </CardContent>
       </Card>
     </div>

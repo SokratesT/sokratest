@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { fileRepository } from "@/db/schema/fileRepository";
+import { fileRepository } from "@/db/schema/file-repository";
 import { createPresignedUrlToDownload } from "@/lib/s3-file-management";
 import { eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";

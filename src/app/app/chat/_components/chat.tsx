@@ -1,12 +1,13 @@
 "use client";
 
+import { deleteTrailingMessages } from "@/actions/ai-actions";
 import { Button } from "@/components/ui/button";
 import { SendButton, StopButton } from "@/components/ui/chat/chat-buttons";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { useStreamingText } from "@/hooks/use-streaming-text";
 import { type Message, useChat } from "@ai-sdk/react";
-import { MicIcon, PaperclipIcon } from "lucide-react";
+import { PaperclipIcon, RefreshCcwIcon } from "lucide-react";
 import { MessageBlock } from "./message-block";
 
 type DataStreamDelta = {
@@ -54,11 +55,26 @@ const Chat = ({
     dataStream as DataStreamDelta[],
   );
 
+  const handleReload = () => {
+    deleteTrailingMessages({
+      id: messages[messages.length - 1].id,
+    }).then(() => {
+      reload();
+    });
+  };
+
   return (
     <div className="flex size-full min-h-0 min-w-0 flex-col gap-4 bg-background">
       <ChatMessageList>
         {messages.map((m: Message) => (
-          <MessageBlock key={m.id} message={m} toolStream={toolStream} />
+          <MessageBlock
+            key={m.id}
+            message={m}
+            toolStream={toolStream}
+            setMessages={setMessages}
+            reload={reload}
+            isLoading={isLoading}
+          />
         ))}
       </ChatMessageList>
 
@@ -75,14 +91,19 @@ const Chat = ({
           />
 
           <div className="absolute bottom-0 flex w-fit flex-row justify-start p-2">
-            <Button variant="ghost" size="icon">
+            <Button type="button" variant="ghost" size="icon">
               <PaperclipIcon className="size-4" />
               <span className="sr-only">Attach file</span>
             </Button>
 
-            <Button variant="ghost" size="icon">
-              <MicIcon className="size-4" />
-              <span className="sr-only">Use Microphone</span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={handleReload}
+            >
+              <RefreshCcwIcon className="size-4" />
+              <span className="sr-only">Regenerate last message</span>
             </Button>
           </div>
 

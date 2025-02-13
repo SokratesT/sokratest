@@ -40,7 +40,9 @@ const PostsPage = async () => {
                 Our goal is to streamline SMB trade, making it easier and faster
                 than ever.
               </p>
-              <p className="text-muted-foreground text-sm">{post.createdAt}</p>
+              <p className="text-muted-foreground text-sm">
+                {post.createdAt?.getDate()}
+              </p>
             </div>
           </Link>
         ))}

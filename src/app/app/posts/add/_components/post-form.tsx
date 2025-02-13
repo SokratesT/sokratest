@@ -17,8 +17,7 @@ const PostForm = ({ post }: { post?: Post }) => {
     resolver: zodResolver(postSchema),
     defaultValues: {
       title: post?.title ?? undefined,
-      // TODO: Rename property to markdown
-      html: post?.html ?? "",
+      content: post?.content ?? "",
     },
   });
 
@@ -54,8 +53,8 @@ const PostForm = ({ post }: { post?: Post }) => {
           <Label>Content</Label>
 
           <PlateEditor
-            options={{ value: form.getValues("html") }}
-            onChange={(value) => form.setValue("html", value)}
+            options={{ value: form.getValues("content") }}
+            onChange={(value) => form.setValue("content", value)}
           />
         </div>
         <Button type="submit">Save Post</Button>

@@ -3,7 +3,7 @@
 import { Placeholder } from "@/components/placeholder";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import type { FileRepository } from "@/db/schema/fileRepository";
+import type { FileRepository } from "@/db/schema/file-repository";
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";
 import { cn } from "@/lib/utils";
 import Image from "next/image";

@@ -47,7 +47,8 @@ export async function POST(request: Request) {
       {
         ...userMessage,
         createdAt: new Date(),
-        chat: id,
+        updatedAt: new Date(),
+        chatId: id,
       },
     ],
   });
@@ -78,12 +79,12 @@ export async function POST(request: Request) {
       const result = streamText({
         model: customModel({
           model: {
-            id: "deepseek-r1-distill-llama-70b",
-            label: "Deepseek R1 (70b)",
-            apiIdentifier: "deepseek-r1-distill-llama-70b",
-            description: "Model description for Deepseek R1",
+            id: "deepseek-r1:14b",
+            label: "Deepseek R1",
+            apiIdentifier: "deepseek-r1:14b",
+            description: "Local R1",
           },
-          mode: "saia",
+          mode: "local",
         }),
         messages,
         experimental_transform: smoothStream(),
@@ -124,10 +125,11 @@ export async function POST(request: Request) {
                   (message) => {
                     return {
                       id: message.id,
-                      chat: id,
+                      chatId: id,
                       role: message.role,
                       content: message.content,
                       createdAt: new Date(),
+                      updatedAt: new Date(),
                     };
                   },
                 ),

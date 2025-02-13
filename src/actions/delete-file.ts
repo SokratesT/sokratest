@@ -4,7 +4,7 @@ import { db } from "@/db/drizzle";
 import {
   type FileRepository,
   fileRepository,
-} from "@/db/schema/fileRepository";
+} from "@/db/schema/file-repository";
 import { auth } from "@/lib/auth";
 import { deleteFileFromBucket } from "@/lib/s3-file-management";
 import { routes } from "@/settings/routes";

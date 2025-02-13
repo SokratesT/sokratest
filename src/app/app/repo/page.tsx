@@ -7,7 +7,7 @@ import { db } from "@/db/drizzle";
 import {
   type FileRepository,
   fileRepository,
-} from "@/db/schema/fileRepository";
+} from "@/db/schema/file-repository";
 import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";

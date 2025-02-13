@@ -1,4 +1,4 @@
-import type { Message as DBMessage } from "@/db/schema/chat";
+import type { MessageDb } from "@/db/schema/messages";
 import type {
   CoreAssistantMessage,
   CoreToolMessage,
@@ -41,7 +41,7 @@ function addToolMessageToChat({
 }
 
 export function convertToUIMessages(
-  messages: Array<DBMessage>,
+  messages: Array<MessageDb>,
 ): Array<Message> {
   return messages.reduce((chatMessages: Array<Message>, message) => {
     if (message.role === "tool") {

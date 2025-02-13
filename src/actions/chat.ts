@@ -1,7 +1,8 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { chats, messages } from "@/db/schema/chat";
+import { chats } from "@/db/schema/chat";
+import { messagesDb } from "@/db/schema/messages";
 import { auth } from "@/lib/auth";
 import { routes } from "@/settings/routes";
 import { desc, eq } from "drizzle-orm";
@@ -20,7 +21,7 @@ export const createNewChat = async () => {
   await db.insert(chats).values({
     id: chatId,
     title: "New Chat",
-    user: session?.user.id,
+    userId: session?.user.id,
   });
 
   return chatId;
@@ -35,13 +36,13 @@ export const deleteLastMessage = async (chatId: string) => {
 
   const mostRecent = await db
     .select()
-    .from(messages)
-    .where(eq(messages.chat, chatId))
-    .orderBy(desc(messages.createdAt))
+    .from(messagesDb)
+    .where(eq(messagesDb.chatId, chatId))
+    .orderBy(desc(messagesDb.createdAt))
     .limit(1);
 
   if (mostRecent.length > 0) {
-    await db.delete(messages).where(eq(messages.id, mostRecent[0].id));
+    await db.delete(messagesDb).where(eq(messagesDb.id, mostRecent[0].id));
   }
 };
 

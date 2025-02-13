@@ -8,7 +8,7 @@ import { chats as chat } from "../schema/chat";
 import type { User } from "better-auth";
 
 import { db } from "../drizzle";
-import { type Message, messages as message } from "../schema/chat";
+import { type MessageDb, messagesDb } from "../schema/messages";
 
 // Optionally, if not using email/pass login, you can
 // use the Drizzle adapter for Auth.js / NextAuth
@@ -39,7 +39,7 @@ export async function saveChat({
       .values({
         id,
         createdAt: new Date(),
-        user: userId,
+        userId: userId,
         title,
       })
       .onConflictDoUpdate({ target: chat.id, set: { title } });
@@ -51,7 +51,7 @@ export async function saveChat({
 
 export async function deleteChatById({ id }: { id: string }) {
   try {
-    await db.delete(message).where(eq(message.chat, id));
+    await db.delete(messagesDb).where(eq(messagesDb.chatId, id));
 
     return await db.delete(chat).where(eq(chat.id, id));
   } catch (error) {
@@ -65,7 +65,7 @@ export async function getChatsByUserId({ id }: { id: string }) {
     return await db
       .select()
       .from(chat)
-      .where(eq(chat.user, id))
+      .where(eq(chat.userId, id))
       .orderBy(desc(chat.createdAt));
   } catch (error) {
     console.error("Failed to get chats by user from database");
@@ -83,9 +83,14 @@ export async function getChatById({ id }: { id: string }) {
   }
 }
 
-export async function saveMessages({ messages }: { messages: Array<Message> }) {
+export async function saveMessages({
+  messages,
+}: { messages: Array<MessageDb> }) {
   try {
-    return await db.insert(message).values(messages);
+    return await db.insert(messagesDb).values(messages).onConflictDoUpdate({
+      target: messagesDb.id,
+      set: messagesDb,
+    });
   } catch (error) {
     console.error("Failed to save messages in database", error);
     throw error;
@@ -96,9 +101,9 @@ export async function getMessagesByChatId({ id }: { id: string }) {
   try {
     return await db
       .select()
-      .from(message)
-      .where(eq(message.chat, id))
-      .orderBy(asc(message.createdAt));
+      .from(messagesDb)
+      .where(eq(messagesDb.chatId, id))
+      .orderBy(asc(messagesDb.createdAt));
   } catch (error) {
     console.error("Failed to get messages by chat id from database", error);
     throw error;
@@ -107,7 +112,7 @@ export async function getMessagesByChatId({ id }: { id: string }) {
 
 export async function getMessageById({ id }: { id: string }) {
   try {
-    return await db.select().from(message).where(eq(message.id, id));
+    return await db.select().from(messagesDb).where(eq(messagesDb.id, id));
   } catch (error) {
     console.error("Failed to get message by id from database");
     throw error;
@@ -123,8 +128,13 @@ export async function deleteMessagesByChatIdAfterTimestamp({
 }) {
   try {
     return await db
-      .delete(message)
-      .where(and(eq(message.chat, chatId), gte(message.createdAt, timestamp)));
+      .delete(messagesDb)
+      .where(
+        and(
+          eq(messagesDb.chatId, chatId),
+          gte(messagesDb.createdAt, timestamp),
+        ),
+      );
   } catch (error) {
     console.error(
       "Failed to delete messages by id after timestamp from database",

@@ -16,7 +16,7 @@ export const createPost = async (post: PostSchemaType) => {
     throw new Error("Not authenticated");
   }
 
-  await db.insert(posts).values({ ...post, author: session.user.id });
+  await db.insert(posts).values({ ...post, userId: session.user.id });
 
   revalidatePath(routes.app.sub.posts.path);
 };
@@ -30,7 +30,7 @@ export const updatePost = async (post: PostSchemaType, postId: Post["id"]) => {
 
   await db
     .update(posts)
-    .set({ ...post, author: session?.user.id, updatedAt: sql`now()` })
+    .set({ ...post, userId: session?.user.id, updatedAt: sql`now()` })
     .where(eq(posts.id, postId));
 
   revalidatePath(routes.app.sub.posts.path);

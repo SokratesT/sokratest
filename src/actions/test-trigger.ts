@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { fileRepository } from "@/db/schema/fileRepository";
+import { fileRepository } from "@/db/schema/file-repository";
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";
 import type { helloWorldTask } from "@/trigger/example";
 import { tasks } from "@trigger.dev/sdk/v3";

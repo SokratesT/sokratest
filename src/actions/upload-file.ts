@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { fileRepository } from "@/db/schema/fileRepository";
+import { fileRepository } from "@/db/schema/file-repository";
 import { auth } from "@/lib/auth";
 import type { PresignedUrlProp } from "@/lib/files/types";
 import { revalidatePath } from "next/cache";

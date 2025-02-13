@@ -28,7 +28,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
     resolver: zodResolver(courseSchema),
     defaultValues: {
       title: course?.title ?? undefined,
-      description: course?.description ?? "",
+      content: course?.content ?? "",
       organizationId: course?.organizationId ?? activeOrganization?.id ?? "",
     },
   });
@@ -96,8 +96,8 @@ const CourseForm = ({ course }: { course?: Course }) => {
             </Label>
 
             <PlateEditor
-              options={{ value: form.getValues("description") }}
-              onChange={(value) => form.setValue("description", value)}
+              options={{ value: form.getValues("content") }}
+              onChange={(value) => form.setValue("content", value)}
             />
           </div>
           <Button type="submit">Save Course</Button>

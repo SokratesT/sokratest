@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/db/drizzle";
 import { embeddings } from "@/db/schema/embeddings";
-import type { FileRepository } from "@/db/schema/fileRepository";
+import type { FileRepository } from "@/db/schema/file-repository";
 import { eq } from "drizzle-orm";
 
 const EditPostPage = async ({

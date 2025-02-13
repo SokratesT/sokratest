@@ -7,7 +7,7 @@ import type * as auth from "./schema/auth";
 import type * as chat from "./schema/chat";
 import type * as courses from "./schema/courses";
 import type * as embeddings from "./schema/embeddings";
-import type * as fileRepository from "./schema/fileRepository";
+import type * as fileRepository from "./schema/file-repository";
 import type * as posts from "./schema/posts";
 
 type Schema = typeof auth &

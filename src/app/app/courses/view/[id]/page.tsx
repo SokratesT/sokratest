@@ -30,7 +30,7 @@ const ViewCoursePage = async ({
         </div>
       </div>
       <div>
-        <Markdown>{queryCourse.description}</Markdown>
+        <Markdown>{queryCourse.content}</Markdown>
       </div>
     </div>
   );
