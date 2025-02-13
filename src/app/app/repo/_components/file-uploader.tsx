@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { convert } from "convert";
 import { FileText, Upload, X } from "lucide-react";
 import Image from "next/image";
-import * as React from "react";
+import { useCallback, useEffect } from "react";
 import Dropzone, {
   type DropzoneProps,
   type FileRejection,
@@ -114,7 +114,7 @@ const FileUploader = (props: FileUploaderProps) => {
     onChange: onValueChange,
   });
 
-  const onDrop = React.useCallback(
+  const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (!multiple && maxFileCount === 1 && acceptedFiles.length > 1) {
         toast.error("Cannot upload more than 1 file at a time");
@@ -172,7 +172,7 @@ const FileUploader = (props: FileUploaderProps) => {
   }
 
   // Revoke preview url when component unmounts
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       if (!files) return;
       files.forEach((file) => {

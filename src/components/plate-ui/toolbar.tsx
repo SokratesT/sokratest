@@ -1,12 +1,10 @@
 "use client";
 
-import * as React from "react";
-
 import * as ToolbarPrimitive from "@radix-ui/react-toolbar";
 import { cn, withCn, withRef, withVariants } from "@udecode/cn";
 import { type VariantProps, cva } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";
-
+import { forwardRef } from "react";
 import { Separator } from "./separator";
 import { withTooltip } from "./tooltip";
 
@@ -83,7 +81,7 @@ const dropdownArrowVariants = cva(
 );
 
 const ToolbarButton = withTooltip(
-  React.forwardRef<
+  forwardRef<
     React.ElementRef<typeof ToolbarToggleItem>,
     {
       isDropdown?: boolean;
@@ -156,7 +154,7 @@ const ToolbarButton = withTooltip(
 
 export { ToolbarButton };
 
-export const ToolbarSplitButton = React.forwardRef<
+export const ToolbarSplitButton = forwardRef<
   React.ElementRef<typeof ToolbarButton>,
   React.ComponentPropsWithoutRef<typeof ToolbarButton>
 >(({ children, className, ...props }, ref) => {
@@ -172,7 +170,7 @@ export const ToolbarSplitButton = React.forwardRef<
 });
 
 export const ToolbarSplitButtonPrimary = withTooltip(
-  React.forwardRef<
+  forwardRef<
     React.ElementRef<typeof ToolbarToggleItem>,
     Omit<React.ComponentPropsWithoutRef<typeof ToolbarToggleItem>, "value">
   >(({ children, className, size, variant, ...props }, ref) => {
@@ -196,7 +194,7 @@ export const ToolbarSplitButtonPrimary = withTooltip(
   }),
 );
 
-export const ToolbarSplitButtonSecondary = React.forwardRef<
+export const ToolbarSplitButtonSecondary = forwardRef<
   HTMLButtonElement,
   React.ComponentPropsWithoutRef<"span"> &
     VariantProps<typeof dropdownArrowVariants>

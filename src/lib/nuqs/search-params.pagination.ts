@@ -4,7 +4,6 @@ import {
   createSearchParamsCache,
   parseAsInteger,
 } from "nuqs/server";
-import type { TransitionStartFunction } from "react";
 
 const pageIndexParser = createParser({
   parse: (query) => {
@@ -21,7 +20,9 @@ const paginationUrlKeys = {
   pageSize: "perPage",
 };
 
-const paginationParsers = (startTransition?: TransitionStartFunction) => ({
+const paginationParsers = (
+  startTransition?: React.TransitionStartFunction,
+) => ({
   pageIndex: pageIndexParser
     .withDefault(0)
     .withOptions({ shallow: false, startTransition }),
@@ -36,7 +37,7 @@ export const paginationSearchParamsCache = createSearchParamsCache(
 );
 
 export function usePaginationSearchParams(
-  startTransition: TransitionStartFunction,
+  startTransition: React.TransitionStartFunction,
 ) {
   return useQueryStates(paginationParsers(startTransition), {
     urlKeys: paginationUrlKeys,

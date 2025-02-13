@@ -1,7 +1,6 @@
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { ChatRequestOptions } from "ai";
-import * as React from "react";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";

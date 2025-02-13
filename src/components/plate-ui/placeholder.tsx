@@ -1,24 +1,23 @@
 "use client";
 
-import React from "react";
-
 import { cn } from "@udecode/cn";
 import { HEADING_KEYS } from "@udecode/plate-heading";
-import { ParagraphPlugin } from "@udecode/plate/react";
 import {
+  ParagraphPlugin,
   type PlaceholderProps,
   createNodeHOC,
   createNodesHOC,
   usePlaceholderState,
 } from "@udecode/plate/react";
+import { Children, cloneElement } from "react";
 
 export const Placeholder = (props: PlaceholderProps) => {
   const { children, nodeProps, placeholder } = props;
 
   const { enabled } = usePlaceholderState(props);
 
-  return React.Children.map(children, (child) => {
-    return React.cloneElement(child, {
+  return Children.map(children, (child) => {
+    return cloneElement(child, {
       className: child.props.className,
       nodeProps: {
         ...nodeProps,

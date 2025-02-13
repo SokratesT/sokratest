@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import { useCallbackRef } from "@/hooks/use-callback-ref";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * @see https://github.com/radix-ui/primitives/blob/main/packages/react/use-controllable-state/src/useControllableState.tsx
@@ -28,7 +27,7 @@ function useControllableState<T>({
   const handleChange = useCallbackRef(onChange);
 
   const setValue: React.Dispatch<React.SetStateAction<T | undefined>> =
-    React.useCallback(
+    useCallback(
       (nextValue) => {
         if (isControlled) {
           const setter = nextValue as SetStateFn<T>;
@@ -49,12 +48,12 @@ function useUncontrolledState<T>({
   defaultProp,
   onChange,
 }: Omit<UseControllableStateParams<T>, "prop">) {
-  const uncontrolledState = React.useState<T | undefined>(defaultProp);
+  const uncontrolledState = useState<T | undefined>(defaultProp);
   const [value] = uncontrolledState;
-  const prevValueRef = React.useRef(value);
+  const prevValueRef = useRef(value);
   const handleChange = useCallbackRef(onChange);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (prevValueRef.current !== value) {
       handleChange(value as T);
       prevValueRef.current = value;

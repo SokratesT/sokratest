@@ -1,21 +1,17 @@
 "use client";
 
-import React, { type ComponentPropsWithoutRef } from "react";
-
 import { cn } from "@udecode/cn";
 import {
   useColorsCustom,
   useColorsCustomState,
 } from "@udecode/plate-font/react";
 import { PlusIcon } from "lucide-react";
-
 import { buttonVariants } from "./button";
 import {
   ColorDropdownMenuItems,
   type TColor,
 } from "./color-dropdown-menu-items";
 import { ColorInput } from "./color-input";
-// import { ColorInput } from './color-input';
 import { DropdownMenuItem } from "./dropdown-menu";
 
 type ColorCustomProps = {
@@ -24,7 +20,7 @@ type ColorCustomProps = {
   updateColor: (color: string) => void;
   updateCustomColor: (color: string) => void;
   color?: string;
-} & ComponentPropsWithoutRef<"div">;
+} & React.ComponentPropsWithoutRef<"div">;
 
 export function ColorCustom({
   className,

@@ -1,10 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-
-import type { TEquationElement } from "@udecode/plate-math";
-
 import { cn, withRef } from "@udecode/cn";
+import type { TEquationElement } from "@udecode/plate-math";
 import { useEquationElement } from "@udecode/plate-math/react";
 import {
   useEditorSelector,
@@ -12,7 +9,7 @@ import {
   useSelected,
 } from "@udecode/plate/react";
 import { RadicalIcon } from "lucide-react";
-
+import { useRef, useState } from "react";
 import { EquationPopoverContent } from "./equation-popover";
 import { PlateElement } from "./plate-element";
 import { Popover, PopoverTrigger } from "./popover";

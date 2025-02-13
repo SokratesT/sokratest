@@ -1,7 +1,5 @@
 "use client";
 
-import type React from "react";
-
 import type { TElement, TText } from "@udecode/plate";
 import type { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import type {

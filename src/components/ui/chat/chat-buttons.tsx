@@ -1,7 +1,6 @@
 import { sanitizeUIMessages } from "@/lib/ai/utils";
 import type { Message } from "ai";
 import { CornerDownLeft, StopCircleIcon } from "lucide-react";
-import type { Dispatch, SetStateAction } from "react";
 import { Button } from "../button";
 
 export const StopButton = ({
@@ -9,7 +8,7 @@ export const StopButton = ({
   setMessages,
 }: {
   stop: () => void;
-  setMessages: Dispatch<SetStateAction<Array<Message>>>;
+  setMessages: React.Dispatch<React.SetStateAction<Array<Message>>>;
 }) => (
   <Button
     className="rounded-full"

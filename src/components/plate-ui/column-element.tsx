@@ -1,17 +1,14 @@
 "use client";
 
-import React from "react";
-
-import type { TColumnElement } from "@udecode/plate-layout";
-
 import { cn, useComposedRef, withRef } from "@udecode/cn";
 import { PathApi } from "@udecode/plate";
 import { useDraggable, useDropLine } from "@udecode/plate-dnd";
+import type { TColumnElement } from "@udecode/plate-layout";
 import { ResizableProvider } from "@udecode/plate-resizable";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { usePluginOption, useReadOnly, withHOC } from "@udecode/plate/react";
 import { GripHorizontal } from "lucide-react";
-
+import { forwardRef, memo } from "react";
 import { Button } from "./button";
 import { PlateElement } from "./plate-element";
 import {
@@ -83,7 +80,7 @@ export const ColumnElement = withHOC(
   }),
 );
 
-const ColumnDragHandle = React.memo(() => {
+const ColumnDragHandle = memo(() => {
   return (
     <TooltipProvider>
       <Tooltip>
@@ -106,7 +103,7 @@ const ColumnDragHandle = React.memo(() => {
   );
 });
 
-const DropLine = React.forwardRef<
+const DropLine = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {

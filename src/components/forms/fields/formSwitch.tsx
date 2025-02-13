@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import type { ReactNode } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
 
 /**
@@ -34,7 +33,7 @@ const FormSwitch = ({
   disabled?: boolean;
   className?: string;
   required?: boolean;
-}): ReactNode => (
+}) => (
   <FormItem
     className={cn(
       className,

@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { cn } from "@udecode/cn";
 import {
   type UseVirtualFloatingOptions,
@@ -19,7 +17,6 @@ import {
 } from "@udecode/plate-link/react";
 import { useFormInputProps } from "@udecode/plate/react";
 import { ExternalLink, Link, Text, Unlink } from "lucide-react";
-
 import { buttonVariants } from "./button";
 import { inputVariants } from "./input";
 import { popoverVariants } from "./popover";

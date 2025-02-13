@@ -1,15 +1,12 @@
 "use client";
 
-import React from "react";
-
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import { getEditorDOMFromHtmlString } from "@udecode/plate";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { useEditorRef } from "@udecode/plate/react";
 import { ArrowUpToLineIcon } from "lucide-react";
+import { useState } from "react";
 import { useFilePicker } from "use-file-picker";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,7 +23,7 @@ export function ImportToolbarButton({ children, ...props }: DropdownMenuProps) {
   const editor = useEditorRef();
   const openState = useOpenState();
 
-  const [type, setType] = React.useState<ImportType>("html");
+  const [type, setType] = useState<ImportType>("html");
   const accept = type === "html" ? ["text/html"] : [".md"];
 
   const getFileNodes = (text: string, type: ImportType) => {

@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { usePathname, useSearchParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { Suspense, useEffect } from "react";
@@ -29,7 +30,7 @@ const PostHogPageView = () => {
 // See: https://nextjs.org/docs/messages/deopted-into-client-rendering
 const SuspendedPostHogPageView = () => {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<LoadingSpinner />}>
       <PostHogPageView />
     </Suspense>
   );

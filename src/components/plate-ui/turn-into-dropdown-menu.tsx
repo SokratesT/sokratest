@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
-
+import {
+  STRUCTURAL_TYPES,
+  getBlockType,
+  setBlockType,
+} from "@/components/editor/transforms";
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
@@ -27,13 +29,7 @@ import {
   QuoteIcon,
   SquareIcon,
 } from "lucide-react";
-
-import {
-  STRUCTURAL_TYPES,
-  getBlockType,
-  setBlockType,
-} from "@/components/editor/transforms";
-
+import { useMemo } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -121,7 +117,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
     structuralTypes: STRUCTURAL_TYPES,
     getProp: (node) => getBlockType(node as any),
   });
-  const selectedItem = React.useMemo(
+  const selectedItem = useMemo(
     () =>
       turnIntoItems.find(
         (item) => item.value === (value ?? ParagraphPlugin.key),

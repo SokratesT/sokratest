@@ -1,7 +1,6 @@
 "use client";
 
 import type { Table } from "@tanstack/react-table";
-import type React from "react";
 import { createContext, useContext } from "react";
 
 const TableContext = createContext<{ table: Table<any> } | null>(null);

@@ -16,6 +16,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
 import { sidebarUserMenu } from "@/settings/menus";
 import { routes } from "@/settings/routes";
@@ -23,7 +24,6 @@ import { ChevronsUpDown, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Skeleton } from "./ui/skeleton";
 
 const userInitial = (name: string) => name[0].toUpperCase();
 

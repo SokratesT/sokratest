@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-
+import { MoreDropdownMenu } from "@/components/plate-ui/more-dropdown-menu";
 import {
   BoldPlugin,
   CodePlugin,
@@ -33,9 +32,6 @@ import {
   UnderlineIcon,
   WandSparklesIcon,
 } from "lucide-react";
-
-import { MoreDropdownMenu } from "@/components/plate-ui/more-dropdown-menu";
-
 import { AIToolbarButton } from "./ai-toolbar-button";
 import { AlignDropdownMenu } from "./align-dropdown-menu";
 import { ColorDropdownMenu } from "./color-dropdown-menu";

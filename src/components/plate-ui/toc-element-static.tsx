@@ -1,8 +1,5 @@
-import React from "react";
-
-import type { SlateEditor, SlateElementProps, TElement } from "@udecode/plate";
-
 import { cn } from "@udecode/cn";
+import type { SlateEditor, SlateElementProps, TElement } from "@udecode/plate";
 import { NodeApi, SlateElement } from "@udecode/plate";
 import {
   BaseTocPlugin,
@@ -11,7 +8,6 @@ import {
   isHeading,
 } from "@udecode/plate-heading";
 import { cva } from "class-variance-authority";
-
 import { Button } from "./button";
 
 const headingItemVariants = cva(

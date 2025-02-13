@@ -1,10 +1,8 @@
 "use client";
 
-import React from "react";
-
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { withCn, withProps } from "@udecode/cn";
-
+import { useEffect, useState } from "react";
 import { Button } from "./button";
 
 export const TooltipProvider = withProps(TooltipPrimitive.Provider, {
@@ -55,9 +53,9 @@ export function withTooltip<T extends React.ElementType>(Component: T) {
     tooltipTriggerProps,
     ...props
   }: TooltipProps<T>) {
-    const [mounted, setMounted] = React.useState(false);
+    const [mounted, setMounted] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
       setMounted(true);
     }, []);
 

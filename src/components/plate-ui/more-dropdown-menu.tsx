@@ -1,9 +1,6 @@
 "use client";
 
-import React from "react";
-
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import {
   SubscriptPlugin,
   SuperscriptPlugin,
@@ -16,7 +13,6 @@ import {
   SubscriptIcon,
   SuperscriptIcon,
 } from "lucide-react";
-
 import {
   DropdownMenu,
   DropdownMenuContent,

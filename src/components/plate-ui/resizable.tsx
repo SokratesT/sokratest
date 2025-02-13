@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { cn, createPrimitiveElement, withRef, withVariants } from "@udecode/cn";
 import {
   Resizable as ResizablePrimitive,

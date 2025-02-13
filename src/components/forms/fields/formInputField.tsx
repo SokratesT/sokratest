@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import { type ReactNode, useId, useState } from "react";
+import { useId, useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
 
 type InputTypes = "number" | "text" | "email";
@@ -56,7 +56,7 @@ const FormInputField = ({
   loading?: boolean;
   disabled?: boolean;
   required?: boolean;
-}): ReactNode => {
+}) => {
   const [disableField, setDisableField] = useState<boolean>(false);
   const [visible, setVisible] = useState(
     showSwitch ? Boolean(field.value) : true,

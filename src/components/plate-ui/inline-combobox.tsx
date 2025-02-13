@@ -1,21 +1,5 @@
 "use client";
 
-import React, {
-  type HTMLAttributes,
-  type ReactNode,
-  type RefObject,
-  createContext,
-  forwardRef,
-  startTransition,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-
-import type { PointRef, TElement } from "@udecode/plate";
-
 import {
   Combobox,
   ComboboxGroup,
@@ -30,6 +14,7 @@ import {
   useComboboxStore,
 } from "@ariakit/react";
 import { cn, withCn } from "@udecode/cn";
+import type { PointRef, TElement } from "@udecode/plate";
 import { filterWords } from "@udecode/plate-combobox";
 import {
   type UseComboboxInputResult,
@@ -38,6 +23,17 @@ import {
 } from "@udecode/plate-combobox/react";
 import { useComposedRef, useEditorRef } from "@udecode/plate/react";
 import { cva } from "class-variance-authority";
+import {
+  createContext,
+  forwardRef,
+  startTransition,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 type FilterFn = (
   item: { value: string; group?: string; keywords?: string[]; label?: string },
@@ -47,7 +43,7 @@ type FilterFn = (
 interface InlineComboboxContextValue {
   filter: FilterFn | false;
   inputProps: UseComboboxInputResult["props"];
-  inputRef: RefObject<HTMLInputElement | null>;
+  inputRef: React.RefObject<HTMLInputElement | null>;
   removeInput: UseComboboxInputResult["removeInput"];
   showTrigger: boolean;
   trigger: string;
@@ -73,7 +69,7 @@ export const defaultFilter: FilterFn = (
 };
 
 interface InlineComboboxProps {
-  children: ReactNode;
+  children: React.ReactNode;
   element: TElement;
   trigger: string;
   filter?: FilterFn | false;
@@ -94,7 +90,7 @@ const InlineCombobox = ({
   value: valueProp,
 }: InlineComboboxProps) => {
   const editor = useEditorRef();
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const cursorState = useHTMLInputCursorState(inputRef);
 
   const [valueState, setValueState] = useState("");
@@ -213,7 +209,7 @@ const InlineCombobox = ({
 
 const InlineComboboxInput = forwardRef<
   HTMLInputElement,
-  HTMLAttributes<HTMLInputElement>
+  React.HTMLAttributes<HTMLInputElement>
 >(({ className, ...props }, propRef) => {
   const {
     inputProps,
@@ -348,7 +344,7 @@ const InlineComboboxItem = ({
 const InlineComboboxEmpty = ({
   children,
   className,
-}: HTMLAttributes<HTMLDivElement>) => {
+}: React.HTMLAttributes<HTMLDivElement>) => {
   const { setHasEmpty } = useContext(InlineComboboxContext);
   // biome-ignore lint/style/noNonNullAssertion: <explanation>
   const store = useComboboxContext()!;

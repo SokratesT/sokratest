@@ -1,10 +1,7 @@
-import React from "react";
-
-import type { SlateElementProps } from "@udecode/plate";
-import type { TMentionElement } from "@udecode/plate-mention";
-
 import { cn } from "@udecode/cn";
+import type { SlateElementProps } from "@udecode/plate";
 import { IS_APPLE, SlateElement } from "@udecode/plate";
+import type { TMentionElement } from "@udecode/plate-mention";
 
 export function MentionElementStatic({
   children,

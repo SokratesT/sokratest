@@ -1,12 +1,8 @@
 "use client";
 
-import React from "react";
-
-import type { TLinkElement } from "@udecode/plate-link";
-
 import { cn, withRef } from "@udecode/cn";
+import type { TLinkElement } from "@udecode/plate-link";
 import { useLink } from "@udecode/plate-link/react";
-
 import { PlateElement } from "./plate-element";
 
 export const LinkElement = withRef<typeof PlateElement>(

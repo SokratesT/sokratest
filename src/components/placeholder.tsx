@@ -1,17 +1,16 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { CircleHelpIcon, type LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
 
 const Placeholder = ({
   children,
   className,
   Icon = CircleHelpIcon,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
   className?: string;
   Icon?: LucideIcon;
-}): ReactNode => {
+}): React.ReactNode => {
   const size = 50;
 
   return (

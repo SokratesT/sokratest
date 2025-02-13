@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import {
   BoldPlugin,
   CodePlugin,
@@ -18,7 +16,6 @@ import {
   UnderlineIcon,
   WandSparklesIcon,
 } from "lucide-react";
-
 import { AIToolbarButton } from "./ai-toolbar-button";
 import { CommentToolbarButton } from "./comment-toolbar-button";
 import { InlineEquationToolbarButton } from "./inline-equation-toolbar-button";

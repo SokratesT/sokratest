@@ -1,8 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { useCallback, useState } from "react";
-
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import {
   cn,
@@ -14,12 +11,13 @@ import {
 } from "@udecode/cn";
 import { cva } from "class-variance-authority";
 import { Check, ChevronRight } from "lucide-react";
+import { forwardRef, useCallback, useState } from "react";
 
 export const DropdownMenu = DropdownMenuPrimitive.Root;
 
 export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 
-export const DropdownMenuGroup = React.forwardRef<
+export const DropdownMenuGroup = forwardRef<
   HTMLDivElement,
   { label?: React.ReactNode } & React.ComponentPropsWithoutRef<
     typeof DropdownMenuPrimitive.Group
@@ -54,7 +52,7 @@ export const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
 
 export const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 
-export const DropdownMenuRadioGroup = React.forwardRef<
+export const DropdownMenuRadioGroup = forwardRef<
   HTMLDivElement,
   { label?: React.ReactNode } & React.ComponentPropsWithoutRef<
     typeof DropdownMenuPrimitive.RadioGroup

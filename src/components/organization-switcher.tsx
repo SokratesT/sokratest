@@ -11,12 +11,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
 import { routes } from "@/settings/routes";
 import { Building2Icon, Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Skeleton } from "./ui/skeleton";
 
 const OrganizationSwitcher = () => {
   const { data: organizations, isPending } = authClient.useListOrganizations();

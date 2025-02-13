@@ -1,17 +1,16 @@
 "use client";
 
-import { MoonIcon, SunIcon } from "lucide-react";
-import { useTheme } from "next-themes";
-import * as React from "react";
-
 import { Button } from "@/components/ui/button";
 import { META_THEME_COLORS, useMetaColor } from "@/hooks/use-meta-color";
+import { MoonIcon, SunIcon } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useCallback } from "react";
 
 export function ThemeSwitcher() {
   const { setTheme, resolvedTheme } = useTheme();
   const { setMetaColor } = useMetaColor();
 
-  const toggleTheme = React.useCallback(() => {
+  const toggleTheme = useCallback(() => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
     setMetaColor(
       resolvedTheme === "dark"

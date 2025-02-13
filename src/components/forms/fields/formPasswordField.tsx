@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
 
 /**
@@ -35,7 +35,7 @@ const FormPasswordField = ({
   label?: string;
   showTogglePassword?: boolean;
   className?: string;
-}): ReactNode => {
+}) => {
   // The state for the password visibility toggle
   const [showPassword, setShowPassword] = useState(false);
 

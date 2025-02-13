@@ -1,10 +1,8 @@
 "use client";
 
-import React from "react";
-
 import { cn, withRef } from "@udecode/cn";
 import { EraserIcon } from "lucide-react";
-
+import { memo } from "react";
 import {
   ColorDropdownMenuItems,
   type TColor,
@@ -69,7 +67,7 @@ export const ColorPickerContent = withRef<
   },
 );
 
-export const ColorPicker = React.memo(
+export const ColorPicker = memo(
   ColorPickerContent,
   (prev, next) =>
     prev.color === next.color &&

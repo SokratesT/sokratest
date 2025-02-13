@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
-
+import {
+  insertBlock,
+  insertInlineElement,
+} from "@/components/editor/transforms";
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
 import { DatePlugin } from "@udecode/plate-date/react";
@@ -48,12 +49,6 @@ import {
   TableIcon,
   TableOfContentsIcon,
 } from "lucide-react";
-
-import {
-  insertBlock,
-  insertInlineElement,
-} from "@/components/editor/transforms";
-
 import {
   DropdownMenu,
   DropdownMenuContent,

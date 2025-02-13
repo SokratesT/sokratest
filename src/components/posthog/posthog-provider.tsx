@@ -1,4 +1,3 @@
-// app/providers.jsx
 "use client";
 
 import { SuspendedPostHogPageView } from "@/components/posthog/posthog-page-view";

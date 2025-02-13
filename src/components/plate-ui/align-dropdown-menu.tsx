@@ -1,9 +1,7 @@
 "use client";
 
-import React from "react";
-
+import { STRUCTURAL_TYPES } from "@/components/editor/transforms";
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import { setAlign } from "@udecode/plate-alignment";
 import { useEditorRef, useSelectionFragmentProp } from "@udecode/plate/react";
 import {
@@ -12,9 +10,6 @@ import {
   AlignLeftIcon,
   AlignRightIcon,
 } from "lucide-react";
-
-import { STRUCTURAL_TYPES } from "@/components/editor/transforms";
-
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -17,7 +17,7 @@ import {
   usePluginOption,
 } from "@udecode/plate/react";
 import { Loader2Icon } from "lucide-react";
-import * as React from "react";
+import { useState } from "react";
 import { AIChatEditor } from "./ai-chat-editor";
 import { AIMenuItems } from "./ai-menu-items";
 import { Command, CommandList, InputCommand } from "./command";
@@ -29,7 +29,7 @@ export function AIMenu() {
   const mode = usePluginOption(AIChatPlugin, "mode");
   const isSelecting = useIsSelecting();
 
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = useState("");
 
   const chat = useChat({
     id: "editor",
@@ -37,9 +37,7 @@ export function AIMenu() {
   });
 
   const { input, isLoading, messages, setInput } = chat;
-  const [anchorElement, setAnchorElement] = React.useState<HTMLElement | null>(
-    null,
-  );
+  const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
 
   const content = useLastAssistantMessage()?.content;
 

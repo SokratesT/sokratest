@@ -1,9 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import { cn } from "@udecode/cn";
 import { TablePlugin, useTableMergeState } from "@udecode/plate-table/react";
 import { useEditorPlugin, useEditorSelector } from "@udecode/plate/react";
@@ -19,7 +16,7 @@ import {
   Ungroup,
   XIcon,
 } from "lucide-react";
-
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,

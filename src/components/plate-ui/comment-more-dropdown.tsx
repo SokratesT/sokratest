@@ -1,14 +1,11 @@
 "use client";
 
-import React from "react";
-
 import { cn } from "@udecode/cn";
 import {
   useCommentDeleteButton,
   useCommentEditButton,
 } from "@udecode/plate-comments/react";
 import { MoreHorizontal } from "lucide-react";
-
 import { Button } from "./button";
 import {
   DropdownMenu,

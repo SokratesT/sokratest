@@ -5,7 +5,6 @@ import {
   parseAsInteger,
   parseAsString,
 } from "nuqs/server";
-import type { TransitionStartFunction } from "react";
 
 // TODO: Split bucket and search, remove page
 const bucketUrlKeys = {
@@ -14,7 +13,7 @@ const bucketUrlKeys = {
   search: "s",
 };
 
-const bucketParser = (startTransition?: TransitionStartFunction) => ({
+const bucketParser = (startTransition?: React.TransitionStartFunction) => ({
   page: parseAsInteger.withDefault(1).withOptions({ shallow: false }),
   bucket: parseAsString
     .withDefault(buckets[0].name)
@@ -27,7 +26,7 @@ export const bucketSearchParamsCache = createSearchParamsCache(bucketParser(), {
 });
 
 export function useBucketSearchParams(
-  startTransition: TransitionStartFunction,
+  startTransition: React.TransitionStartFunction,
 ) {
   return useQueryStates(bucketParser(startTransition), {
     urlKeys: bucketUrlKeys,

@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import type { ReactNode } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
 
 /**
@@ -34,7 +33,7 @@ const FormTextField = ({
   description?: string;
   className?: string;
   required?: boolean;
-}): ReactNode => (
+}) => (
   <FormItem className={cn(className)}>
     {label && (
       <FormLabel>

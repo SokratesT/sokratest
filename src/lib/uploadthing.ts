@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import type { OurFileRouter } from "@/app/api/uploadthing/route";
 import type {
   ClientUploadedFileData,
@@ -7,6 +5,7 @@ import type {
 } from "uploadthing/types";
 
 import { generateReactHelpers } from "@uploadthing/react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -26,10 +25,10 @@ export function useUploadFile({
   onUploadError,
   ...props
 }: UseUploadFileProps = {}) {
-  const [uploadedFile, setUploadedFile] = React.useState<UploadedFile>();
-  const [uploadingFile, setUploadingFile] = React.useState<File>();
-  const [progress, setProgress] = React.useState<number>(0);
-  const [isUploading, setIsUploading] = React.useState(false);
+  const [uploadedFile, setUploadedFile] = useState<UploadedFile>();
+  const [uploadingFile, setUploadingFile] = useState<File>();
+  const [progress, setProgress] = useState<number>(0);
+  const [isUploading, setIsUploading] = useState(false);
 
   async function uploadThing(file: File) {
     setIsUploading(true);

@@ -3,7 +3,7 @@ import { Button, type buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
 import type { LucideIcon } from "lucide-react";
-import * as React from "react";
+import { Children, cloneElement, isValidElement } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip";
 import { MessageLoading } from "./message-loading";
 
@@ -47,9 +47,9 @@ const ChatBubble = ({
     )}
     {...props}
   >
-    {React.Children.map(children, (child) =>
-      React.isValidElement(child) && typeof child.type !== "string"
-        ? React.cloneElement(child, {
+    {Children.map(children, (child) =>
+      isValidElement(child) && typeof child.type !== "string"
+        ? cloneElement(child, {
             variant,
             layout,
           } as React.ComponentProps<typeof child.type>)

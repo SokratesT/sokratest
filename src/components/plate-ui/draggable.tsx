@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
-
+import { STRUCTURAL_TYPES } from "@/components/editor/transforms";
 import { cn, withRef } from "@udecode/cn";
 import { isType } from "@udecode/plate";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
@@ -34,9 +33,7 @@ import {
 } from "@udecode/plate/react";
 import { useReadOnly, useSelected } from "@udecode/plate/react";
 import { GripVertical } from "lucide-react";
-
-import { STRUCTURAL_TYPES } from "@/components/editor/transforms";
-
+import { forwardRef, memo, useMemo } from "react";
 import { TooltipButton } from "./tooltip";
 
 const UNDRAGGABLE_KEYS = [
@@ -158,64 +155,64 @@ export const Draggable = withRef<"div", PlateRenderElementProps>(
   },
 );
 
-const Gutter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ children, className, ...props }, ref) => {
-  const editor = useEditorRef();
-  const element = useElement();
-  const path = usePath();
-  const isSelectionAreaVisible = usePluginOption(
-    BlockSelectionPlugin,
-    "isSelectionAreaVisible",
-  );
-  const selected = useSelected();
+const Gutter = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ children, className, ...props }, ref) => {
+    const editor = useEditorRef();
+    const element = useElement();
+    const path = usePath();
+    const isSelectionAreaVisible = usePluginOption(
+      BlockSelectionPlugin,
+      "isSelectionAreaVisible",
+    );
+    const selected = useSelected();
 
-  const isNodeType = (keys: string[] | string) => isType(editor, element, keys);
+    const isNodeType = (keys: string[] | string) =>
+      isType(editor, element, keys);
 
-  const isInColumn = path.length === 3;
+    const isInColumn = path.length === 3;
 
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "slate-gutterLeft",
-        "-top-px -translate-x-full absolute z-50 flex h-full cursor-text hover:opacity-100 sm:opacity-0",
-        STRUCTURAL_TYPES.includes(element.type)
-          ? "group-hover/structural:opacity-100"
-          : "group-hover:opacity-100",
-        isSelectionAreaVisible && "hidden",
-        !selected && "opacity-0",
-        isNodeType(HEADING_KEYS.h1) && "pb-1 text-[1.875em]",
-        isNodeType(HEADING_KEYS.h2) && "pb-1 text-[1.5em]",
-        isNodeType(HEADING_KEYS.h3) && "pt-[2px] pb-1 text-[1.25em]",
-        isNodeType([HEADING_KEYS.h4, HEADING_KEYS.h5]) &&
-          "pt-[3px] pb-0 text-[1.1em]",
-        isNodeType(HEADING_KEYS.h6) && "pb-0",
-        isNodeType(ParagraphPlugin.key) && "pt-[3px] pb-0",
-        isNodeType(["ul", "ol"]) && "pb-0",
-        isNodeType(BlockquotePlugin.key) && "pb-0",
-        isNodeType(CodeBlockPlugin.key) && "pt-6 pb-0",
-        isNodeType([
-          ImagePlugin.key,
-          MediaEmbedPlugin.key,
-          ExcalidrawPlugin.key,
-          TogglePlugin.key,
-          ColumnPlugin.key,
-        ]) && "py-0",
-        isNodeType([PlaceholderPlugin.key, TablePlugin.key]) && "pt-3 pb-0",
-        isInColumn && "mt-2 h-4 pt-0",
-        className,
-      )}
-      contentEditable={false}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-});
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "slate-gutterLeft",
+          "-top-px -translate-x-full absolute z-50 flex h-full cursor-text hover:opacity-100 sm:opacity-0",
+          STRUCTURAL_TYPES.includes(element.type)
+            ? "group-hover/structural:opacity-100"
+            : "group-hover:opacity-100",
+          isSelectionAreaVisible && "hidden",
+          !selected && "opacity-0",
+          isNodeType(HEADING_KEYS.h1) && "pb-1 text-[1.875em]",
+          isNodeType(HEADING_KEYS.h2) && "pb-1 text-[1.5em]",
+          isNodeType(HEADING_KEYS.h3) && "pt-[2px] pb-1 text-[1.25em]",
+          isNodeType([HEADING_KEYS.h4, HEADING_KEYS.h5]) &&
+            "pt-[3px] pb-0 text-[1.1em]",
+          isNodeType(HEADING_KEYS.h6) && "pb-0",
+          isNodeType(ParagraphPlugin.key) && "pt-[3px] pb-0",
+          isNodeType(["ul", "ol"]) && "pb-0",
+          isNodeType(BlockquotePlugin.key) && "pb-0",
+          isNodeType(CodeBlockPlugin.key) && "pt-6 pb-0",
+          isNodeType([
+            ImagePlugin.key,
+            MediaEmbedPlugin.key,
+            ExcalidrawPlugin.key,
+            TogglePlugin.key,
+            ColumnPlugin.key,
+          ]) && "py-0",
+          isNodeType([PlaceholderPlugin.key, TablePlugin.key]) && "pt-3 pb-0",
+          isInColumn && "mt-2 h-4 pt-0",
+          className,
+        )}
+        contentEditable={false}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  },
+);
 
-const DragHandle = React.memo(() => {
+const DragHandle = memo(() => {
   const editor = useEditorRef();
   const element = useElement();
 
@@ -236,8 +233,8 @@ const DragHandle = React.memo(() => {
   );
 });
 
-const DropLine = React.memo(
-  React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+const DropLine = memo(
+  forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
     ({ className, ...props }, ref) => {
       const { dropLine } = useDropLine();
 

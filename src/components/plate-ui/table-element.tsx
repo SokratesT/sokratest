@@ -1,13 +1,10 @@
 "use client";
 
-import React from "react";
-
 import type * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import type { TTableElement } from "@udecode/plate-table";
-
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import { cn, withRef } from "@udecode/cn";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
+import type { TTableElement } from "@udecode/plate-table";
 import {
   TablePlugin,
   TableProvider,
@@ -37,7 +34,6 @@ import {
   Trash2Icon,
   XIcon,
 } from "lucide-react";
-
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,

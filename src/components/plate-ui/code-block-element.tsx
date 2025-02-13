@@ -1,18 +1,13 @@
 "use client";
 
-import React from "react";
-
-import type { Editor, TElement } from "@udecode/plate";
-
 import { cn, withRef } from "@udecode/cn";
+import type { Editor, TElement } from "@udecode/plate";
 import { formatCodeBlock, isLangSupported } from "@udecode/plate-code-block";
 import { useCodeBlockElementState } from "@udecode/plate-code-block/react";
 import { BracesIcon } from "lucide-react";
-
 import { Button } from "./button";
 import { CodeBlockCombobox } from "./code-block-combobox";
 import { PlateElement } from "./plate-element";
-
 import "./code-block-element.css";
 
 export const CodeBlockElement = withRef<typeof PlateElement>(

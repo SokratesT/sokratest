@@ -1,9 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
-
 import type { WithRequiredKey } from "@udecode/plate";
-
 import {
   FloatingMedia as FloatingMediaPrimitive,
   FloatingMediaStore,
@@ -17,7 +14,7 @@ import {
   useSelected,
 } from "@udecode/plate/react";
 import { Link, Trash2Icon } from "lucide-react";
-
+import { useEffect } from "react";
 import { Button, buttonVariants } from "./button";
 import { CaptionButton } from "./caption";
 import { inputVariants } from "./input";

@@ -1,13 +1,9 @@
 "use client";
 
-import React from "react";
-
-import type { TMentionElement } from "@udecode/plate-mention";
-
 import { cn, withRef } from "@udecode/cn";
 import { IS_APPLE, getHandler } from "@udecode/plate";
+import type { TMentionElement } from "@udecode/plate-mention";
 import { useFocused, useReadOnly, useSelected } from "@udecode/plate/react";
-
 import { useIsMounted } from "usehooks-ts";
 import { PlateElement } from "./plate-element";
 

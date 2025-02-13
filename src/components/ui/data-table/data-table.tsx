@@ -1,16 +1,15 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
+import { usePaginationSearchParams } from "@/lib/nuqs/search-params.pagination";
+import { useSortingSearchParams } from "@/lib/nuqs/search-params.sorting";
+import { cn } from "@/lib/utils";
 import {
   type ColumnDef,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
-import { Skeleton } from "@/components/ui/skeleton";
-import { usePaginationSearchParams } from "@/lib/nuqs/search-params.pagination";
-import { useSortingSearchParams } from "@/lib/nuqs/search-params.sorting";
-import { cn } from "@/lib/utils";
 import { useMemo, useTransition } from "react";
 import { TableProvider } from "./data-table-context";
 

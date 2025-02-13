@@ -1,7 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
-
 import { cn } from "@udecode/cn";
 import {
   useCodeBlockCombobox,
@@ -10,7 +8,7 @@ import {
 import { Check, ChevronsUpDown } from "lucide-react";
 // Prism must be imported before all language files
 import Prism from "prismjs";
-
+import { useState } from "react";
 import { Button } from "./button";
 import {
   Command,

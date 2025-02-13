@@ -1,11 +1,8 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import type { ReactNode } from "react";
-
-import type { TPlaceholderElement } from "@udecode/plate-media";
-
+import { useUploadFile } from "@/lib/uploadthing";
 import { cn } from "@udecode/cn";
+import type { TPlaceholderElement } from "@udecode/plate-media";
 import {
   AudioPlugin,
   FilePlugin,
@@ -17,10 +14,8 @@ import {
 } from "@udecode/plate-media/react";
 import { useEditorPlugin, withHOC, withRef } from "@udecode/plate/react";
 import { AudioLines, FileUp, Film, ImageIcon } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useFilePicker } from "use-file-picker";
-
-import { useUploadFile } from "@/lib/uploadthing";
-
 import { PlateElement } from "./plate-element";
 import { Spinner } from "./spinner";
 
@@ -28,8 +23,8 @@ const CONTENT: Record<
   string,
   {
     accept: string[];
-    content: ReactNode;
-    icon: ReactNode;
+    content: React.ReactNode;
+    icon: React.ReactNode;
   }
 > = {
   [AudioPlugin.key]: {

@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { cn, withRef } from "@udecode/cn";
 import {
   type FloatingToolbarState,
@@ -16,7 +14,6 @@ import {
   useEventEditorValue,
   usePluginOption,
 } from "@udecode/plate/react";
-
 import { Toolbar } from "./toolbar";
 
 export const FloatingToolbar = withRef<

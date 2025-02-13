@@ -1,14 +1,11 @@
 "use client";
 
-import React from "react";
-
-import type { TTableCellElement } from "@udecode/plate-table";
-
 import { cn, withProps, withRef } from "@udecode/cn";
 import {
   BlockSelectionPlugin,
   useBlockSelected,
 } from "@udecode/plate-selection/react";
+import type { TTableCellElement } from "@udecode/plate-table";
 import {
   TablePlugin,
   TableRowPlugin,
@@ -22,7 +19,6 @@ import {
   useReadOnly,
 } from "@udecode/plate/react";
 import { cva } from "class-variance-authority";
-
 import { blockSelectionVariants } from "./block-selection";
 import { PlateElement } from "./plate-element";
 import { ResizeHandle } from "./resizable";

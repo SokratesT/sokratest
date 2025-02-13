@@ -1,6 +1,4 @@
-import type { FC } from "react";
-
-const Default: FC = () => {
+const Default: React.FC = () => {
   return null;
 };
 

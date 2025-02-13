@@ -1,7 +1,9 @@
 "use client";
 
-import React from "react";
-
+import {
+  insertBlock,
+  insertInlineElement,
+} from "@/components/editor/transforms";
 import { withRef } from "@udecode/cn";
 import { AIChatPlugin } from "@udecode/plate-ai/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
@@ -35,12 +37,6 @@ import {
   Table,
   TableOfContentsIcon,
 } from "lucide-react";
-
-import {
-  insertBlock,
-  insertInlineElement,
-} from "@/components/editor/transforms";
-
 import {
   InlineCombobox,
   InlineComboboxContent,

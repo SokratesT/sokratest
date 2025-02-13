@@ -1,13 +1,10 @@
 "use client";
 
-import React from "react";
-
 import { cn, withRef } from "@udecode/cn";
 import { useDraggable } from "@udecode/plate-dnd";
 import { Image, ImagePlugin, useMediaState } from "@udecode/plate-media/react";
 import { ResizableProvider, useResizableValue } from "@udecode/plate-resizable";
 import { withHOC } from "@udecode/plate/react";
-
 import { Caption, CaptionTextarea } from "./caption";
 import { MediaPopover } from "./media-popover";
 import { PlateElement } from "./plate-element";
