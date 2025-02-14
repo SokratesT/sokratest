@@ -1,5 +1,6 @@
 "use client";
 
+import { revalidatePathFromClient } from "@/actions/revalidate-helper";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {
@@ -18,11 +19,29 @@ const UsersDataTableSelectActions = () => {
   const { table } = useTable();
 
   const handleDelete = async () => {
-    const userIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
+    const organizationIds = table
+      .getSelectedRowModel()
+      .flatRows.map((row) => row.id);
 
-    userIds.map((userId) => authClient.admin.removeUser({ userId }));
+    const deletions = organizationIds.map((organizationId) => {
+      const result = authClient.organization
+        .delete({ organizationId })
+        .then((result) => result.error);
 
-    toast.success("Users deleted");
+      if (result) return result;
+    });
+
+    Promise.all(deletions).then((errors) => {
+      console.log("ORganization errors", errors.filter(Boolean));
+
+      if (errors.filter(Boolean).length > 0) {
+        toast.error("Something went wrong, please try again!");
+      } else {
+        toast.success("Organizations deleted");
+      }
+    });
+
+    await revalidatePathFromClient("/app/orgs");
   };
 
   return (

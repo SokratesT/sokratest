@@ -40,6 +40,8 @@ const OrganizationSwitcher = () => {
       });
   };
 
+  if (isPending || !organizations) return <Skeleton className="h-12 w-full" />;
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -67,7 +69,7 @@ const OrganizationSwitcher = () => {
             className="w-[--radix-dropdown-menu-trigger-width]"
             align="start"
           >
-            {organizations?.map((organization) => (
+            {organizations.map((organization) => (
               <DropdownMenuItem
                 key={organization.id}
                 onSelect={() => handleOrganizationChange(organization)}

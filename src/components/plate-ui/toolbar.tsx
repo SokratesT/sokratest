@@ -4,7 +4,6 @@ import * as ToolbarPrimitive from "@radix-ui/react-toolbar";
 import { cn, withCn, withRef, withVariants } from "@udecode/cn";
 import { type VariantProps, cva } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";
-import { forwardRef } from "react";
 import { Separator } from "./separator";
 import { withTooltip } from "./tooltip";
 
@@ -12,8 +11,6 @@ export const Toolbar = withCn(
   ToolbarPrimitive.Root,
   "relative flex items-center select-none",
 );
-
-const a = cn("flex items-center");
 
 export const ToolbarToggleGroup = withCn(
   ToolbarPrimitive.ToolbarToggleGroup,
@@ -80,128 +77,129 @@ const dropdownArrowVariants = cva(
   },
 );
 
-const ToolbarButton = withTooltip(
-  forwardRef<
-    React.ElementRef<typeof ToolbarToggleItem>,
-    {
-      isDropdown?: boolean;
-      pressed?: boolean;
-    } & Omit<
-      React.ComponentPropsWithoutRef<typeof ToolbarToggleItem>,
-      "asChild" | "value"
-    > &
-      VariantProps<typeof toolbarButtonVariants>
-  >(
-    (
-      { children, className, isDropdown, pressed, size, variant, ...props },
-      ref,
-    ) => {
-      return typeof pressed === "boolean" ? (
-        <ToolbarToggleGroup
-          disabled={props.disabled}
-          value="single"
-          type="single"
-        >
-          <ToolbarToggleItem
-            ref={ref}
-            className={cn(
-              toolbarButtonVariants({
-                size,
-                variant,
-              }),
-              isDropdown && "justify-between gap-1 pr-1",
-              className,
-            )}
-            value={pressed ? "single" : ""}
-            {...props}
-          >
-            {isDropdown ? (
-              <>
-                <div className="flex flex-1 items-center gap-2 whitespace-nowrap">
-                  {children}
-                </div>
-                <div>
-                  <ChevronDown
-                    className="size-3.5 text-muted-foreground"
-                    data-icon
-                  />
-                </div>
-              </>
-            ) : (
-              children
-            )}
-          </ToolbarToggleItem>
-        </ToolbarToggleGroup>
-      ) : (
-        <ToolbarPrimitive.Button
-          ref={ref}
-          className={cn(
-            toolbarButtonVariants({
-              size,
-              variant,
-            }),
-            isDropdown && "pr-1",
-            className,
-          )}
+type ToolbarButtonProps = {
+  isDropdown?: boolean;
+  pressed?: boolean;
+  size?: VariantProps<typeof toolbarButtonVariants>["size"];
+  variant?: VariantProps<typeof toolbarButtonVariants>["variant"];
+} & Omit<
+  React.ComponentPropsWithRef<typeof ToolbarPrimitive.Button>,
+  "asChild" | "value"
+>;
+
+const ToolbarButtonBase = ({
+  children,
+  className,
+  isDropdown,
+  pressed,
+  size,
+  variant,
+  ...props
+}: ToolbarButtonProps) => {
+  const buttonContent = isDropdown ? (
+    <>
+      <div className="flex flex-1 items-center gap-2 whitespace-nowrap">
+        {children}
+      </div>
+      <div>
+        <ChevronDown className="size-3.5 text-muted-foreground" data-icon />
+      </div>
+    </>
+  ) : (
+    children
+  );
+
+  const buttonClassName = cn(
+    toolbarButtonVariants({
+      size,
+      variant,
+    }),
+    isDropdown && "justify-between gap-1 pr-1",
+    className,
+  );
+
+  if (typeof pressed === "boolean") {
+    return (
+      <ToolbarPrimitive.ToggleGroup
+        disabled={props.disabled}
+        value="single"
+        type="single"
+      >
+        <ToolbarPrimitive.ToggleItem
+          className={buttonClassName}
+          value={pressed ? "single" : ""}
           {...props}
         >
-          {children}
-        </ToolbarPrimitive.Button>
-      );
-    },
-  ),
-);
+          {buttonContent}
+        </ToolbarPrimitive.ToggleItem>
+      </ToolbarPrimitive.ToggleGroup>
+    );
+  }
+
+  return (
+    <ToolbarPrimitive.Button className={buttonClassName} {...props}>
+      {buttonContent}
+    </ToolbarPrimitive.Button>
+  );
+};
+
+const ToolbarButton = withTooltip(ToolbarButtonBase);
 
 export { ToolbarButton };
 
-export const ToolbarSplitButton = forwardRef<
-  React.ElementRef<typeof ToolbarButton>,
-  React.ComponentPropsWithoutRef<typeof ToolbarButton>
->(({ children, className, ...props }, ref) => {
+export const ToolbarSplitButton = ({
+  children,
+  className,
+  ...props
+}: React.ComponentPropsWithRef<typeof ToolbarButton>) => {
   return (
     <ToolbarButton
-      ref={ref}
       className={cn("group flex gap-0 px-0 hover:bg-transparent", className)}
       {...props}
     >
       {children}
     </ToolbarButton>
   );
-});
+};
 
-export const ToolbarSplitButtonPrimary = withTooltip(
-  forwardRef<
-    React.ElementRef<typeof ToolbarToggleItem>,
-    Omit<React.ComponentPropsWithoutRef<typeof ToolbarToggleItem>, "value">
-  >(({ children, className, size, variant, ...props }, ref) => {
-    return (
-      <span
-        ref={ref}
-        className={cn(
-          toolbarButtonVariants({
-            size,
-            variant,
-          }),
-          "rounded-r-none",
-          "group-data-[pressed=true]:bg-accent group-data-[pressed=true]:text-accent-foreground",
-          className,
-        )}
-        {...props}
-      >
-        {children}
-      </span>
-    );
-  }),
-);
-
-export const ToolbarSplitButtonSecondary = forwardRef<
-  HTMLButtonElement,
-  React.ComponentPropsWithoutRef<"span"> &
-    VariantProps<typeof dropdownArrowVariants>
->(({ className, size, variant, ...props }, ref) => {
+export const ToolbarSplitButtonPrimaryBase = ({
+  children,
+  className,
+  size,
+  variant,
+  ...props
+}: Omit<React.ComponentPropsWithRef<typeof ToolbarToggleItem>, "value">) => {
   return (
     <span
-      ref={ref}
+      className={cn(
+        toolbarButtonVariants({
+          size,
+          variant,
+        }),
+        "rounded-r-none",
+        "group-data-[pressed=true]:bg-accent group-data-[pressed=true]:text-accent-foreground",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </span>
+  );
+};
+
+export const ToolbarSplitButtonPrimary = withTooltip(
+  ToolbarSplitButtonPrimaryBase,
+);
+
+export const ToolbarSplitButtonSecondary = ({
+  className,
+  size,
+  variant,
+  ...props
+}: Omit<React.ComponentPropsWithRef<typeof ToolbarToggleItem>, "value"> &
+  VariantProps<typeof dropdownArrowVariants>) => {
+  return (
+    <span
       className={cn(
         dropdownArrowVariants({
           size,
@@ -217,7 +215,7 @@ export const ToolbarSplitButtonSecondary = forwardRef<
       <ChevronDown className="size-3.5 text-muted-foreground" data-icon />
     </span>
   );
-});
+};
 
 ToolbarSplitButton.displayName = "ToolbarButton";
 

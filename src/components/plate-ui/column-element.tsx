@@ -8,7 +8,7 @@ import { ResizableProvider } from "@udecode/plate-resizable";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import { usePluginOption, useReadOnly, withHOC } from "@udecode/plate/react";
 import { GripHorizontal } from "lucide-react";
-import { forwardRef, memo } from "react";
+import { memo } from "react";
 import { Button } from "./button";
 import { PlateElement } from "./plate-element";
 import {
@@ -103,17 +103,15 @@ const ColumnDragHandle = memo(() => {
   );
 });
 
-const DropLine = forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+ColumnDragHandle.displayName = "ColumnDragHandle";
+
+const DropLine = ({ className, ...props }: React.HTMLProps<HTMLDivElement>) => {
   const { dropLine } = useDropLine({ orientation: "horizontal" });
 
   if (!dropLine) return null;
 
   return (
     <div
-      ref={ref}
       {...props}
       className={cn(
         "slate-dropLine",
@@ -126,4 +124,4 @@ const DropLine = forwardRef<
       )}
     />
   );
-});
+};

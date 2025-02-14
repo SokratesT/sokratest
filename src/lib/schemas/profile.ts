@@ -3,6 +3,7 @@ import { sharedSchemas } from "./shared";
 
 export const profileSchema = z.object({
   email: sharedSchemas.email,
+  name: z.string().max(100),
   username: sharedSchemas.username,
 });
 

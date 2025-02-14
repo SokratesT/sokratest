@@ -79,10 +79,10 @@ export async function POST(request: Request) {
       const result = streamText({
         model: customModel({
           model: {
-            id: "deepseek-r1:14b",
-            label: "Deepseek R1",
-            apiIdentifier: "deepseek-r1:14b",
-            description: "Local R1",
+            id: "llama3.1",
+            label: "Llama 3.1",
+            apiIdentifier: "llama3.1:latest",
+            description: "Local Llama",
           },
           mode: "local",
         }),

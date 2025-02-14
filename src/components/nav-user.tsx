@@ -23,19 +23,11 @@ import { routes } from "@/settings/routes";
 import { ChevronsUpDown, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const userInitial = (name: string) => name[0].toUpperCase();
 
 const NavUser = () => {
   const router = useRouter();
-
-  const [isClient, setIsClient] = useState(false);
-
-  // TODO: Feels janky, should be a better way to do this
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const { data, isPending } = authClient.useSession();
   const { isMobile } = useSidebar();
@@ -50,8 +42,7 @@ const NavUser = () => {
     });
   };
 
-  if (isPending || !data || !isClient)
-    return <Skeleton className="h-12 w-full" />;
+  if (isPending || !data) return <Skeleton className="h-12 w-full" />;
 
   return (
     <SidebarMenu>

@@ -1,5 +1,6 @@
 "use client";
 
+import { revalidatePathFromClient } from "@/actions/revalidate-helper";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
@@ -23,7 +24,8 @@ type Organization = InferSelectModel<typeof organization>;
 
 const handleDelete = async (id: string) => {
   authClient.organization.delete({ organizationId: id });
-  toast.success("User deleted");
+  toast.success("Organization deleted");
+  await revalidatePathFromClient("/app/orgs");
 };
 
 export const columns: ColumnDef<Organization>[] = [
@@ -60,13 +62,13 @@ export const columns: ColumnDef<Organization>[] = [
   {
     accessorKey: "slug",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email" />
+      <DataTableColumnHeader column={column} title="Slug" />
     ),
   },
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Role" />
+      <DataTableColumnHeader column={column} title="Created At" />
     ),
   },
   {

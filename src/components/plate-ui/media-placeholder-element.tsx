@@ -14,6 +14,7 @@ import {
 } from "@udecode/plate-media/react";
 import { useEditorPlugin, withHOC, withRef } from "@udecode/plate/react";
 import { AudioLines, FileUp, Film, ImageIcon } from "lucide-react";
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFilePicker } from "use-file-picker";
 import { PlateElement } from "./plate-element";
@@ -214,7 +215,7 @@ export function ImageProgress({
 
   return (
     <div className={cn("relative", className)} contentEditable={false}>
-      <img
+      <Image
         ref={imageRef}
         className="h-auto w-full rounded-sm object-cover"
         alt={file.name}

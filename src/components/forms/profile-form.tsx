@@ -18,7 +18,8 @@ const ProfileForm = () => {
     resolver: zodResolver(profileSchema),
     defaultValues: {
       email: data?.user.email,
-      username: data?.user.name,
+      name: data?.user.name,
+      username: data?.user.username,
     },
   });
 
@@ -26,7 +27,8 @@ const ProfileForm = () => {
   useEffect(() => {
     form.reset({
       email: data?.user.email,
-      username: data?.user.name,
+      name: data?.user.name,
+      username: data?.user.username,
     });
 
     if (!isPending && data) {
@@ -35,9 +37,12 @@ const ProfileForm = () => {
   }, [data]);
 
   const onSubmit = async (values: ProfileSchemaType) => {
+    console.log("values", values);
+
     const { data, error } = await authClient.updateUser(
       {
-        name: values.username,
+        name: values.name,
+        username: values.username,
       },
       {
         onRequest: (ctx) => {
@@ -65,8 +70,22 @@ const ProfileForm = () => {
           render={({ field }) => (
             <FormInputField
               field={field}
-              placeholder="Email"
+              placeholder="your@email.com"
+              label="Email"
               inputType="email"
+              loading={loading}
+            />
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormInputField
+              field={field}
+              placeholder="Your name"
+              label="Name"
+              inputType="text"
               loading={loading}
             />
           )}
@@ -77,7 +96,8 @@ const ProfileForm = () => {
           render={({ field }) => (
             <FormInputField
               field={field}
-              placeholder="Username"
+              placeholder="Your username"
+              label="Username"
               inputType="text"
               loading={loading}
             />

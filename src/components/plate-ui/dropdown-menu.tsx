@@ -11,18 +11,18 @@ import {
 } from "@udecode/cn";
 import { cva } from "class-variance-authority";
 import { Check, ChevronRight } from "lucide-react";
-import { forwardRef, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 
 export const DropdownMenu = DropdownMenuPrimitive.Root;
 
 export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 
-export const DropdownMenuGroup = forwardRef<
-  HTMLDivElement,
-  { label?: React.ReactNode } & React.ComponentPropsWithoutRef<
-    typeof DropdownMenuPrimitive.Group
-  >
->(({ label, ...props }, ref) => {
+export const DropdownMenuGroup = ({
+  label,
+  ...props
+}: React.ComponentPropsWithRef<typeof DropdownMenuPrimitive.Group> & {
+  label?: React.ReactNode;
+}) => {
   return (
     <>
       <DropdownMenuSeparator
@@ -33,7 +33,6 @@ export const DropdownMenuGroup = forwardRef<
       />
 
       <DropdownMenuPrimitive.Group
-        ref={ref}
         {...props}
         className={cn(
           "hidden",
@@ -46,18 +45,20 @@ export const DropdownMenuGroup = forwardRef<
       </DropdownMenuPrimitive.Group>
     </>
   );
-});
+};
 
 export const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
 
 export const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 
-export const DropdownMenuRadioGroup = forwardRef<
-  HTMLDivElement,
-  { label?: React.ReactNode } & React.ComponentPropsWithoutRef<
+export const DropdownMenuRadioGroup = ({
+  label,
+  ...props
+}: React.HTMLProps<HTMLDivElement> & {
+  label?: React.ReactNode;
+} & React.ComponentPropsWithoutRef<
     typeof DropdownMenuPrimitive.RadioGroup
-  >
->(({ label, ...props }, ref) => {
+  >) => {
   return (
     <>
       <DropdownMenuSeparator
@@ -68,7 +69,6 @@ export const DropdownMenuRadioGroup = forwardRef<
       />
 
       <DropdownMenuPrimitive.RadioGroup
-        ref={ref}
         {...props}
         className={cn(
           "hidden",
@@ -81,7 +81,7 @@ export const DropdownMenuRadioGroup = forwardRef<
       </DropdownMenuPrimitive.RadioGroup>
     </>
   );
-});
+};
 
 export const DropdownMenuSubTrigger = withRef<
   typeof DropdownMenuPrimitive.SubTrigger,

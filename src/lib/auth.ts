@@ -1,4 +1,5 @@
 import { db } from "@/db/drizzle";
+import { getUserOrganizationsOnLogin } from "@/db/queries/organizations";
 import {
   account,
   invitation,
@@ -45,8 +46,41 @@ export const auth = betterAuth({
     },
   },
   advanced: {
-    // TODO: Adjust schema to auto generate UUIDs
     generateId: () => uuidv4(),
+  },
+  databaseHooks: {
+    session: {
+      create: {
+        before: async (session) => {
+          let activeOrganizationId = null;
+
+          try {
+            const orgs = await getUserOrganizationsOnLogin(session);
+
+            if (orgs.length === 0) {
+              throw new Error("User is not a member of any organizations");
+            }
+
+            activeOrganizationId = orgs[0].id;
+          } catch (error) {
+            console.error(
+              "Failed to set user organization on login: ",
+              error,
+              "Session: ",
+              session,
+            );
+          }
+
+          return {
+            data: {
+              ...session,
+              // TODO: Set active organization based on preference instead of simply the first one
+              activeOrganizationId: activeOrganizationId,
+            },
+          };
+        },
+      },
+    },
   },
 });
 

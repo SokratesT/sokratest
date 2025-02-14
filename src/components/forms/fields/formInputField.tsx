@@ -103,7 +103,17 @@ const FormInputField = ({
   };
 
   if (loading) {
-    return <Skeleton className="h-9" />;
+    return (
+      <>
+        {label && (
+          <FormLabel>
+            {label}
+            {required && <span className="bold text-muted-foreground"> *</span>}
+          </FormLabel>
+        )}
+        <Skeleton className="h-9" />
+      </>
+    );
   }
 
   return (

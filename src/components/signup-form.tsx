@@ -27,7 +27,8 @@ const SignUpForm = () => {
   const onSubmit = async (values: SignupSchemaType) => {
     const { data, error } = await authClient.signUp.email(
       {
-        name: values.username,
+        name: values.name,
+        username: values.username,
         email: values.email,
         password: values.password,
       },
@@ -54,12 +55,24 @@ const SignUpForm = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="username"
+            name="name"
             render={({ field }) => (
               <FormInputField
                 field={field}
                 placeholder="Your Name"
                 label="Name"
+                inputType="text"
+              />
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormInputField
+                field={field}
+                placeholder="Your Username"
+                label="Username"
                 inputType="text"
               />
             )}

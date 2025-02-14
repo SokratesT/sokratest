@@ -65,7 +65,7 @@ const FormPasswordField = ({
                 className="h-full w-12 rounded-l-none p-1"
                 type="button"
                 variant={"outline"}
-                // Update the state of the showPassword boolean on click
+                tabIndex={-1}
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {/* Render the eye or eye off icon based on the state */}
