@@ -3,32 +3,14 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
-import { db } from "@/db/drizzle";
-import { user } from "@/db/schema/auth";
+import { getAvailableUsers } from "@/db/queries/users";
 import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
-import {
-  type InferSelectModel,
-  asc,
-  count,
-  desc,
-  getTableColumns,
-  ilike,
-} from "drizzle-orm";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
 import { columns } from "./_components/columns";
 import { UsersDataTableSelectActions } from "./_components/users-data-table-select-actions";
-
-type User = InferSelectModel<typeof user>;
-
-// TODO: Centralise this in a shared file
-
-// Type guard function
-function isValidColumnId(id: string): id is keyof User {
-  return ["name", "email", "role"].includes(id);
-}
 
 const UsersPage = async ({
   searchParams,
@@ -40,29 +22,12 @@ const UsersPage = async ({
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
   const { bucket, search } = await bucketSearchParamsCache.parse(searchParams);
 
-  const sortOrder = sort
-    ?.filter((s) => isValidColumnId(s.id))
-    .map((s) => {
-      if (["name", "email", "role"].includes(s.id)) {
-        const column = user[s.id as keyof User];
-        return s.desc ? desc(column) : asc(column);
-      } else {
-        return asc(user.createdAt);
-      }
-    }) ?? [asc(user.createdAt)]; // Fallback default sort
-
-  const query = await db
-    .select({ ...getTableColumns(user) })
-    .from(user)
-    .where(ilike(user.email, `%${search}%`))
-    .limit(pageSize)
-    .orderBy(...sortOrder)
-    .offset(pageIndex * pageSize);
-
-  const [rowCount] = await db
-    .select({ count: count() })
-    .from(user)
-    .where(ilike(user.email, `%${search}%`));
+  const { query, rowCount } = await getAvailableUsers(
+    sort,
+    pageIndex,
+    pageSize,
+    search,
+  );
 
   return (
     <div className="flex flex-col gap-14">

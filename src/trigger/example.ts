@@ -6,7 +6,6 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { logger, task, wait } from "@trigger.dev/sdk/v3";
 import { embedMany } from "ai";
 import { UnstructuredClient } from "unstructured-client";
-import { ChunkingStrategy } from "unstructured-client/sdk/models/shared";
 
 // SimpleDirectoryReader,
 interface Payload {
@@ -55,7 +54,7 @@ export const helloWorldTask = task({
             content: await openAsBlob(filePath),
             fileName,
           },
-          chunkingStrategy: ChunkingStrategy.ByTitle,
+          chunkingStrategy: "by_title",
           overlap: 64,
           // splitPdfPageRange: [1, 6],
           // strategy: Strategy.HiRes,

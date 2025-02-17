@@ -3,40 +3,13 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
-import { db } from "@/db/drizzle";
-import { user } from "@/db/schema/auth";
-import { type Post, posts } from "@/db/schema/posts";
+import { getAvailablePosts } from "@/db/queries/posts";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
-import {
-  type InferSelectModel,
-  asc,
-  count,
-  desc,
-  eq,
-  getTableColumns,
-} from "drizzle-orm";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
 import { columns } from "./_components/columns";
 import { PostsDataTableSelectActions } from "./_components/posts-data-table-select-actions";
-
-interface PostWithAuthor extends Post {
-  name: string | null;
-}
-
-// TODO: Centralise this in a shared file
-type User = InferSelectModel<typeof user>;
-
-// Define valid column keys
-type ValidPostWithAuthorColumnId = keyof PostWithAuthor;
-
-// Type guard function
-function isValidColumnId(
-  id: string,
-): id is ValidPostWithAuthorColumnId | keyof User {
-  return ["title", "name", "createdAt"].includes(id);
-}
 
 const PostsPage = async ({
   searchParams,
@@ -47,29 +20,11 @@ const PostsPage = async ({
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
 
-  const sortOrder = sort
-    ?.filter((s) => isValidColumnId(s.id))
-    .map((s) => {
-      if (s.id === "name") {
-        const column = user[s.id as keyof User];
-        return s.desc ? desc(column) : asc(column);
-      } else if (["createdAt", "title"].includes(s.id)) {
-        const column = posts[s.id as keyof Post];
-        return s.desc ? desc(column) : asc(column);
-      } else {
-        return asc(posts.createdAt);
-      }
-    }) ?? [asc(posts.createdAt)]; // Fallback default sort
-
-  const query = await db
-    .select({ ...getTableColumns(posts), name: user.name })
-    .from(posts)
-    .limit(pageSize)
-    .orderBy(...sortOrder)
-    .leftJoin(user, eq(posts.userId, user.id))
-    .offset(pageIndex * pageSize);
-
-  const [rowCount] = await db.select({ count: count() }).from(posts);
+  const { query, rowCount } = await getAvailablePosts(
+    sort,
+    pageIndex,
+    pageSize,
+  );
 
   return (
     <div className="flex flex-col gap-14">

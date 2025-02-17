@@ -13,7 +13,15 @@ export async function generateTitleFromUserMessage({
   message: Message;
 }) {
   const { text: title } = await generateText({
-    model: customModel({ mode: "local" }),
+    model: customModel({
+      model: {
+        id: "meta-llama-3.1-8b-instruct",
+        label: "Llama 3.1 (8b)",
+        apiIdentifier: "meta-llama-3.1-8b-instruct",
+        description: "Model description for 3.1 8b",
+      },
+      mode: "saia",
+    }),
     system: `\n
     - you will generate a short title based on the first message a user begins a conversation with
     - ensure it is not more than 80 characters long

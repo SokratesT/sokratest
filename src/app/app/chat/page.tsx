@@ -1,15 +1,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { db } from "@/db/drizzle";
-import { chats } from "@/db/schema/chat";
-import { asc } from "drizzle-orm";
+import { getAllChats } from "@/db/queries/chats";
 import Link from "next/link";
 import { DeleteChatButton } from "./_components/delete-chat-button";
 import { NewChatButton } from "./_components/new-chat-button";
 
 const ChatsPage = async () => {
-  const query = await db.select().from(chats).orderBy(asc(chats.createdAt));
+  const query = await getAllChats();
 
   return (
     <div className="flex flex-col gap-14">

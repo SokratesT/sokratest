@@ -8,6 +8,13 @@
       "when": 1736261314928,
       "tag": "0000_calm_doctor_strange",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1739527920757,
+      "tag": "0001_military_doomsday",
+      "breakpoints": true
     }
   ]
 }

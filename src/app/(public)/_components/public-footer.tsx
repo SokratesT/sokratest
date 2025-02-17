@@ -1,6 +1,8 @@
 import { navigationItems } from "@/settings/menus";
 import Link from "next/link";
 
+// TODO: Add funding notice and logos (check formal requirements)
+
 const PublicFooter = () => {
   return (
     <div className="w-full bg-foreground py-20 text-background lg:py-40">

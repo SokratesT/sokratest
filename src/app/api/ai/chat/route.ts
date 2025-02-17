@@ -13,8 +13,9 @@ import {
   streamText,
 } from "ai";
 import { headers } from "next/headers";
+import { getRelevantChunks } from "./ai-helper";
 
-export const maxDuration = 30;
+export const maxDuration = 120;
 
 export async function POST(request: Request) {
   const {
@@ -72,19 +73,19 @@ export async function POST(request: Request) {
 
   return createDataStreamResponse({
     execute: async (dataStream) => {
-      // const relevantChunks = await getRelevantChunks(messages);
+      const relevantChunks = await getRelevantChunks(messages);
 
-      // relevantChunks.map((chunk) => dataStream.writeMessageAnnotation(chunk));
+      relevantChunks.map((chunk) => dataStream.writeMessageAnnotation(chunk));
 
       const result = streamText({
         model: customModel({
           model: {
-            id: "llama3.1",
-            label: "Llama 3.1",
-            apiIdentifier: "llama3.1:latest",
-            description: "Local Llama",
+            id: "deepseek-r1-distill-llama-70b",
+            label: "Deepseek R1 (70b)",
+            apiIdentifier: "deepseek-r1-distill-llama-70b",
+            description: "Model description for Deepseek R1",
           },
-          mode: "local",
+          mode: "saia",
         }),
         messages,
         experimental_transform: smoothStream(),
@@ -93,12 +94,12 @@ export async function POST(request: Request) {
         // experimental_toolCallStreaming: true,
         /* system:
           "You are a helpful assistant. You can use tools to help the user.", */
-        /* system: createSystemPrompt(
+        system: createSystemPrompt(
           JSON.stringify(
             relevantChunks.map((c) => ({ fileId: c.fileId, text: c.text })),
           ),
-        ), */
-        system: "You are a helpful assistant.",
+        ),
+        // system: "You are a helpful assistant.",
         /* tools: {
           // generateFinalResponse: finalResponseTool(dataStream, messages),
           queryRag: queryRagTool(dataStream),

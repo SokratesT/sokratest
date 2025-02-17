@@ -1,18 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { db } from "@/db/drizzle";
-import { posts } from "@/db/schema/posts";
+import { getAllPosts } from "@/db/queries/posts";
 import { auth } from "@/lib/auth";
 import { routes } from "@/settings/routes";
-import { asc } from "drizzle-orm";
 import { MoveRight } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 
 const PostsPage = async () => {
-  const queryPosts = await db
-    .select()
-    .from(posts)
-    .orderBy(asc(posts.createdAt));
+  const queryPosts = await getAllPosts();
 
   const session = await auth.api.getSession({ headers: await headers() });
 

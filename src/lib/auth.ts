@@ -22,6 +22,7 @@ import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { v4 as uuidv4 } from "uuid";
 
 export const auth = betterAuth({
+  trustedOrigins: ["http://localhost:3000", "http://host.docker.internal:3000"],
   plugins: [admin(), username(), organizationPlugin()],
   database: drizzleAdapter(db, {
     provider: "pg",
