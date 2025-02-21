@@ -5,11 +5,10 @@ import { useDraggable } from "@udecode/plate-dnd";
 import { parseTwitterUrl, parseVideoUrl } from "@udecode/plate-media";
 import { useMediaState } from "@udecode/plate-media/react";
 import { ResizableProvider, useResizableValue } from "@udecode/plate-resizable";
-import { useEditorMounted, withHOC } from "@udecode/plate/react";
+import { PlateElement, useEditorMounted, withHOC } from "@udecode/plate/react";
 import LiteYouTubeEmbed from "react-lite-youtube-embed";
 import ReactPlayer from "react-player";
 import { Caption, CaptionTextarea } from "./caption";
-import { PlateElement } from "./plate-element";
 import {
   Resizable,
   ResizeHandle,

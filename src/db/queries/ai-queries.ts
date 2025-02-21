@@ -26,10 +26,12 @@ export async function getUser(email: string): Promise<Array<User>> {
 export async function saveChat({
   id,
   userId,
+  courseId,
   title,
 }: {
   id: string;
   userId: string;
+  courseId: string;
   title: string;
 }) {
   try {
@@ -39,7 +41,8 @@ export async function saveChat({
       .values({
         id,
         createdAt: new Date(),
-        userId: userId,
+        userId,
+        courseId,
         title,
       })
       .onConflictDoUpdate({ target: chat.id, set: { title } });

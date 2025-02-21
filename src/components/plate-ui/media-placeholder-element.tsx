@@ -12,12 +12,16 @@ import {
   VideoPlugin,
   updateUploadHistory,
 } from "@udecode/plate-media/react";
-import { useEditorPlugin, withHOC, withRef } from "@udecode/plate/react";
+import {
+  PlateElement,
+  useEditorPlugin,
+  withHOC,
+  withRef,
+} from "@udecode/plate/react";
 import { AudioLines, FileUp, Film, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFilePicker } from "use-file-picker";
-import { PlateElement } from "./plate-element";
 import { Spinner } from "./spinner";
 
 const CONTENT: Record<

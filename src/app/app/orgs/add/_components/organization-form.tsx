@@ -3,20 +3,19 @@
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
-import type { organization as organizationDbSchema } from "@/db/schema/auth";
+import type { Organization } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
 import {
   type OrganizationSchemaType,
   organizationSchema,
 } from "@/lib/schemas/organization";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { InferSelectModel } from "drizzle-orm";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const OrganizationForm = ({
   organization,
-}: { organization?: InferSelectModel<typeof organizationDbSchema> }) => {
+}: { organization?: Organization }) => {
   const form = useForm<OrganizationSchemaType>({
     resolver: zodResolver(organizationSchema),
     defaultValues: {

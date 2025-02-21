@@ -17,11 +17,16 @@ export const createNewChat = async () => {
     throw new Error("Not authenticated");
   }
 
+  if (!session.session.activeCourseId) {
+    throw new Error("No active course");
+  }
+
   const chatId = uuidv4();
   await db.insert(chats).values({
     id: chatId,
     title: "New Chat",
     userId: session?.user.id,
+    courseId: session.session.activeCourseId,
   });
 
   return chatId;

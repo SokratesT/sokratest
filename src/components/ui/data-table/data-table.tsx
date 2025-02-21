@@ -22,6 +22,7 @@ interface DataTableOptions<TData> {
   rowCount: number;
   uidAccessor: keyof TData;
   placeholderClassName?: React.ComponentProps<"div">["className"];
+  meta?: Record<string, any>;
 }
 
 const DataTable = <TData, TValue>({
@@ -34,7 +35,7 @@ const DataTable = <TData, TValue>({
   children: React.ReactNode;
   props?: React.HTMLAttributes<HTMLDivElement>;
 }) => {
-  const { rowCount, placeholderClassName, uidAccessor } = options;
+  const { rowCount, placeholderClassName, uidAccessor, meta } = options;
 
   const [isLoading, startTransition] = useTransition();
   const [pagination, setPagination] =
@@ -67,6 +68,7 @@ const DataTable = <TData, TValue>({
 
   const table = useReactTable({
     data: tableData,
+    meta,
     columns: tableColumns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,

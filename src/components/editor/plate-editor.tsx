@@ -5,6 +5,7 @@ import { Editor, EditorContainer } from "@/components/plate-ui/editor";
 import { Plate } from "@udecode/plate/react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { defaultEditorText } from "./default-editor-text";
 
 export function PlateEditor({
   options,
@@ -15,7 +16,16 @@ export function PlateEditor({
   onChange?: (value: string) => void;
   readOnly?: boolean;
 }) {
-  const editor = useCreateEditor({ value: options?.value });
+  const parsedValue = () => {
+    try {
+      if (!options?.value) return defaultEditorText;
+      return JSON.parse(options.value);
+    } catch (e) {
+      return defaultEditorText;
+    }
+  };
+
+  const editor = useCreateEditor({ value: parsedValue() });
 
   return (
     <DndProvider backend={HTML5Backend}>

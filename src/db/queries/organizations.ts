@@ -1,17 +1,9 @@
 "server only";
 
 import { db } from "@/db/drizzle";
+import { type Organization, member, organization } from "@/db/schema/auth";
 import type { Session } from "better-auth";
-import {
-  type InferSelectModel,
-  asc,
-  count,
-  desc,
-  eq,
-  getTableColumns,
-  ilike,
-} from "drizzle-orm";
-import { member, organization } from "../schema/auth";
+import { asc, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 
 export const getUserOrganizationsOnLogin = async (session: Session) => {
   if (!session) {
@@ -23,8 +15,6 @@ export const getUserOrganizationsOnLogin = async (session: Session) => {
     .from(member)
     .where(eq(member.userId, session.userId));
 };
-
-type Organization = InferSelectModel<typeof organization>;
 
 function isValidColumnId(id: string): id is keyof Organization {
   return ["name", "slug"].includes(id);

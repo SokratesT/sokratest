@@ -12,14 +12,18 @@ import {
 } from "@/components/ui/sidebar";
 import { sidebarMenu } from "@/settings/menus";
 import Link from "next/link";
+import { Suspense } from "react";
+import { CourseSwitcherServer } from "./course-switcher/course-switcher-server";
 import { NavUser } from "./nav-user";
-import { OrganizationSwitcher } from "./organization-switcher";
+import { Skeleton } from "./ui/skeleton";
 
 const AppSidebar = async () => {
   return (
     <Sidebar>
       <SidebarHeader>
-        <OrganizationSwitcher />
+        <Suspense fallback={<Skeleton className="h-12 w-full" />}>
+          <CourseSwitcherServer />
+        </Suspense>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

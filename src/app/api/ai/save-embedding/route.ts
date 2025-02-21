@@ -1,3 +1,4 @@
+import { deleteEmbeddingsForFile } from "@/actions/embeddings";
 import { db } from "@/db/drizzle";
 import { embeddings } from "@/db/schema/embeddings";
 import { fileRepository } from "@/db/schema/file-repository";
@@ -46,6 +47,8 @@ const saveEmbedding = async (
   documentId: string,
 ) => {
   // TODO: Add authentication / authorization checks
+
+  await deleteEmbeddingsForFile(documentId);
 
   const embeds = transformData(embedResults, documentId);
 

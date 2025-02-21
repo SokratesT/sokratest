@@ -6,11 +6,15 @@ import { useDraggable, useDropLine } from "@udecode/plate-dnd";
 import type { TColumnElement } from "@udecode/plate-layout";
 import { ResizableProvider } from "@udecode/plate-resizable";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
-import { usePluginOption, useReadOnly, withHOC } from "@udecode/plate/react";
+import {
+  PlateElement,
+  usePluginOption,
+  useReadOnly,
+  withHOC,
+} from "@udecode/plate/react";
 import { GripHorizontal } from "lucide-react";
 import { memo } from "react";
 import { Button } from "./button";
-import { PlateElement } from "./plate-element";
 import {
   Tooltip,
   TooltipContent,

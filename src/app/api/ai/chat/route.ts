@@ -18,18 +18,22 @@ import { getRelevantChunks } from "./ai-helper";
 export const maxDuration = 120;
 
 export async function POST(request: Request) {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session || !session.user || !session.user.id) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  if (!session.session.activeCourseId) {
+    return new Response("No active course", { status: 400 });
+  }
+
   const {
     id,
     messages,
     modelId,
   }: { id: string; messages: Array<Message>; modelId: string } =
     await request.json();
-
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (!session || !session.user || !session.user.id) {
-    return new Response("Unauthorized", { status: 401 });
-  }
 
   const userMessage = getMostRecentUserMessage(messages);
 
@@ -39,7 +43,12 @@ export async function POST(request: Request) {
 
   if (!messages || messages.length === 1) {
     const title = await generateTitleFromUserMessage({ message: userMessage });
-    await saveChat({ id, userId: session.user.id, title });
+    await saveChat({
+      id,
+      userId: session.user.id,
+      courseId: session.session.activeCourseId,
+      title,
+    });
   }
 
   // TODO: Save user messages
@@ -117,8 +126,7 @@ export async function POST(request: Request) {
                 sanitizeResponseMessages({
                   messages: response.messages,
                   reasoning,
-                  // annotations: relevantChunks ??,
-                  annotations: undefined,
+                  annotations: relevantChunks,
                 });
 
               await saveMessages({

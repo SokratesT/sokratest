@@ -23,6 +23,9 @@
   "drizzle": {
     "config": ["drizzle.config.{ts,js,json}"]
   },
+  "trigger": {
+    "entry": ["trigger.config.{js,ts}"]
+  },
   "tailwind": {
     "entry": ["tailwind.config.{js,cjs,mjs,ts}"]
   },

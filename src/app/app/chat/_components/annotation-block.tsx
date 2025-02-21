@@ -5,7 +5,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import type { JSONValue } from "ai";
+import { Markdown } from "./markdown";
 
 interface BaseAnnotation {
   type: string;
@@ -44,9 +46,21 @@ const AnnotationBlock = ({ annotations }: { annotations: JSONValue[] }) => {
                   </PopoverTrigger>
                   <PopoverContent className="h-72 w-[500px]">
                     <ScrollArea className="size-full">
-                      <p>{referenceAnnotation.fileId}</p>
-                      <p>{referenceAnnotation.similarity}</p>
-                      <p className="mt-2">{referenceAnnotation.text}</p>
+                      <div className="rounded-md bg-muted p-4">
+                        <p>
+                          <b>ID:</b> {referenceAnnotation.fileId}
+                        </p>
+                        <p>
+                          <b>Similarity:</b> {referenceAnnotation.similarity}
+                        </p>
+                      </div>
+                      <div className="mt-4">
+                        <p>
+                          <b>Chunk</b>
+                        </p>
+                        <Separator orientation="horizontal" className="mx-1" />
+                        <Markdown>{referenceAnnotation.text}</Markdown>
+                      </div>
                     </ScrollArea>
                   </PopoverContent>
                 </Popover>

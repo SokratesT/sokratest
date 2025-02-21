@@ -11,15 +11,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { user } from "@/db/schema/auth";
+import type { User } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { InferSelectModel } from "drizzle-orm";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-
-type User = InferSelectModel<typeof user>;
 
 const handleDelete = async (id: string) => {
   authClient.admin.removeUser({ userId: id });

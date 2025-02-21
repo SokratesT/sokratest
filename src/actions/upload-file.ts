@@ -18,6 +18,12 @@ export const saveFileInfoInDB = async (
     throw new Error("Not authenticated");
   }
 
+  if (!session.session.activeCourseId) {
+    throw new Error("No active course");
+  }
+
+  const courseId = session.session.activeCourseId;
+
   await db.insert(fileRepository).values(
     filesInfo.map((file) => ({
       id: file.id,
@@ -25,6 +31,7 @@ export const saveFileInfoInDB = async (
       prefix: "", // TODO: Implement prefix handling
       filename: file.id,
       originalName: file.originalFileName,
+      courseId,
       size: file.fileSize,
       uploadedBy: session?.user.id,
       fileType,

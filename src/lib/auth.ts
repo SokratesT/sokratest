@@ -1,4 +1,5 @@
 import { db } from "@/db/drizzle";
+import { getUserCoursesOnLogin } from "@/db/queries/courses";
 import { getUserOrganizationsOnLogin } from "@/db/queries/organizations";
 import {
   account,
@@ -54,15 +55,23 @@ export const auth = betterAuth({
       create: {
         before: async (session) => {
           let activeOrganizationId = null;
+          let activeCourseId = null;
 
+          // TODO: Separate org and course handling to avoid mutual failure
           try {
             const orgs = await getUserOrganizationsOnLogin(session);
+            const courses = await getUserCoursesOnLogin(session);
 
             if (orgs.length === 0) {
               throw new Error("User is not a member of any organizations");
             }
 
+            if (courses.length === 0) {
+              throw new Error("User is not a member of any courses");
+            }
+
             activeOrganizationId = orgs[0].id;
+            activeCourseId = courses[0].id;
           } catch (error) {
             console.error(
               "Failed to set user organization on login: ",
@@ -76,10 +85,20 @@ export const auth = betterAuth({
             data: {
               ...session,
               // TODO: Set active organization based on preference instead of simply the first one
-              activeOrganizationId: activeOrganizationId,
+              activeOrganizationId,
+              activeCourseId,
             },
           };
         },
+      },
+    },
+  },
+  session: {
+    additionalFields: {
+      activeCourseId: {
+        type: "string",
+        required: false,
+        input: true,
       },
     },
   },

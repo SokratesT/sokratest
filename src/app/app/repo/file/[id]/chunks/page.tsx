@@ -1,3 +1,4 @@
+import { Markdown } from "@/app/app/chat/_components/markdown";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/db/drizzle";
 import { embeddings } from "@/db/schema/embeddings";
@@ -26,7 +27,9 @@ const EditPostPage = async ({
                 {chunk.fileId} / {chunk.nodeId}
               </CardTitle>
             </CardHeader>
-            <CardContent>{chunk.text}</CardContent>
+            <CardContent>
+              <Markdown>{chunk.text}</Markdown>
+            </CardContent>
           </Card>
         );
       })}

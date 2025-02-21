@@ -7,8 +7,8 @@ import { useCodeBlockElementState } from "@udecode/plate-code-block/react";
 import { BracesIcon } from "lucide-react";
 import { Button } from "./button";
 import { CodeBlockCombobox } from "./code-block-combobox";
-import { PlateElement } from "./plate-element";
 import "./code-block-element.css";
+import { PlateElement } from "@udecode/plate/react";
 
 export const CodeBlockElement = withRef<typeof PlateElement>(
   ({ children, className, ...props }, ref) => {

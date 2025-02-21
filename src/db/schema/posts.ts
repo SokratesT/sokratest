@@ -6,6 +6,7 @@ export const posts = pgTable("posts", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(),
   content: text("text").notNull(),
+  // TODO: Check what should be done if user deletes account
   userId: uuid("user_id")
     .notNull()
     .references(() => user.id),

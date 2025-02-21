@@ -1,7 +1,9 @@
 "server only";
 
 import { db } from "@/db/drizzle";
-import { asc, count, desc, getTableColumns, ilike } from "drizzle-orm";
+import { auth } from "@/lib/auth";
+import { and, asc, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
+import { headers } from "next/headers";
 import { type FileRepository, fileRepository } from "../schema/file-repository";
 
 function isValidColumnId(id: FileRepository["id"]): id is keyof FileRepository {
@@ -16,6 +18,12 @@ export const getAvailableFiles = async (
   pageSize: number,
   search: string,
 ) => {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session?.session.activeCourseId) {
+    throw new Error("No session or active course");
+  }
+
   let query: FileRepository[] = [];
   let rowCount: { count: number } = { count: 0 };
 
@@ -42,7 +50,12 @@ export const getAvailableFiles = async (
     query = await db
       .select({ ...getTableColumns(fileRepository) })
       .from(fileRepository)
-      .where(ilike(fileRepository.filename, `%${search}%`))
+      .where(
+        and(
+          ilike(fileRepository.filename, `%${search}%`),
+          eq(fileRepository.courseId, session.session.activeCourseId),
+        ),
+      )
       .limit(pageSize)
       .orderBy(...sortOrder)
       .offset(pageIndex * pageSize);

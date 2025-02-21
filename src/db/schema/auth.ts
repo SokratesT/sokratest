@@ -1,3 +1,4 @@
+import type { InferSelectModel } from "drizzle-orm";
 import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -15,6 +16,8 @@ export const user = pgTable("user", {
   username: text("username").unique(),
 });
 
+export type User = InferSelectModel<typeof user>;
+
 export const session = pgTable("session", {
   id: uuid("id").primaryKey().defaultRandom(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -28,7 +31,10 @@ export const session = pgTable("session", {
     .references(() => user.id),
   impersonatedBy: text("impersonated_by"),
   activeOrganizationId: uuid("active_organization_id"),
+  activeCourseId: uuid("active_course_id"),
 });
+
+export type Session = InferSelectModel<typeof session>;
 
 export const account = pgTable("account", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -48,6 +54,8 @@ export const account = pgTable("account", {
   updatedAt: timestamp("updated_at").notNull(),
 });
 
+export type Account = InferSelectModel<typeof account>;
+
 export const verification = pgTable("verification", {
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
@@ -57,6 +65,8 @@ export const verification = pgTable("verification", {
   updatedAt: timestamp("updated_at"),
 });
 
+export type Verification = InferSelectModel<typeof verification>;
+
 export const organization = pgTable("organization", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
@@ -65,6 +75,8 @@ export const organization = pgTable("organization", {
   createdAt: timestamp("created_at").notNull(),
   metadata: text("metadata"),
 });
+
+export type Organization = InferSelectModel<typeof organization>;
 
 export const member = pgTable("member", {
   id: text("id").primaryKey(),
@@ -77,6 +89,8 @@ export const member = pgTable("member", {
   role: text("role").notNull(),
   createdAt: timestamp("created_at").notNull(),
 });
+
+export type Member = InferSelectModel<typeof member>;
 
 export const invitation = pgTable("invitation", {
   id: text("id").primaryKey(),
@@ -91,3 +105,5 @@ export const invitation = pgTable("invitation", {
     .notNull()
     .references(() => user.id),
 });
+
+export type Invitation = InferSelectModel<typeof invitation>;

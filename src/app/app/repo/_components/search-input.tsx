@@ -7,7 +7,7 @@ import { useTransition } from "react";
 import { useDebounceCallback } from "usehooks-ts";
 
 const SearchInput = () => {
-  const [isLoading, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [{ search, page }, setQuery] = useBucketSearchParams(startTransition);
 
   const handleSearch = useDebounceCallback((search: string) => {

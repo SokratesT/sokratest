@@ -1,5 +1,6 @@
-import { Markdown } from "@/app/app/chat/_components/markdown";
+import { PlateEditor } from "@/components/editor/plate-editor";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { db } from "@/db/drizzle";
 import { courses } from "@/db/schema/courses";
 import { eq } from "drizzle-orm";
@@ -25,12 +26,19 @@ const ViewCoursePage = async ({
         </h4>
         <div className="flex gap-2">
           <Button asChild>
+            <Link href={`/app/courses/view/${id}/members`}>Manage Users</Link>
+          </Button>
+          <Button asChild>
             <Link href="/app/courses/add">Add Files</Link>
           </Button>
         </div>
       </div>
-      <div>
-        <Markdown>{queryCourse.content}</Markdown>
+      <div className="flex justify-center">
+        <Card className="max-w-full lg:w-[60%]">
+          <CardContent className="p-4">
+            <PlateEditor options={{ value: queryCourse.content }} readOnly />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

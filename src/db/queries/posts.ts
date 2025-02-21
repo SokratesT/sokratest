@@ -1,16 +1,9 @@
 "server only";
 
 import { db } from "@/db/drizzle";
-import {
-  type InferSelectModel,
-  asc,
-  count,
-  desc,
-  eq,
-  getTableColumns,
-} from "drizzle-orm";
-import { user } from "../schema/auth";
-import { type Post, posts } from "../schema/posts";
+import { type User, user } from "@/db/schema/auth";
+import { type Post, posts } from "@/db/schema/posts";
+import { asc, count, desc, eq, getTableColumns } from "drizzle-orm";
 
 export const getAllPosts = async () => {
   let queryPosts: Post[] = [];
@@ -27,9 +20,6 @@ export const getAllPosts = async () => {
 interface PostWithAuthor extends Post {
   name: string | null;
 }
-
-// TODO: Centralise this in a shared file
-type User = InferSelectModel<typeof user>;
 
 // Define valid column keys
 type ValidPostWithAuthorColumnId = keyof PostWithAuthor;

@@ -1,16 +1,24 @@
-import { createWriteStream, openAsBlob } from "node:fs";
-import fs from "node:fs/promises";
-import path from "node:path";
-import { serverEnv } from "@/lib/env/server";
+// import { serverEnv } from "@/lib/env/server";
 import { createOpenAI } from "@ai-sdk/openai";
 import { logger, task, wait } from "@trigger.dev/sdk/v3";
 import { embedMany } from "ai";
-import { UnstructuredClient } from "unstructured-client";
+// import { SentenceSplitter } from "@llamaindex/core/node-parser";
+import { SentenceSplitter } from "llamaindex";
 
-// SimpleDirectoryReader,
 interface Payload {
   url: string;
   documentId: string;
+}
+
+interface DoclingResponse {
+  filename: string;
+  markdown: string;
+  images: {
+    type: string;
+    filename: string;
+    image: string;
+  }[];
+  error: string;
 }
 
 const openai = createOpenAI({
@@ -20,71 +28,68 @@ const openai = createOpenAI({
   name: "ollama",
 });
 
-const unstructuredClient = new UnstructuredClient({
-  serverURL: serverEnv.UNSTRUCTURED_API_URL,
-  /* security: {
-    apiKeyAuth: serverEnv.UNSTRUCTURED_SECRET_KEY,
-  }, */
-});
-
 export const helloWorldTask = task({
   id: "hello-world",
   maxDuration: 3000, // Stop executing after 300 secs (5 mins) of compute
   run: async (payload: Payload, { ctx }) => {
     const signedUrl = payload.url;
-
-    // Temporary file path to save the downloaded file
-    const fileName = "downloaded-file.pdf"; // Change as needed
-    const filePath = path.join("/tmp", fileName); // Use a temporary directory
+    const doclingUrl = "http://localhost:8080/documents/convert";
 
     try {
-      // Step 1: Download the file
-      logger.log("Downloading file from:", { signedUrl });
-      await downloadFile(signedUrl, filePath);
-      await wait.for({ seconds: 5 });
-      logger.log("File downloaded successfully:", { filePath });
+      // Fetch the file from the signed URL
+      const fileResponse = await fetch(signedUrl);
+      if (!fileResponse.ok)
+        throw new Error("Failed to fetch the file from signed URL");
 
-      // Step 2: Process the file (example: load it as a Document)
-      logger.log("Processing file...");
-      // const fileContent = await fs.readFile(filePath);
+      // Convert the response to a Blob
+      const fileBlob = await fileResponse.blob();
 
-      const res = await unstructuredClient.general.partition({
-        partitionParameters: {
-          files: {
-            content: await openAsBlob(filePath),
-            fileName,
-          },
-          chunkingStrategy: "by_title",
-          overlap: 64,
-          // splitPdfPageRange: [1, 6],
-          // strategy: Strategy.HiRes,
-          // languages: ["deu"],
-          // splitPdfPage: false,
-          combineUnderNChars: 1024,
-          maxCharacters: 2048,
-        },
+      // Create a File object with a meaningful name
+      const file = new File([fileBlob], "document.pdf", {
+        type: fileBlob.type,
       });
 
-      logger.log("File processed successfully:", { res });
+      logger.log("Processing file...");
+
+      const formData = new FormData();
+      formData.append("document", file);
+      formData.append("extract_tables_as_images", "true");
+      formData.append("image_resolution_scale", "4");
+
+      const res = await fetch(doclingUrl, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          // The `Content-Type` header is automatically set by `FormData`
+        },
+        body: formData,
+      });
+
+      const json = (await res.json()) as DoclingResponse;
+
+      logger.log("File processed successfully:", { json });
+
+      const splitter = new SentenceSplitter({
+        chunkSize: 512,
+        chunkOverlap: 64,
+      });
+      /* const splitter = new MarkdownNodeParser();
+      const nodes = splitter.getNodesFromDocuments([
+        new Document({ text: json.markdown }),
+      ]);
+      const output = nodes.map((node) => node.text); */
+
+      const output = splitter.splitText(json.markdown);
 
       // Step 3: Build the index
       logger.log("Building index...");
 
-      if (!res.elements) {
-        throw new Error("No elements found in the response.");
-      }
-
       const embedResults = await embedMany({
         model: openai.embedding("mxbai-embed-large:latest"),
-        values: res.elements.map((d) => d.text),
+        values: output.map((d) => d),
       });
 
       logger.log("Index built successfully.");
-
-      // Clean up the temporary file
-      logger.log("Cleaning up temporary file...");
-      await fs.unlink(filePath);
-      logger.log("Temporary file deleted.");
 
       const response = await fetch(
         `${"http://localhost:3000"}/api/ai/save-embedding`,
@@ -124,50 +129,3 @@ export const helloWorldTask = task({
     }
   },
 });
-
-// Helper function to download a file using fetch
-async function downloadFile(
-  signedUrl: string,
-  downloadPath: string,
-): Promise<void> {
-  const response = await fetch(signedUrl);
-
-  if (!response.ok) {
-    throw new Error(`Failed to download file: ${response.statusText}`);
-  }
-
-  const fileStream = createWriteStream(downloadPath);
-
-  return new Promise((resolve, reject) => {
-    if (!response.body) {
-      reject(new Error("No response body"));
-      return;
-    }
-
-    const reader = response.body.getReader();
-    const stream = new ReadableStream({
-      async start(controller) {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          controller.enqueue(value);
-        }
-        controller.close();
-      },
-    });
-
-    stream
-      .pipeTo(
-        new WritableStream({
-          write(chunk) {
-            fileStream.write(chunk);
-          },
-        }),
-      )
-      .then(() => {
-        fileStream.end();
-        resolve();
-      })
-      .catch(reject);
-  });
-}

@@ -23,6 +23,7 @@ import { routes } from "@/settings/routes";
 import { ChevronsUpDown, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { OrganizationSwitcher } from "./organization-switcher";
 
 const userInitial = (name: string) => name[0].toUpperCase();
 
@@ -30,6 +31,8 @@ const NavUser = () => {
   const router = useRouter();
 
   const { data, isPending } = authClient.useSession();
+  const { data: activeOrganization, isPending: isPendingOrganization } =
+    authClient.useActiveOrganization();
   const { isMobile } = useSidebar();
 
   const handleSignOut = async () => {
@@ -42,7 +45,8 @@ const NavUser = () => {
     });
   };
 
-  if (isPending || !data) return <Skeleton className="h-12 w-full" />;
+  if (isPending || !data || isPendingOrganization)
+    return <Skeleton className="h-12 w-full" />;
 
   return (
     <SidebarMenu>
@@ -64,7 +68,12 @@ const NavUser = () => {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{data.user.name}</span>
-                <span className="truncate text-xs">{data.user.email}</span>
+                {/* <span className="truncate text-xs">{data.user.email}</span> */}
+                {activeOrganization && (
+                  <span className="truncate text-xs">
+                    {activeOrganization.name}
+                  </span>
+                )}
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -105,6 +114,8 @@ const NavUser = () => {
                 </DropdownMenuItem>
               ))}
             </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <OrganizationSwitcher />
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>
               <LogOut />

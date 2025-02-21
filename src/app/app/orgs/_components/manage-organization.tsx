@@ -2,13 +2,10 @@
 
 import { revalidatePathFromClient } from "@/actions/revalidate-helper";
 import { Button } from "@/components/ui/button";
-import type { organization } from "@/db/schema/auth";
+import type { Organization } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
 import { routes } from "@/settings/routes";
-import type { InferSelectModel } from "drizzle-orm";
 import { toast } from "sonner";
-
-type Organization = InferSelectModel<typeof organization>;
 
 const ManageOrganization = ({
   organization,

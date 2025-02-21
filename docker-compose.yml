@@ -1,6 +1,8 @@
 services:
   nextjs:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.nextjs
     ports:
       - "3000:3000"
     depends_on:
@@ -14,7 +16,7 @@ services:
       - .env
     environment:
       DATABASE_URL: postgres://postgres:password@postgres:5432/mydatabase
-      S3_ENDPOINT: http://localhost
+      S3_ENDPOINT: 192.168.147.2
       S3_PORT: 9000
       S3_ACCESS_KEY: minioadmin
       S3_SECRET_KEY: minioadmin
@@ -24,7 +26,7 @@ services:
   migrations:
     build:
       context: .
-      dockerfile: Dockerfile.migrations
+      dockerfile: docker/Dockerfile.migrations
     depends_on:
       postgres:
         condition: service_healthy
