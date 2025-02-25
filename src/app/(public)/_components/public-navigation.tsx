@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -78,6 +79,7 @@ const PublicNavigation = () => {
           <Button variant="ghost" className="hidden md:inline">
             Learn more
           </Button>
+          <ThemeSwitcher />
           <div className="hidden border-r md:inline" />
 
           <NavigationAuthButtons />

@@ -2,11 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { META_THEME_COLORS, useMetaColor } from "@/hooks/use-meta-color";
+import { cn } from "@/lib/utils";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useCallback } from "react";
 
-export function ThemeSwitcher() {
+export function ThemeSwitcher({ className }: { className?: string }) {
   const { setTheme, resolvedTheme } = useTheme();
   const { setMetaColor } = useMetaColor();
 
@@ -22,7 +23,7 @@ export function ThemeSwitcher() {
   return (
     <Button
       variant="ghost"
-      className="group/toggle h-8 w-8 px-0"
+      className={cn("group/toggle", className)}
       onClick={toggleTheme}
     >
       <SunIcon className="hidden [html.dark_&]:block" />
