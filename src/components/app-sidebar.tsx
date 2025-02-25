@@ -19,7 +19,7 @@ import { Skeleton } from "./ui/skeleton";
 
 const AppSidebar = async () => {
   return (
-    <Sidebar>
+    <Sidebar id="tour1-step1">
       <SidebarHeader>
         <Suspense fallback={<Skeleton className="h-12 w-full" />}>
           <CourseSwitcherServer />
