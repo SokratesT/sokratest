@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { routes } from "./routes";
 
-export const sidebarMenu = [
+export const sidebarStudentMenu = [
   {
     title: "Home",
     url: routes.app.path,
@@ -23,14 +23,17 @@ export const sidebarMenu = [
     icon: MessagesSquareIcon,
   },
   {
-    title: "Posts",
-    url: routes.app.sub.posts.path,
-    icon: NewspaperIcon,
-  },
-  {
     title: "Files",
     url: routes.app.sub.up.path,
     icon: FilesIcon,
+  },
+];
+
+export const sidebarInstructorMenu = [
+  {
+    title: "Posts",
+    url: routes.app.sub.posts.path,
+    icon: NewspaperIcon,
   },
   {
     title: "Courses",

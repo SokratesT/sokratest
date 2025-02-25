@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { sidebarMenu } from "@/settings/menus";
+import { sidebarInstructorMenu, sidebarStudentMenu } from "@/settings/menus";
 import Link from "next/link";
 import { Suspense } from "react";
 import { CourseSwitcherServer } from "./course-switcher/course-switcher-server";
@@ -27,10 +27,25 @@ const AppSidebar = async () => {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Study</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarMenu.map((item) => (
+              {sidebarStudentMenu.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+          <SidebarGroupLabel>Manage</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarInstructorMenu.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <Link href={item.url}>
