@@ -1,7 +1,5 @@
-import { db } from "@/db/drizzle";
-import { courses } from "@/db/schema/courses";
-import { eq } from "drizzle-orm";
-import { CourseForm } from "../../add/_components/course-form";
+import { getCourseById } from "@/db/queries/courses";
+import { CourseForm } from "../../_components/course-form";
 
 const EditCoursePage = async ({
   params,
@@ -9,15 +7,11 @@ const EditCoursePage = async ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
-
-  const [queryCourse] = await db
-    .select()
-    .from(courses)
-    .where(eq(courses.id, id));
+  const { query } = await getCourseById(id);
 
   return (
     <div>
-      <CourseForm course={queryCourse} />
+      <CourseForm course={query} />
     </div>
   );
 };

@@ -1,9 +1,7 @@
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { db } from "@/db/drizzle";
-import { courses } from "@/db/schema/courses";
-import { eq } from "drizzle-orm";
+import { getCourseById } from "@/db/queries/courses";
 import Link from "next/link";
 
 const ViewCoursePage = async ({
@@ -12,17 +10,13 @@ const ViewCoursePage = async ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
-
-  const [queryCourse] = await db
-    .select()
-    .from(courses)
-    .where(eq(courses.id, id));
+  const { query } = await getCourseById(id);
 
   return (
     <div className="flex flex-col gap-14">
       <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
         <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          {queryCourse.title}
+          {query.title}
         </h4>
         <div className="flex gap-2">
           <Button asChild>
@@ -36,7 +30,7 @@ const ViewCoursePage = async ({
       <div className="flex justify-center">
         <Card className="max-w-full lg:w-[60%]">
           <CardContent className="p-4">
-            <PlateEditor options={{ value: queryCourse.content }} readOnly />
+            <PlateEditor options={{ value: query.content }} readOnly />
           </CardContent>
         </Card>
       </div>

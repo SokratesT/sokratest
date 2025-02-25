@@ -1,10 +1,16 @@
 "use client";
 
 import { createNewChat } from "@/actions/chat";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import type { VariantProps } from "class-variance-authority";
 import { useRouter } from "next/navigation";
 
-const NewChatButton = () => {
+const NewChatButton = ({
+  className,
+  variant,
+  ...props
+}: React.ComponentProps<"button"> & VariantProps<typeof buttonVariants>) => {
   const router = useRouter();
 
   const handleNewChat = async () => {
@@ -12,7 +18,13 @@ const NewChatButton = () => {
     router.push(`/app/chat/${chatId}`);
   };
 
-  return <Button onClick={handleNewChat}>New Chat</Button>;
+  return (
+    <Button
+      {...props}
+      onClick={handleNewChat}
+      className={cn(buttonVariants({ variant, className }))}
+    />
+  );
 };
 
 export { NewChatButton };

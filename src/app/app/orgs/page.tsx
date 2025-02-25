@@ -23,12 +23,12 @@ const UsersPage = async ({
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
   const { search } = await bucketSearchParamsCache.parse(searchParams);
 
-  const { query, rowCount } = await getAvailableOrganizations(
+  const { query, rowCount } = await getAvailableOrganizations({
     sort,
     pageIndex,
     pageSize,
     search,
-  );
+  });
 
   return (
     <div className="flex flex-col gap-14">

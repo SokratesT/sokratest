@@ -2,12 +2,14 @@
 
 import { db } from "@/db/drizzle";
 import { type Course, courseMember, courses } from "@/db/schema/courses";
-import { auth } from "@/lib/auth";
-import type { Session as DefaultSession } from "better-auth";
-import { asc, count, desc, eq, getTableColumns } from "drizzle-orm";
-import { headers } from "next/headers";
+import type { Session as AuthSession } from "better-auth";
+import { count, eq, getTableColumns } from "drizzle-orm";
+import { withAuthQuery } from "./common";
+import { buildPagination, buildSortOrder } from "./query-builders";
 
-export const getUserCoursesOnLogin = async (session: DefaultSession) => {
+const VALID_COURSE_SORT_COLUMNS = ["title", "createdAt"] as (keyof Course)[];
+
+export const getUserCoursesOnLogin = (session: AuthSession) => {
   if (!session) {
     throw new Error("Not authenticated");
   }
@@ -18,68 +20,82 @@ export const getUserCoursesOnLogin = async (session: DefaultSession) => {
     .where(eq(courseMember.userId, session.userId));
 };
 
-// TODO: Improve queries
-
-function isValidColumnId(id: string): id is keyof Course {
-  return ["title", "createdAt"].includes(id);
-}
-
-export const getUserActiveOrganizationCourses = async (options: {
+export const getUserCoursesForActiveOrganization = async (options: {
   sort: { id: string; desc: boolean }[];
   pageIndex: number;
   pageSize: number;
 }) => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  return withAuthQuery(
+    async (session) => {
+      const { sort, pageIndex, pageSize } = options;
+      const { limit, offset } = buildPagination({ pageIndex, pageSize });
 
-  let query: Course[] = [];
-  let rowCount: { count: number } = { count: 0 };
+      const sortOrder = buildSortOrder(
+        sort,
+        courses,
+        VALID_COURSE_SORT_COLUMNS,
+        "createdAt",
+      );
 
-  const { sort, pageIndex, pageSize } = options;
+      const query = await db
+        .selectDistinct({ ...getTableColumns(courses) })
+        .from(courses)
+        .innerJoin(
+          courseMember,
+          eq(courseMember.userId, session.session.userId),
+        )
+        .where(eq(courses.organizationId, session.session.activeOrganizationId))
+        .limit(limit)
+        .offset(offset)
+        .orderBy(...sortOrder);
 
-  if (!session?.session.activeOrganizationId) {
-    return {
-      query: [],
-      rowCount: { count: 0 },
-      error: "No session or active organization",
-    };
-  }
+      const [rowCount] = await db
+        .select({ count: count() })
+        .from(courses)
+        .innerJoin(
+          courseMember,
+          eq(courseMember.userId, session.session.userId),
+        )
+        .where(
+          eq(courses.organizationId, session.session.activeOrganizationId),
+        );
 
-  try {
-    const sortOrder = sort
-      ?.filter((s) => isValidColumnId(s.id))
-      .map((s) => {
-        const column = courses[s.id as keyof Course];
-        return s.desc ? desc(column) : asc(column);
-      }) ?? [asc(courses.createdAt)]; // Fallback default sort
-
-    query = await db
-      .select({ ...getTableColumns(courses) })
-      .from(courses)
-      .where(eq(courses.organizationId, session.session.activeOrganizationId))
-      .limit(pageSize)
-      .orderBy(...sortOrder)
-      .offset(pageIndex * pageSize);
-
-    [rowCount] = await db.select({ count: count() }).from(courses);
-  } catch (error) {
-    console.error(error);
-  }
-
-  return { query, rowCount, error: null };
+      return { query, rowCount };
+    },
+    { requireOrg: true },
+  );
 };
 
 export const getCourseById = async (id: Course["id"]) => {
-  let query: Course | undefined = undefined;
+  return withAuthQuery(
+    async () => {
+      const [query] = await db
+        .select({ ...getTableColumns(courses) })
+        .from(courses)
+        .where(eq(courses.id, id))
+        .limit(1);
 
-  try {
-    [query] = await db
-      .select({ ...getTableColumns(courses) })
-      .from(courses)
-      .where(eq(courses.id, id))
-      .limit(1);
-  } catch (error) {
-    console.error(error);
-  }
+      return { query };
+    },
+    {
+      resource: { type: "course", id },
+    },
+  );
+};
 
-  return { query, error: null };
+export const getActiveCourse = async () => {
+  return withAuthQuery(
+    async (session) => {
+      const [query] = await db
+        .select({ ...getTableColumns(courses) })
+        .from(courses)
+        .where(eq(courses.id, session.session.activeCourseId))
+        .limit(1);
+
+      return { query };
+    },
+    {
+      requireCourse: true,
+    },
+  );
 };

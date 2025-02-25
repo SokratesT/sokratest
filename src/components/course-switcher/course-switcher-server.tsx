@@ -1,6 +1,6 @@
 import {
   getCourseById,
-  getUserActiveOrganizationCourses,
+  getUserCoursesForActiveOrganization,
 } from "@/db/queries/courses";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -14,7 +14,7 @@ const CourseSwitcherServer = async () => {
   }
 
   // TODO: Not ideal...
-  const { query } = await getUserActiveOrganizationCourses({
+  const { query } = await getUserCoursesForActiveOrganization({
     sort: [{ id: "createdAt", desc: true }],
     pageIndex: 0,
     pageSize: 100,

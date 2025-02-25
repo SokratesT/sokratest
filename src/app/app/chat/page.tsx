@@ -1,13 +1,9 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAllChats } from "@/db/queries/chats";
-import Link from "next/link";
-import { DeleteChatButton } from "./_components/delete-chat-button";
+import { ChatsList } from "@/components/app/chats-list";
+import { getUserChatsForActiveCourse } from "@/db/queries/chats";
 import { NewChatButton } from "./_components/new-chat-button";
 
 const ChatsPage = async () => {
-  const query = await getAllChats();
+  const query = await getUserChatsForActiveCourse();
 
   return (
     <div className="flex flex-col gap-14">
@@ -16,33 +12,11 @@ const ChatsPage = async () => {
           Chats
         </h4>
         <div className="flex gap-2">
-          <NewChatButton />
+          <NewChatButton>New Chat</NewChatButton>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
-        {query.map((q) => (
-          <Card key={q.id}>
-            <CardHeader>
-              <CardTitle>{q.title}</CardTitle>
-              <div className="flex gap-2">
-                <Badge
-                  variant="outline"
-                  className="text-muted-foreground text-sm"
-                >
-                  {q.createdAt?.toISOString()}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="flex gap-2">
-              <Button asChild>
-                <Link href={`/app/chat/${q.id}`}>Chat</Link>
-              </Button>
-              <DeleteChatButton chatId={q.id} />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <ChatsList chats={query} />
     </div>
   );
 };

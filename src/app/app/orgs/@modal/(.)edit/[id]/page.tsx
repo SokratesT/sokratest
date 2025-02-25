@@ -20,7 +20,7 @@ const EditOrganizationPage = async ({
   }
 
   return (
-    <InterceptingModal title="Edit User">
+    <InterceptingModal title="Edit Organisation">
       <ManageOrganization organization={query} />
     </InterceptingModal>
   );

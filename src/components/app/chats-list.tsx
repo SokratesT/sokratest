@@ -1,0 +1,69 @@
+"use client";
+
+import { NewChatButton } from "@/app/app/chat/_components/new-chat-button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import type { Chat } from "@/db/schema/chat";
+import { routes } from "@/settings/routes";
+import { motion } from "framer-motion";
+import { MessagesSquareIcon } from "lucide-react";
+import Link from "next/link";
+import { ChatCardOptions } from "./chat-card-options";
+
+export function ChatsList({ chats }: { chats: Chat[] }) {
+  if (!chats.length) {
+    return (
+      <Card className="rounded-lg border-2 border-card-foreground border-dashed bg-muted p-6 shadow-sm">
+        <CardHeader className="text-center">
+          <CardTitle className="font-semibold text-xl">No chats yet</CardTitle>
+          <CardDescription className="mt-4 flex flex-col items-center gap-4">
+            <div className="text-muted-foreground">
+              Start a new chat to begin your learning journey
+            </div>
+            <NewChatButton>Start Learning</NewChatButton>
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {chats.map((chat, i) => (
+        <motion.div
+          key={chat.id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.05 }}
+        >
+          <Link href={`${routes.app.sub.chat.path}/${chat.id}`}>
+            <Card className="relative h-full transition-all hover:border-primary/50 hover:shadow-md">
+              <ChatCardOptions chatId={chat.id} />
+              <CardHeader className="pb-2">
+                <CardTitle className="line-clamp-1 text-base">
+                  {chat.title}
+                </CardTitle>
+                {chat.updatedAt && (
+                  <CardDescription className="text-xs">
+                    Last updated: {chat.updatedAt.toLocaleDateString()}
+                  </CardDescription>
+                )}
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="flex items-center text-muted-foreground text-sm">
+                  <MessagesSquareIcon className="mr-2 h-4 w-4" />
+                  Continue chat
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        </motion.div>
+      ))}
+    </div>
+  );
+}

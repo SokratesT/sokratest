@@ -2,6 +2,7 @@
 
 import { useCreateEditor } from "@/components/editor/use-create-editor";
 import { Editor, EditorContainer } from "@/components/plate-ui/editor";
+import { cn } from "@/lib/utils";
 import { Plate } from "@udecode/plate/react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -11,10 +12,12 @@ export function PlateEditor({
   options,
   onChange,
   readOnly = false,
+  className,
 }: {
   options?: { value: string | undefined };
   onChange?: (value: string) => void;
   readOnly?: boolean;
+  className?: string;
 }) {
   const parsedValue = () => {
     try {
@@ -34,7 +37,9 @@ export function PlateEditor({
         editor={editor}
         onChange={(value) => onChange?.(JSON.stringify(value.value))}
       >
-        <EditorContainer>
+        <EditorContainer
+          className={cn(!readOnly && "rounded-md border", className)}
+        >
           <Editor variant="default" />
         </EditorContainer>
       </Plate>
