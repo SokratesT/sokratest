@@ -5,30 +5,55 @@ import { META_THEME_COLORS, useMetaColor } from "@/hooks/use-meta-color";
 import { cn } from "@/lib/utils";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-export function ThemeSwitcher({ className }: { className?: string }) {
+const ThemeSwitcher = ({ className }: { className?: string }) => {
   const { setTheme, resolvedTheme } = useTheme();
   const { setMetaColor } = useMetaColor();
+  const [isDark, setIsDark] = useState(resolvedTheme === "dark");
 
   const toggleTheme = useCallback(() => {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+    const newTheme = resolvedTheme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
     setMetaColor(
-      resolvedTheme === "dark"
-        ? META_THEME_COLORS.light
-        : META_THEME_COLORS.dark,
+      newTheme === "dark" ? META_THEME_COLORS.dark : META_THEME_COLORS.light,
     );
+    setIsDark(newTheme === "dark");
   }, [resolvedTheme, setTheme, setMetaColor]);
 
   return (
     <Button
       variant="ghost"
-      className={cn("group/toggle", className)}
+      className={cn("group/toggle overflow-hidden", className)}
       onClick={toggleTheme}
     >
-      <SunIcon className="hidden [html.dark_&]:block" />
-      <MoonIcon className="hidden [html.light_&]:block" />
+      <AnimatePresence initial={false} mode="wait">
+        {isDark ? (
+          <motion.div
+            key="sun"
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <SunIcon className="block" />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="moon"
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <MoonIcon className="block" />
+          </motion.div>
+        )}
+      </AnimatePresence>
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
-}
+};
+
+export { ThemeSwitcher };

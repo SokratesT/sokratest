@@ -11,7 +11,12 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
       {/* <PostHogProvider> */}
       <NextStepProvider>
         <NextStep steps={nextStepTours} cardComponent={NextStepCard}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
             <TooltipProvider>{children}</TooltipProvider>
           </ThemeProvider>
         </NextStep>

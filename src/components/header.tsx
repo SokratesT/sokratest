@@ -37,7 +37,7 @@ const Header = () => {
             <ArrowLeftToLine />
           </Link>
         </Button>
-        <ThemeSwitcher className="h-8 w-8 px-0" />
+        <ThemeSwitcher className="size-8 px-0" />
       </div>
     </header>
   );

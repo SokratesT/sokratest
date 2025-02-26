@@ -20,7 +20,7 @@ const PublicNavigation = () => {
   const [isOpen, setOpen] = useState(false);
 
   return (
-    <header className="top-0 left-0 z-40 w-full bg-background">
+    <header className="top-0 left-0 z-40 w-full bg-background sticky">
       <div className="container relative mx-auto flex min-h-20 flex-row items-center gap-4 lg:grid lg:grid-cols-3">
         <div className="hidden flex-row items-center justify-start gap-4 lg:flex">
           <NavigationMenu className="flex items-start justify-start">
@@ -79,7 +79,7 @@ const PublicNavigation = () => {
           <Button variant="ghost" className="hidden md:inline">
             Learn more
           </Button>
-          <ThemeSwitcher />
+          <ThemeSwitcher className="size-9" />
           <div className="hidden border-r md:inline" />
 
           <NavigationAuthButtons />
