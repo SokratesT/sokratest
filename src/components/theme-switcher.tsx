@@ -3,10 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { META_THEME_COLORS, useMetaColor } from "@/hooks/use-meta-color";
 import { cn } from "@/lib/utils";
+import { AnimatePresence, motion } from "framer-motion";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useCallback, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 const ThemeSwitcher = ({ className }: { className?: string }) => {
   const { setTheme, resolvedTheme } = useTheme();

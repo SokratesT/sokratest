@@ -129,7 +129,7 @@ const MessageBlock = ({
                     type="single"
                     collapsible
                     key={part.type}
-                    className="mb-4 max-w-[500px] rounded-2xl bg-accent px-4 font-mono"
+                    className="mb-4 max-w-[500px] rounded-2xl bg-accent px-4 font-mono text-accent-foreground"
                   >
                     <AccordionItem value="item-1">
                       <AccordionTrigger className="py-2">
@@ -137,8 +137,8 @@ const MessageBlock = ({
                           ? "Thinking..."
                           : "Thinking steps"}
                       </AccordionTrigger>
-                      <AccordionContent className="">
-                        <Markdown className="font-mono text-sm">
+                      <AccordionContent>
+                        <Markdown className="font-mono text-sm text-accent-foreground">
                           {part.reasoning}
                         </Markdown>
                       </AccordionContent>
@@ -151,9 +151,7 @@ const MessageBlock = ({
                 )}
 
                 {part.type === "text" && variant === "received" && (
-                  <Markdown className="text-secondary-foreground">
-                    {part.text}
-                  </Markdown>
+                  <Markdown className="text-foreground">{part.text}</Markdown>
                 )}
 
                 {part.type === "tool-invocation" && (
