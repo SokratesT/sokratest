@@ -6,6 +6,7 @@ import type { Organization } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
 import { routes } from "@/settings/routes";
 import { toast } from "sonner";
+import { OrganizationForm } from "../add/_components/organization-form";
 
 const ManageOrganization = ({
   organization,
@@ -23,6 +24,7 @@ const ManageOrganization = ({
 
   return (
     <div className="mt-4 flex flex-col gap-4">
+      <OrganizationForm organization={organization} />
       <div className="flex gap-2">
         <Button
           variant="destructive"

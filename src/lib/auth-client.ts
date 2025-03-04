@@ -22,5 +22,5 @@ export const authClient = createAuthClient({
       },
     }),
   ],
-  baseURL: clientEnv.NEXT_PUBLIC_BASE_URL, // the base url of your auth server
+  baseURL: clientEnv.NEXT_PUBLIC_BASE_URL,
 });

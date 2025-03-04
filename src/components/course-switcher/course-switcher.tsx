@@ -49,10 +49,12 @@ const CourseSwitcher = ({
                 {!activeCourse ? (
                   <span>Select a course</span>
                 ) : (
-                  <>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="font-semibold">Course</span>
-                    <span>{activeCourse?.title}</span>
-                  </>
+                    <span className="line-clamp-2 text-xs">
+                      {activeCourse?.title}
+                    </span>
+                  </div>
                 )}
               </div>
               <ChevronsUpDown className="ml-auto" />

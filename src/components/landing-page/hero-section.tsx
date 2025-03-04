@@ -51,7 +51,7 @@ const HeroSection = () => {
           <Image
             width={1200}
             height={1000}
-            className="rouded-lg relative mx-auto flex w-full items-center rounded-lg border border-secondary border-t-2 border-t-primary/30 leading-none md:w-[1200px]"
+            className="rouded-lg relative mx-auto flex w-full items-center rounded-lg border-secondary border-t-2 border-t-primary/30 leading-none md:w-[1200px]"
             src={
               theme === "light"
                 ? "/landing-page/hero-light.png"

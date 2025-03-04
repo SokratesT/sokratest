@@ -12,15 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { User } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
 import { DEFAULT_ROLE, roles } from "@/settings/roles";
 import { routes } from "@/settings/routes";
 import type { Session } from "better-auth";
-import type { UserWithRole } from "better-auth/plugins";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const ManageUser = ({ user }: { user: UserWithRole }) => {
+const ManageUser = ({ user }: { user: User }) => {
   const [sessions, setSessions] = useState<Session[] | undefined>(undefined);
 
   // FIXME: Wtf? Why would this need a useEffect?

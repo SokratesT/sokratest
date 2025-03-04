@@ -1,4 +1,4 @@
-const OrganisationsLayout = ({
+const OrganizationsLayout = ({
   children,
   modal,
 }: { children: React.ReactNode; modal: React.ReactNode }) => {
@@ -10,4 +10,4 @@ const OrganisationsLayout = ({
   );
 };
 
-export default OrganisationsLayout;
+export default OrganizationsLayout;
