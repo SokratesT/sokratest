@@ -1,12 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { getActiveCourse } from "@/db/queries/courses";
 import { auth } from "@/lib/auth";
-import {
-  BookMarkedIcon,
-  Building2Icon,
-  MailIcon,
-  UserIcon,
-} from "lucide-react";
+import { Building2Icon, MailIcon, UserIcon } from "lucide-react";
 import { headers } from "next/headers";
 
 const UserStats = async () => {
@@ -18,66 +12,40 @@ const UserStats = async () => {
     headers: await headers(),
   });
 
-  const { query: activeCourse } = await getActiveCourse();
-
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex items-center gap-2">
-            <UserIcon />
-            <div className="space-y-0.5">
-              <p className="font-medium text-sm">User</p>
-              <p className="text-muted-foreground text-xs">
-                {session?.user.name}
-              </p>
-            </div>
+    <Card>
+      <CardContent className="flex flex-col gap-2 pt-6">
+        <div className="flex items-center gap-2">
+          <UserIcon />
+          <div className="space-y-0.5">
+            <p className="font-medium text-sm">User</p>
+            <p className="text-muted-foreground text-xs">
+              {session?.user.name}
+            </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex items-center gap-2">
-            <MailIcon />
-            <div className="space-y-0.5">
-              <p className="font-medium text-sm">Email</p>
-              <p className="text-muted-foreground text-xs">
-                {session?.user.email}
-              </p>
-            </div>
+        <div className="flex items-center gap-2">
+          <MailIcon />
+          <div className="space-y-0.5">
+            <p className="font-medium text-sm">Email</p>
+            <p className="text-muted-foreground text-xs">
+              {session?.user.email}
+            </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex items-center gap-2">
-            <BookMarkedIcon />
-            <div className="space-y-0.5">
-              <p className="font-medium text-sm">Course</p>
-              <p className="text-muted-foreground text-xs">
-                {activeCourse.title || "No active course"}
-              </p>
-            </div>
+        <div className="flex items-center gap-2">
+          <Building2Icon />
+          <div className="space-y-0.5">
+            <p className="font-medium text-sm">Organisation</p>
+            <p className="text-muted-foreground text-xs">
+              {activeOrganization?.name || "No active organisation"}
+            </p>
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex items-center gap-2">
-            <Building2Icon />
-            <div className="space-y-0.5">
-              <p className="font-medium text-sm">Organisation</p>
-              <p className="text-muted-foreground text-xs">
-                {activeOrganization?.name || "No active organisation"}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

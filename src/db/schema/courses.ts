@@ -5,6 +5,7 @@ import {
   text,
   timestamp,
   uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 import { organization, user } from "./auth";
 
@@ -15,6 +16,7 @@ export const courses = pgTable("courses", {
     .notNull()
     .references(() => organization.id, { onDelete: "cascade" }),
   content: text("content").notNull(),
+  description: varchar("description", { length: 500 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

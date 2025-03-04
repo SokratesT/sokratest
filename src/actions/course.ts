@@ -17,7 +17,16 @@ export const createCourse = async (course: CourseSchemaType) => {
     throw new Error("Not authenticated");
   }
 
-  await db.insert(courses).values({ ...course });
+  const [newCourse] = await db
+    .insert(courses)
+    .values({ ...course })
+    .returning({ id: courses.id });
+
+  await db.insert(courseMember).values({
+    courseId: newCourse.id,
+    userId: session.session.userId,
+    role: "instructor",
+  });
 
   revalidatePath(routes.app.sub.posts.path);
 };

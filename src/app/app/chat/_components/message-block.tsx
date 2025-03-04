@@ -138,7 +138,7 @@ const MessageBlock = ({
                           : "Thinking steps"}
                       </AccordionTrigger>
                       <AccordionContent>
-                        <Markdown className="font-mono text-sm text-accent-foreground">
+                        <Markdown className="font-mono text-accent-foreground text-sm">
                           {part.reasoning}
                         </Markdown>
                       </AccordionContent>

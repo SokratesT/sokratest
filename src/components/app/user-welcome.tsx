@@ -1,8 +1,5 @@
 import { auth } from "@/lib/auth";
-import type { authClient } from "@/lib/auth-client";
 import { headers } from "next/headers";
-
-type User = typeof authClient.$Infer.Session.user;
 
 const UserWelcome = async () => {
   const session = await auth.api.getSession({

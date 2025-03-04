@@ -1,5 +1,6 @@
 "use client";
 
+import { CompassIcon } from "lucide-react";
 import { useNextStep } from "nextstepjs";
 import { Button } from "../ui/button";
 
@@ -10,8 +11,15 @@ const AppTourButton = () => {
     startNextStep(tourName);
   };
 
+  // TODO: Expose props for customizing the button
   return (
-    <Button onClick={() => onClickHandler("firsttour")}>Start Tour</Button>
+    <Button
+      variant="secondary"
+      onClick={() => onClickHandler("firsttour")}
+      className="w-full justify-start"
+    >
+      <CompassIcon className="mr-2 h-4 w-4" /> Start Tour
+    </Button>
   );
 };
 

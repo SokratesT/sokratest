@@ -36,6 +36,7 @@ import { TableElementStatic } from "@/components/plate-ui/table-element-static";
 import { TableRowElementStatic } from "@/components/plate-ui/table-row-element-static";
 import { TocElementStatic } from "@/components/plate-ui/toc-element-static";
 import { ToggleElementStatic } from "@/components/plate-ui/toggle-element-static";
+import { clientEnv } from "@/lib/env/client";
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { withProps } from "@udecode/cn";
 import {
@@ -102,8 +103,9 @@ import {
 } from "@udecode/plate-table";
 import { BaseTogglePlugin } from "@udecode/plate-toggle";
 import { useEditorRef } from "@udecode/plate/react";
+import { all, createLowlight } from "lowlight";
 import { ArrowDownToLineIcon } from "lucide-react";
-import Prism from "prismjs";
+import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -117,7 +119,8 @@ import { EquationElementStatic } from "./equation-element-static";
 import { InlineEquationElementStatic } from "./inline-equation-element-static";
 import { ToolbarButton } from "./toolbar";
 
-const siteUrl = "https://platejs.org";
+const siteUrl = clientEnv.NEXT_PUBLIC_BASE_URL;
+const lowlight = createLowlight(all);
 
 export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
   const editor = useEditorRef();
@@ -247,7 +250,7 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
         BaseInlineEquationPlugin,
         BaseCodeBlockPlugin.configure({
           options: {
-            prism: Prism,
+            lowlight,
           },
         }),
         BaseIndentPlugin.extend({
@@ -320,7 +323,6 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
       props: { style: { padding: "0 calc(50% - 350px)", paddingBottom: "" } },
     });
 
-    const prismCss = `<link rel="stylesheet" href="${siteUrl}/prism.css">`;
     const tailwindCss = `<link rel="stylesheet" href="${siteUrl}/tailwind.css">`;
     const katexCss = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.css" integrity="sha384-9PvLvaiSKCPkFKB1ZsEoTjgnJn+O3KvEwtsz37/XrkYft3DTk2gHdYvd9oWgW3tV" crossorigin="anonymous">`;
 
@@ -337,7 +339,6 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
           rel="stylesheet"
         />
         ${tailwindCss}
-        ${prismCss}
         ${katexCss}
         <style>
           :root {

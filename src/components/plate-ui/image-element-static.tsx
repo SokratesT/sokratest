@@ -37,7 +37,7 @@ export function ImageElementStatic({
               "w-full max-w-full cursor-default object-cover px-0",
               "rounded-sm",
             )}
-            alt={url}
+            alt=""
             src={url}
             {...nodeProps}
           />

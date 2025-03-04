@@ -5,8 +5,10 @@ import {
   FloatingMedia as FloatingMediaPrimitive,
   FloatingMediaStore,
   useFloatingMediaValue,
+  useImagePreviewValue,
 } from "@udecode/plate-media/react";
 import {
+  useEditorRef,
   useEditorSelector,
   useElement,
   useReadOnly,
@@ -14,7 +16,7 @@ import {
   useSelected,
 } from "@udecode/plate/react";
 import { Link, Trash2Icon } from "lucide-react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Button, buttonVariants } from "./button";
 import { CaptionButton } from "./caption";
 import { inputVariants } from "./input";
@@ -27,6 +29,7 @@ export interface MediaPopoverProps {
 }
 
 export function MediaPopover({ children, plugin }: MediaPopoverProps) {
+  const editor = useEditorRef();
   const readOnly = useReadOnly();
   const selected = useSelected();
 
@@ -34,7 +37,9 @@ export function MediaPopover({ children, plugin }: MediaPopoverProps) {
     (editor) => !editor.api.isExpanded(),
     [],
   );
-  const isOpen = !readOnly && selected && selectionCollapsed;
+  const isImagePreviewOpen = useImagePreviewValue("isOpen", editor.id);
+  const isOpen =
+    !readOnly && selected && selectionCollapsed && !isImagePreviewOpen;
   const isEditing = useFloatingMediaValue("isEditing");
 
   useEffect(() => {

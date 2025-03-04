@@ -1,5 +1,3 @@
-"use client";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -14,39 +12,37 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from "@/components/ui/sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { authClient } from "@/lib/auth-client";
+import { getOrganizationById } from "@/db/queries/organizations";
+import type { Organization } from "@/db/schema/auth";
+import { auth } from "@/lib/auth";
 import { sidebarUserMenu } from "@/settings/menus";
-import { routes } from "@/settings/routes";
 import { ChevronsUpDown, LogOut } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { OrganizationSwitcher } from "./organization-switcher";
+import { SignOutButton } from "./signout-button";
 
 const userInitial = (name: string) => name[0].toUpperCase();
 
-const NavUser = () => {
-  const router = useRouter();
+const NavUser = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  const { data, isPending } = authClient.useSession();
-  const { data: activeOrganization, isPending: isPendingOrganization } =
-    authClient.useActiveOrganization();
-  const { isMobile } = useSidebar();
+  if (!session) {
+    return null;
+  }
 
-  const handleSignOut = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.push(routes.root.path);
-        },
-      },
-    });
-  };
+  let activeOrganization: Organization | null = null;
 
-  if (isPending || !data || isPendingOrganization)
-    return <Skeleton className="h-12 w-full" />;
+  if (session.session.activeOrganizationId) {
+    const { query } = await getOrganizationById(
+      session.session.activeOrganizationId,
+    );
+
+    activeOrganization = query;
+  }
 
   return (
     <SidebarMenu>
@@ -59,15 +55,17 @@ const NavUser = () => {
             >
               <Avatar className="size-8 rounded-lg">
                 <AvatarImage
-                  src={data.user.image ?? undefined}
-                  alt={data.user.name}
+                  src={session.user.image ?? undefined}
+                  alt={session.user.name}
                 />
                 <AvatarFallback className="rounded-lg">
-                  {userInitial(data.user.name)}
+                  {userInitial(session.user.name)}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{data.user.name}</span>
+                <span className="truncate font-semibold">
+                  {session.user.name}
+                </span>
                 {/* <span className="truncate text-xs">{data.user.email}</span> */}
                 {activeOrganization && (
                   <span className="truncate text-xs">
@@ -80,7 +78,6 @@ const NavUser = () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
           >
@@ -88,18 +85,18 @@ const NavUser = () => {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="size-8 rounded-lg">
                   <AvatarImage
-                    src={data.user.image ?? undefined}
-                    alt={data.user.name}
+                    src={session.user.image ?? undefined}
+                    alt={session.user.name}
                   />
                   <AvatarFallback className="rounded-lg">
-                    {userInitial(data.user.name)}
+                    {userInitial(session.user.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
-                    {data.user.name}
+                    {session.user.name}
                   </span>
-                  <span className="truncate text-xs">{data.user.email}</span>
+                  <span className="truncate text-xs">{session.user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -117,10 +114,12 @@ const NavUser = () => {
             <DropdownMenuSeparator />
             <OrganizationSwitcher />
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleSignOut}>
-              <LogOut />
-              Sign Out
-            </DropdownMenuItem>
+            <SignOutButton asChild>
+              <DropdownMenuItem className="flex items-center gap-2">
+                <LogOut />
+                Sign Out
+              </DropdownMenuItem>
+            </SignOutButton>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

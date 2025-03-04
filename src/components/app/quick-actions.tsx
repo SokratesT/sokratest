@@ -4,8 +4,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { routes } from "@/settings/routes";
 import { FilesIcon, PlusIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
+import { AppTourButton } from "../next-step/app-tour-button";
 
-export function QuickActions() {
+const QuickActions = () => {
   return (
     <Card>
       <CardContent className="flex flex-col gap-2 p-6">
@@ -29,7 +30,10 @@ export function QuickActions() {
             Settings
           </Button>
         </Link>
+        <AppTourButton />
       </CardContent>
     </Card>
   );
-}
+};
+
+export { QuickActions };

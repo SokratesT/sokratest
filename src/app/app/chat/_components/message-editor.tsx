@@ -19,13 +19,13 @@ export type MessageEditorProps = {
   isLoading: boolean;
 };
 
-export function MessageEditor({
+const MessageEditor = ({
   message,
   setMode,
   setMessages,
   reload,
   isLoading,
-}: MessageEditorProps) {
+}: MessageEditorProps) => {
   const [draftContent, setDraftContent] = useState<string>(message.content);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -45,6 +45,47 @@ export function MessageEditor({
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDraftContent(event.target.value);
     adjustHeight();
+  };
+
+  const handleEdit = async () => {
+    const messageId = message.id;
+
+    if (!messageId) {
+      toast.error("Something went wrong, please try again!");
+      return;
+    }
+
+    await deleteTrailingMessages({
+      id: messageId,
+    });
+
+    setMessages((messages) => {
+      const index = messages.findIndex((m) => m.id === message.id);
+
+      if (index !== -1) {
+        const updatedMessage: Message = {
+          ...message,
+          parts: message.parts?.map((part) => {
+            if (part.type === "text") {
+              return {
+                ...part,
+                text: draftContent,
+              };
+            }
+
+            return part;
+          }),
+          content: draftContent,
+        };
+
+        return [...messages.slice(0, index), updatedMessage];
+      }
+
+      return messages;
+    });
+
+    setMode("view");
+    reload();
   };
 
   return (
@@ -70,50 +111,13 @@ export function MessageEditor({
           variant="default"
           className="h-fit px-3 py-2"
           disabled={isLoading}
-          onClick={async () => {
-            const messageId = message.id;
-
-            if (!messageId) {
-              toast.error("Something went wrong, please try again!");
-              return;
-            }
-
-            await deleteTrailingMessages({
-              id: messageId,
-            });
-
-            setMessages((messages) => {
-              const index = messages.findIndex((m) => m.id === message.id);
-
-              if (index !== -1) {
-                const updatedMessage: Message = {
-                  ...message,
-                  parts: message.parts?.map((part) => {
-                    if (part.type === "text") {
-                      return {
-                        ...part,
-                        text: draftContent,
-                      };
-                    }
-
-                    return part;
-                  }),
-                  content: draftContent,
-                };
-
-                return [...messages.slice(0, index), updatedMessage];
-              }
-
-              return messages;
-            });
-
-            setMode("view");
-            reload();
-          }}
+          onClick={handleEdit}
         >
           {isLoading ? "Generating..." : "Edit"}
         </Button>
       </div>
     </div>
   );
-}
+};
+
+export { MessageEditor };

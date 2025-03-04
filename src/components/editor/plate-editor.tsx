@@ -8,7 +8,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { defaultEditorText } from "./default-editor-text";
 
-export function PlateEditor({
+const PlateEditor = ({
   options,
   onChange,
   readOnly = false,
@@ -18,7 +18,7 @@ export function PlateEditor({
   onChange?: (value: string) => void;
   readOnly?: boolean;
   className?: string;
-}) {
+}) => {
   const parsedValue = () => {
     try {
       if (!options?.value) return defaultEditorText;
@@ -40,9 +40,11 @@ export function PlateEditor({
         <EditorContainer
           className={cn(!readOnly && "rounded-md border", className)}
         >
-          <Editor variant="default" />
+          <Editor variant="default" readOnly={readOnly} />
         </EditorContainer>
       </Plate>
     </DndProvider>
   );
-}
+};
+
+export { PlateEditor };

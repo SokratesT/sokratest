@@ -4,6 +4,7 @@ import { createCourse, updateCourse } from "@/actions/course";
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormSelect } from "@/components/forms/fields/formSelect";
+import { FormTextField } from "@/components/forms/fields/formTextField";
 import { Placeholder } from "@/components/placeholder";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,6 +42,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
     resolver: zodResolver(courseSchema),
     defaultValues: {
       title: course?.title ?? undefined,
+      description: course?.description ?? "",
       content: course?.content ?? "",
       organizationId: course?.organizationId ?? activeOrganization?.id ?? "",
     },
@@ -85,7 +87,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
                         label: org.name,
                         value: org.id,
                       }))}
-                      required={isFieldRequired(courseSchema, "organizationId")}
+                      required={isFieldRequired(courseSchema, field.name)}
                     />
                   )}
                 />
@@ -98,7 +100,19 @@ const CourseForm = ({ course }: { course?: Course }) => {
                       label="Title"
                       placeholder="Course title"
                       inputType="text"
-                      required={isFieldRequired(courseSchema, "title")}
+                      required={isFieldRequired(courseSchema, field.name)}
+                    />
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormTextField
+                      field={field}
+                      label="Short Description"
+                      placeholder="Short course description"
+                      required={isFieldRequired(courseSchema, field.name)}
                     />
                   )}
                 />

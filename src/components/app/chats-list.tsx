@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -15,19 +16,19 @@ import { MessagesSquareIcon } from "lucide-react";
 import Link from "next/link";
 import { ChatCardOptions } from "./chat-card-options";
 
-export function ChatsList({ chats }: { chats: Chat[] }) {
+const ChatsList = ({ chats }: { chats: Chat[] }) => {
   if (!chats.length) {
     return (
-      <Card className="rounded-lg border-2 border-card-foreground border-dashed bg-muted p-6 shadow-sm">
+      <Card className="border-dashed">
         <CardHeader className="text-center">
           <CardTitle className="font-semibold text-xl">No chats yet</CardTitle>
           <CardDescription className="mt-4 flex flex-col items-center gap-4">
-            <div className="text-muted-foreground">
-              Start a new chat to begin your learning journey
-            </div>
-            <NewChatButton>Start Learning</NewChatButton>
+            Start a new chat to begin your learning journey
           </CardDescription>
         </CardHeader>
+        <CardFooter className="flex justify-center">
+          <NewChatButton variant="outline">Start Learning</NewChatButton>
+        </CardFooter>
       </Card>
     );
   }
@@ -66,4 +67,6 @@ export function ChatsList({ chats }: { chats: Chat[] }) {
       ))}
     </div>
   );
-}
+};
+
+export { ChatsList };

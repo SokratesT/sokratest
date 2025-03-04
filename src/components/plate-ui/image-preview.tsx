@@ -46,11 +46,13 @@ export const ImagePreview = () => {
   } = useImagePreview({ scrollSpeed: SCROLL_SPEED });
 
   return (
+    // biome-ignore lint/nursery/noStaticElementInteractions: <explanation>
     <div
       className={cn(
-        "fixed top-0 left-0 z-50 h-screen w-screen",
+        "fixed top-0 left-0 z-50 h-screen w-screen select-none",
         !isOpen && "hidden",
       )}
+      onContextMenu={(e) => e.stopPropagation()}
       {...maskLayerProps}
     >
       <div className="absolute inset-0 size-full bg-black opacity-30" />

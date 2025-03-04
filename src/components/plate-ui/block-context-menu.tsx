@@ -10,7 +10,11 @@ import {
   BlockMenuPlugin,
   BlockSelectionPlugin,
 } from "@udecode/plate-selection/react";
-import { ParagraphPlugin, useEditorPlugin } from "@udecode/plate/react";
+import {
+  ParagraphPlugin,
+  useEditorPlugin,
+  useEditorReadOnly,
+} from "@udecode/plate/react";
 import { useCallback, useState } from "react";
 import {
   ContextMenu,
@@ -29,6 +33,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
   const { api, editor } = useEditorPlugin(BlockMenuPlugin);
   const [value, setValue] = useState<Value>(null);
   const isTouch = useIsTouchDevice();
+  const readOnly = useEditorReadOnly();
 
   const handleTurnInto = useCallback(
     (type: string) => {
@@ -57,7 +62,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
     [editor],
   );
 
-  if (isTouch) {
+  if (isTouch || readOnly) {
     return children;
   }
 

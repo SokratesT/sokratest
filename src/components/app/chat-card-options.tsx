@@ -11,7 +11,7 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 
-export function ChatCardOptions({ chatId }: { chatId: string }) {
+const ChatCardOptions = ({ chatId }: { chatId: string }) => {
   const onDelete = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     await deleteChat(chatId).then(() => {
@@ -35,4 +35,6 @@ export function ChatCardOptions({ chatId }: { chatId: string }) {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+};
+
+export { ChatCardOptions };
