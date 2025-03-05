@@ -18,7 +18,7 @@ const ManageOrganization = ({
       toast.error(`Failed to delete organisation: ${res.error.message}`);
     } else {
       toast.success("Organisation deleted");
-      revalidatePathFromClient(routes.app.sub.organizations.path);
+      revalidatePathFromClient({ path: routes.app.sub.organizations.path });
     }
   };
 

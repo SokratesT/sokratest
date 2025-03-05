@@ -22,7 +22,7 @@ const PostsDataTableSelectActions = () => {
   const handleDelete = async () => {
     const postIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    deletePosts(postIds);
+    deletePosts({ ids: postIds });
     toast.success("Posts deleted");
   };
 

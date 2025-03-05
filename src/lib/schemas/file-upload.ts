@@ -1,3 +1,5 @@
+import { fileRepository } from "@/db/schema/file-repository";
+import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const fileUploadSchema = z.object({
@@ -6,3 +8,11 @@ export const fileUploadSchema = z.object({
 });
 
 export type FileUploadSchemaType = z.infer<typeof fileUploadSchema>;
+
+export const fileInsertSchema = createInsertSchema(fileRepository, {
+  courseId: z.string().optional(),
+  uploadedBy: z.string().optional(),
+  prefix: z.string().optional(),
+});
+
+export const fileDeleteSchema = z.object({ ids: z.array(z.string()) });

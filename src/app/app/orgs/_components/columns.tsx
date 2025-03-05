@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Organization } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
+import { routes } from "@/settings/routes";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -22,7 +23,7 @@ import { toast } from "sonner";
 const handleDelete = async (id: string) => {
   authClient.organization.delete({ organizationId: id });
   toast.success("Organization deleted");
-  await revalidatePathFromClient("/app/orgs");
+  await revalidatePathFromClient({ path: routes.app.sub.organizations.path });
 };
 
 export const columns: ColumnDef<Organization>[] = [

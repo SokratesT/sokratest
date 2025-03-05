@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteFileInfoFromDB } from "@/actions/delete-file";
+import { deleteFileInfo } from "@/actions/file-repository";
 import { enqueueEmbeddings } from "@/actions/test-trigger";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,14 +49,14 @@ const FileActions = ({
         </div>
         <div className="flex h-full justify-center gap-2">
           <Button
-            onClick={() => enqueueEmbeddings([fileInfo.id])}
+            onClick={() => enqueueEmbeddings({ ids: [fileInfo.id] })}
             disabled={fileInfo.embeddingStatus === "processing"}
           >
             Generate Embedding
           </Button>
           <Button
             variant="destructive"
-            onClick={() => deleteFileInfoFromDB([fileInfo.id])}
+            onClick={() => deleteFileInfo({ ids: [fileInfo.id] })}
           >
             Delete
           </Button>

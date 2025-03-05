@@ -14,7 +14,7 @@ import { toast } from "sonner";
 const ChatCardOptions = ({ chatId }: { chatId: string }) => {
   const onDelete = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    await deleteChat(chatId).then(() => {
+    await deleteChat({ ids: [chatId] }).then(() => {
       toast.success("Chat deleted");
     });
   };

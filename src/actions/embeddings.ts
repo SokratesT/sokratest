@@ -1,15 +1,16 @@
 import { db } from "@/db/drizzle";
 import { embeddings } from "@/db/schema/embeddings";
-import type { FileRepository } from "@/db/schema/file-repository";
+import { authActionClient } from "@/lib/safe-action";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
 
-export const deleteEmbeddingsForFile = async (fileId: FileRepository["id"]) => {
-  // TODO: Check access rights
+// TODO: Check access rights
 
-  try {
+export const deleteEmbeddingsForFile = authActionClient
+  .metadata({ actionName: "deleteEmbeddingsForFile" })
+  .schema(z.object({ fileId: z.string() }))
+  .action(async ({ parsedInput: { fileId } }) => {
     await db.delete(embeddings).where(eq(embeddings.fileId, fileId));
-  } catch (error) {
-    console.error("Failed to delete embeddings for file in database", error);
-    throw error;
-  }
-};
+
+    return { error: null };
+  });

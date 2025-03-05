@@ -1,11 +1,12 @@
 "use client";
 
-import { createNewChat } from "@/actions/chat";
+import { createChat } from "@/actions/chat";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import type { VariantProps } from "class-variance-authority";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const NewChatButton = ({
   className,
@@ -20,7 +21,14 @@ const NewChatButton = ({
   const router = useRouter();
 
   const handleNewChat = async () => {
-    const chatId = await createNewChat();
+    const res = await createChat();
+    const chatId = res?.data?.chat.id;
+
+    if (!chatId) {
+      toast.error("Failed to create chat");
+      return;
+    }
+
     router.push(`/app/chat/${chatId}`);
   };
 

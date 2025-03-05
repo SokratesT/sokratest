@@ -37,7 +37,7 @@ const AddCourseMembers = ({
   const [open, setOpen] = useState(false);
 
   const handleAddMember = (user: User) => {
-    addCourseMember(user, courseId);
+    addCourseMember({ courseId, userId: user.id });
     setOpen(false);
     toast.success("Member added");
   };

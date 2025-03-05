@@ -3,12 +3,15 @@
 import { db } from "@/db/drizzle";
 import { fileRepository } from "@/db/schema/file-repository";
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";
+import { authActionClient } from "@/lib/safe-action";
+import { routes } from "@/settings/routes";
 import type { helloWorldTask } from "@/trigger/example";
 import { tasks } from "@trigger.dev/sdk/v3";
 import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
-export async function enqueueEmbeddings(fileIds: string[]) {
+export async function enqueueEmbeddings2(fileIds: string[]) {
   try {
     await db
       .update(fileRepository)
@@ -44,3 +47,39 @@ export async function enqueueEmbeddings(fileIds: string[]) {
     };
   }
 }
+
+export const enqueueEmbeddings = authActionClient
+  .metadata({ actionName: "enqueueEmbeddings" })
+  .schema(z.object({ ids: z.array(z.string()) }))
+  .action(async ({ parsedInput: { ids } }) => {
+    await db
+      .update(fileRepository)
+      .set({ embeddingStatus: "processing" })
+      .where(inArray(fileRepository.id, ids));
+
+    const docsWithUrls = await Promise.all(
+      ids.map(async (id) => {
+        const url = await getPresignedUrl(id);
+        return { url, id };
+      }),
+    );
+
+    // Use this if frontend hooks for status are added
+    /* const handle = await tasks.batchTrigger<typeof helloWorldTask>(
+      "hello-world",
+      docsWithUrls.map((doc) => ({
+        payload: { url: doc.url, documentId: doc.fileId },
+        options: {
+          concurrencyKey: "TEST_CONCURRENCY_KEY",
+          queue: {
+            name: "my-task-queue",
+            concurrencyLimit: 1,
+          },
+        },
+      })),
+    ); */
+
+    revalidatePath(routes.app.sub.up.path);
+
+    return { error: null };
+  });

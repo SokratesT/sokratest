@@ -23,7 +23,7 @@ interface PostWithAuthor extends Post {
 }
 
 const handleDelete = async (id: string) => {
-  deletePosts([id]);
+  deletePosts({ ids: [id] });
   toast.success("Post deleted");
 };
 

@@ -26,7 +26,7 @@ const OrganizationSwitcher = () => {
         organizationId: organization.id,
       })
       .then(() => {
-        setActiveCourse(null);
+        setActiveCourse({ courseId: undefined });
         router.push(routes.app.path);
         toast.success(`Organization changed to ${organization?.name}`);
       })

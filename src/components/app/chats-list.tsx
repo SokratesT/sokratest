@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import type { Chat } from "@/db/schema/chat";
 import { routes } from "@/settings/routes";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { MessagesSquareIcon } from "lucide-react";
 import Link from "next/link";
 import { ChatCardOptions } from "./chat-card-options";

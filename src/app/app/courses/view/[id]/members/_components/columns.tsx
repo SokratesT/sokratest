@@ -23,7 +23,7 @@ const handleDelete = async (id: string, courseId?: Course["id"]) => {
     throw new Error("Course ID is missing");
   }
 
-  await removeCourseMembers([id], courseId);
+  await removeCourseMembers({ ids: [id], courseId });
   toast.success("Member removed");
 };
 

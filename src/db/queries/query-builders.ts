@@ -1,11 +1,11 @@
 import { type SQL, asc, desc } from "drizzle-orm";
 
-export interface PaginationOptions {
+interface PaginationOptions {
   pageIndex: number;
   pageSize: number;
 }
 
-export interface SortOptions {
+interface SortOptions {
   id: string;
   desc: boolean;
 }

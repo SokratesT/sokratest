@@ -3,7 +3,6 @@
 import { createCourse, updateCourse } from "@/actions/course";
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { FormInputField } from "@/components/forms/fields/formInputField";
-import { FormSelect } from "@/components/forms/fields/formSelect";
 import { FormTextField } from "@/components/forms/fields/formTextField";
 import { Placeholder } from "@/components/placeholder";
 import { Button } from "@/components/ui/button";
@@ -29,7 +28,6 @@ import { type CourseSchemaType, courseSchema } from "@/lib/schemas/course";
 import { isFieldRequired } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2Icon } from "lucide-react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -44,25 +42,18 @@ const CourseForm = ({ course }: { course?: Course }) => {
       title: course?.title ?? undefined,
       description: course?.description ?? "",
       content: course?.content ?? "",
-      organizationId: course?.organizationId ?? activeOrganization?.id ?? "",
     },
   });
 
   const onSubmit = (values: CourseSchemaType) => {
     if (course) {
-      updateCourse(values, course.id);
+      updateCourse({ ...values, id: course.id });
       toast.success("Course updated successfully");
     } else {
       createCourse(values);
       toast.success("Course created successfully");
     }
   };
-
-  useEffect(() => {
-    if (!activeOrganization) return;
-    // FIXME: Doesnt work half the time...
-    form.setValue("organizationId", activeOrganization.id);
-  }, [activeOrganization]);
 
   if (isPending || isPendingActive || !organizations || !activeOrganization) {
     return <LoadingSpinner />;
@@ -75,22 +66,6 @@ const CourseForm = ({ course }: { course?: Course }) => {
           <div className="grid grid-cols-3 gap-4">
             <Card className="col-span-2">
               <CardContent className="flex flex-col gap-4 p-6">
-                <FormField
-                  control={form.control}
-                  name="organizationId"
-                  render={({ field }) => (
-                    <FormSelect
-                      field={field}
-                      label="Organisation"
-                      placeholder="Select organisation"
-                      options={organizations.map((org) => ({
-                        label: org.name,
-                        value: org.id,
-                      }))}
-                      required={isFieldRequired(courseSchema, field.name)}
-                    />
-                  )}
-                />
                 <FormField
                   control={form.control}
                   name="title"

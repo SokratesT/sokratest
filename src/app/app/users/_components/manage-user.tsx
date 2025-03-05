@@ -43,7 +43,7 @@ const ManageUser = ({ user }: { user: User }) => {
       toast.error(`Failed to ban user: ${res.error.message}`);
     } else {
       toast.success("User banned");
-      revalidatePathFromClient(routes.app.sub.users.path);
+      revalidatePathFromClient({ path: routes.app.sub.users.path });
     }
   };
 
@@ -54,7 +54,7 @@ const ManageUser = ({ user }: { user: User }) => {
       toast.error(`Failed to unban user: ${res.error.message}`);
     } else {
       toast.success("User unbanned");
-      revalidatePathFromClient(routes.app.sub.users.path);
+      revalidatePathFromClient({ path: routes.app.sub.users.path });
     }
   };
 
@@ -67,7 +67,7 @@ const ManageUser = ({ user }: { user: User }) => {
       toast.error(`Failed to revoke session: ${res.error.message}`);
     } else {
       toast.success("Session revoked");
-      revalidatePathFromClient(routes.app.sub.users.path);
+      revalidatePathFromClient({ path: routes.app.sub.users.path });
     }
   };
 
@@ -81,7 +81,7 @@ const ManageUser = ({ user }: { user: User }) => {
       toast.error(`Failed to update user role: ${res.error.message}`);
     } else {
       toast.success("User role updated");
-      revalidatePathFromClient(routes.app.sub.users.path);
+      revalidatePathFromClient({ path: routes.app.sub.users.path });
     }
   };
 
@@ -92,7 +92,7 @@ const ManageUser = ({ user }: { user: User }) => {
       toast.error(`Failed to delete user: ${res.error.message}`);
     } else {
       toast.success("User deleted");
-      revalidatePathFromClient(routes.app.sub.users.path);
+      revalidatePathFromClient({ path: routes.app.sub.users.path });
     }
   };
 

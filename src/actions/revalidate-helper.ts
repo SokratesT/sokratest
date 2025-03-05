@@ -1,15 +1,14 @@
 "use server";
 
-import { auth } from "@/lib/auth";
+import { authActionClient } from "@/lib/safe-action";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
+import { z } from "zod";
 
-export const revalidatePathFromClient = async (path: string) => {
-  const session = await auth.api.getSession({ headers: await headers() });
+export const revalidatePathFromClient = authActionClient
+  .metadata({ actionName: "revalidatePathFromClient" })
+  .schema(z.object({ path: z.string() }))
+  .action(async ({ parsedInput: { path } }) => {
+    revalidatePath(path);
 
-  if (!session) {
-    throw new Error("Not authenticated");
-  }
-
-  revalidatePath(path);
-};
+    return { error: null };
+  });

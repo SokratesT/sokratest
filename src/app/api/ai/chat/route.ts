@@ -42,13 +42,19 @@ export async function POST(request: Request) {
   }
 
   if (!messages || messages.length === 1) {
-    const title = await generateTitleFromUserMessage({ message: userMessage });
-    await saveChat({
-      id,
-      userId: session.user.id,
-      courseId: session.session.activeCourseId,
-      title,
+    const res = await generateTitleFromUserMessage({
+      message: userMessage.content,
     });
+    const title = res?.data?.title;
+
+    if (title) {
+      await saveChat({
+        id,
+        userId: session.user.id,
+        courseId: session.session.activeCourseId,
+        title,
+      });
+    }
   }
 
   // TODO: Save user messages

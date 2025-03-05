@@ -1,9 +1,11 @@
+import { voteMessage } from "@/actions/vote";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import {
   ChatBubble,
   ChatBubbleAction,
@@ -11,17 +13,18 @@ import {
   ChatBubbleAvatar,
   ChatBubbleMessage,
 } from "@/components/ui/chat/chat-bubble";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { ChatRequestOptions, Message } from "ai";
-import { AnimatePresence, motion } from "framer-motion";
-import {
-  BotIcon,
-  CopyIcon,
-  PencilIcon,
-  ThumbsDownIcon,
-  ThumbsUpIcon,
-  UserIcon,
-} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { BotIcon, CopyIcon, PencilIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
@@ -56,15 +59,25 @@ const MessageBlock = ({
   const [, copy] = useCopyToClipboard();
   const [mode, setMode] = useState<"view" | "edit">("view");
 
-  const handleCopy = (text: string) => () => {
-    copy(text)
-      .then(() => {
-        toast.success("Copied to clipboard!");
-      })
-      .catch((error) => {
-        toast.error("Failed to copy to clipboard");
-        console.error("Failed to copy to clipboard", error);
-      });
+  const handleCopy = async (text: string) => {
+    const isCopied = await copy(text);
+
+    if (isCopied) {
+      toast.success("Copied to clipboard!");
+      return;
+    }
+    toast.error("Failed to copy to clipboard");
+  };
+
+  const handleVote = async (sentiment: number) => {
+    await voteMessage({
+      messageId: message.id,
+      sentiment,
+    }).then((res) => {
+      res?.data?.error
+        ? toast.error("Failed to rate")
+        : toast.success("Rated successfully");
+    });
   };
 
   const handleModeChange = () => {
@@ -78,18 +91,12 @@ const MessageBlock = ({
   const variant = message.role === "user" ? "sent" : "received";
 
   const actionIcons = [
-    { icon: CopyIcon, type: "Copy", fn: handleCopy(message.content) },
-    { icon: ThumbsUpIcon, type: "Like", fn: () => console.log("Like clicked") },
-    {
-      icon: ThumbsDownIcon,
-      type: "Dislike",
-      fn: () => console.log("Dislike clicked"),
-    },
+    { icon: CopyIcon, type: "Copy", fn: () => handleCopy(message.content) },
   ];
 
   const userActionIcons = [
     { icon: PencilIcon, type: "Edit", fn: handleModeChange },
-    { icon: CopyIcon, type: "Copy", fn: handleCopy(message.content) },
+    { icon: CopyIcon, type: "Copy", fn: () => handleCopy(message.content) },
   ];
 
   return (
@@ -180,7 +187,7 @@ const MessageBlock = ({
                     actionLabel={type}
                     key={type}
                     icon={<Icon className="size-3" />}
-                    onClick={() => fn()}
+                    onClick={fn}
                   />
                 ))}
               </ChatBubbleActionWrapper>
@@ -199,6 +206,29 @@ const MessageBlock = ({
                     onClick={fn}
                   />
                 ))}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-6 px-2 text-xs">
+                      Rate
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuLabel>Rate Response</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => handleVote(10)}>
+                      Excellent
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleVote(5)}>
+                      Good
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleVote(-5)}>
+                      Poor
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleVote(-10)}>
+                      Terrible
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </ChatBubbleActionWrapper>
             )}
           </ChatBubbleMessage>

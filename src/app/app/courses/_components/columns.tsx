@@ -19,7 +19,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 const handleDelete = async (id: string) => {
-  await deleteCourses([id]);
+  await deleteCourses({ ids: [id] });
   toast.success("Course deleted");
 };
 

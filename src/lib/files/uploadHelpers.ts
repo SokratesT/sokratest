@@ -1,5 +1,5 @@
-import { saveFileInfoInDB } from "@/actions/upload-file";
-import { clientEnv } from "../env/client";
+import { saveFileInfo } from "@/actions/file-repository";
+import { clientEnv } from "@/lib/env/client";
 import type { PresignedUrlProp, ShortFileProp } from "./types";
 
 /**
@@ -66,11 +66,12 @@ export const handleUpload = async (
 
       return uploadToS3(presignedUrl, file).then(async (res) => {
         if (res.status === 200) {
-          await saveFileInfoInDB(
-            [presignedUrl],
+          await saveFileInfo({
             bucket,
-            getFileTypeFromMime(file),
-          );
+            filename: presignedUrl.originalFileName,
+            size: presignedUrl.fileSize,
+            fileType: getFileTypeFromMime(file),
+          });
         }
         return res;
       });

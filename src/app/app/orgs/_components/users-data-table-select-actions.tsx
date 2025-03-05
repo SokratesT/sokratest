@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
+import { routes } from "@/settings/routes";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -41,7 +42,7 @@ const UsersDataTableSelectActions = () => {
       }
     });
 
-    await revalidatePathFromClient("/app/orgs");
+    await revalidatePathFromClient({ path: routes.app.sub.organizations.path });
   };
 
   return (

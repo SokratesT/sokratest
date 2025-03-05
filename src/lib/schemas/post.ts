@@ -1,3 +1,5 @@
+import { posts } from "@/db/schema/posts";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const postSchema = z.object({
@@ -6,3 +8,14 @@ export const postSchema = z.object({
 });
 
 export type PostSchemaType = z.infer<typeof postSchema>;
+
+export const postInsertSchema = createInsertSchema(posts, {
+  userId: (schema) => schema.optional(),
+});
+
+export const postUpdateSchema = createUpdateSchema(posts, {
+  userId: (schema) => schema.optional(),
+  id: z.string(),
+});
+
+export const postDeleteSchema = z.object({ ids: z.array(z.string()) });

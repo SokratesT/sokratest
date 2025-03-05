@@ -23,7 +23,7 @@ const MembersDataTableSelectActions = ({
   const handleDelete = async () => {
     const userIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    await removeCourseMembers(userIds, courseId);
+    await removeCourseMembers({ ids: userIds, courseId });
 
     toast.success("Members deleted");
   };

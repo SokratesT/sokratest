@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteFileInfoFromDB } from "@/actions/delete-file";
+import { deleteFileInfo } from "@/actions/file-repository";
 import { enqueueEmbeddings } from "@/actions/test-trigger";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,12 +23,12 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 const handleDelete = async (id: string) => {
-  deleteFileInfoFromDB([id]);
+  deleteFileInfo({ ids: [id] });
   toast.success("File deleted");
 };
 
 const handleEnqueueEmbedding = async (id: string) => {
-  enqueueEmbeddings([id]);
+  enqueueEmbeddings({ ids: [id] });
   toast.success("Enqueued for embedding");
 };
 

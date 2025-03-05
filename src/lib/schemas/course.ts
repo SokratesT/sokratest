@@ -1,3 +1,5 @@
+import { courses } from "@/db/schema/courses";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const courseSchema = z.object({
@@ -6,7 +8,17 @@ export const courseSchema = z.object({
     .string()
     .max(500, { message: "Description must be less than 500 characters" }),
   content: z.string(),
-  organizationId: z.string(),
 });
 
 export type CourseSchemaType = z.infer<typeof courseSchema>;
+
+export const courseInsertSchema = createInsertSchema(courses, {
+  organizationId: (schema) => schema.optional(),
+});
+
+export const courseUpdateSchema = createUpdateSchema(courses, {
+  organizationId: (schema) => schema.optional(),
+  id: z.string(),
+});
+
+export const courseDeleteSchema = z.object({ ids: z.array(z.string()) });

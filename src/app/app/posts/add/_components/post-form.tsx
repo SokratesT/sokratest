@@ -23,7 +23,7 @@ const PostForm = ({ post }: { post?: Post }) => {
 
   const onSubmit = (values: PostSchemaType) => {
     if (post) {
-      updatePost(values, post.id);
+      updatePost({ ...values, id: post.id });
       toast.success("Post updated successfully");
     } else {
       createPost(values);

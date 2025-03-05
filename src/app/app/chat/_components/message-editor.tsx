@@ -7,7 +7,7 @@ import type { ChatRequestOptions, Message } from "ai";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-export type MessageEditorProps = {
+type MessageEditorProps = {
   message: Message;
   setMode: React.Dispatch<React.SetStateAction<"view" | "edit">>;
   setMessages: (

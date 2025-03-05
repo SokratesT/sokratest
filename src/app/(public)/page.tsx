@@ -1,4 +1,5 @@
 import { BenefitsSection } from "@/components/landing-page/benefits-section";
+import { FAQSection } from "@/components/landing-page/faq-section";
 import { HeroSection } from "@/components/landing-page/hero-section";
 import { TeamSection } from "@/components/landing-page/team-section";
 
@@ -9,6 +10,9 @@ export default async function Home() {
         <HeroSection />
         <BenefitsSection />
         <TeamSection />
+        <div className="flex justify-center">
+          <FAQSection />
+        </div>
       </div>
     </div>
   );

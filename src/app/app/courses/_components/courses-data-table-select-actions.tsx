@@ -22,7 +22,7 @@ const CoursesDataTableSelectActions = () => {
   const handleDelete = async () => {
     const courseIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    deleteCourses(courseIds);
+    deleteCourses({ ids: courseIds });
     toast.success("Courses deleted");
   };
 

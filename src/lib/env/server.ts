@@ -33,10 +33,6 @@ export const serverEnv = createEnv({
     TRIGGER_SECRET_KEY: z.string(),
     TRIGGER_API_URL: z.string(),
 
-    // Unstructured Service
-    UNSTRUCTURED_API_URL: z.string(),
-    UNSTRUCTURED_SECRET_KEY: z.string(),
-
     // AI Service
     OPENAI_COMPATIBLE_BASE_URL: z.string(),
     OPENAI_COMPATIBLE_API_KEY: z.string(),

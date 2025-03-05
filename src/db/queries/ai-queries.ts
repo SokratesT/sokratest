@@ -1,28 +1,11 @@
-import "server-only";
+"server-only";
 
-import { and, asc, desc, eq, gte } from "drizzle-orm";
+import { db } from "@/db/drizzle";
+import { chats as chat } from "@/db/schema/chat";
+import { type MessageDb, messagesDb } from "@/db/schema/messages";
+import { and, asc, eq, gte } from "drizzle-orm";
 
-import { user } from "../schema/auth";
-import { chats as chat } from "../schema/chat";
-
-import type { User } from "better-auth";
-
-import { db } from "../drizzle";
-import { type MessageDb, messagesDb } from "../schema/messages";
-
-// Optionally, if not using email/pass login, you can
-// use the Drizzle adapter for Auth.js / NextAuth
-// https://authjs.dev/reference/adapter/drizzle
-
-export async function getUser(email: string): Promise<Array<User>> {
-  try {
-    return await db.select().from(user).where(eq(user.email, email));
-  } catch (error) {
-    console.error("Failed to get user from database");
-    throw error;
-  }
-}
-
+// TODO: Refactor to "update chat"
 export async function saveChat({
   id,
   userId,
@@ -48,30 +31,6 @@ export async function saveChat({
       .onConflictDoUpdate({ target: chat.id, set: { title } });
   } catch (error) {
     console.error("Failed to save chat in database");
-    throw error;
-  }
-}
-
-export async function deleteChatById({ id }: { id: string }) {
-  try {
-    await db.delete(messagesDb).where(eq(messagesDb.chatId, id));
-
-    return await db.delete(chat).where(eq(chat.id, id));
-  } catch (error) {
-    console.error("Failed to delete chat by id from database");
-    throw error;
-  }
-}
-
-export async function getChatsByUserId({ id }: { id: string }) {
-  try {
-    return await db
-      .select()
-      .from(chat)
-      .where(eq(chat.userId, id))
-      .orderBy(desc(chat.createdAt));
-  } catch (error) {
-    console.error("Failed to get chats by user from database");
     throw error;
   }
 }

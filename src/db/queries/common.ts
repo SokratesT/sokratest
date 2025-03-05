@@ -37,7 +37,7 @@ type EnhancedSession<TOptions extends AuthQueryOptions> = BaseSession & {
       : { activeCourseId?: BaseSession["session"]["activeCourseId"] });
 };
 
-export type AuthQueryOptions = {
+type AuthQueryOptions = {
   requireOrg?: boolean;
   requireCourse?: boolean;
   resource?: ResourceOptions;

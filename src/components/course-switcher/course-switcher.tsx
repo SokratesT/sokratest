@@ -27,7 +27,7 @@ const CourseSwitcher = ({
   const handleCourseChange = async (course: Course) => {
     console.log(course);
 
-    await setActiveCourse(course.id);
+    await setActiveCourse({ courseId: course.id });
 
     router.push(routes.app.path);
     toast.success(`Course changed to ${course.title}`);

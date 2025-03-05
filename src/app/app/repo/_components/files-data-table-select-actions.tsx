@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteFileInfoFromDB } from "@/actions/delete-file";
+import { deleteFileInfo } from "@/actions/file-repository";
 import { enqueueEmbeddings } from "@/actions/test-trigger";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
@@ -21,14 +21,14 @@ const FilesDataTableSelectActions = () => {
   const handleDelete = async () => {
     const fileIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    deleteFileInfoFromDB(fileIds);
+    deleteFileInfo({ ids: fileIds });
     toast.success("Files deleted");
   };
 
   const handleEnqueueEmbeddings = async () => {
     const fileIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    enqueueEmbeddings(fileIds);
+    enqueueEmbeddings({ ids: fileIds });
     toast.success("Files enqueued for embeddings");
   };
 

@@ -48,7 +48,7 @@ const saveEmbedding = async (
 ) => {
   // TODO: Add authentication / authorization checks
 
-  await deleteEmbeddingsForFile(documentId);
+  await deleteEmbeddingsForFile({ fileId: documentId });
 
   const embeds = transformData(embedResults, documentId);
 

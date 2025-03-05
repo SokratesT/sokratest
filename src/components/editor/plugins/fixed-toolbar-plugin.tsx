@@ -9,6 +9,7 @@ export const FixedToolbarPlugin = createPlatePlugin({
   key: "fixed-toolbar",
   render: {
     beforeEditable: () => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const readOnly = useEditorReadOnly();
 
       if (readOnly) return null;

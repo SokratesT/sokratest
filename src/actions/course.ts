@@ -1,122 +1,118 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { type User, session } from "@/db/schema/auth";
-import { type Course, courseMember, courses } from "@/db/schema/courses";
-import { auth } from "@/lib/auth";
-import type { CourseSchemaType } from "@/lib/schemas/course";
+import { session } from "@/db/schema/auth";
+import { courseMember, courses } from "@/db/schema/courses";
+import {
+  authActionClient,
+  requireOrganizationMiddleware,
+} from "@/lib/safe-action";
+import {
+  courseDeleteSchema,
+  courseInsertSchema,
+  courseUpdateSchema,
+} from "@/lib/schemas/course";
+import {
+  courseMemberDeleteSchema,
+  courseMemberInsertSchema,
+} from "@/lib/schemas/course-member";
 import { routes } from "@/settings/routes";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
+import { z } from "zod";
 
-export const createCourse = async (course: CourseSchemaType) => {
-  const session = await auth.api.getSession({ headers: await headers() });
+export const createCourse = authActionClient
+  .metadata({ actionName: "createCourse" })
+  .use(requireOrganizationMiddleware)
+  .schema(courseInsertSchema)
+  .action(
+    async ({
+      parsedInput: { title, description, content },
+      ctx: { userId, activeOrganizationId },
+    }) => {
+      const [newCourse] = await db
+        .insert(courses)
+        .values({
+          title,
+          description,
+          content,
+          organizationId: activeOrganizationId,
+        })
+        .returning({ id: courses.id });
 
-  if (!session) {
-    throw new Error("Not authenticated");
-  }
+      await db.insert(courseMember).values({
+        courseId: newCourse.id,
+        userId,
+        role: "instructor", // TODO: Make enum
+      });
 
-  const [newCourse] = await db
-    .insert(courses)
-    .values({ ...course })
-    .returning({ id: courses.id });
+      revalidatePath(routes.app.sub.courses.path);
+      return { error: null };
+    },
+  );
 
-  await db.insert(courseMember).values({
-    courseId: newCourse.id,
-    userId: session.session.userId,
-    role: "instructor",
+export const updateCourse = authActionClient
+  .metadata({ actionName: "updateCourse" })
+  .schema(courseUpdateSchema)
+  .action(async ({ parsedInput: { id, description, content, title } }) => {
+    await db
+      .update(courses)
+      .set({ id, content, title, description, updatedAt: sql`now()` })
+      .where(eq(courses.id, id));
+
+    revalidatePath(routes.app.sub.courses.path);
+    return { error: null };
   });
 
-  revalidatePath(routes.app.sub.posts.path);
-};
+export const deleteCourses = authActionClient
+  .metadata({ actionName: "deleteCourses" })
+  .schema(courseDeleteSchema)
+  .action(async ({ parsedInput: { ids } }) => {
+    await db.delete(courses).where(inArray(courses.id, ids));
 
-export const updateCourse = async (
-  course: CourseSchemaType,
-  courseId: Course["id"],
-) => {
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (!session) {
-    throw new Error("Not authenticated");
-  }
-
-  await db
-    .update(courses)
-    .set({ ...course, updatedAt: sql`now()` })
-    .where(eq(courses.id, courseId));
-
-  revalidatePath(routes.app.sub.posts.path);
-};
-
-export const deleteCourses = async (courseIds: Course["id"][]) => {
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (!session) {
-    throw new Error("Not authenticated");
-  }
-
-  await db.delete(courses).where(inArray(courses.id, courseIds));
-
-  revalidatePath(routes.app.sub.courses.path);
-};
-
-export const addCourseMember = async (user: User, courseId: Course["id"]) => {
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (!session) {
-    throw new Error("Not authenticated");
-  }
-
-  await db
-    .insert(courseMember)
-    .values({
-      courseId,
-      userId: user.id,
-      role: "student",
-    })
-    .onConflictDoNothing();
-
-  // TODO: Make more granular
-  revalidatePath(routes.app.sub.courses.path);
-};
-
-export const removeCourseMembers = async (
-  userIds: User["id"][],
-  courseId: Course["id"],
-) => {
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (!session) {
-    throw new Error("Not authenticated");
-  }
-
-  await db
-    .delete(courseMember)
-    .where(
-      and(
-        inArray(courseMember.userId, userIds),
-        eq(courseMember.courseId, courseId),
-      ),
-    );
-
-  // TODO: Make more granular
-  revalidatePath(routes.app.sub.courses.path);
-};
-
-export const setActiveCourse = async (courseId: Course["id"] | null) => {
-  const currentSession = await auth.api.getSession({
-    headers: await headers(),
+    revalidatePath(routes.app.sub.courses.path);
+    return { error: null };
   });
 
-  if (!currentSession) {
-    throw new Error("Not authenticated");
-  }
+export const addCourseMember = authActionClient
+  .metadata({ actionName: "addCourseMember" })
+  .schema(courseMemberInsertSchema)
+  .action(async ({ parsedInput: { userId, courseId } }) => {
+    await db
+      .insert(courseMember)
+      .values({
+        courseId,
+        userId,
+        role: "student",
+      })
+      .onConflictDoNothing();
 
-  await db
-    .update(session)
-    .set({ activeCourseId: courseId })
-    .where(eq(session.userId, session.userId));
+    // TODO: Make more granular
+    revalidatePath(routes.app.sub.courses.path);
+  });
 
-  revalidatePath(routes.app.path);
-};
+export const removeCourseMembers = authActionClient
+  .metadata({ actionName: "removeCourseMembers" })
+  .schema(courseMemberDeleteSchema)
+  .action(async ({ parsedInput: { ids, courseId } }) => {
+    await db
+      .delete(courseMember)
+      .where(
+        and(
+          inArray(courseMember.userId, ids),
+          eq(courseMember.courseId, courseId),
+        ),
+      );
+    // TODO: Make more granular
+    revalidatePath(routes.app.sub.courses.path);
+  });
+
+export const setActiveCourse = authActionClient
+  .metadata({ actionName: "setActiveCourse" })
+  .schema(z.object({ courseId: z.string().optional() }))
+  .action(async ({ parsedInput: { courseId }, ctx: { userId } }) => {
+    await db
+      .update(session)
+      .set({ activeCourseId: courseId })
+      .where(eq(session.userId, userId));
+  });
