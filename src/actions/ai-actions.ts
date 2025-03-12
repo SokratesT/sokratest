@@ -16,12 +16,12 @@ export const generateTitleFromUserMessage = authActionClient
     const { text: title } = await generateText({
       model: customModel({
         model: {
-          id: "meta-llama-3.1-8b-instruct",
-          label: "Llama 3.1 (8b)",
-          apiIdentifier: "meta-llama-3.1-8b-instruct",
-          description: "Model description for 3.1 8b",
+          id: "llama3.1",
+          label: "Llama 3.1",
+          apiIdentifier: "llama3.1:latest",
+          description: "Local Llama",
         },
-        mode: "saia",
+        mode: "local",
       }),
       system: `\n
       - you will generate a short title based on the first message a user begins a conversation with
