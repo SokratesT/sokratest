@@ -2,6 +2,9 @@ import { serverEnv } from "@/lib/env/server";
 import { type OpenAIProvider, createOpenAI } from "@ai-sdk/openai";
 import { extractReasoningMiddleware, wrapLanguageModel } from "ai";
 import type { Model } from "./models";
+import { PostHog } from "posthog-node";
+import { withTracing } from "@posthog/ai";
+import { clientEnv } from "../env/client";
 
 export const customModel = ({
   model,
@@ -73,3 +76,32 @@ export const customModel = ({
     middleware: extractReasoningMiddleware({ tagName: "think" }),
   });
 };
+
+const phClient = new PostHog(clientEnv.NEXT_PUBLIC_POSTHOG_KEY, {
+  host: `https://${clientEnv.NEXT_PUBLIC_POSTHOG_HOST}`,
+});
+
+interface PostHogTraceParams {
+  userId: string;
+  messageId: string;
+  chatId: string;
+  courseId: string;
+  organizationId: string;
+}
+
+export const customModelWithTracing = ({
+  model,
+  mode,
+  traceParams: { userId, messageId, chatId, courseId, organizationId },
+}: {
+  model?: Model;
+  mode: "saia" | "local";
+  traceParams: PostHogTraceParams;
+}) =>
+  withTracing(customModel({ model, mode }), phClient, {
+    posthogDistinctId: userId, // optional
+    posthogTraceId: messageId, // optional
+    posthogProperties: { conversation_id: chatId }, // optional
+    posthogPrivacyMode: false, // optional
+    posthogGroups: { course: courseId, organization: organizationId },
+  });

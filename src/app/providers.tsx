@@ -1,4 +1,5 @@
 import { NextStepCard } from "@/components/next-step/next-step-card";
+import { PostHogProvider } from "@/components/posthog/posthog-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { nextStepTours } from "@/lib/next-step-tours";
@@ -8,20 +9,20 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <NuqsAdapter>
-      {/* <PostHogProvider> */}
-      <NextStepProvider>
-        <NextStep steps={nextStepTours} cardComponent={NextStepCard}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TooltipProvider>{children}</TooltipProvider>
-          </ThemeProvider>
-        </NextStep>
-      </NextStepProvider>
-      {/* </PostHogProvider> */}
+      <PostHogProvider>
+        <NextStepProvider>
+          <NextStep steps={nextStepTours} cardComponent={NextStepCard}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <TooltipProvider>{children}</TooltipProvider>
+            </ThemeProvider>
+          </NextStep>
+        </NextStepProvider>
+      </PostHogProvider>
     </NuqsAdapter>
   );
 };

@@ -1,6 +1,6 @@
 import { generateTitleFromUserMessage } from "@/actions/ai-actions";
 import { saveChat, saveMessages } from "@/db/queries/ai-queries";
-import { customModel } from "@/lib/ai";
+import { customModelWithTracing } from "@/lib/ai";
 import {
   getMostRecentUserMessage,
   sanitizeResponseMessages,
@@ -24,8 +24,15 @@ export async function POST(request: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  if (!session.session.activeCourseId) {
+  const activeCourseId = session.session.activeCourseId;
+  const activeOrganizationId = session.session.activeOrganizationId;
+
+  if (!activeCourseId) {
     return new Response("No active course", { status: 400 });
+  }
+
+  if (!activeOrganizationId) {
+    return new Response("No active organization", { status: 400 });
   }
 
   const {
@@ -51,7 +58,7 @@ export async function POST(request: Request) {
       await saveChat({
         id,
         userId: session.user.id,
-        courseId: session.session.activeCourseId,
+        courseId: activeCourseId,
         title,
       });
     }
@@ -93,14 +100,21 @@ export async function POST(request: Request) {
       relevantChunks.map((chunk) => dataStream.writeMessageAnnotation(chunk));
 
       const result = streamText({
-        model: customModel({
+        model: customModelWithTracing({
           model: {
-            id: "deepseek-r1-distill-llama-70b",
-            label: "Deepseek R1 (70b)",
-            apiIdentifier: "deepseek-r1-distill-llama-70b",
-            description: "Model description for Deepseek R1",
+            id: "deepseek-r1:14b",
+            label: "Deepseek R1",
+            apiIdentifier: "deepseek-r1:14b",
+            description: "Local R1",
           },
-          mode: "saia",
+          mode: "local",
+          traceParams: {
+            userId: session.user.id,
+            messageId: userMessage.id,
+            chatId: id,
+            courseId: activeCourseId,
+            organizationId: activeOrganizationId,
+          },
         }),
         messages,
         experimental_transform: smoothStream(),
