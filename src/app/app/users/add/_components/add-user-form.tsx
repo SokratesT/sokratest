@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import type { Course } from "@/db/schema/courses";
+import { authClient } from "@/lib/auth-client";
 import { isFieldRequired } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, CircleMinusIcon } from "lucide-react";
@@ -19,11 +20,11 @@ const schema = z.object({
   items: z
     .array(
       z.object({
-        userEmails: z.string().email("Field must be a valid email"),
+        email: z.string().email("Field must be a valid email"),
       }),
     )
     .superRefine((items, ctx) => {
-      const emails = items.map((item) => item.userEmails.toLowerCase());
+      const emails = items.map((item) => item.email.toLowerCase());
       const uniqueEmails = new Set(emails);
 
       if (uniqueEmails.size !== emails.length) {
@@ -43,7 +44,7 @@ const AddUserForm = ({ courses }: { courses: Course[] }) => {
     resolver: zodResolver(schema),
     defaultValues: {
       courseId: undefined,
-      items: [{ userEmails: "" }],
+      items: [{ email: "" }],
     },
   });
 
@@ -53,6 +54,13 @@ const AddUserForm = ({ courses }: { courses: Course[] }) => {
   });
 
   const onSubmit = (data: FormValues) => {
+    data.items.forEach(async (user) => {
+      await authClient.organization.inviteMember({
+        email: user.email,
+        role: "member",
+      });
+    });
+
     console.log("Submitted data:", data);
   };
 
@@ -83,13 +91,13 @@ const AddUserForm = ({ courses }: { courses: Course[] }) => {
 
           {fields.map((field, index) => (
             <div key={field.id}>
-              <Label htmlFor={`items.${index}.userEmails`}>
+              <Label htmlFor={`items.${index}.email`}>
                 User {index + 1} Email
               </Label>
               <div className="flex flex-row items-start gap-2">
                 <FormField
                   control={form.control}
-                  name={`items.${index}.userEmails`}
+                  name={`items.${index}.email`}
                   render={({ field }) => (
                     <FormInputField
                       className="w-full"
@@ -123,7 +131,7 @@ const AddUserForm = ({ courses }: { courses: Course[] }) => {
         </div>
 
         <div className="mt-4 flex flex-row gap-2">
-          <Button variant="outline" onClick={() => append({ userEmails: "" })}>
+          <Button variant="outline" onClick={() => append({ email: "" })}>
             Add email field
           </Button>
           <Button type="submit">Invite Users</Button>

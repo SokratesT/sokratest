@@ -10,8 +10,9 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { FormInputField } from "./forms/fields/formInputField";
 import { FormPasswordField } from "./forms/fields/formPasswordField";
+import type { Invitation } from "@/db/schema/auth";
 
-const SignUpForm = () => {
+const SignUpForm = ({ invitation }: { invitation?: Invitation }) => {
   const router = useRouter();
 
   const form = useForm<SignupSchemaType>({
@@ -21,6 +22,7 @@ const SignUpForm = () => {
       username: undefined,
       password: undefined,
       confirmPassword: undefined,
+      invitationId: invitation?.id ?? undefined,
     },
   });
 
@@ -37,7 +39,14 @@ const SignUpForm = () => {
           //show loading
           console.log("loading");
         },
-        onSuccess: (ctx) => {
+        onSuccess: async (ctx) => {
+          if (invitation?.id) {
+            console.log("accepting invitation");
+            await authClient.organization.acceptInvitation({
+              invitationId: invitation?.id,
+            });
+          }
+
           router.replace(routes.app.path);
           console.log("success");
         },
@@ -86,6 +95,18 @@ const SignUpForm = () => {
                 placeholder="your@email.com"
                 label="Email"
                 inputType="email"
+              />
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="invitationId"
+            render={({ field }) => (
+              <FormInputField
+                field={field}
+                placeholder="Unique invitation code"
+                label="Invitation Code"
+                inputType="text"
               />
             )}
           />

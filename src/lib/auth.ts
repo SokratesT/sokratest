@@ -24,7 +24,20 @@ import { v4 as uuidv4 } from "uuid";
 
 export const auth = betterAuth({
   trustedOrigins: ["http://localhost:3000", "http://host.docker.internal:3000"],
-  plugins: [admin(), username(), organizationPlugin()],
+  plugins: [
+    admin(),
+    username(),
+    organizationPlugin({
+      async sendInvitationEmail(data) {
+        const inviteLink = `https://example.com/accept-invitation/${data.id}`;
+        sendEmail({
+          to: data.email,
+          subject: "You've been invited to join an organisation",
+          text: `Click the link to accept the invitation: ${inviteLink}`,
+        });
+      },
+    }),
+  ],
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {

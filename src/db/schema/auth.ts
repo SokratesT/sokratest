@@ -1,12 +1,5 @@
 import type { InferSelectModel } from "drizzle-orm";
-import {
-  boolean,
-  pgTable,
-  primaryKey,
-  text,
-  timestamp,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -86,24 +79,17 @@ export const organization = pgTable("organization", {
 
 export type Organization = InferSelectModel<typeof organization>;
 
-export const member = pgTable(
-  "member",
-  {
-    organizationId: uuid("organization_id")
-      .notNull()
-      .references(() => organization.id),
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => user.id),
-    role: text("role").notNull(),
-    createdAt: timestamp("created_at").notNull(),
-  },
-  (table) => [
-    primaryKey({
-      columns: [table.organizationId, table.userId],
-    }),
-  ],
-);
+export const member = pgTable("member", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  organizationId: uuid("organization_id")
+    .notNull()
+    .references(() => organization.id),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => user.id),
+  role: text("role").notNull(),
+  createdAt: timestamp("created_at").notNull(),
+});
 
 export type Member = InferSelectModel<typeof member>;
 

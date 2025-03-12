@@ -8,6 +8,7 @@ export const signupSchema = z
     username: sharedSchemas.username,
     password: sharedSchemas.password,
     confirmPassword: sharedSchemas.password,
+    invitationId: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords must match",
