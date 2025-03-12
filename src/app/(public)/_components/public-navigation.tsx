@@ -17,6 +17,7 @@ import { Menu, MoveRight, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { NavigationAuthButtons } from "./navigation-auth-buttons";
+import { routes } from "@/settings/routes";
 
 const PublicNavigation = () => {
   const [isOpen, setOpen] = useState(false);
@@ -102,7 +103,10 @@ const PublicNavigation = () => {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-        <Link href="/" className="flex items-center lg:justify-center">
+        <Link
+          href={routes.root.path}
+          className="flex items-center lg:justify-center"
+        >
           <motion.div
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}

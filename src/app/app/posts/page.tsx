@@ -10,6 +10,7 @@ import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
 import { columns } from "./_components/columns";
 import { PostsDataTableSelectActions } from "./_components/posts-data-table-select-actions";
+import { routes } from "@/settings/routes";
 
 const PostsPage = async ({
   searchParams,
@@ -34,10 +35,10 @@ const PostsPage = async ({
         </h4>
         <div className="flex gap-2">
           <Button variant="outline" asChild>
-            <Link href="/blog">View Posts</Link>
+            <Link href={routes.blog.path}>View Posts</Link>
           </Button>
           <Button asChild>
-            <Link href="/app/posts/add">Add Post</Link>
+            <Link href={routes.app.sub.posts.sub.add.path}>Add Post</Link>
           </Button>
         </div>
       </div>

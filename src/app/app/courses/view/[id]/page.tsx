@@ -2,6 +2,7 @@ import { PlateEditor } from "@/components/editor/plate-editor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCourseById } from "@/db/queries/courses";
+import { routes } from "@/settings/routes";
 import Link from "next/link";
 
 const ViewCoursePage = async ({
@@ -23,7 +24,7 @@ const ViewCoursePage = async ({
             <Link href={`/app/courses/view/${id}/members`}>Manage Users</Link>
           </Button>
           <Button asChild>
-            <Link href="/app/courses/add">Add Files</Link>
+            <Link href={routes.app.sub.up.sub.add.path}>Add Files</Link>
           </Button>
         </div>
       </div>

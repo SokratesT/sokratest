@@ -12,6 +12,7 @@ import type { SearchParams } from "nuqs/server";
 import { columns } from "./_components/columns";
 import { FilesDataTableSelectActions } from "./_components/files-data-table-select-actions";
 import { SearchInput } from "./_components/search-input";
+import { routes } from "@/settings/routes";
 
 const FilesPage = async ({
   searchParams,
@@ -38,7 +39,7 @@ const FilesPage = async ({
         </h4>
         <div className="flex gap-2">
           <Button asChild>
-            <Link href="/app/repo/add">Add File</Link>
+            <Link href={routes.app.sub.up.sub.add.path}>Add File</Link>
           </Button>
         </div>
       </div>

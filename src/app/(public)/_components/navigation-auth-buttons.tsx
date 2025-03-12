@@ -1,6 +1,9 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
+import { routes } from "@/settings/routes";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -26,10 +29,10 @@ const NavigationAuthButtons = () => {
     return (
       <div className="flex gap-2">
         <Button variant="outline" asChild>
-          <Link href="/app/account">Account</Link>
+          <Link href={routes.app.sub.account.path}>Account</Link>
         </Button>
         <Button asChild>
-          <Link href="/app">Go to App</Link>
+          <Link href={routes.app.path}>Go to App</Link>
         </Button>
       </div>
     );
@@ -38,10 +41,10 @@ const NavigationAuthButtons = () => {
   return (
     <div className="flex gap-2">
       <Button variant="outline" asChild>
-        <Link href="/auth">Sign in</Link>
+        <Link href={routes.login.path}>Sign in</Link>
       </Button>
       <Button asChild>
-        <Link href="/auth">Get started</Link>
+        <Link href={routes.signup.path}>Get started</Link>
       </Button>
     </div>
   );
