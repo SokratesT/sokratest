@@ -15,6 +15,7 @@ const EditPostPage = async ({
 }) => {
   const { id } = await params;
 
+  // TODO: Use function instead
   const [queryPost] = await db.select().from(posts).where(eq(posts.id, id));
   const [author] = await db
     .select({ name: user.name })

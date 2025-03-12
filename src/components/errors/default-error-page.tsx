@@ -8,6 +8,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { AlertCircleIcon } from "lucide-react";
+import posthog from "posthog-js";
 import { useEffect } from "react";
 
 const DefaultErrorPage = ({
@@ -20,6 +21,7 @@ const DefaultErrorPage = ({
   reset: () => void;
 }) => {
   useEffect(() => {
+    posthog.captureException(error);
     console.error(error);
   }, [error]);
 

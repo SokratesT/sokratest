@@ -2,7 +2,7 @@
 
 import { DefaultErrorPage } from "@/components/errors/default-error-page";
 
-export default function ApplicationError({
+export default function GlobalError({
   error,
   reset,
 }: {
