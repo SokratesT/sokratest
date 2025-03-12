@@ -25,45 +25,37 @@ export const getUserCoursesForActiveOrganization = async (options: {
   pageIndex: number;
   pageSize: number;
 }) => {
-  return withAuthQuery(
-    async (session) => {
-      const { sort, pageIndex, pageSize } = options;
-      const { limit, offset } = buildPagination({ pageIndex, pageSize });
+  return withAuthQuery(async (session) => {
+    const { sort, pageIndex, pageSize } = options;
+    const { limit, offset } = buildPagination({ pageIndex, pageSize });
 
-      const sortOrder = buildSortOrder(
-        sort,
-        courses,
-        VALID_COURSE_SORT_COLUMNS,
-        "createdAt",
-      );
+    const sortOrder = buildSortOrder(
+      sort,
+      courses,
+      VALID_COURSE_SORT_COLUMNS,
+      "createdAt",
+    );
 
-      const query = await db
-        .selectDistinct({ ...getTableColumns(courses) })
-        .from(courses)
-        .innerJoin(
-          courseMember,
-          eq(courseMember.userId, session.session.userId),
-        )
-        .where(eq(courses.organizationId, session.session.activeOrganizationId))
-        .limit(limit)
-        .offset(offset)
-        .orderBy(...sortOrder);
+    if (!session.session.activeOrganizationId)
+      return { query: [], rowCount: { count: 0 } };
 
-      const [rowCount] = await db
-        .select({ count: count() })
-        .from(courses)
-        .innerJoin(
-          courseMember,
-          eq(courseMember.userId, session.session.userId),
-        )
-        .where(
-          eq(courses.organizationId, session.session.activeOrganizationId),
-        );
+    const query = await db
+      .selectDistinct({ ...getTableColumns(courses) })
+      .from(courses)
+      .innerJoin(courseMember, eq(courseMember.userId, session.session.userId))
+      .where(eq(courses.organizationId, session.session.activeOrganizationId))
+      .limit(limit)
+      .offset(offset)
+      .orderBy(...sortOrder);
 
-      return { query, rowCount };
-    },
-    { requireOrg: true },
-  );
+    const [rowCount] = await db
+      .select({ count: count() })
+      .from(courses)
+      .innerJoin(courseMember, eq(courseMember.userId, session.session.userId))
+      .where(eq(courses.organizationId, session.session.activeOrganizationId));
+
+    return { query, rowCount };
+  }, {});
 };
 
 export const getCourseById = async (id: Course["id"]) => {

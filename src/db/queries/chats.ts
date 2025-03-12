@@ -16,7 +16,7 @@ export const getUserChatsForActiveCourse = async () => {
         .where(eq(chats.courseId, session.session.activeCourseId))
         .orderBy(desc(chats.createdAt));
 
-      return query;
+      return { query };
     },
     { requireCourse: true },
   );

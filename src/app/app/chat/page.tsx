@@ -3,7 +3,7 @@ import { getUserChatsForActiveCourse } from "@/db/queries/chats";
 import { NewChatButton } from "./_components/new-chat-button";
 
 const ChatsPage = async () => {
-  const query = await getUserChatsForActiveCourse();
+  const { query } = await getUserChatsForActiveCourse();
 
   return (
     <div className="flex flex-col gap-14">
