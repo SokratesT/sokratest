@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteChat } from "@/actions/chat";
+import { deleteChat } from "@/db/actions/chat";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

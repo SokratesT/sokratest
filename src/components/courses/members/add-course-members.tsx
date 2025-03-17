@@ -1,6 +1,6 @@
 "use client";
 
-import { addCourseMember } from "@/actions/course";
+import { addCourseMember } from "@/db/actions/course";
 import { Button } from "@/components/ui/button";
 import {
   Command,

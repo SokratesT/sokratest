@@ -1,6 +1,6 @@
 "use client";
 
-import { revalidatePathFromClient } from "@/actions/revalidate-helper";
+import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {

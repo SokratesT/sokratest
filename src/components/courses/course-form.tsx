@@ -1,6 +1,6 @@
 "use client";
 
-import { createCourse, updateCourse } from "@/actions/course";
+import { createCourse, updateCourse } from "@/db/actions/course";
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormTextField } from "@/components/forms/fields/formTextField";

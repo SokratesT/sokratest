@@ -1,6 +1,6 @@
 "use client";
 
-import { createPost, updatePost } from "@/actions/post";
+import { createPost, updatePost } from "@/db/actions/post";
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";

@@ -1,6 +1,6 @@
 "use client";
 
-import { setActiveCourse } from "@/actions/course";
+import { setActiveCourse } from "@/db/actions/course";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +21,7 @@ import { toast } from "sonner";
 const CourseSwitcher = ({
   availableCourses,
   activeCourse,
-}: { availableCourses: Course[]; activeCourse: Course | undefined }) => {
+}: { availableCourses: Course[]; activeCourse: Course | undefined | null }) => {
   const router = useRouter();
 
   const handleCourseChange = async (course: Course) => {

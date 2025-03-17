@@ -25,6 +25,10 @@ const CoursePreview = async () => {
     session?.session.activeCourseId,
   );
 
+  if (!course) {
+    return <Placeholder>No such course</Placeholder>;
+  }
+
   return (
     <Card>
       <CardHeader>

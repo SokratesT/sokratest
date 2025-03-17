@@ -1,4 +1,4 @@
-import { deleteEmbeddingsForFile } from "@/actions/embedding";
+import { deleteEmbeddingsForFile } from "@/db/actions/embedding";
 import { db } from "@/db/drizzle";
 import { document } from "@/db/schema/document";
 import { embedding } from "@/db/schema/embedding";

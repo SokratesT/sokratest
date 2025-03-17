@@ -1,4 +1,4 @@
-import { generateTitleFromUserMessage } from "@/actions/ai-actions";
+import { generateTitleFromUserMessage } from "@/db/actions/ai-actions";
 import { saveChat, saveMessages } from "@/db/queries/ai-queries";
 import { customModelWithTracing } from "@/lib/ai";
 import {

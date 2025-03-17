@@ -6,6 +6,7 @@ import type { Session as AuthSession } from "better-auth";
 import { count, eq, getTableColumns } from "drizzle-orm";
 import { withAuthQuery } from "./common";
 import { buildPagination, buildSortOrder } from "./query-builders";
+import { hasPermission } from "@/settings/rbac";
 
 const VALID_COURSE_SORT_COLUMNS = ["title", "createdAt"] as (keyof Course)[];
 
@@ -61,6 +62,10 @@ export const getUserCoursesForActiveOrganization = async (options: {
 export const getCourseById = async (id: Course["id"]) => {
   return withAuthQuery(
     async () => {
+      if (await hasPermission({ type: "course", id }, "read")) {
+        return { query: null };
+      }
+
       const [query] = await db
         .select({ ...getTableColumns(course) })
         .from(course)
@@ -75,7 +80,7 @@ export const getCourseById = async (id: Course["id"]) => {
   );
 };
 
-export const getActiveCourse = async () => {
+/* export const getActiveCourse = async () => {
   return withAuthQuery(
     async (session) => {
       const [query] = await db
@@ -90,4 +95,4 @@ export const getActiveCourse = async () => {
       requireCourse: true,
     },
   );
-};
+}; */

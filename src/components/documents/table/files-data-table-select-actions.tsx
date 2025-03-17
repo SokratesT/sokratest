@@ -1,7 +1,7 @@
 "use client";
 
-import { deleteDocumentInfo } from "@/actions/document";
-import { enqueueEmbeddings } from "@/actions/test-trigger";
+import { deleteDocumentInfo } from "@/db/actions/document";
+import { enqueueEmbeddings } from "@/db/actions/test-trigger";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {

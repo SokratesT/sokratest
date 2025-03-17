@@ -1,4 +1,4 @@
-import { voteMessage } from "@/actions/chat-message-vote";
+import { voteMessage } from "@/db/actions/chat-message-vote";
 import {
   Accordion,
   AccordionContent,

@@ -1,4 +1,4 @@
-import { saveDocumentInfo } from "@/actions/document";
+import { saveDocumentInfo } from "@/db/actions/document";
 import { clientEnv } from "@/lib/env/client";
 import type { PresignedUrlProp, ShortFileProp } from "./types";
 

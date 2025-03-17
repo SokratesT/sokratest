@@ -1,6 +1,6 @@
 "use client";
 
-import { removeCourseMembers } from "@/actions/course";
+import { removeCourseMembers } from "@/db/actions/course";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {

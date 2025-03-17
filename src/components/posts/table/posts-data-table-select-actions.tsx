@@ -1,6 +1,6 @@
 "use client";
 
-import { deletePosts } from "@/actions/post";
+import { deletePosts } from "@/db/actions/post";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {

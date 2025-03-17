@@ -1,4 +1,5 @@
 import { CourseForm } from "@/components/courses/course-form";
+import { Placeholder } from "@/components/ui/custom/placeholder";
 import { getCourseById } from "@/db/queries/courses";
 
 const EditCoursePage = async ({
@@ -8,6 +9,10 @@ const EditCoursePage = async ({
 }) => {
   const { id } = await params;
   const { query } = await getCourseById(id);
+
+  if (!query) {
+    return <Placeholder>No such course</Placeholder>;
+  }
 
   return (
     <div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteTrailingMessages } from "@/actions/ai-actions";
+import { deleteTrailingMessages } from "@/db/actions/ai-actions";
 import { Button } from "@/components/ui/button";
 import { SendButton, StopButton } from "@/components/ui/chat/chat-buttons";
 import { ChatInput } from "@/components/ui/chat/chat-input";

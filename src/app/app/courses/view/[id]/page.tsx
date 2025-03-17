@@ -1,6 +1,7 @@
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Placeholder } from "@/components/ui/custom/placeholder";
 import { getCourseById } from "@/db/queries/courses";
 import { routes } from "@/settings/routes";
 import Link from "next/link";
@@ -12,6 +13,10 @@ const ViewCoursePage = async ({
 }) => {
   const { id } = await params;
   const { query } = await getCourseById(id);
+
+  if (!query) {
+    return <Placeholder>No such course</Placeholder>;
+  }
 
   return (
     <div className="flex flex-col gap-14">

@@ -1,6 +1,6 @@
 "use client";
 
-import { createChat } from "@/actions/chat";
+import { createChat } from "@/db/actions/chat";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";

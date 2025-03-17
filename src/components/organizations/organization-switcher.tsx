@@ -1,6 +1,6 @@
 "use client";
 
-import { setActiveCourse } from "@/actions/course";
+import { setActiveCourse } from "@/db/actions/course";
 import {
   DropdownMenuGroup,
   DropdownMenuItem,

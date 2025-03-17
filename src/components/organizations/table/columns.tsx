@@ -1,6 +1,6 @@
 "use client";
 
-import { revalidatePathFromClient } from "@/actions/revalidate-helper";
+import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";

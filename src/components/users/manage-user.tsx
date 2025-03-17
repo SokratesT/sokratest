@@ -1,6 +1,6 @@
 "use client";
 
-import { revalidatePathFromClient } from "@/actions/revalidate-helper";
+import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Placeholder } from "@/components/ui/custom/placeholder";
