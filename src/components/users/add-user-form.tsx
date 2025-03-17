@@ -6,7 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
-import type { Course } from "@/db/schema/courses";
+import type { Course } from "@/db/schema/course";
 import { authClient } from "@/lib/auth-client";
 import { isFieldRequired } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";

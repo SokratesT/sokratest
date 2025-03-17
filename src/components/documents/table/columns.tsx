@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteFileInfo } from "@/actions/file-repository";
+import { deleteDocumentInfo } from "@/actions/document";
 import { enqueueEmbeddings } from "@/actions/test-trigger";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { FileRepository } from "@/db/schema/file-repository";
+import type { Document } from "@/db/schema/document";
 import { cn } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import { convert } from "convert";
@@ -23,7 +23,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 const handleDelete = async (id: string) => {
-  deleteFileInfo({ ids: [id] });
+  deleteDocumentInfo({ ids: [id] });
   toast.success("File deleted");
 };
 
@@ -32,7 +32,7 @@ const handleEnqueueEmbedding = async (id: string) => {
   toast.success("Enqueued for embedding");
 };
 
-export const columns: ColumnDef<FileRepository>[] = [
+export const columns: ColumnDef<Document>[] = [
   {
     id: "select",
     size: 32,

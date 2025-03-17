@@ -17,7 +17,7 @@ const QuickActions = () => {
           </NewChatButton>
         </Link>
 
-        <Link href={routes.app.sub.up.path}>
+        <Link href={routes.app.sub.documents.path}>
           <Button variant="secondary" className="w-full justify-start">
             <FilesIcon className="mr-2 h-4 w-4" />
             Course Files

@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { chats } from "@/db/schema/chat";
+import { chat } from "@/db/schema/chat";
 import {
   authActionClient,
   requireCourseMiddleware,
@@ -17,23 +17,23 @@ export const createChat = authActionClient
   .use(requireCourseMiddleware)
   .use(requireOrganizationMiddleware)
   .action(async ({ ctx: { activeCourseId, userId } }) => {
-    const [chat] = await db
-      .insert(chats)
+    const [query] = await db
+      .insert(chat)
       .values({
         title: "New Chat",
         userId,
         courseId: activeCourseId,
       })
-      .returning({ id: chats.id });
+      .returning({ id: chat.id });
 
-    return { chat, error: null };
+    return { chat: query, error: null };
   });
 
 export const deleteChat = authActionClient
   .metadata({ actionName: "deleteChat" })
   .schema(chatDeleteSchema)
   .action(async ({ parsedInput: { ids } }) => {
-    await db.delete(chats).where(inArray(chats.id, ids));
+    await db.delete(chat).where(inArray(chat.id, ids));
 
     revalidatePath(routes.app.sub.chat.path);
     return { error: null };

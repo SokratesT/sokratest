@@ -2,7 +2,7 @@
 
 import { db } from "@/db/drizzle";
 import { type User, member, user } from "@/db/schema/auth";
-import { type Course, courseMember } from "@/db/schema/courses";
+import { type Course, courseMember } from "@/db/schema/course";
 import {
   and,
   asc,

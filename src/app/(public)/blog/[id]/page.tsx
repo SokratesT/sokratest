@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { db } from "@/db/drizzle";
 import { user } from "@/db/schema/auth";
-import { posts } from "@/db/schema/posts";
+import { post } from "@/db/schema/post";
 import { eq } from "drizzle-orm";
 import { UserIcon } from "lucide-react";
 
@@ -16,7 +16,7 @@ const EditPostPage = async ({
   const { id } = await params;
 
   // TODO: Use function instead
-  const [queryPost] = await db.select().from(posts).where(eq(posts.id, id));
+  const [queryPost] = await db.select().from(post).where(eq(post.id, id));
   const [author] = await db
     .select({ name: user.name })
     .from(user)

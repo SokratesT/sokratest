@@ -1,8 +1,8 @@
 "server-only";
 
 import { db } from "@/db/drizzle";
-import { chats as chat } from "@/db/schema/chat";
-import { type MessageDb, messagesDb } from "@/db/schema/messages";
+import { chat } from "@/db/schema/chat";
+import { type ChatMessage, chatMessage } from "@/db/schema/chat-message";
 import { and, asc, eq, gte } from "drizzle-orm";
 
 // TODO: Refactor to "update chat"
@@ -47,11 +47,11 @@ export async function getChatById({ id }: { id: string }) {
 
 export async function saveMessages({
   messages,
-}: { messages: Array<MessageDb> }) {
+}: { messages: Array<ChatMessage> }) {
   try {
-    return await db.insert(messagesDb).values(messages).onConflictDoUpdate({
-      target: messagesDb.id,
-      set: messagesDb,
+    return await db.insert(chatMessage).values(messages).onConflictDoUpdate({
+      target: chatMessage.id,
+      set: chatMessage,
     });
   } catch (error) {
     console.error("Failed to save messages in database", error);
@@ -63,9 +63,9 @@ export async function getMessagesByChatId({ id }: { id: string }) {
   try {
     return await db
       .select()
-      .from(messagesDb)
-      .where(eq(messagesDb.chatId, id))
-      .orderBy(asc(messagesDb.createdAt));
+      .from(chatMessage)
+      .where(eq(chatMessage.chatId, id))
+      .orderBy(asc(chatMessage.createdAt));
   } catch (error) {
     console.error("Failed to get messages by chat id from database", error);
     throw error;
@@ -74,7 +74,7 @@ export async function getMessagesByChatId({ id }: { id: string }) {
 
 export async function getMessageById({ id }: { id: string }) {
   try {
-    return await db.select().from(messagesDb).where(eq(messagesDb.id, id));
+    return await db.select().from(chatMessage).where(eq(chatMessage.id, id));
   } catch (error) {
     console.error("Failed to get message by id from database");
     throw error;
@@ -90,11 +90,11 @@ export async function deleteMessagesByChatIdAfterTimestamp({
 }) {
   try {
     return await db
-      .delete(messagesDb)
+      .delete(chatMessage)
       .where(
         and(
-          eq(messagesDb.chatId, chatId),
-          gte(messagesDb.createdAt, timestamp),
+          eq(chatMessage.chatId, chatId),
+          gte(chatMessage.createdAt, timestamp),
         ),
       );
   } catch (error) {

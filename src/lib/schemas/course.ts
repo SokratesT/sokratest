@@ -1,4 +1,4 @@
-import { courses } from "@/db/schema/courses";
+import { course } from "@/db/schema/course";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -12,11 +12,11 @@ export const courseSchema = z.object({
 
 export type CourseSchemaType = z.infer<typeof courseSchema>;
 
-export const courseInsertSchema = createInsertSchema(courses, {
+export const courseInsertSchema = createInsertSchema(course, {
   organizationId: (schema) => schema.optional(),
 });
 
-export const courseUpdateSchema = createUpdateSchema(courses, {
+export const courseUpdateSchema = createUpdateSchema(course, {
   organizationId: (schema) => schema.optional(),
   id: z.string(),
 });

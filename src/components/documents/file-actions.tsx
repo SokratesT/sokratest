@@ -1,11 +1,11 @@
 "use client";
 
-import { deleteFileInfo } from "@/actions/file-repository";
+import { deleteDocumentInfo } from "@/actions/document";
 import { enqueueEmbeddings } from "@/actions/test-trigger";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import type { FileRepository } from "@/db/schema/file-repository";
+import type { Document } from "@/db/schema/document";
 import { cn } from "@/lib/utils";
 import { convert } from "convert";
 import Link from "next/link";
@@ -15,7 +15,7 @@ const FileActions = ({
   filePath,
   className,
 }: {
-  fileInfo: FileRepository;
+  fileInfo: Document;
   filePath: string;
   className?: string;
 }) => {
@@ -56,7 +56,7 @@ const FileActions = ({
           </Button>
           <Button
             variant="destructive"
-            onClick={() => deleteFileInfo({ ids: [fileInfo.id] })}
+            onClick={() => deleteDocumentInfo({ ids: [fileInfo.id] })}
           >
             Delete
           </Button>

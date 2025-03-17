@@ -12,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import type { Course } from "@/db/schema/courses";
+import type { Course } from "@/db/schema/course";
 import { routes } from "@/settings/routes";
 import { BookMarkedIcon, Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";

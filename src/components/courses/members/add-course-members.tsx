@@ -16,7 +16,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import type { User } from "@/db/schema/auth";
-import type { Course } from "@/db/schema/courses";
+import type { Course } from "@/db/schema/course";
 import { useBucketSearchParams } from "@/lib/nuqs/search-params.bucket";
 import { UserIcon } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";

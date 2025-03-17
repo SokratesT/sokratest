@@ -1,6 +1,6 @@
 import { PostForm } from "@/app/app/posts/add/_components/post-form";
 import { db } from "@/db/drizzle";
-import { posts } from "@/db/schema/posts";
+import { post } from "@/db/schema/post";
 import { eq } from "drizzle-orm";
 
 const EditPostPage = async ({
@@ -10,7 +10,7 @@ const EditPostPage = async ({
 }) => {
   const { id } = await params;
 
-  const [queryPost] = await db.select().from(posts).where(eq(posts.id, id));
+  const [queryPost] = await db.select().from(post).where(eq(post.id, id));
 
   return (
     <div>

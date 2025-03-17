@@ -6,7 +6,7 @@ import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
-import type { Post } from "@/db/schema/posts";
+import type { Post } from "@/db/schema/post";
 import { type PostSchemaType, postSchema } from "@/lib/schemas/post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";

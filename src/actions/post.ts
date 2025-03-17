@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { posts } from "@/db/schema/posts";
+import { post } from "@/db/schema/post";
 import { authActionClient } from "@/lib/safe-action";
 import {
   postDeleteSchema,
@@ -16,7 +16,7 @@ export const createPost = authActionClient
   .metadata({ actionName: "createPost" })
   .schema(postInsertSchema)
   .action(async ({ parsedInput: { content, title }, ctx: { userId } }) => {
-    await db.insert(posts).values({ content, title, userId });
+    await db.insert(post).values({ content, title, userId });
 
     revalidatePath(routes.app.sub.posts.path);
     return { error: null };
@@ -27,9 +27,9 @@ export const updatePost = authActionClient
   .schema(postUpdateSchema)
   .action(async ({ parsedInput: { id, content, title }, ctx: { userId } }) => {
     await db
-      .update(posts)
+      .update(post)
       .set({ content, title, userId, updatedAt: sql`now()` })
-      .where(eq(posts.id, id));
+      .where(eq(post.id, id));
 
     revalidatePath(routes.app.sub.posts.path);
     return { error: null };
@@ -39,7 +39,7 @@ export const deletePosts = authActionClient
   .metadata({ actionName: "deletePost" })
   .schema(postDeleteSchema)
   .action(async ({ parsedInput: { ids } }) => {
-    await db.delete(posts).where(inArray(posts.id, ids));
+    await db.delete(post).where(inArray(post.id, ids));
 
     revalidatePath(routes.app.sub.posts.path);
     return { error: null };

@@ -1,4 +1,4 @@
-import { courseMember } from "@/db/schema/courses";
+import { courseMember } from "@/db/schema/course";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
 

@@ -2,7 +2,7 @@ import { type InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 
-export const posts = pgTable("posts", {
+export const post = pgTable("post", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(),
   content: text("text").notNull(),
@@ -14,11 +14,11 @@ export const posts = pgTable("posts", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export type Post = InferSelectModel<typeof posts>;
+export type Post = InferSelectModel<typeof post>;
 
-export const postsRelations = relations(posts, ({ one, many }) => ({
+export const postRelations = relations(post, ({ one, many }) => ({
   user: one(user, {
-    fields: [posts.userId],
+    fields: [post.userId],
     references: [user.id],
   }),
 }));

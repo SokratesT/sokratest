@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { fileRepository } from "@/db/schema/file-repository";
+import { document } from "@/db/schema/document";
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";
 import { authActionClient } from "@/lib/safe-action";
 import { routes } from "@/settings/routes";
@@ -14,9 +14,9 @@ import { z } from "zod";
 export async function enqueueEmbeddings2(fileIds: string[]) {
   try {
     await db
-      .update(fileRepository)
+      .update(document)
       .set({ embeddingStatus: "processing" })
-      .where(inArray(fileRepository.id, fileIds));
+      .where(inArray(document.id, fileIds));
 
     const docsWithUrls = await Promise.all(
       fileIds.map(async (fileId) => {
@@ -39,7 +39,7 @@ export async function enqueueEmbeddings2(fileIds: string[]) {
       })),
     );
 
-    revalidatePath("/app/repo");
+    revalidatePath(routes.app.sub.documents.path);
   } catch (error) {
     console.error(error);
     return {
@@ -53,9 +53,9 @@ export const enqueueEmbeddings = authActionClient
   .schema(z.object({ ids: z.array(z.string()) }))
   .action(async ({ parsedInput: { ids } }) => {
     await db
-      .update(fileRepository)
+      .update(document)
       .set({ embeddingStatus: "processing" })
-      .where(inArray(fileRepository.id, ids));
+      .where(inArray(document.id, ids));
 
     const docsWithUrls = await Promise.all(
       ids.map(async (id) => {
@@ -79,7 +79,7 @@ export const enqueueEmbeddings = authActionClient
       })),
     ); */
 
-    revalidatePath(routes.app.sub.up.path);
+    revalidatePath(routes.app.sub.documents.path);
 
     return { error: null };
   });

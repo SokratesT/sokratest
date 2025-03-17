@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { fileRepository } from "@/db/schema/file-repository";
+import { document } from "@/db/schema/document";
 import { deleteFileFromBucket } from "@/lib/s3-file-management";
 import {
   authActionClient,
@@ -13,8 +13,8 @@ import { routes } from "@/settings/routes";
 import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-export const saveFileInfo = authActionClient
-  .metadata({ actionName: "saveFileInfo" })
+export const saveDocumentInfo = authActionClient
+  .metadata({ actionName: "saveDocumentInfo" })
   .use(requireCourseMiddleware)
   .use(requireOrganizationMiddleware)
   .schema(fileInsertSchema)
@@ -23,7 +23,7 @@ export const saveFileInfo = authActionClient
       parsedInput: { bucket, filename, size, fileType },
       ctx: { userId, activeCourseId },
     }) => {
-      await db.insert(fileRepository).values({
+      await db.insert(document).values({
         courseId: activeCourseId,
         bucket,
         prefix: activeCourseId,
@@ -33,21 +33,21 @@ export const saveFileInfo = authActionClient
         uploadedBy: userId,
       });
 
-      revalidatePath(routes.app.sub.up.path);
+      revalidatePath(routes.app.sub.documents.path);
 
       return { error: null };
     },
   );
 
 // TODO: This function should get the prefix instead of looking up files
-export const deleteFileInfo = authActionClient
-  .metadata({ actionName: "deleteFileInfo" })
+export const deleteDocumentInfo = authActionClient
+  .metadata({ actionName: "deleteDocumentInfo" })
   .schema(fileDeleteSchema)
   .action(async ({ parsedInput: { ids } }) => {
     const filesToDelete = await db
       .select()
-      .from(fileRepository)
-      .where(inArray(fileRepository.id, ids));
+      .from(document)
+      .where(inArray(document.id, ids));
 
     Promise.all(
       filesToDelete.map(async (file) => {
@@ -58,8 +58,8 @@ export const deleteFileInfo = authActionClient
       }),
     );
 
-    await db.delete(fileRepository).where(inArray(fileRepository.id, ids));
+    await db.delete(document).where(inArray(document.id, ids));
 
-    revalidatePath(routes.app.sub.up.path);
+    revalidatePath(routes.app.sub.documents.path);
     return { error: null };
   });

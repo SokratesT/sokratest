@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteFileInfo } from "@/actions/file-repository";
+import { deleteDocumentInfo } from "@/actions/document";
 import { enqueueEmbeddings } from "@/actions/test-trigger";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
@@ -21,7 +21,7 @@ const FilesDataTableSelectActions = () => {
   const handleDelete = async () => {
     const fileIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    deleteFileInfo({ ids: fileIds });
+    deleteDocumentInfo({ ids: fileIds });
     toast.success("Files deleted");
   };
 

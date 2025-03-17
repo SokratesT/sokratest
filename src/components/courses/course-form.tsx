@@ -22,7 +22,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import type { Course } from "@/db/schema/courses";
+import type { Course } from "@/db/schema/course";
 import { authClient } from "@/lib/auth-client";
 import { type CourseSchemaType, courseSchema } from "@/lib/schemas/course";
 import { isFieldRequired } from "@/lib/utils";

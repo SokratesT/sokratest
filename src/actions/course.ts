@@ -2,7 +2,7 @@
 
 import { db } from "@/db/drizzle";
 import { session } from "@/db/schema/auth";
-import { courseMember, courses } from "@/db/schema/courses";
+import { course, courseMember } from "@/db/schema/course";
 import {
   authActionClient,
   requireOrganizationMiddleware,
@@ -31,14 +31,14 @@ export const createCourse = authActionClient
       ctx: { userId, activeOrganizationId },
     }) => {
       const [newCourse] = await db
-        .insert(courses)
+        .insert(course)
         .values({
           title,
           description,
           content,
           organizationId: activeOrganizationId,
         })
-        .returning({ id: courses.id });
+        .returning({ id: course.id });
 
       await db.insert(courseMember).values({
         courseId: newCourse.id,
@@ -56,9 +56,9 @@ export const updateCourse = authActionClient
   .schema(courseUpdateSchema)
   .action(async ({ parsedInput: { id, description, content, title } }) => {
     await db
-      .update(courses)
+      .update(course)
       .set({ id, content, title, description, updatedAt: sql`now()` })
-      .where(eq(courses.id, id));
+      .where(eq(course.id, id));
 
     revalidatePath(routes.app.sub.courses.path);
     return { error: null };
@@ -68,7 +68,7 @@ export const deleteCourses = authActionClient
   .metadata({ actionName: "deleteCourses" })
   .schema(courseDeleteSchema)
   .action(async ({ parsedInput: { ids } }) => {
-    await db.delete(courses).where(inArray(courses.id, ids));
+    await db.delete(course).where(inArray(course.id, ids));
 
     revalidatePath(routes.app.sub.courses.path);
     return { error: null };

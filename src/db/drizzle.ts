@@ -4,10 +4,12 @@ import { Pool } from "pg";
 
 import * as auth from "./schema/auth";
 import * as chat from "./schema/chat";
-import * as courses from "./schema/courses";
-import * as embeddings from "./schema/embeddings";
-import * as fileRepository from "./schema/file-repository";
-import * as posts from "./schema/posts";
+import * as chatMessage from "./schema/chat-message";
+import * as chatMessageVote from "./schema/chat-message-vote";
+import * as course from "./schema/course";
+import * as document from "./schema/document";
+import * as embedding from "./schema/embedding";
+import * as post from "./schema/post";
 
 const pool = new Pool({
   connectionString: serverEnv.DATABASE_URL,
@@ -16,10 +18,12 @@ const pool = new Pool({
 export const db = drizzle(pool, {
   schema: {
     auth,
-    courses,
-    embeddings,
+    chatMessageVote,
+    chatMessage,
     chat,
-    fileRepository,
-    posts,
+    course,
+    document,
+    embedding,
+    post,
   },
 });

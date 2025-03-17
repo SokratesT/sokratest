@@ -1,7 +1,7 @@
 "server only";
 
 import { db } from "@/db/drizzle";
-import { type Course, courseMember, courses } from "@/db/schema/courses";
+import { type Course, course, courseMember } from "@/db/schema/course";
 import type { Session as AuthSession } from "better-auth";
 import { count, eq, getTableColumns } from "drizzle-orm";
 import { withAuthQuery } from "./common";
@@ -31,7 +31,7 @@ export const getUserCoursesForActiveOrganization = async (options: {
 
     const sortOrder = buildSortOrder(
       sort,
-      courses,
+      course,
       VALID_COURSE_SORT_COLUMNS,
       "createdAt",
     );
@@ -40,19 +40,19 @@ export const getUserCoursesForActiveOrganization = async (options: {
       return { query: [], rowCount: { count: 0 } };
 
     const query = await db
-      .selectDistinct({ ...getTableColumns(courses) })
-      .from(courses)
+      .selectDistinct({ ...getTableColumns(course) })
+      .from(course)
       .innerJoin(courseMember, eq(courseMember.userId, session.session.userId))
-      .where(eq(courses.organizationId, session.session.activeOrganizationId))
+      .where(eq(course.organizationId, session.session.activeOrganizationId))
       .limit(limit)
       .offset(offset)
       .orderBy(...sortOrder);
 
     const [rowCount] = await db
       .select({ count: count() })
-      .from(courses)
+      .from(course)
       .innerJoin(courseMember, eq(courseMember.userId, session.session.userId))
-      .where(eq(courses.organizationId, session.session.activeOrganizationId));
+      .where(eq(course.organizationId, session.session.activeOrganizationId));
 
     return { query, rowCount };
   }, {});
@@ -62,9 +62,9 @@ export const getCourseById = async (id: Course["id"]) => {
   return withAuthQuery(
     async () => {
       const [query] = await db
-        .select({ ...getTableColumns(courses) })
-        .from(courses)
-        .where(eq(courses.id, id))
+        .select({ ...getTableColumns(course) })
+        .from(course)
+        .where(eq(course.id, id))
         .limit(1);
 
       return { query };
@@ -79,9 +79,9 @@ export const getActiveCourse = async () => {
   return withAuthQuery(
     async (session) => {
       const [query] = await db
-        .select({ ...getTableColumns(courses) })
-        .from(courses)
-        .where(eq(courses.id, session.session.activeCourseId))
+        .select({ ...getTableColumns(course) })
+        .from(course)
+        .where(eq(course.id, session.session.activeCourseId))
         .limit(1);
 
       return { query };

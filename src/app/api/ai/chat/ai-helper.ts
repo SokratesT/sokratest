@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { embeddings } from "@/db/schema/embeddings";
+import { embedding } from "@/db/schema/embedding";
 import { customModel } from "@/lib/ai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { type Message, embed, generateText } from "ai";
@@ -28,16 +28,16 @@ export const getRelevantChunks = async (messages: Message[]) => {
   const findRelevantContent = async (userQuery: string) => {
     const userQueryEmbedded = await generateEmbedding(userQuery);
     const similarity = sql<number>`1 - (${cosineDistance(
-      embeddings.embedding,
+      embedding.vector,
       userQueryEmbedded,
     )})`;
     const similarGuides = await db
       .select({
         similarity,
-        text: embeddings.text,
-        fileId: embeddings.fileId,
+        text: embedding.text,
+        fileId: embedding.fileId,
       })
-      .from(embeddings)
+      .from(embedding)
       .where(gt(similarity, 0))
       .orderBy((t) => desc(t.similarity))
       .limit(5);

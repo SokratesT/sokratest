@@ -27,13 +27,13 @@ export const routes = {
         name: "Chat",
         path: "/app/chat",
       },
-      up: {
-        name: "Upload",
-        path: "/app/repo",
+      documents: {
+        name: "Documents",
+        path: "/app/docs",
         sub: {
           add: {
             name: "Add File",
-            path: "/app/repo/add",
+            path: "/app/docs/add",
           },
         },
       },

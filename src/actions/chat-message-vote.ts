@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { votes } from "@/db/schema/votes";
+import { chatMessageVote } from "@/db/schema/chat-message-vote";
 import { authActionClient } from "@/lib/safe-action";
 import { voteInsertSchema } from "@/lib/schemas/vote";
 
@@ -10,9 +10,12 @@ export const voteMessage = authActionClient
   .schema(voteInsertSchema)
   .action(async ({ parsedInput: { messageId, sentiment } }) => {
     await db
-      .insert(votes)
+      .insert(chatMessageVote)
       .values({ messageId, sentiment })
-      .onConflictDoUpdate({ target: votes.messageId, set: { sentiment } });
+      .onConflictDoUpdate({
+        target: chatMessageVote.messageId,
+        set: { sentiment },
+      });
 
     return { error: null };
   });

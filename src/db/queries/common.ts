@@ -1,6 +1,6 @@
 import { db } from "@/db/drizzle";
 import { member } from "@/db/schema/auth";
-import { courseMember } from "@/db/schema/courses";
+import { courseMember } from "@/db/schema/course";
 import { auth } from "@/lib/auth";
 import type { authClient } from "@/lib/auth-client";
 import { and, eq } from "drizzle-orm";

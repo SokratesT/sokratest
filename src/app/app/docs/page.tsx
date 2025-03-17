@@ -39,7 +39,7 @@ const FilesPage = async ({
         </h4>
         <div className="flex gap-2">
           <Button asChild>
-            <Link href={routes.app.sub.up.sub.add.path}>Add File</Link>
+            <Link href={routes.app.sub.documents.sub.add.path}>Add File</Link>
           </Button>
         </div>
       </div>

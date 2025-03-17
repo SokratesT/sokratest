@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { embeddings } from "@/db/schema/embeddings";
+import { embedding } from "@/db/schema/embedding";
 import { authActionClient } from "@/lib/safe-action";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
@@ -10,7 +10,7 @@ export const deleteEmbeddingsForFile = authActionClient
   .metadata({ actionName: "deleteEmbeddingsForFile" })
   .schema(z.object({ fileId: z.string() }))
   .action(async ({ parsedInput: { fileId } }) => {
-    await db.delete(embeddings).where(eq(embeddings.fileId, fileId));
+    await db.delete(embedding).where(eq(embedding.fileId, fileId));
 
     return { error: null };
   });

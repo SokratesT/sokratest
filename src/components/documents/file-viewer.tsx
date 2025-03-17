@@ -3,14 +3,14 @@
 import { Card } from "@/components/ui/card";
 import { Placeholder } from "@/components/ui/custom/placeholder";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import type { FileRepository } from "@/db/schema/file-repository";
+import type { Document } from "@/db/schema/document";
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FileActions } from "./file-actions";
 
-const FileViewer = ({ fileInfo }: { fileInfo: FileRepository }) => {
+const FileViewer = ({ fileInfo }: { fileInfo: Document }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [filePath, setFilePath] = useState<string | undefined>(undefined);
 

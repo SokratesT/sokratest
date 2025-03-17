@@ -24,7 +24,7 @@ export const sidebarStudentMenu = [
   },
   {
     title: "Files",
-    url: routes.app.sub.up.path,
+    url: routes.app.sub.documents.path,
     icon: FilesIcon,
   },
 ];

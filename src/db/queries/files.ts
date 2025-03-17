@@ -1,15 +1,12 @@
 "server only";
 
 import { db } from "@/db/drizzle";
-import {
-  type FileRepository,
-  fileRepository,
-} from "@/db/schema/file-repository";
+import { type Document, document } from "@/db/schema/document";
 import { auth } from "@/lib/auth";
 import { and, asc, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 import { headers } from "next/headers";
 
-function isValidColumnId(id: FileRepository["id"]): id is keyof FileRepository {
+function isValidColumnId(id: Document["id"]): id is keyof Document {
   return ["title", "filename", "createdAt", "size", "embeddingStatus"].includes(
     id,
   );
@@ -27,7 +24,7 @@ export const getAvailableFiles = async (
     throw new Error("No session or active course");
   }
 
-  let query: FileRepository[] = [];
+  let query: Document[] = [];
   let rowCount: { count: number } = { count: 0 };
 
   try {
@@ -43,20 +40,20 @@ export const getAvailableFiles = async (
             "embeddingStatus",
           ].includes(s.id)
         ) {
-          const column = fileRepository[s.id as keyof FileRepository];
+          const column = document[s.id as keyof Document];
           return s.desc ? desc(column) : asc(column);
         } else {
-          return asc(fileRepository.createdAt);
+          return asc(document.createdAt);
         }
-      }) ?? [asc(fileRepository.createdAt)]; // Fallback default sort
+      }) ?? [asc(document.createdAt)]; // Fallback default sort
 
     query = await db
-      .select({ ...getTableColumns(fileRepository) })
-      .from(fileRepository)
+      .select({ ...getTableColumns(document) })
+      .from(document)
       .where(
         and(
-          ilike(fileRepository.filename, `%${search}%`),
-          eq(fileRepository.courseId, session.session.activeCourseId),
+          ilike(document.filename, `%${search}%`),
+          eq(document.courseId, session.session.activeCourseId),
         ),
       )
       .limit(pageSize)
@@ -65,8 +62,8 @@ export const getAvailableFiles = async (
 
     [rowCount] = await db
       .select({ count: count() })
-      .from(fileRepository)
-      .where(ilike(fileRepository.filename, `%${search}%`));
+      .from(document)
+      .where(ilike(document.filename, `%${search}%`));
   } catch (error) {
     console.error(error);
   }

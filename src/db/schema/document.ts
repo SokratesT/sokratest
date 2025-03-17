@@ -8,7 +8,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
-import { courses } from "./courses";
+import { course } from "./course";
 
 export const embeddingStatusEnum = pgEnum("embedding_status", [
   "outstanding",
@@ -17,7 +17,7 @@ export const embeddingStatusEnum = pgEnum("embedding_status", [
   "failed",
 ]);
 
-export const fileRepository = pgTable("file_repository", {
+export const document = pgTable("document", {
   id: uuid("id").primaryKey().defaultRandom(),
   bucket: text("bucket").notNull(),
   prefix: text("prefix").notNull(),
@@ -28,7 +28,7 @@ export const fileRepository = pgTable("file_repository", {
   // TODO: Check what should be done if user deletes account
   courseId: uuid("course_id")
     .notNull()
-    .references(() => courses.id),
+    .references(() => course.id),
   uploadedBy: uuid("uploaded_by")
     .notNull()
     .references(() => user.id),
@@ -37,4 +37,4 @@ export const fileRepository = pgTable("file_repository", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export type FileRepository = InferSelectModel<typeof fileRepository>;
+export type Document = InferSelectModel<typeof document>;

@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { User } from "@/db/schema/auth";
-import type { Course } from "@/db/schema/courses";
+import type { Course } from "@/db/schema/course";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";

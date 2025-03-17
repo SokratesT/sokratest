@@ -24,7 +24,7 @@ const ViewCoursePage = async ({
             <Link href={`/app/courses/view/${id}/members`}>Manage Users</Link>
           </Button>
           <Button asChild>
-            <Link href={routes.app.sub.up.sub.add.path}>Add Files</Link>
+            <Link href={routes.app.sub.documents.sub.add.path}>Add Files</Link>
           </Button>
         </div>
       </div>

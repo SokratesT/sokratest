@@ -1,4 +1,4 @@
-import { saveFileInfo } from "@/actions/file-repository";
+import { saveDocumentInfo } from "@/actions/document";
 import { clientEnv } from "@/lib/env/client";
 import type { PresignedUrlProp, ShortFileProp } from "./types";
 
@@ -8,7 +8,7 @@ import type { PresignedUrlProp, ShortFileProp } from "./types";
  * @returns
  */
 export const getPresignedUrls = async (files: ShortFileProp[]) => {
-  const response = await fetch("/api/files/upload/presignedUrl", {
+  const response = await fetch("/api/docs/upload/presignedUrl", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -66,7 +66,7 @@ export const handleUpload = async (
 
       return uploadToS3(presignedUrl, file).then(async (res) => {
         if (res.status === 200) {
-          await saveFileInfo({
+          await saveDocumentInfo({
             bucket,
             filename: presignedUrl.originalFileName,
             size: presignedUrl.fileSize,
@@ -93,7 +93,7 @@ interface FileProps {
 
 export async function getPresignedUrl(fileId: string) {
   const response = await fetch(
-    `${clientEnv.NEXT_PUBLIC_BASE_URL}/api/files/download/presignedUrl/${fileId}`,
+    `${clientEnv.NEXT_PUBLIC_BASE_URL}/api/docs/download/presignedUrl/${fileId}`,
   );
 
   console.log(response);

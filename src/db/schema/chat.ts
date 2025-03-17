@@ -1,15 +1,15 @@
 import { type InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { user } from "./auth";
-import { courses } from "./courses";
-import { messagesDb } from "./messages";
+import { chatMessage } from "./chat-message";
+import { course } from "./course";
 
-export const chats = pgTable("chats", {
+export const chat = pgTable("chat", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: varchar("title", { length: 255 }),
   courseId: uuid("course_id")
     .notNull()
-    .references(() => courses.id, { onDelete: "cascade" }),
+    .references(() => course.id, { onDelete: "cascade" }),
   userId: uuid("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
@@ -20,12 +20,12 @@ export const chats = pgTable("chats", {
     .default("private"),
 });
 
-export type Chat = InferSelectModel<typeof chats>;
+export type Chat = InferSelectModel<typeof chat>;
 
-export const chatsRelations = relations(chats, ({ one, many }) => ({
+export const chatsRelations = relations(chat, ({ one, many }) => ({
   user: one(user, {
-    fields: [chats.userId],
+    fields: [chat.userId],
     references: [user.id],
   }),
-  messages: many(messagesDb),
+  messages: many(chatMessage),
 }));

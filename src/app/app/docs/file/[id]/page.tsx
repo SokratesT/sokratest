@@ -1,22 +1,19 @@
 import { FileViewer } from "@/components/documents/file-viewer";
 import { db } from "@/db/drizzle";
-import {
-  type FileRepository,
-  fileRepository,
-} from "@/db/schema/file-repository";
+import { type Document, document } from "@/db/schema/document";
 import { eq } from "drizzle-orm";
 
 const EditFilePage = async ({
   params,
 }: {
-  params: Promise<{ id: FileRepository["id"] }>;
+  params: Promise<{ id: Document["id"] }>;
 }) => {
   const { id } = await params;
 
   const [queryFile] = await db
     .select()
-    .from(fileRepository)
-    .where(eq(fileRepository.id, id));
+    .from(document)
+    .where(eq(document.id, id));
 
   return <FileViewer fileInfo={queryFile} />;
 };

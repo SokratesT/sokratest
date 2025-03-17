@@ -1,7 +1,8 @@
-import { deleteEmbeddingsForFile } from "@/actions/embeddings";
+import { deleteEmbeddingsForFile } from "@/actions/embedding";
 import { db } from "@/db/drizzle";
-import { embeddings } from "@/db/schema/embeddings";
-import { fileRepository } from "@/db/schema/file-repository";
+import { document } from "@/db/schema/document";
+import { embedding } from "@/db/schema/embedding";
+import { routes } from "@/settings/routes";
 import type { EmbedManyResult } from "ai";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -14,29 +15,20 @@ interface Response {
   embedResults?: EmbedManyResult<string>;
 }
 
-interface Node {
-  id_: string;
-  embedding: number[];
-  text: string;
-  metadata: any;
-  start_char_idx: number;
-  end_char_idx: number;
-}
-
 export const POST = async (req: NextRequest) => {
   const res = (await req.json()) as Response;
 
   if (res.status === "failed" || !res.embedResults) {
     await db
-      .update(fileRepository)
+      .update(document)
       .set({ embeddingStatus: "failed" })
-      .where(eq(fileRepository.id, res.documentId));
+      .where(eq(document.id, res.documentId));
 
     return NextResponse.json({ state: { success: false } }, { status: 200 });
   }
 
   const result = await saveEmbedding(res.embedResults, res.documentId);
-  revalidatePath("/app/repo");
+  revalidatePath(routes.app.sub.documents.path);
   // res.
 
   return NextResponse.json({ state: result }, { status: 200 });
@@ -52,11 +44,11 @@ const saveEmbedding = async (
 
   const embeds = transformData(embedResults, documentId);
 
-  await db.insert(embeddings).values(embeds);
+  await db.insert(embedding).values(embeds);
   await db
-    .update(fileRepository)
+    .update(document)
     .set({ embeddingStatus: "done" })
-    .where(eq(fileRepository.id, documentId));
+    .where(eq(document.id, documentId));
 
   return { success: true };
 };
@@ -68,7 +60,7 @@ function transformData(data: EmbedManyResult<string>, documentId: string) {
   }
 
   return embeddings.map((embedding, index) => ({
-    embedding,
+    vector: embedding,
     text: values[index],
     metadata: {},
     nodeId: uuidv4(),

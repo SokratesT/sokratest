@@ -3,19 +3,23 @@ import type {
   DBQueryConfig,
   ExtractTablesWithRelations,
 } from "drizzle-orm";
-import type * as auth from "./schema/auth";
-import type * as chat from "./schema/chat";
-import type * as courses from "./schema/courses";
-import type * as embeddings from "./schema/embeddings";
-import type * as fileRepository from "./schema/file-repository";
-import type * as posts from "./schema/posts";
+import type * as Auth from "./schema/auth";
+import type * as Chat from "./schema/chat";
+import type * as ChatMessage from "./schema/chat-message";
+import type * as ChatMessageVote from "./schema/chat-message-vote";
+import type * as Course from "./schema/course";
+import type * as Document from "./schema/document";
+import type * as Embedding from "./schema/embedding";
+import type * as Post from "./schema/post";
 
-type Schema = typeof auth &
-  typeof chat &
-  typeof courses &
-  typeof embeddings &
-  typeof fileRepository &
-  typeof posts;
+type Schema = typeof Auth &
+  typeof ChatMessageVote &
+  typeof ChatMessage &
+  typeof Chat &
+  typeof Course &
+  typeof Document &
+  typeof Embedding &
+  typeof Post;
 type TSchema = ExtractTablesWithRelations<Schema>;
 
 export type IncludeRelation<TableName extends keyof TSchema> = DBQueryConfig<

@@ -1,21 +1,21 @@
 import { Markdown } from "@/components/chat/markdown";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/db/drizzle";
-import { embeddings } from "@/db/schema/embeddings";
-import type { FileRepository } from "@/db/schema/file-repository";
+import type { Document } from "@/db/schema/document";
+import { embedding } from "@/db/schema/embedding";
 import { eq } from "drizzle-orm";
 
 const EditPostPage = async ({
   params,
 }: {
-  params: Promise<{ id: FileRepository["id"] }>;
+  params: Promise<{ id: Document["id"] }>;
 }) => {
   const { id } = await params;
 
   const queryFileChunks = await db
     .select()
-    .from(embeddings)
-    .where(eq(embeddings.fileId, id));
+    .from(embedding)
+    .where(eq(embedding.fileId, id));
 
   return (
     <div className="grid grid-cols-1 gap-2">

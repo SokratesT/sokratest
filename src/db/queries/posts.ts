@@ -2,14 +2,14 @@
 
 import { db } from "@/db/drizzle";
 import { type User, user } from "@/db/schema/auth";
-import { type Post, posts } from "@/db/schema/posts";
+import { type Post, post } from "@/db/schema/post";
 import { asc, count, desc, eq, getTableColumns } from "drizzle-orm";
 
 export const getAllPosts = async () => {
   let queryPosts: Post[] = [];
 
   try {
-    queryPosts = await db.select().from(posts).orderBy(asc(posts.createdAt));
+    queryPosts = await db.select().from(post).orderBy(asc(post.createdAt));
   } catch (error) {
     console.error(error);
   }
@@ -47,22 +47,22 @@ export const getAvailablePosts = async (
           const column = user[s.id as keyof User];
           return s.desc ? desc(column) : asc(column);
         } else if (["createdAt", "title"].includes(s.id)) {
-          const column = posts[s.id as keyof Post];
+          const column = post[s.id as keyof Post];
           return s.desc ? desc(column) : asc(column);
         } else {
-          return asc(posts.createdAt);
+          return asc(post.createdAt);
         }
-      }) ?? [asc(posts.createdAt)]; // Fallback default sort
+      }) ?? [asc(post.createdAt)]; // Fallback default sort
 
     query = await db
-      .select({ ...getTableColumns(posts), name: user.name })
-      .from(posts)
+      .select({ ...getTableColumns(post), name: user.name })
+      .from(post)
       .limit(pageSize)
       .orderBy(...sortOrder)
-      .leftJoin(user, eq(posts.userId, user.id))
+      .leftJoin(user, eq(post.userId, user.id))
       .offset(pageIndex * pageSize);
 
-    [rowCount] = await db.select({ count: count() }).from(posts);
+    [rowCount] = await db.select({ count: count() }).from(post);
   } catch (error) {
     console.error(error);
   }

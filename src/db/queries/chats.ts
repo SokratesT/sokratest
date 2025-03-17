@@ -1,7 +1,7 @@
 "server only";
 
 import { db } from "@/db/drizzle";
-import { chats } from "@/db/schema/chat";
+import { chat } from "@/db/schema/chat";
 import { desc, eq } from "drizzle-orm";
 import { withAuthQuery } from "./common";
 
@@ -12,9 +12,9 @@ export const getUserChatsForActiveCourse = async () => {
     async (session) => {
       const query = await db
         .select()
-        .from(chats)
-        .where(eq(chats.courseId, session.session.activeCourseId))
-        .orderBy(desc(chats.createdAt));
+        .from(chat)
+        .where(eq(chat.courseId, session.session.activeCourseId))
+        .orderBy(desc(chat.createdAt));
 
       return { query };
     },

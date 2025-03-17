@@ -9,7 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { organization, user } from "./auth";
 
-export const courses = pgTable("courses", {
+export const course = pgTable("course", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(),
   organizationId: uuid("organization_id")
@@ -21,14 +21,14 @@ export const courses = pgTable("courses", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export type Course = InferSelectModel<typeof courses>;
+export type Course = InferSelectModel<typeof course>;
 
 export const courseMember = pgTable(
-  "courseMember",
+  "course_member",
   {
     courseId: uuid("course_id")
       .notNull()
-      .references(() => courses.id),
+      .references(() => course.id),
     userId: uuid("user_id")
       .notNull()
       .references(() => user.id),
@@ -42,11 +42,11 @@ export const courseMember = pgTable(
   ],
 );
 
-export type CourseMember = InferSelectModel<typeof courses>;
+export type CourseMember = InferSelectModel<typeof course>;
 
-export const coursesRelations = relations(courses, ({ one, many }) => ({
+export const coursesRelations = relations(course, ({ one, many }) => ({
   organizationId: one(organization, {
-    fields: [courses.organizationId],
+    fields: [course.organizationId],
     references: [organization.id],
   }),
 }));
