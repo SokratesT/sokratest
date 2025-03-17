@@ -1,12 +1,12 @@
-import { Placeholder } from "@/components/placeholder";
 import { Button } from "@/components/ui/button";
+import { Placeholder } from "@/components/ui/custom/placeholder";
+import { AddUserForm } from "@/components/users/add-user-form";
 import { db } from "@/db/drizzle";
 import { courses } from "@/db/schema/courses";
 import { auth } from "@/lib/auth";
 import { asc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { AddUserForm } from "./_components/add-user-form";
 
 const addUserPage = async () => {
   const session = await auth.api.getSession({ headers: await headers() });

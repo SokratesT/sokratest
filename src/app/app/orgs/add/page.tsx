@@ -1,4 +1,4 @@
-import { OrganizationForm } from "./_components/organization-form";
+import { OrganizationForm } from "@/components/organizations/organization-form";
 
 const AddOrganizationPage = async () => {
   return (

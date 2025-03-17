@@ -1,3 +1,6 @@
+import { AddCourseMembers } from "@/components/courses/members/add-course-members";
+import { columns } from "@/components/courses/members/table/columns";
+import { MembersDataTableSelectActions } from "@/components/courses/members/table/members-data-table-select-actions";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
@@ -12,9 +15,6 @@ import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { headers } from "next/headers";
 import type { SearchParams } from "nuqs/server";
-import { AddCourseMembers } from "./_components/add-course-members";
-import { columns } from "./_components/columns";
-import { MembersDataTableSelectActions } from "./_components/members-data-table-select-actions";
 
 const UsersPage = async ({
   params,

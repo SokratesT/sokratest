@@ -1,8 +1,8 @@
-import { Placeholder } from "@/components/placeholder";
+import { Placeholder } from "@/components/ui/custom/placeholder";
+import { ManageUser } from "@/components/users/manage-user";
 import { db } from "@/db/drizzle";
 import { user } from "@/db/schema/auth";
 import { eq } from "drizzle-orm";
-import { ManageUser } from "../../_components/manage-user";
 
 const EditUserPage = async ({
   params,

@@ -1,3 +1,6 @@
+import { SearchInput } from "@/components/documents/search-input";
+import { columns } from "@/components/organizations/table/columns";
+import { UsersDataTableSelectActions } from "@/components/organizations/table/users-data-table-select-actions";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
@@ -7,12 +10,9 @@ import { getAvailableOrganizations } from "@/db/queries/organizations";
 import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
+import { routes } from "@/settings/routes";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
-import { SearchInput } from "../repo/_components/search-input";
-import { columns } from "./_components/columns";
-import { UsersDataTableSelectActions } from "./_components/users-data-table-select-actions";
-import { routes } from "@/settings/routes";
 
 const UsersPage = async ({
   searchParams,

@@ -1,6 +1,6 @@
+import { customModel } from "@/lib/ai";
 import { type DataStreamWriter, type Message, streamText, tool } from "ai";
 import { z } from "zod";
-import { customModel } from "../ai";
 
 export const finalResponseTool = (
   dataStream: DataStreamWriter,

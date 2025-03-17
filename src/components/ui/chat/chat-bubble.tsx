@@ -1,10 +1,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, type buttonVariants } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
 import type { LucideIcon } from "lucide-react";
 import { Children, cloneElement, isValidElement } from "react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip";
 import { MessageLoading } from "./message-loading";
 
 // ChatBubble

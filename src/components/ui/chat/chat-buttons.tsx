@@ -1,7 +1,7 @@
+import { Button } from "@/components/ui/button";
 import { sanitizeUIMessages } from "@/lib/ai/utils";
 import type { Message } from "ai";
 import { CornerDownLeft, StopCircleIcon } from "lucide-react";
-import { Button } from "../button";
 
 export const StopButton = ({
   stop,

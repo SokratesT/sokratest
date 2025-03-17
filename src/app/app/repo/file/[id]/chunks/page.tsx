@@ -1,4 +1,4 @@
-import { Markdown } from "@/app/app/chat/_components/markdown";
+import { Markdown } from "@/components/chat/markdown";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/db/drizzle";
 import { embeddings } from "@/db/schema/embeddings";

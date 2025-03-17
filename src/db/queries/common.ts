@@ -1,10 +1,10 @@
 import { db } from "@/db/drizzle";
+import { member } from "@/db/schema/auth";
 import { courseMember } from "@/db/schema/courses";
 import { auth } from "@/lib/auth";
 import type { authClient } from "@/lib/auth-client";
 import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
-import { member } from "../schema/auth";
 
 type CourseRole = "admin" | "instructor" | "student";
 type OrganizationRole = "admin" | "student";

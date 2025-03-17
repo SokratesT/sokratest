@@ -1,10 +1,13 @@
 "server only";
 
 import { db } from "@/db/drizzle";
+import {
+  type FileRepository,
+  fileRepository,
+} from "@/db/schema/file-repository";
 import { auth } from "@/lib/auth";
 import { and, asc, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 import { headers } from "next/headers";
-import { type FileRepository, fileRepository } from "../schema/file-repository";
 
 function isValidColumnId(id: FileRepository["id"]): id is keyof FileRepository {
   return ["title", "filename", "createdAt", "size", "embeddingStatus"].includes(

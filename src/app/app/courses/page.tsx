@@ -1,3 +1,5 @@
+import { columns } from "@/components/courses/table/columns";
+import { CoursesDataTableSelectActions } from "@/components/courses/table/courses-data-table-select-actions";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
@@ -6,11 +8,9 @@ import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view
 import { getUserCoursesForActiveOrganization } from "@/db/queries/courses";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
+import { routes } from "@/settings/routes";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
-import { columns } from "./_components/columns";
-import { CoursesDataTableSelectActions } from "./_components/courses-data-table-select-actions";
-import { routes } from "@/settings/routes";
 
 const CoursesPage = async ({
   searchParams,

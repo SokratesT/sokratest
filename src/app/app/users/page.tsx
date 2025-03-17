@@ -3,15 +3,15 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
+import { columns } from "@/components/users/table/columns";
+import { UsersDataTableSelectActions } from "@/components/users/table/users-data-table-select-actions";
 import { getAvailableUsers } from "@/db/queries/users";
 import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
+import { routes } from "@/settings/routes";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
-import { columns } from "./_components/columns";
-import { UsersDataTableSelectActions } from "./_components/users-data-table-select-actions";
-import { routes } from "@/settings/routes";
 
 const UsersPage = async ({
   searchParams,

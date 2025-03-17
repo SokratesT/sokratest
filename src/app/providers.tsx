@@ -1,6 +1,6 @@
 import { NextStepCard } from "@/components/next-step/next-step-card";
 import { PostHogProvider } from "@/components/posthog/posthog-provider";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { nextStepTours } from "@/lib/next-step-tours";
 import { NextStep, NextStepProvider } from "nextstepjs";

@@ -1,5 +1,5 @@
+import { SendVerificationEmail } from "@/components/account/send-verification-email";
 import { ProfileForm } from "@/components/forms/profile-form";
-import { SendVerificationEmail } from "@/components/send-verification-email";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Metadata } from "next";
 

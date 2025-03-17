@@ -1,3 +1,6 @@
+import { SearchInput } from "@/components/documents/search-input";
+import { columns } from "@/components/documents/table/columns";
+import { FilesDataTableSelectActions } from "@/components/documents/table/files-data-table-select-actions";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
@@ -7,12 +10,9 @@ import { getAvailableFiles } from "@/db/queries/files";
 import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
+import { routes } from "@/settings/routes";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
-import { columns } from "./_components/columns";
-import { FilesDataTableSelectActions } from "./_components/files-data-table-select-actions";
-import { SearchInput } from "./_components/search-input";
-import { routes } from "@/settings/routes";
 
 const FilesPage = async ({
   searchParams,

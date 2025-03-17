@@ -1,10 +1,10 @@
-import { NewChatButton } from "@/app/app/chat/_components/new-chat-button";
+import { NewChatButton } from "@/components/chat/new-chat-button";
+import { AppTourButton } from "@/components/next-step/app-tour-button";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { routes } from "@/settings/routes";
 import { FilesIcon, PlusIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
-import { AppTourButton } from "../next-step/app-tour-button";
 
 const QuickActions = () => {
   return (

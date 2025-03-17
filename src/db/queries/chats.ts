@@ -1,8 +1,8 @@
 "server only";
 
 import { db } from "@/db/drizzle";
+import { chats } from "@/db/schema/chat";
 import { desc, eq } from "drizzle-orm";
-import { chats } from "../schema/chat";
 import { withAuthQuery } from "./common";
 
 // TODO: Improve queries

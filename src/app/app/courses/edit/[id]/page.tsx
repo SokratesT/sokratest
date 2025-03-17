@@ -1,5 +1,5 @@
+import { CourseForm } from "@/components/courses/course-form";
 import { getCourseById } from "@/db/queries/courses";
-import { CourseForm } from "../../_components/course-form";
 
 const EditCoursePage = async ({
   params,

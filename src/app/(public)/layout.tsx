@@ -1,5 +1,5 @@
-import { PublicFooter } from "./_components/public-footer";
-import { PublicNavigation } from "./_components/public-navigation";
+import { PublicFooter } from "@/components/footer/public-footer";
+import { PublicNavigation } from "@/components/navigation/public-navigation";
 
 const PublicLayout = ({
   children,

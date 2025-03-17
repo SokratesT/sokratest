@@ -1,8 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { CompassIcon } from "lucide-react";
 import { useNextStep } from "nextstepjs";
-import { Button } from "../ui/button";
 
 const AppTourButton = () => {
   const { startNextStep, closeNextStep } = useNextStep();

@@ -1,5 +1,5 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import { Header } from "@/components/header";
+import { AppSidebar } from "@/components/app/app-sidebar";
+import { Header } from "@/components/app/header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
 import { routes } from "@/settings/routes";

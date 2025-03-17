@@ -1,8 +1,8 @@
-import { ChatsPreview } from "@/components/app/chats-preview";
-import { CoursePreview } from "@/components/app/course-preview";
 import { QuickActions } from "@/components/app/quick-actions";
 import { UserStats } from "@/components/app/user-stats";
 import { UserWelcome } from "@/components/app/user-welcome";
+import { ChatsPreview } from "@/components/chat/chats-preview";
+import { CoursePreview } from "@/components/courses/course-preview";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Metadata } from "next";
 import { Suspense } from "react";

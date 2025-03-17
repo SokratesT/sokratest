@@ -8,7 +8,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { AlertCircleIcon } from "lucide-react";
-import posthog from "posthog-js";
+import { posthog } from "posthog-js";
 import { useEffect } from "react";
 
 const DefaultErrorPage = ({

@@ -1,7 +1,7 @@
-import { Placeholder } from "@/components/placeholder";
+import { ManageOrganization } from "@/components/organizations/manage-organization";
+import { Placeholder } from "@/components/ui/custom/placeholder";
 import { getOrganizationById } from "@/db/queries/organizations";
 import { user } from "@/db/schema/auth";
-import { ManageOrganization } from "../../_components/manage-organization";
 
 const EditOrganizationPage = async ({
   params,

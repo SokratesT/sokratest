@@ -1,4 +1,4 @@
-import { CourseForm } from "../_components/course-form";
+import { CourseForm } from "@/components/courses/course-form";
 
 const AddCoursePage = async () => {
   return <CourseForm />;

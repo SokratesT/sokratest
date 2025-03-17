@@ -1,10 +1,10 @@
+import { clientEnv } from "@/lib/env/client";
 import { serverEnv } from "@/lib/env/server";
 import { type OpenAIProvider, createOpenAI } from "@ai-sdk/openai";
-import { extractReasoningMiddleware, wrapLanguageModel } from "ai";
-import type { Model } from "./models";
-import { PostHog } from "posthog-node";
 import { withTracing } from "@posthog/ai";
-import { clientEnv } from "../env/client";
+import { extractReasoningMiddleware, wrapLanguageModel } from "ai";
+import { PostHog } from "posthog-node";
+import type { Model } from "./models";
 
 export const customModel = ({
   model,
