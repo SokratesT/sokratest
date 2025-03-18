@@ -1,6 +1,5 @@
 "use client";
 
-import { removeCourseMembers } from "@/db/actions/course";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
@@ -11,6 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { removeCourseMembers } from "@/db/actions/course";
 import type { User } from "@/db/schema/auth";
 import type { Course } from "@/db/schema/course";
 import type { ColumnDef } from "@tanstack/react-table";

@@ -1,27 +1,27 @@
 "use client";
 
-import { createPost, updatePost } from "@/db/actions/post";
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
+import { createPost, updatePost } from "@/db/actions/post";
 import type { Post } from "@/db/schema/post";
-import { type PostSchemaType, postSchema } from "@/lib/schemas/post";
+import { type PostInsertSchemaType, postInsertSchema } from "@/db/zod/post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const PostForm = ({ post }: { post?: Post }) => {
-  const form = useForm<PostSchemaType>({
-    resolver: zodResolver(postSchema),
+  const form = useForm<PostInsertSchemaType>({
+    resolver: zodResolver(postInsertSchema),
     defaultValues: {
       title: post?.title ?? undefined,
       content: post?.content ?? "",
     },
   });
 
-  const onSubmit = (values: PostSchemaType) => {
+  const onSubmit = (values: PostInsertSchemaType) => {
     if (post) {
       updatePost({ ...values, id: post.id });
       toast.success("Post updated successfully");

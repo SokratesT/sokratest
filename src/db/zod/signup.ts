@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { userInsertSchema } from "./profile";
 import { sharedSchemas } from "./shared";
 
 export const signupSchema = z
   .object({
-    email: sharedSchemas.email,
-    name: sharedSchemas.name,
-    username: sharedSchemas.username,
+    email: userInsertSchema.shape.email,
+    name: userInsertSchema.shape.name,
+    username: userInsertSchema.shape.username,
     password: sharedSchemas.password,
     confirmPassword: sharedSchemas.password,
     invitationId: z.string().optional(),

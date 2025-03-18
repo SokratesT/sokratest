@@ -1,6 +1,5 @@
 "use client";
 
-import { deletePosts } from "@/db/actions/post";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {
@@ -10,6 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { deletePosts } from "@/db/actions/post";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -22,7 +22,7 @@ const PostsDataTableSelectActions = () => {
   const handleDelete = async () => {
     const postIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    deletePosts({ ids: postIds });
+    deletePosts({ refs: postIds.map((id) => ({ id })) });
     toast.success("Posts deleted");
   };
 

@@ -1,10 +1,10 @@
 "use client";
 
-import { deleteDocumentInfo } from "@/db/actions/document";
-import { enqueueEmbeddings } from "@/db/actions/test-trigger";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { deleteDocumentInfo } from "@/db/actions/document";
+import { enqueueEmbeddings } from "@/db/actions/test-trigger";
 import type { Document } from "@/db/schema/document";
 import { cn } from "@/lib/utils";
 import { convert } from "convert";

@@ -2,11 +2,11 @@
 
 import { db } from "@/db/drizzle";
 import { type Course, course, courseMember } from "@/db/schema/course";
+import { hasPermission } from "@/settings/rbac";
 import type { Session as AuthSession } from "better-auth";
 import { count, eq, getTableColumns } from "drizzle-orm";
 import { withAuthQuery } from "./common";
 import { buildPagination, buildSortOrder } from "./query-builders";
-import { hasPermission } from "@/settings/rbac";
 
 const VALID_COURSE_SORT_COLUMNS = ["title", "createdAt"] as (keyof Course)[];
 

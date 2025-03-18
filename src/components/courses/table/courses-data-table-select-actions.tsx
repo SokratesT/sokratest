@@ -1,6 +1,5 @@
 "use client";
 
-import { deleteCourses } from "@/db/actions/course";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {
@@ -10,6 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { deleteCourses } from "@/db/actions/course";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -22,7 +22,7 @@ const CoursesDataTableSelectActions = () => {
   const handleDelete = async () => {
     const courseIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    deleteCourses({ ids: courseIds });
+    deleteCourses({ refs: courseIds.map((id) => ({ id })) });
     toast.success("Courses deleted");
   };
 

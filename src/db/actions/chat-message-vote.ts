@@ -2,8 +2,8 @@
 
 import { db } from "@/db/drizzle";
 import { chatMessageVote } from "@/db/schema/chat-message-vote";
+import { voteInsertSchema } from "@/db/zod/vote";
 import { authActionClient } from "@/lib/safe-action";
-import { voteInsertSchema } from "@/lib/schemas/vote";
 
 export const voteMessage = authActionClient
   .metadata({ actionName: "voteMessage" })

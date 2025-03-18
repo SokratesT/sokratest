@@ -1,11 +1,11 @@
 "use client";
 
-import { setActiveCourse } from "@/db/actions/course";
 import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { setActiveCourse } from "@/db/actions/course";
 import { authClient } from "@/lib/auth-client";
 import { routes } from "@/settings/routes";
 import { Check } from "lucide-react";

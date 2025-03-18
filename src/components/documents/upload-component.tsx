@@ -10,14 +10,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { type FileUploadSchemaType, fileUploadSchema } from "@/db/zod/document";
 import type { ShortFileProp } from "@/lib/files/types";
 import { getPresignedUrls, handleUpload } from "@/lib/files/uploadHelpers";
 import { getErrorMessage } from "@/lib/handle-error";
 import { useBucketSearchParams } from "@/lib/nuqs/search-params.bucket";
-import {
-  type FileUploadSchemaType,
-  fileUploadSchema,
-} from "@/lib/schemas/file-upload";
 import { buckets } from "@/settings/buckets";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";

@@ -1,6 +1,5 @@
 "use client";
 
-import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {
@@ -10,6 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import { authClient } from "@/lib/auth-client";
 import { routes } from "@/settings/routes";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";

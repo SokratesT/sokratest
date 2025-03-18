@@ -15,3 +15,13 @@ export const courseMemberDeleteSchema = z.object({
   ids: z.array(z.string()),
   courseId: z.string(),
 });
+
+export type CourseMemberInsertSchemaType = z.infer<
+  typeof courseMemberInsertSchema
+>;
+export type CourseMemberUpdateSchemaType = z.infer<
+  typeof courseMemberUpdateSchema
+>;
+export type CourseMemberDeleteSchemaType = z.infer<
+  typeof courseMemberDeleteSchema
+>;

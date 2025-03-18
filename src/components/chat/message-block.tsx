@@ -1,4 +1,3 @@
-import { voteMessage } from "@/db/actions/chat-message-vote";
 import {
   Accordion,
   AccordionContent,
@@ -21,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { voteMessage } from "@/db/actions/chat-message-vote";
 import { cn } from "@/lib/utils";
 import type { ChatRequestOptions, Message } from "ai";
 import { BotIcon, CopyIcon, PencilIcon, UserIcon } from "lucide-react";

@@ -1,0 +1,21 @@
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
+import { z } from "zod";
+import { organization } from "../schema/auth";
+
+export const organizationInsertSchema = createInsertSchema(organization);
+
+export const organizationUpdateSchema = createUpdateSchema(organization);
+
+export const organizationDeleteSchema = z.object({
+  refs: z.array(organizationUpdateSchema.pick({ id: true })),
+});
+
+export type OrganizationInsertSchemaType = z.infer<
+  typeof organizationInsertSchema
+>;
+export type OrganizationUpdateSchemaType = z.infer<
+  typeof organizationUpdateSchema
+>;
+export type OrganizationDeleteSchemaType = z.infer<
+  typeof organizationDeleteSchema
+>;

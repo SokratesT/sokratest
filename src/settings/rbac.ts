@@ -1,10 +1,10 @@
 "server only";
 
 import { db } from "@/db/drizzle";
-import { eq, and } from "drizzle-orm";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { courseMember } from "@/db/schema/course";
+import { auth } from "@/lib/auth";
+import { and, eq } from "drizzle-orm";
+import { headers } from "next/headers";
 
 // Define resource type literals
 type ResourceType = "course" | "document";

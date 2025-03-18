@@ -1,6 +1,5 @@
 "use client";
 
-import { setActiveCourse } from "@/db/actions/course";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { setActiveCourse } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
 import { routes } from "@/settings/routes";
 import { BookMarkedIcon, Check, ChevronsUpDown } from "lucide-react";

@@ -71,7 +71,7 @@ export type Verification = InferSelectModel<typeof verification>;
 export const organization = pgTable("organization", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
-  slug: text("slug").unique(),
+  slug: text("slug").unique().notNull(),
   logo: text("logo"),
   createdAt: timestamp("created_at").notNull(),
   metadata: text("metadata"),

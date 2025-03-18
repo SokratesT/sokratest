@@ -1,7 +1,7 @@
 "use client";
 
-import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import { Button } from "@/components/ui/button";
+import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import type { Organization } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
 import { routes } from "@/settings/routes";

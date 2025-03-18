@@ -1,6 +1,5 @@
 "use client";
 
-import { deleteChat } from "@/db/actions/chat";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { deleteChat } from "@/db/actions/chat";
 import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 

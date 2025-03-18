@@ -1,6 +1,5 @@
 "use client";
 
-import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Placeholder } from "@/components/ui/custom/placeholder";
@@ -12,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import type { User } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
 import { DEFAULT_ROLE, roles } from "@/settings/roles";

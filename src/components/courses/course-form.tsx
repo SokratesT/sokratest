@@ -1,6 +1,5 @@
 "use client";
 
-import { createCourse, updateCourse } from "@/db/actions/course";
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormTextField } from "@/components/forms/fields/formTextField";
@@ -22,9 +21,13 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { createCourse, updateCourse } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
+import {
+  type CourseInsertSchemaType,
+  courseInsertSchema,
+} from "@/db/zod/course";
 import { authClient } from "@/lib/auth-client";
-import { type CourseSchemaType, courseSchema } from "@/lib/schemas/course";
 import { isFieldRequired } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2Icon } from "lucide-react";
@@ -36,8 +39,8 @@ const CourseForm = ({ course }: { course?: Course }) => {
   const { data: activeOrganization, isPending: isPendingActive } =
     authClient.useActiveOrganization();
 
-  const form = useForm<CourseSchemaType>({
-    resolver: zodResolver(courseSchema),
+  const form = useForm<CourseInsertSchemaType>({
+    resolver: zodResolver(courseInsertSchema),
     defaultValues: {
       title: course?.title ?? undefined,
       description: course?.description ?? "",
@@ -45,7 +48,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
     },
   });
 
-  const onSubmit = (values: CourseSchemaType) => {
+  const onSubmit = (values: CourseInsertSchemaType) => {
     if (course) {
       updateCourse({ ...values, id: course.id });
       toast.success("Course updated successfully");
@@ -75,7 +78,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
                       label="Title"
                       placeholder="Course title"
                       inputType="text"
-                      required={isFieldRequired(courseSchema, field.name)}
+                      required={isFieldRequired(courseInsertSchema, field.name)}
                     />
                   )}
                 />
@@ -87,7 +90,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
                       field={field}
                       label="Short Description"
                       placeholder="Short course description"
-                      required={isFieldRequired(courseSchema, field.name)}
+                      required={isFieldRequired(courseInsertSchema, field.name)}
                     />
                   )}
                 />

@@ -2,13 +2,6 @@ import { post } from "@/db/schema/post";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const postSchema = z.object({
-  title: z.string(),
-  content: z.string(),
-});
-
-export type PostSchemaType = z.infer<typeof postSchema>;
-
 export const postInsertSchema = createInsertSchema(post, {
   userId: (schema) => schema.optional(),
 });
@@ -18,4 +11,10 @@ export const postUpdateSchema = createUpdateSchema(post, {
   id: z.string(),
 });
 
-export const postDeleteSchema = z.object({ ids: z.array(z.string()) });
+export const postDeleteSchema = z.object({
+  refs: z.array(postUpdateSchema.pick({ id: true })),
+});
+
+export type PostInsertSchemaType = z.infer<typeof postInsertSchema>;
+export type PostUpdateSchemaType = z.infer<typeof postUpdateSchema>;
+export type PostDeleteSchemaType = z.infer<typeof postDeleteSchema>;

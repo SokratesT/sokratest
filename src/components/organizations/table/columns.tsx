@@ -1,6 +1,5 @@
 "use client";
 
-import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
@@ -12,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import type { Organization } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
 import { routes } from "@/settings/routes";

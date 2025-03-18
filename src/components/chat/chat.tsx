@@ -1,10 +1,10 @@
 "use client";
 
-import { deleteTrailingMessages } from "@/db/actions/ai-actions";
 import { Button } from "@/components/ui/button";
 import { SendButton, StopButton } from "@/components/ui/chat/chat-buttons";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
+import { deleteTrailingMessages } from "@/db/actions/ai-actions";
 import { useStreamingText } from "@/hooks/use-streaming-text";
 import { type Message, useChat } from "@ai-sdk/react";
 import { PaperclipIcon, RefreshCcwIcon } from "lucide-react";

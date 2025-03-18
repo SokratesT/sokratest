@@ -4,11 +4,11 @@ import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import type { Organization } from "@/db/schema/auth";
-import { authClient } from "@/lib/auth-client";
 import {
-  type OrganizationSchemaType,
-  organizationSchema,
-} from "@/lib/schemas/organization";
+  type OrganizationInsertSchemaType,
+  organizationInsertSchema,
+} from "@/db/zod/organization";
+import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -16,15 +16,15 @@ import { toast } from "sonner";
 const OrganizationForm = ({
   organization,
 }: { organization?: Organization }) => {
-  const form = useForm<OrganizationSchemaType>({
-    resolver: zodResolver(organizationSchema),
+  const form = useForm<OrganizationInsertSchemaType>({
+    resolver: zodResolver(organizationInsertSchema),
     defaultValues: {
       name: organization?.name ?? undefined,
       slug: organization?.slug ?? undefined,
     },
   });
 
-  const onSubmit = async (values: OrganizationSchemaType) => {
+  const onSubmit = async (values: OrganizationInsertSchemaType) => {
     if (organization) {
       await authClient.organization.update({
         data: {

@@ -2,12 +2,12 @@
 
 import { db } from "@/db/drizzle";
 import { post } from "@/db/schema/post";
-import { authActionClient } from "@/lib/safe-action";
 import {
   postDeleteSchema,
   postInsertSchema,
   postUpdateSchema,
-} from "@/lib/schemas/post";
+} from "@/db/zod/post";
+import { authActionClient } from "@/lib/safe-action";
 import { routes } from "@/settings/routes";
 import { eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -38,7 +38,9 @@ export const updatePost = authActionClient
 export const deletePosts = authActionClient
   .metadata({ actionName: "deletePost" })
   .schema(postDeleteSchema)
-  .action(async ({ parsedInput: { ids } }) => {
+  .action(async ({ parsedInput: { refs } }) => {
+    const ids = refs.map((ref) => ref.id);
+
     await db.delete(post).where(inArray(post.id, ids));
 
     revalidatePath(routes.app.sub.posts.path);

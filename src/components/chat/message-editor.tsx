@@ -1,8 +1,8 @@
 "use client";
 
-import { deleteTrailingMessages } from "@/db/actions/ai-actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { deleteTrailingMessages } from "@/db/actions/ai-actions";
 import type { ChatRequestOptions, Message } from "ai";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";

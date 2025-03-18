@@ -1,7 +1,5 @@
 "use client";
 
-import { deleteDocumentInfo } from "@/db/actions/document";
-import { enqueueEmbeddings } from "@/db/actions/test-trigger";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,6 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { deleteDocumentInfo } from "@/db/actions/document";
+import { enqueueEmbeddings } from "@/db/actions/test-trigger";
 import type { Document } from "@/db/schema/document";
 import { cn } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";

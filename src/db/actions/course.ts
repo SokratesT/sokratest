@@ -4,18 +4,18 @@ import { db } from "@/db/drizzle";
 import { session } from "@/db/schema/auth";
 import { course, courseMember } from "@/db/schema/course";
 import {
-  authActionClient,
-  requireOrganizationMiddleware,
-} from "@/lib/safe-action";
-import {
   courseDeleteSchema,
   courseInsertSchema,
   courseUpdateSchema,
-} from "@/lib/schemas/course";
+} from "@/db/zod/course";
 import {
   courseMemberDeleteSchema,
   courseMemberInsertSchema,
-} from "@/lib/schemas/course-member";
+} from "@/db/zod/course-member";
+import {
+  authActionClient,
+  requireOrganizationMiddleware,
+} from "@/lib/safe-action";
 import { routes } from "@/settings/routes";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -67,7 +67,9 @@ export const updateCourse = authActionClient
 export const deleteCourses = authActionClient
   .metadata({ actionName: "deleteCourses" })
   .schema(courseDeleteSchema)
-  .action(async ({ parsedInput: { ids } }) => {
+  .action(async ({ parsedInput: { refs } }) => {
+    const ids = refs.map((ref) => ref.id);
+
     await db.delete(course).where(inArray(course.id, ids));
 
     revalidatePath(routes.app.sub.courses.path);

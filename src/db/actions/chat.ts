@@ -2,12 +2,12 @@
 
 import { db } from "@/db/drizzle";
 import { chat } from "@/db/schema/chat";
+import { chatDeleteSchema } from "@/db/zod/chat";
 import {
   authActionClient,
   requireCourseMiddleware,
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
-import { chatDeleteSchema } from "@/lib/schemas/chat";
 import { routes } from "@/settings/routes";
 import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";

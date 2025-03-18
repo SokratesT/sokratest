@@ -1,6 +1,5 @@
 "use client";
 
-import { addCourseMember } from "@/db/actions/course";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -15,6 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { addCourseMember } from "@/db/actions/course";
 import type { User } from "@/db/schema/auth";
 import type { Course } from "@/db/schema/course";
 import { useBucketSearchParams } from "@/lib/nuqs/search-params.bucket";

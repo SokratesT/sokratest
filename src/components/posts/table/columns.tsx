@@ -1,6 +1,5 @@
 "use client";
 
-import { deletePosts } from "@/db/actions/post";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
@@ -12,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { deletePosts } from "@/db/actions/post";
 import type { Post } from "@/db/schema/post";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
@@ -23,7 +23,7 @@ interface PostWithAuthor extends Post {
 }
 
 const handleDelete = async (id: string) => {
-  deletePosts({ ids: [id] });
+  deletePosts({ refs: [{ id }] });
   toast.success("Post deleted");
 };
 

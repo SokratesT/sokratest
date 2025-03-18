@@ -1,6 +1,5 @@
 "use client";
 
-import { deleteCourses } from "@/db/actions/course";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
@@ -12,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { deleteCourses } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
@@ -19,7 +19,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 const handleDelete = async (id: string) => {
-  await deleteCourses({ ids: [id] });
+  await deleteCourses({ refs: [{ id }] });
   toast.success("Course deleted");
 };
 

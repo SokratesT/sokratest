@@ -3,8 +3,8 @@
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
+import { type UserUpdateSchemaType, userUpdateSchema } from "@/db/zod/profile";
 import { authClient } from "@/lib/auth-client";
-import { type ProfileSchemaType, profileSchema } from "@/lib/schemas/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -14,8 +14,8 @@ const ProfileForm = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  const form = useForm<ProfileSchemaType>({
-    resolver: zodResolver(profileSchema),
+  const form = useForm<UserUpdateSchemaType>({
+    resolver: zodResolver(userUpdateSchema),
     defaultValues: {
       email: data?.user.email,
       name: data?.user.name,
@@ -36,7 +36,7 @@ const ProfileForm = () => {
     }
   }, [data]);
 
-  const onSubmit = async (values: ProfileSchemaType) => {
+  const onSubmit = async (values: UserUpdateSchemaType) => {
     console.log("values", values);
 
     const { data, error } = await authClient.updateUser(

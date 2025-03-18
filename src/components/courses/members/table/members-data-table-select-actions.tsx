@@ -1,6 +1,5 @@
 "use client";
 
-import { removeCourseMembers } from "@/db/actions/course";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {
@@ -10,6 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { removeCourseMembers } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";

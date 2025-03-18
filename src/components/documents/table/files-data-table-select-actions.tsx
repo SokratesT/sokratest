@@ -1,7 +1,5 @@
 "use client";
 
-import { deleteDocumentInfo } from "@/db/actions/document";
-import { enqueueEmbeddings } from "@/db/actions/test-trigger";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {
@@ -11,6 +9,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { deleteDocumentInfo } from "@/db/actions/document";
+import { enqueueEmbeddings } from "@/db/actions/test-trigger";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
