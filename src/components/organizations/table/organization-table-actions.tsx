@@ -9,23 +9,40 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { removeCourseMembers } from "@/db/actions/course";
-import type { Course } from "@/db/schema/course";
+import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
+import { authClient } from "@/lib/auth-client";
+import { routes } from "@/settings/routes";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
 
-const MembersDataTableSelectActions = ({
-  courseId,
-}: { courseId: Course["id"] }) => {
+const OrganizationTableActions = () => {
   const { table } = useTable();
 
   const handleDelete = async () => {
-    const userIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
+    const organizationIds = table
+      .getSelectedRowModel()
+      .flatRows.map((row) => row.id);
 
-    await removeCourseMembers({ ids: userIds, courseId });
+    const deletions = organizationIds.map((organizationId) => {
+      const result = authClient.organization
+        .delete({ organizationId })
+        .then((result) => result.error);
 
-    toast.success("Members deleted");
+      if (result) return result;
+    });
+
+    Promise.all(deletions).then((errors) => {
+      console.log("Organization errors", errors.filter(Boolean));
+
+      if (errors.filter(Boolean).length > 0) {
+        toast.error("Something went wrong, please try again!");
+      } else {
+        toast.success("Organizations deleted");
+      }
+    });
+
+    await revalidatePathFromClient({ path: routes.app.sub.organizations.path });
   };
 
   return (
@@ -43,11 +60,11 @@ const MembersDataTableSelectActions = ({
           onClick={handleDelete}
           disabled={table.getSelectedRowModel().rows.length === 0}
         >
-          Remove selected members
+          Delete selected
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
 
-export { MembersDataTableSelectActions };
+export { OrganizationTableActions };

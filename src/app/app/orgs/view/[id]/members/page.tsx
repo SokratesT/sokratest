@@ -1,64 +1,71 @@
-import { SearchInput } from "@/components/documents/search-input";
-import { OrganizationTableActions } from "@/components/organizations/table/organization-table-actions";
-import { organizationTableColumns } from "@/components/organizations/table/organization-table-columns";
+import { OrganizationMemberTableActions } from "@/components/organizations/members/table/organization-member-table-actions";
+import { organizationMemberTableColumns } from "@/components/organizations/members/table/organization-member-table-columns";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
-import { getAvailableOrganizations } from "@/db/queries/organizations";
-import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
+import { getOrganizationUsers } from "@/db/queries/users";
+import { auth } from "@/lib/auth";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { routes } from "@/settings/routes";
+import { headers } from "next/headers";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
 
-const UsersPage = async ({
+const OrganizationMembersPage = async ({
+  params,
   searchParams,
 }: {
+  params: Promise<{ id: string }>;
   searchParams: Promise<SearchParams>;
 }) => {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session?.session.activeOrganizationId) {
+    throw new Error("No session or active organization");
+  }
+
+  const { id } = await params;
+
   const { pageIndex, pageSize } =
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
-  const { search } = await bucketSearchParamsCache.parse(searchParams);
 
-  const { query, rowCount } = await getAvailableOrganizations({
+  const { query, rowCount } = await getOrganizationUsers(id, {
     sort,
     pageIndex,
     pageSize,
-    search,
   });
 
   return (
     <div className="flex flex-col gap-14">
       <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
         <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          Organisations
+          Organisation Members
         </h4>
         <div className="flex gap-2">
           <Button asChild>
-            <Link href={routes.app.sub.organizations.sub.add.path}>
-              Add Organisation
-            </Link>
+            <Link href={routes.app.sub.users.sub.add.path}>Add Users</Link>
           </Button>
         </div>
       </div>
       <div>
         <DataTable
           data={query}
-          columns={organizationTableColumns}
+          columns={organizationMemberTableColumns}
           options={{
             rowCount: rowCount.count,
             uidAccessor: "id",
             placeholderClassName: "h-8",
+            meta: { organizationId: id },
           }}
         >
           <div className="flex items-center gap-2">
             <DataTableViewOptions />
-            <OrganizationTableActions />
-            <SearchInput />
+            <OrganizationMemberTableActions organizationId={id} />
+            {/* <SearchInput /> */}
           </div>
           <DataTableBody />
           <DataTablePagination />
@@ -68,4 +75,4 @@ const UsersPage = async ({
   );
 };
 
-export default UsersPage;
+export default OrganizationMembersPage;

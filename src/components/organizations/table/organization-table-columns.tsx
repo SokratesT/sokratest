@@ -26,7 +26,7 @@ const handleDelete = async (id: string) => {
   await revalidatePathFromClient({ path: routes.app.sub.organizations.path });
 };
 
-export const columns: ColumnDef<Organization>[] = [
+export const organizationTableColumns: ColumnDef<Organization>[] = [
   {
     id: "select",
     size: 32,
@@ -85,6 +85,9 @@ export const columns: ColumnDef<Organization>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <Link href={`/app/orgs/view/${user.id}`}>
+              <DropdownMenuItem>View Organisation</DropdownMenuItem>
+            </Link>
             <Link href={`/app/orgs/edit/${user.id}`}>
               <DropdownMenuItem>Edit Organisation</DropdownMenuItem>
             </Link>

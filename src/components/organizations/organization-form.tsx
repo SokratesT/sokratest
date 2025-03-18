@@ -30,12 +30,10 @@ const OrganizationForm = ({
         data: {
           name: values.name,
           /* logo: "new-logo.url",
-          metadata: {
-            customerId: "test"
-          }, */
+          metadata: {}, */
           slug: values.slug,
         },
-        organizationId: organization.id, //defaults to the current active organization
+        organizationId: organization.id,
       });
       toast.success("Organisation updated successfully");
     } else {

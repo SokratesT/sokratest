@@ -1,6 +1,6 @@
 import { AddCourseMembers } from "@/components/courses/members/add-course-members";
-import { columns } from "@/components/courses/members/table/columns";
-import { MembersDataTableSelectActions } from "@/components/courses/members/table/members-data-table-select-actions";
+import { CourseMemberTableActions } from "@/components/courses/members/table/course-member-table-actions";
+import { courseMemberTableColumns } from "@/components/courses/members/table/course-member-table-columns";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
@@ -61,7 +61,7 @@ const UsersPage = async ({
       <div>
         <DataTable
           data={query}
-          columns={columns}
+          columns={courseMemberTableColumns}
           options={{
             rowCount: rowCount.count,
             uidAccessor: "id",
@@ -71,7 +71,7 @@ const UsersPage = async ({
         >
           <div className="flex items-center gap-2">
             <DataTableViewOptions />
-            <MembersDataTableSelectActions courseId={id} />
+            <CourseMemberTableActions courseId={id} />
             {/* <SearchInput /> */}
           </div>
           <DataTableBody />

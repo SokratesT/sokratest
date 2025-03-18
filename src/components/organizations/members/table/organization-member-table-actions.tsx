@@ -9,40 +9,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
+import type { Organization } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
-import { routes } from "@/settings/routes";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
 
-const UsersDataTableSelectActions = () => {
+const OrganizationMemberTableActions = ({
+  organizationId,
+}: { organizationId: Organization["id"] }) => {
   const { table } = useTable();
 
   const handleDelete = async () => {
-    const organizationIds = table
-      .getSelectedRowModel()
-      .flatRows.map((row) => row.id);
+    const userIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    const deletions = organizationIds.map((organizationId) => {
-      const result = authClient.organization
-        .delete({ organizationId })
-        .then((result) => result.error);
+    userIds.forEach((userId) =>
+      authClient.organization
+        .removeMember({ organizationId, memberIdOrEmail: userId })
+        .then((result) => result.error),
+    );
 
-      if (result) return result;
-    });
-
-    Promise.all(deletions).then((errors) => {
-      console.log("ORganization errors", errors.filter(Boolean));
-
-      if (errors.filter(Boolean).length > 0) {
-        toast.error("Something went wrong, please try again!");
-      } else {
-        toast.success("Organizations deleted");
-      }
-    });
-
-    await revalidatePathFromClient({ path: routes.app.sub.organizations.path });
+    toast.success("Organisation members deleted");
   };
 
   return (
@@ -60,11 +47,11 @@ const UsersDataTableSelectActions = () => {
           onClick={handleDelete}
           disabled={table.getSelectedRowModel().rows.length === 0}
         >
-          Delete selected
+          Remove selected members
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
 
-export { UsersDataTableSelectActions };
+export { OrganizationMemberTableActions };

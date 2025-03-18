@@ -4,7 +4,7 @@ import { db } from "@/db/drizzle";
 import { type Course, course, courseMember } from "@/db/schema/course";
 import { hasPermission } from "@/settings/rbac";
 import type { Session as AuthSession } from "better-auth";
-import { count, eq, getTableColumns } from "drizzle-orm";
+import { and, count, eq, getTableColumns } from "drizzle-orm";
 import { withAuthQuery } from "./common";
 import { buildPagination, buildSortOrder } from "./query-builders";
 
@@ -26,43 +26,58 @@ export const getUserCoursesForActiveOrganization = async (options: {
   pageIndex: number;
   pageSize: number;
 }) => {
-  return withAuthQuery(async (session) => {
-    const { sort, pageIndex, pageSize } = options;
-    const { limit, offset } = buildPagination({ pageIndex, pageSize });
+  return withAuthQuery(
+    async (session) => {
+      const { sort, pageIndex, pageSize } = options;
+      const { limit, offset } = buildPagination({ pageIndex, pageSize });
 
-    const sortOrder = buildSortOrder(
-      sort,
-      course,
-      VALID_COURSE_SORT_COLUMNS,
-      "createdAt",
-    );
+      const sortOrder = buildSortOrder(
+        sort,
+        course,
+        VALID_COURSE_SORT_COLUMNS,
+        "createdAt",
+      );
 
-    if (!session.session.activeOrganizationId)
-      return { query: [], rowCount: { count: 0 } };
+      if (!session.session.activeOrganizationId)
+        return { query: [], rowCount: { count: 0 } };
 
-    const query = await db
-      .selectDistinct({ ...getTableColumns(course) })
-      .from(course)
-      .innerJoin(courseMember, eq(courseMember.userId, session.session.userId))
-      .where(eq(course.organizationId, session.session.activeOrganizationId))
-      .limit(limit)
-      .offset(offset)
-      .orderBy(...sortOrder);
+      const query = await db
+        .select({ ...getTableColumns(course) })
+        .from(course)
+        .innerJoin(
+          courseMember,
+          and(
+            eq(course.id, courseMember.courseId),
+            eq(courseMember.userId, session.session.userId),
+          ),
+        )
+        .where(eq(course.organizationId, session.session.activeOrganizationId))
+        .limit(limit)
+        .offset(offset)
+        .orderBy(...sortOrder);
 
-    const [rowCount] = await db
-      .select({ count: count() })
-      .from(course)
-      .innerJoin(courseMember, eq(courseMember.userId, session.session.userId))
-      .where(eq(course.organizationId, session.session.activeOrganizationId));
+      const [rowCount] = await db
+        .select({ count: count() })
+        .from(course)
+        .innerJoin(
+          courseMember,
+          and(
+            eq(course.id, courseMember.courseId),
+            eq(courseMember.userId, session.session.userId),
+          ),
+        )
+        .where(eq(course.organizationId, session.session.activeOrganizationId));
 
-    return { query, rowCount };
-  }, {});
+      return { query, rowCount };
+    },
+    { requireOrg: true },
+  );
 };
 
 export const getCourseById = async (id: Course["id"]) => {
   return withAuthQuery(
     async () => {
-      if (await hasPermission({ type: "course", id }, "read")) {
+      if (!(await hasPermission({ type: "course", id }, "read"))) {
         return { query: null };
       }
 
@@ -79,20 +94,3 @@ export const getCourseById = async (id: Course["id"]) => {
     },
   );
 };
-
-/* export const getActiveCourse = async () => {
-  return withAuthQuery(
-    async (session) => {
-      const [query] = await db
-        .select({ ...getTableColumns(course) })
-        .from(course)
-        .where(eq(course.id, session.session.activeCourseId))
-        .limit(1);
-
-      return { query };
-    },
-    {
-      requireCourse: true,
-    },
-  );
-}; */

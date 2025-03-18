@@ -10,24 +10,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { removeCourseMembers } from "@/db/actions/course";
-import type { User } from "@/db/schema/auth";
-import type { Course } from "@/db/schema/course";
+import type { Organization, User } from "@/db/schema/auth";
+import { authClient } from "@/lib/auth-client";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 
-const handleDelete = async (id: string, courseId?: Course["id"]) => {
-  if (!courseId) {
-    toast.error("Unknown Course");
-    throw new Error("Course ID is missing");
+const handleDelete = async (
+  id: string,
+  organizationId?: Organization["id"],
+) => {
+  if (!organizationId) {
+    toast.error("Unknown Organisation");
+    throw new Error("Organization ID is missing");
   }
 
-  await removeCourseMembers({ ids: [id], courseId });
-  toast.success("Member removed");
+  authClient.organization.removeMember({ organizationId, memberIdOrEmail: id });
+
+  toast.success("Organisation member removed");
 };
 
-export const columns: ColumnDef<User>[] = [
+export const organizationMemberTableColumns: ColumnDef<User>[] = [
   {
     id: "select",
     size: 32,
@@ -88,7 +91,7 @@ export const columns: ColumnDef<User>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => {
-                handleDelete(user.id, table.options.meta?.courseId);
+                handleDelete(user.id, table.options.meta?.organizationId);
               }}
             >
               Remove Member

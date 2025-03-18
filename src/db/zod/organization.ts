@@ -2,7 +2,9 @@ import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
 import { organization } from "../schema/auth";
 
-export const organizationInsertSchema = createInsertSchema(organization);
+export const organizationInsertSchema = createInsertSchema(organization, {
+  createdAt: (schema) => schema.optional(),
+});
 
 export const organizationUpdateSchema = createUpdateSchema(organization);
 
