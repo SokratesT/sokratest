@@ -1,16 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { auth } from "@/lib/auth";
+import { getActiveOrganization, getSession } from "@/db/queries/auth";
 import { Building2Icon, MailIcon, UserIcon } from "lucide-react";
-import { headers } from "next/headers";
 
 const UserStats = async () => {
-  const activeOrganization = await auth.api.getFullOrganization({
-    headers: await headers(),
-  });
-
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const activeOrganization = await getActiveOrganization();
+  const session = await getSession();
 
   return (
     <Card>

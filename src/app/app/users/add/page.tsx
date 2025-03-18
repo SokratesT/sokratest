@@ -2,15 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Placeholder } from "@/components/ui/custom/placeholder";
 import { AddUserForm } from "@/components/users/add-user-form";
 import { db } from "@/db/drizzle";
+import { getSession } from "@/db/queries/auth";
 import { course } from "@/db/schema/course";
-import { auth } from "@/lib/auth";
 import { routes } from "@/settings/routes";
 import { asc, eq } from "drizzle-orm";
-import { headers } from "next/headers";
 import Link from "next/link";
 
 const addUserPage = async () => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   if (!session?.session.activeOrganizationId) {
     return <Placeholder>Please activate an organization first.</Placeholder>;

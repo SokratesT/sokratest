@@ -2,9 +2,8 @@
 
 import { db } from "@/db/drizzle";
 import { type Document, document } from "@/db/schema/document";
-import { auth } from "@/lib/auth";
 import { and, asc, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
-import { headers } from "next/headers";
+import { getSession } from "./auth";
 
 function isValidColumnId(id: Document["id"]): id is keyof Document {
   return ["title", "filename", "createdAt", "size", "embeddingStatus"].includes(
@@ -18,7 +17,7 @@ export const getAvailableFiles = async (
   pageSize: number,
   search: string,
 ) => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   if (!session?.session.activeCourseId) {
     throw new Error("No session or active course");

@@ -5,15 +5,14 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
+import { getSession } from "@/db/queries/auth";
 import {
   getCourseUsers,
   getOrganizationUsersNotInCourse,
 } from "@/db/queries/users";
-import { auth } from "@/lib/auth";
 import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
-import { headers } from "next/headers";
 import type { SearchParams } from "nuqs/server";
 
 const UsersPage = async ({
@@ -23,7 +22,7 @@ const UsersPage = async ({
   params: Promise<{ id: string }>;
   searchParams: Promise<SearchParams>;
 }) => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   if (!session?.session.activeOrganizationId) {
     throw new Error("No session or active organization");

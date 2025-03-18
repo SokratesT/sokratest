@@ -1,12 +1,11 @@
+import { getSession } from "@/db/queries/auth";
 import type { User } from "@/db/schema/auth";
 import {
   DEFAULT_SERVER_ERROR_MESSAGE,
   createMiddleware,
   createSafeActionClient,
 } from "next-safe-action";
-import { headers } from "next/headers";
 import { z } from "zod";
-import { auth } from "./auth";
 
 class ActionError extends Error {}
 
@@ -48,7 +47,7 @@ const actionClient = createSafeActionClient({
 export const authActionClient = actionClient
   // Define authorization middleware.
   .use(async ({ next }) => {
-    const session = await auth.api.getSession({ headers: await headers() });
+    const session = await getSession();
 
     if (!session) {
       throw new Error("Session not found!");
@@ -67,7 +66,7 @@ export const authActionClient = actionClient
 export const requireOrganizationMiddleware = createMiddleware<{
   ctx: { userId: User["id"] };
 }>().define(async ({ next, ctx }) => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   const activeOrganizationId = session?.session.activeOrganizationId;
 
@@ -81,7 +80,7 @@ export const requireOrganizationMiddleware = createMiddleware<{
 export const requireCourseMiddleware = createMiddleware<{
   ctx: { userId: User["id"] };
 }>().define(async ({ next, ctx }) => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   const activeCourseId = session?.session.activeCourseId;
 

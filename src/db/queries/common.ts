@@ -1,10 +1,9 @@
 import { db } from "@/db/drizzle";
 import { member } from "@/db/schema/auth";
 import { courseMember } from "@/db/schema/course";
-import { auth } from "@/lib/auth";
 import type { authClient } from "@/lib/auth-client";
 import { and, eq } from "drizzle-orm";
-import { headers } from "next/headers";
+import { getSession } from "./auth";
 
 type CourseRole = "admin" | "instructor" | "student";
 type OrganizationRole = "admin" | "student";
@@ -58,7 +57,7 @@ export async function withAuthQuery<T>(
   options: AuthQueryOptions = {},
 ): Promise<T> {
   // Get session (cached by Next.js when called multiple times in same request)
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   // Check if authentication is required
   if (!session) {

@@ -7,15 +7,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Placeholder } from "@/components/ui/custom/placeholder";
+import { getSession } from "@/db/queries/auth";
 import { getCourseById } from "@/db/queries/courses";
-import { auth } from "@/lib/auth";
 import { BookMarkedIcon } from "lucide-react";
-import { headers } from "next/headers";
 
 const CoursePreview = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session?.session.activeCourseId) {
     return <Placeholder>Please select an active course first</Placeholder>;

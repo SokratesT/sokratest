@@ -1,24 +1,23 @@
 import { generateTitleFromUserMessage } from "@/db/actions/ai-actions";
 import { saveChat, saveMessages } from "@/db/queries/ai-queries";
+import { getSession } from "@/db/queries/auth";
 import { customModelWithTracing } from "@/lib/ai";
 import {
   getMostRecentUserMessage,
   sanitizeResponseMessages,
 } from "@/lib/ai/utils";
-import { auth } from "@/lib/auth";
 import {
   type Message,
   createDataStreamResponse,
   smoothStream,
   streamText,
 } from "ai";
-import { headers } from "next/headers";
 import { getRelevantChunks } from "./ai-helper";
 
 export const maxDuration = 120;
 
 export async function POST(request: Request) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   if (!session || !session.user || !session.user.id) {
     return new Response("Unauthorized", { status: 401 });

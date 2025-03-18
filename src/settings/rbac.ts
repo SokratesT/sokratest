@@ -1,10 +1,9 @@
 "server only";
 
 import { db } from "@/db/drizzle";
+import { getSession } from "@/db/queries/auth";
 import { courseMember } from "@/db/schema/course";
-import { auth } from "@/lib/auth";
 import { and, eq } from "drizzle-orm";
-import { headers } from "next/headers";
 
 // Define resource type literals
 type ResourceType = "course" | "document";
@@ -64,7 +63,7 @@ const getPermissions = (role: Role): ResourceTypePermissions => {
  * @throws Error if session not found or user has no role
  */
 const getCourseRole = async (courseId: string): Promise<Role> => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   if (!session) {
     throw new Error("Session not found");

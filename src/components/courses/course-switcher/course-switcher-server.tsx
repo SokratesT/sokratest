@@ -1,13 +1,12 @@
+import { getSession } from "@/db/queries/auth";
 import {
   getCourseById,
   getUserCoursesForActiveOrganization,
 } from "@/db/queries/courses";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { CourseSwitcher } from "./course-switcher";
 
 const CourseSwitcherServer = async () => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   if (!session) {
     throw new Error("No session");

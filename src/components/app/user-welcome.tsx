@@ -1,10 +1,7 @@
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { getSession } from "@/db/queries/auth";
 
 const UserWelcome = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   const getTimeBasedGreeting = () => {
     const hour = new Date().getHours();

@@ -5,12 +5,11 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
+import { getSession } from "@/db/queries/auth";
 import { getOrganizationUsers } from "@/db/queries/users";
-import { auth } from "@/lib/auth";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { routes } from "@/settings/routes";
-import { headers } from "next/headers";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
 
@@ -21,7 +20,7 @@ const OrganizationMembersPage = async ({
   params: Promise<{ id: string }>;
   searchParams: Promise<SearchParams>;
 }) => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   if (!session?.session.activeOrganizationId) {
     throw new Error("No session or active organization");

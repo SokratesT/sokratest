@@ -15,20 +15,17 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { getSession } from "@/db/queries/auth";
 import { getOrganizationById } from "@/db/queries/organizations";
 import type { Organization } from "@/db/schema/auth";
-import { auth } from "@/lib/auth";
 import { sidebarUserMenu } from "@/settings/menus";
 import { ChevronsUpDown, LogOut } from "lucide-react";
-import { headers } from "next/headers";
 import Link from "next/link";
 
 const userInitial = (name: string) => name[0].toUpperCase();
 
 const NavUser = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session) {
     return null;

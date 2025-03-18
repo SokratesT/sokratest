@@ -1,9 +1,9 @@
 import { Chat } from "@/components/chat/chat";
 import { getChatById, getMessagesByChatId } from "@/db/queries/ai-queries";
+import { getSession } from "@/db/queries/auth";
 import { DEFAULT_MODEL, models } from "@/lib/ai/models";
 import { convertToUIMessages } from "@/lib/ai/utils";
-import { auth } from "@/lib/auth";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 const SingleChatPage = async (props: { params: Promise<{ id: string }> }) => {
@@ -15,7 +15,7 @@ const SingleChatPage = async (props: { params: Promise<{ id: string }> }) => {
     notFound();
   }
 
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   if (chat.visibility === "private") {
     if (!session || !session.user) {

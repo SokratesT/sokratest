@@ -1,15 +1,12 @@
 import { AppSidebar } from "@/components/app/app-sidebar";
 import { Header } from "@/components/app/header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/db/queries/auth";
 import { routes } from "@/settings/routes";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 const AppLayout = async ({ children }: { children: React.ReactNode }) => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session) {
     redirect(routes.login.path);

@@ -1,15 +1,13 @@
 import { Button } from "@/components/ui/button";
+import { getSession } from "@/db/queries/auth";
 import { getAllPosts } from "@/db/queries/posts";
-import { auth } from "@/lib/auth";
 import { routes } from "@/settings/routes";
 import { MoveRight } from "lucide-react";
-import { headers } from "next/headers";
 import Link from "next/link";
 
 const PostsPage = async () => {
   const queryPosts = await getAllPosts();
-
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   return (
     <div className="container mx-auto flex flex-col gap-14">
