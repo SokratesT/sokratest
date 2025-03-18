@@ -7,7 +7,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { setActiveCourse } from "@/db/actions/course";
 import { authClient } from "@/lib/auth-client";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -27,7 +27,7 @@ const OrganizationSwitcher = () => {
       })
       .then(() => {
         setActiveCourse({ courseId: undefined });
-        router.push(routes.app.path);
+        router.push(ROUTES.PRIVATE.root.getPath());
         toast.success(`Organization changed to ${organization?.name}`);
       })
       .catch((error) => {

@@ -8,7 +8,7 @@ import {
   postUpdateSchema,
 } from "@/db/zod/post";
 import { authActionClient } from "@/lib/safe-action";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -18,7 +18,7 @@ export const createPost = authActionClient
   .action(async ({ parsedInput: { content, title }, ctx: { userId } }) => {
     await db.insert(post).values({ content, title, userId });
 
-    revalidatePath(routes.app.sub.posts.path);
+    revalidatePath(ROUTES.PRIVATE.posts.root.getPath());
     return { error: null };
   });
 
@@ -31,7 +31,7 @@ export const updatePost = authActionClient
       .set({ content, title, userId, updatedAt: sql`now()` })
       .where(eq(post.id, id));
 
-    revalidatePath(routes.app.sub.posts.path);
+    revalidatePath(ROUTES.PRIVATE.posts.root.getPath());
     return { error: null };
   });
 
@@ -43,6 +43,6 @@ export const deletePosts = authActionClient
 
     await db.delete(post).where(inArray(post.id, ids));
 
-    revalidatePath(routes.app.sub.posts.path);
+    revalidatePath(ROUTES.PRIVATE.posts.root.getPath());
     return { error: null };
   });

@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
@@ -38,7 +38,7 @@ const HeroSection = () => {
 
           <div className="space-y-4 md:space-x-4 md:space-y-0">
             <Button asChild className="group/arrow w-5/6 font-bold md:w-1/4">
-              <Link href={routes.app.path} target="_blank">
+              <Link href={ROUTES.PRIVATE.root.getPath()} target="_blank">
                 Get Started
                 <ArrowRight className="ml-2 size-5 transition-transform group-hover/arrow:translate-x-1" />
               </Link>

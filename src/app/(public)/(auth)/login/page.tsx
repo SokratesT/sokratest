@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -26,7 +26,7 @@ const LoginPage = async () => {
         <SignInForm />
       </CardContent>
       <CardFooter className="text-muted-foreground text-sm">
-        <Link href={routes.signup.path}>Create a new account?</Link>
+        <Link href={ROUTES.PUBLIC.signup.getPath()}>Create a new account?</Link>
       </CardFooter>
     </Card>
   );

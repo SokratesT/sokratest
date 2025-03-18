@@ -8,7 +8,7 @@ import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view
 import { getAvailablePosts } from "@/db/queries/posts";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
 
@@ -35,10 +35,10 @@ const PostsPage = async ({
         </h4>
         <div className="flex gap-2">
           <Button variant="outline" asChild>
-            <Link href={routes.blog.path}>View Posts</Link>
+            <Link href={ROUTES.PUBLIC.blog.getPath()}>View Posts</Link>
           </Button>
           <Button asChild>
-            <Link href={routes.app.sub.posts.sub.add.path}>Add Post</Link>
+            <Link href={ROUTES.PRIVATE.posts.add.getPath()}>Add Post</Link>
           </Button>
         </div>
       </div>

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { getInvitationById } from "@/db/queries/invitation";
 import type { Invitation } from "@/db/schema/auth";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -40,7 +40,9 @@ const RegisterPage = async ({
         <SignUpForm invitation={invitation} />
       </CardContent>
       <CardFooter className="text-muted-foreground text-sm">
-        <Link href={routes.login.path}>Already have an account?</Link>
+        <Link href={ROUTES.PUBLIC.login.getPath()}>
+          Already have an account?
+        </Link>
       </CardFooter>
     </Card>
   );

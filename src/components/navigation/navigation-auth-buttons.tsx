@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -29,10 +29,10 @@ const NavigationAuthButtons = () => {
     return (
       <div className="flex gap-2">
         <Button variant="outline" asChild>
-          <Link href={routes.app.sub.account.path}>Account</Link>
+          <Link href={ROUTES.PRIVATE.app.account.getPath()}>Account</Link>
         </Button>
         <Button asChild>
-          <Link href={routes.app.path}>Go to App</Link>
+          <Link href={ROUTES.PRIVATE.root.getPath()}>Go to App</Link>
         </Button>
       </div>
     );
@@ -41,10 +41,10 @@ const NavigationAuthButtons = () => {
   return (
     <div className="flex gap-2">
       <Button variant="outline" asChild>
-        <Link href={routes.login.path}>Sign in</Link>
+        <Link href={ROUTES.PUBLIC.login.getPath()}>Sign in</Link>
       </Button>
       <Button asChild>
-        <Link href={routes.signup.path}>Get started</Link>
+        <Link href={ROUTES.PUBLIC.signup.getPath()}>Get started</Link>
       </Button>
     </div>
   );

@@ -8,7 +8,7 @@ import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view
 import { getUserCoursesForActiveOrganization } from "@/db/queries/courses";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
 
@@ -35,7 +35,7 @@ const CoursesPage = async ({
         </h4>
         <div className="flex gap-2">
           <Button asChild>
-            <Link href={routes.app.sub.courses.sub.add.path}>Add Course</Link>
+            <Link href={ROUTES.PRIVATE.courses.add.getPath()}>Add Course</Link>
           </Button>
         </div>
       </div>

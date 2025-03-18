@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { type LoginSchemaType, loginSchema } from "@/db/zod/login";
 import { authClient } from "@/lib/auth-client";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -35,7 +35,7 @@ const SignInForm = () => {
         },
         onSuccess: (ctx) => {
           console.log("success");
-          router.replace(routes.app.path);
+          router.replace(ROUTES.PRIVATE.root.getPath());
         },
         onError: (ctx) => {
           console.log("error");

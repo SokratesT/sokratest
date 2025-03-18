@@ -3,6 +3,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { createChat } from "@/db/actions/chat";
 import { cn } from "@/lib/utils";
+import { ROUTES } from "@/settings/routes";
 import { Slot } from "@radix-ui/react-slot";
 import type { VariantProps } from "class-variance-authority";
 import { useRouter } from "next/navigation";
@@ -29,7 +30,7 @@ const NewChatButton = ({
       return;
     }
 
-    router.push(`/app/chat/${chatId}`);
+    router.push(ROUTES.PRIVATE.chat.view.getPath({ id: chatId }));
   };
 
   const Comp = asChild ? Slot : "button";

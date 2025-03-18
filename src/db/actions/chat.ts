@@ -8,7 +8,7 @@ import {
   requireCourseMiddleware,
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -35,6 +35,6 @@ export const deleteChat = authActionClient
   .action(async ({ parsedInput: { ids } }) => {
     await db.delete(chat).where(inArray(chat.id, ids));
 
-    revalidatePath(routes.app.sub.chat.path);
+    revalidatePath(ROUTES.PRIVATE.chat.root.getPath());
     return { error: null };
   });

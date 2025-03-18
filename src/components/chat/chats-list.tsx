@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { Chat } from "@/db/schema/chat";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { MessagesSquareIcon } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
@@ -42,7 +42,7 @@ const ChatsList = ({ chats }: { chats: Chat[] }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.05 }}
         >
-          <Link href={`${routes.app.sub.chat.path}/${chat.id}`}>
+          <Link href={ROUTES.PRIVATE.chat.view.getPath({ id: chat.id })}>
             <Card className="relative h-full transition-all hover:border-primary/50 hover:shadow-md">
               <ChatCardOptions chatId={chat.id} />
               <CardHeader className="pb-2">

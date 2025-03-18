@@ -10,7 +10,7 @@ import { getAvailableFiles } from "@/db/queries/files";
 import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
 
@@ -39,7 +39,7 @@ const FilesPage = async ({
         </h4>
         <div className="flex gap-2">
           <Button asChild>
-            <Link href={routes.app.sub.documents.sub.add.path}>Add File</Link>
+            <Link href={ROUTES.PRIVATE.documents.add.getPath()}>Add File</Link>
           </Button>
         </div>
       </div>

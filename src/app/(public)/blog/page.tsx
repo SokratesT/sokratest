@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { getSession } from "@/db/queries/auth";
 import { getAllPosts } from "@/db/queries/posts";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { MoveRight } from "lucide-react";
 import Link from "next/link";
 
@@ -16,7 +16,7 @@ const PostsPage = async () => {
           Posts
         </h4>
         {session && session.user.role === "admin" && (
-          <Link href={routes.app.sub.posts.path}>
+          <Link href={ROUTES.PRIVATE.posts.root.getPath()}>
             <Button className="gap-4">
               Manage Posts <MoveRight className="size-4" />
             </Button>

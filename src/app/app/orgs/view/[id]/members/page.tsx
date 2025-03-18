@@ -9,7 +9,7 @@ import { getSession } from "@/db/queries/auth";
 import { getOrganizationUsers } from "@/db/queries/users";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
 
@@ -46,7 +46,7 @@ const OrganizationMembersPage = async ({
         </h4>
         <div className="flex gap-2">
           <Button asChild>
-            <Link href={routes.app.sub.users.sub.add.path}>Add Users</Link>
+            <Link href={ROUTES.PRIVATE.users.add.getPath()}>Add Users</Link>
           </Button>
         </div>
       </div>

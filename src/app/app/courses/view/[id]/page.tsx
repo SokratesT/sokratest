@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Placeholder } from "@/components/ui/custom/placeholder";
 import { getCourseById } from "@/db/queries/courses";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
 
 const ViewCoursePage = async ({
@@ -27,10 +27,12 @@ const ViewCoursePage = async ({
         </h4>
         <div className="flex gap-2">
           <Button asChild>
-            <Link href={`/app/courses/view/${id}/members`}>Manage Users</Link>
+            <Link href={ROUTES.PRIVATE.courses.members.getPath({ id })}>
+              Manage Users
+            </Link>
           </Button>
           <Button asChild>
-            <Link href={routes.app.sub.documents.sub.add.path}>Add Files</Link>
+            <Link href={ROUTES.PRIVATE.documents.add.getPath()}>Add Files</Link>
           </Button>
         </div>
       </div>

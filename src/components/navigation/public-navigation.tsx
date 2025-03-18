@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { navigationItems } from "@/settings/menus";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { Menu, MoveRight, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
@@ -104,7 +104,7 @@ const PublicNavigation = () => {
           </NavigationMenu>
         </div>
         <Link
-          href={routes.root.path}
+          href={ROUTES.PUBLIC.root.getPath()}
           className="flex items-center lg:justify-center"
         >
           <motion.div

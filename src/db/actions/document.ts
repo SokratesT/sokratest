@@ -9,7 +9,7 @@ import {
   requireCourseMiddleware,
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -33,7 +33,7 @@ export const saveDocumentInfo = authActionClient
         uploadedBy: userId,
       });
 
-      revalidatePath(routes.app.sub.documents.path);
+      revalidatePath(ROUTES.PRIVATE.documents.root.getPath());
 
       return { error: null };
     },
@@ -60,6 +60,6 @@ export const deleteDocumentInfo = authActionClient
 
     await db.delete(document).where(inArray(document.id, ids));
 
-    revalidatePath(routes.app.sub.documents.path);
+    revalidatePath(ROUTES.PRIVATE.documents.root.getPath());
     return { error: null };
   });

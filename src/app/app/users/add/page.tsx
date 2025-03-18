@@ -4,7 +4,7 @@ import { AddUserForm } from "@/components/users/add-user-form";
 import { db } from "@/db/drizzle";
 import { getSession } from "@/db/queries/auth";
 import { course } from "@/db/schema/course";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { asc, eq } from "drizzle-orm";
 import Link from "next/link";
 
@@ -26,7 +26,7 @@ const addUserPage = async () => {
       <Placeholder>
         <p>No courses found. Please create a course first.</p>
         <Button asChild variant="outline">
-          <Link href={routes.app.sub.courses.sub.add.path}>Create Course</Link>
+          <Link href={ROUTES.PRIVATE.courses.add.getPath()}>Create Course</Link>
         </Button>
       </Placeholder>
     );

@@ -9,22 +9,22 @@ import {
   UserIcon,
   UsersIcon,
 } from "lucide-react";
-import { routes } from "./routes";
+import { ROUTES } from "./routes";
 
 export const sidebarStudentMenu = [
   {
     title: "Home",
-    url: routes.app.path,
+    url: ROUTES.PRIVATE.root.getPath(),
     icon: HomeIcon,
   },
   {
     title: "Chat",
-    url: routes.app.sub.chat.path,
+    url: ROUTES.PRIVATE.chat.root.getPath(),
     icon: MessagesSquareIcon,
   },
   {
-    title: "Files",
-    url: routes.app.sub.documents.path,
+    title: "Documents",
+    url: ROUTES.PRIVATE.documents.root.getPath(),
     icon: FilesIcon,
   },
 ];
@@ -32,22 +32,22 @@ export const sidebarStudentMenu = [
 export const sidebarInstructorMenu = [
   {
     title: "Posts",
-    url: routes.app.sub.posts.path,
+    url: ROUTES.PRIVATE.posts.root.getPath(),
     icon: NewspaperIcon,
   },
   {
     title: "Courses",
-    url: routes.app.sub.courses.path,
+    url: ROUTES.PRIVATE.courses.root.getPath(),
     icon: BookMarkedIcon,
   },
   {
     title: "Users",
-    url: routes.app.sub.users.path,
+    url: ROUTES.PRIVATE.users.root.getPath(),
     icon: UsersIcon,
   },
   {
     title: "Organisations",
-    url: routes.app.sub.organizations.path,
+    url: ROUTES.PRIVATE.organizations.root.getPath(),
     icon: Building2Icon,
   },
 ];
@@ -55,7 +55,7 @@ export const sidebarInstructorMenu = [
 export const sidebarUserMenu = [
   {
     title: "Profile",
-    url: routes.app.sub.account.path,
+    url: ROUTES.PRIVATE.app.account.getPath(),
     icon: UserIcon,
   },
   {
@@ -68,7 +68,7 @@ export const sidebarUserMenu = [
 export const navigationItems = [
   {
     title: "Home",
-    href: "/",
+    href: ROUTES.PUBLIC.root.getPath(),
     description: "",
   },
   {
@@ -77,7 +77,7 @@ export const navigationItems = [
     items: [
       {
         title: "Posts",
-        href: "/blog",
+        href: ROUTES.PUBLIC.blog.getPath(),
       },
       {
         title: "Statistics",

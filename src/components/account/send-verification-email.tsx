@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 
 export const SendVerificationEmail = () => {
   const session = authClient.useSession();
@@ -20,7 +20,7 @@ export const SendVerificationEmail = () => {
 
     await authClient.sendVerificationEmail({
       email: session.data.user.email,
-      callbackURL: routes.root.path,
+      callbackURL: ROUTES.PUBLIC.root.getPath(),
     });
 
     console.log("Verification email sent");

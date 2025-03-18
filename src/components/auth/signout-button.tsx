@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { Slot } from "@radix-ui/react-slot";
 import { useRouter } from "next/navigation";
 
@@ -17,7 +17,7 @@ export const SignOutButton = ({
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push(routes.root.path);
+          router.push(ROUTES.PUBLIC.root.getPath());
         },
       },
     });

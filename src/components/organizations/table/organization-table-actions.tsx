@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import { authClient } from "@/lib/auth-client";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -42,7 +42,9 @@ const OrganizationTableActions = () => {
       }
     });
 
-    await revalidatePathFromClient({ path: routes.app.sub.organizations.path });
+    await revalidatePathFromClient({
+      path: ROUTES.PRIVATE.organizations.root.getPath(),
+    });
   };
 
   return (

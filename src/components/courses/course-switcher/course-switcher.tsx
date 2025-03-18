@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { setActiveCourse } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { BookMarkedIcon, Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -29,7 +29,7 @@ const CourseSwitcher = ({
 
     await setActiveCourse({ courseId: course.id });
 
-    router.push(routes.app.path);
+    router.push(ROUTES.PRIVATE.root.getPath());
     toast.success(`Course changed to ${course.title}`);
   };
 

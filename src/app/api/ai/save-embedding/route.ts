@@ -2,7 +2,7 @@ import { deleteEmbeddingsForFile } from "@/db/actions/embedding";
 import { db } from "@/db/drizzle";
 import { document } from "@/db/schema/document";
 import { embedding } from "@/db/schema/embedding";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import type { EmbedManyResult } from "ai";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -28,8 +28,7 @@ export const POST = async (req: NextRequest) => {
   }
 
   const result = await saveEmbedding(res.embedResults, res.documentId);
-  revalidatePath(routes.app.sub.documents.path);
-  // res.
+  revalidatePath(ROUTES.PRIVATE.documents.root.getPath());
 
   return NextResponse.json({ state: result }, { status: 200 });
 };

@@ -7,7 +7,7 @@ import { Form, FormField } from "@/components/ui/form";
 import type { Invitation } from "@/db/schema/auth";
 import { type SignupSchemaType, signupSchema } from "@/db/zod/signup";
 import { authClient } from "@/lib/auth-client";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -47,7 +47,7 @@ const SignUpForm = ({ invitation }: { invitation?: Invitation }) => {
             });
           }
 
-          router.replace(routes.app.path);
+          router.replace(ROUTES.PRIVATE.root.getPath());
           console.log("success");
         },
         onError: (ctx) => {

@@ -15,7 +15,7 @@ import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import type { User } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
 import { DEFAULT_ROLE, roles } from "@/settings/roles";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import type { Session } from "better-auth";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -43,7 +43,7 @@ const ManageUser = ({ user }: { user: User }) => {
       toast.error(`Failed to ban user: ${res.error.message}`);
     } else {
       toast.success("User banned");
-      revalidatePathFromClient({ path: routes.app.sub.users.path });
+      revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
     }
   };
 
@@ -54,7 +54,7 @@ const ManageUser = ({ user }: { user: User }) => {
       toast.error(`Failed to unban user: ${res.error.message}`);
     } else {
       toast.success("User unbanned");
-      revalidatePathFromClient({ path: routes.app.sub.users.path });
+      revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
     }
   };
 
@@ -67,7 +67,7 @@ const ManageUser = ({ user }: { user: User }) => {
       toast.error(`Failed to revoke session: ${res.error.message}`);
     } else {
       toast.success("Session revoked");
-      revalidatePathFromClient({ path: routes.app.sub.users.path });
+      revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
     }
   };
 
@@ -81,7 +81,7 @@ const ManageUser = ({ user }: { user: User }) => {
       toast.error(`Failed to update user role: ${res.error.message}`);
     } else {
       toast.success("User role updated");
-      revalidatePathFromClient({ path: routes.app.sub.users.path });
+      revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
     }
   };
 
@@ -92,7 +92,7 @@ const ManageUser = ({ user }: { user: User }) => {
       toast.error(`Failed to delete user: ${res.error.message}`);
     } else {
       toast.success("User deleted");
-      revalidatePathFromClient({ path: routes.app.sub.users.path });
+      revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
     }
   };
 

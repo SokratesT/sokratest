@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { ArrowLeftToLine } from "lucide-react";
 import Link from "next/link";
 
@@ -33,7 +33,7 @@ const Header = () => {
       </div>
       <div className="flex gap-2">
         <Button size="icon" className="size-8" variant="outline" asChild>
-          <Link href={routes.root.path}>
+          <Link href={ROUTES.PUBLIC.root.getPath()}>
             <ArrowLeftToLine />
           </Link>
         </Button>

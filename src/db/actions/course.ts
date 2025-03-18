@@ -16,7 +16,7 @@ import {
   authActionClient,
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
-import { routes } from "@/settings/routes";
+import { ROUTES } from "@/settings/routes";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -46,7 +46,7 @@ export const createCourse = authActionClient
         role: "instructor", // TODO: Make enum
       });
 
-      revalidatePath(routes.app.sub.courses.path);
+      revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
       return { error: null };
     },
   );
@@ -60,7 +60,7 @@ export const updateCourse = authActionClient
       .set({ id, content, title, description, updatedAt: sql`now()` })
       .where(eq(course.id, id));
 
-    revalidatePath(routes.app.sub.courses.path);
+    revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
     return { error: null };
   });
 
@@ -72,7 +72,7 @@ export const deleteCourses = authActionClient
 
     await db.delete(course).where(inArray(course.id, ids));
 
-    revalidatePath(routes.app.sub.courses.path);
+    revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
     return { error: null };
   });
 
@@ -90,7 +90,7 @@ export const addCourseMember = authActionClient
       .onConflictDoNothing();
 
     // TODO: Make more granular
-    revalidatePath(routes.app.sub.courses.path);
+    revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
   });
 
 export const removeCourseMembers = authActionClient
@@ -106,7 +106,7 @@ export const removeCourseMembers = authActionClient
         ),
       );
     // TODO: Make more granular
-    revalidatePath(routes.app.sub.courses.path);
+    revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
   });
 
 export const setActiveCourse = authActionClient
