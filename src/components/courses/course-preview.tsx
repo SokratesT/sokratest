@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Placeholder } from "@/components/ui/custom/placeholder";
 import { getSession } from "@/db/queries/auth";
-import { getCourseById } from "@/db/queries/courses";
+import { getCourseById } from "@/db/queries/course";
 import { BookMarkedIcon } from "lucide-react";
 
 const CoursePreview = async () => {

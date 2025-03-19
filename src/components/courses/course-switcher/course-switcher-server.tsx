@@ -2,7 +2,7 @@ import { getSession } from "@/db/queries/auth";
 import {
   getCourseById,
   getUserCoursesForActiveOrganization,
-} from "@/db/queries/courses";
+} from "@/db/queries/course";
 import { CourseSwitcher } from "./course-switcher";
 
 const CourseSwitcherServer = async () => {

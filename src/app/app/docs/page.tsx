@@ -6,7 +6,7 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
-import { getAvailableFiles } from "@/db/queries/files";
+import { getAvailableDocuments } from "@/db/queries/document";
 import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
@@ -24,7 +24,7 @@ const FilesPage = async ({
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
   const { search } = await bucketSearchParamsCache.parse(searchParams);
 
-  const { query, rowCount } = await getAvailableFiles(
+  const { query, rowCount } = await getAvailableDocuments(
     sort,
     pageIndex,
     pageSize,

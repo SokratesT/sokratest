@@ -2,11 +2,11 @@
 
 import { db } from "@/db/drizzle";
 import { type Course, course, courseMember } from "@/db/schema/course";
-import { hasPermission } from "@/settings/rbac";
+import { hasPermission } from "@/lib/rbac";
 import type { Session as AuthSession } from "better-auth";
 import { and, count, eq, getTableColumns } from "drizzle-orm";
-import { withAuthQuery } from "./common";
-import { buildPagination, buildSortOrder } from "./query-builders";
+import { buildPagination, buildSortOrder } from "./utils/query-builders";
+import { withAuthQuery } from "./utils/with-auth-query";
 
 const VALID_COURSE_SORT_COLUMNS = ["title", "createdAt"] as (keyof Course)[];
 
@@ -77,7 +77,12 @@ export const getUserCoursesForActiveOrganization = async (options: {
 export const getCourseById = async (id: Course["id"]) => {
   return withAuthQuery(
     async () => {
-      if (!(await hasPermission({ type: "course", id }, "read"))) {
+      if (
+        !(await hasPermission(
+          { context: "course", type: "course", id },
+          "read",
+        ))
+      ) {
         return { query: null };
       }
 
@@ -90,7 +95,10 @@ export const getCourseById = async (id: Course["id"]) => {
       return { query };
     },
     {
-      resource: { type: "course", id },
+      access: {
+        resource: { context: "course", type: "course", id },
+        action: "read",
+      },
     },
   );
 };

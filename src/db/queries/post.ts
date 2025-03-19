@@ -4,6 +4,7 @@ import { db } from "@/db/drizzle";
 import { type User, user } from "@/db/schema/auth";
 import { type Post, post } from "@/db/schema/post";
 import { asc, count, desc, eq, getTableColumns } from "drizzle-orm";
+import { withAuthQuery } from "./utils/with-auth-query";
 
 export const getAllPosts = async () => {
   let queryPosts: Post[] = [];
@@ -15,6 +16,27 @@ export const getAllPosts = async () => {
   }
 
   return queryPosts;
+};
+
+export const getPostById = async (id: Post["id"]) => {
+  return withAuthQuery(
+    async () => {
+      const [query] = await db
+        .select({ ...getTableColumns(post) })
+        .from(post)
+        .where(eq(post.id, id))
+        .limit(1);
+
+      return { query };
+    },
+    {
+      byPassAuth: true,
+      access: {
+        resource: { context: "organization", type: "post", id },
+        action: "read",
+      },
+    },
+  );
 };
 
 interface PostWithAuthor extends Post {

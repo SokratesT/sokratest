@@ -1,4 +1,4 @@
-import { getUserChatsForActiveCourse } from "@/db/queries/chats";
+import { getUserChatsForActiveCourse } from "@/db/queries/chat";
 import { ChatsList } from "./chats-list";
 
 const ChatsPreview = async () => {

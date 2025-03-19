@@ -1,6 +1,6 @@
 import { ChatsList } from "@/components/chat/chats-list";
 import { NewChatButton } from "@/components/chat/new-chat-button";
-import { getUserChatsForActiveCourse } from "@/db/queries/chats";
+import { getUserChatsForActiveCourse } from "@/db/queries/chat";
 
 const ChatsPage = async () => {
   const { query } = await getUserChatsForActiveCourse();

@@ -1,24 +1,7 @@
 import { db } from "@/db/drizzle";
-import { member } from "@/db/schema/auth";
-import { courseMember } from "@/db/schema/course";
 import type { authClient } from "@/lib/auth-client";
-import { and, eq } from "drizzle-orm";
-import { getSession } from "./auth";
-
-type CourseRole = "admin" | "instructor" | "student";
-type OrganizationRole = "admin" | "student";
-
-type ResourceOptions =
-  | {
-      type: "course";
-      id: string;
-      requiredRoles?: CourseRole[];
-    }
-  | {
-      type: "organization";
-      id: string;
-      requiredRoles?: OrganizationRole[];
-    };
+import { type Action, type Resource, hasPermission } from "@/lib/rbac";
+import { getSession } from "../auth";
 
 // Define the base session type
 type BaseSession = typeof authClient.$Infer.Session;
@@ -37,12 +20,19 @@ type EnhancedSession<TOptions extends AuthQueryOptions> = BaseSession & {
 };
 
 type AuthQueryOptions = {
+  byPassAuth?: boolean;
   requireOrg?: boolean;
   requireCourse?: boolean;
-  resource?: ResourceOptions;
+  access?: {
+    resource: Resource;
+    action: Action;
+  };
 };
 
 // Single overloaded function that handles all cases
+// TypeScript function overload:
+// 1. First signature provides strongly-typed parameters and return values
+// 2. Implementation signature provides the actual function body
 export async function withAuthQuery<T, TOptions extends AuthQueryOptions>(
   queryFn: (
     session: EnhancedSession<TOptions>,
@@ -54,82 +44,40 @@ export async function withAuthQuery<T, TOptions extends AuthQueryOptions>(
 // Implementation
 export async function withAuthQuery<T>(
   queryFn: (session: any, db: typeof import("@/db/drizzle").db) => Promise<T>,
-  options: AuthQueryOptions = {},
+  options: AuthQueryOptions = { byPassAuth: false },
 ): Promise<T> {
   // Get session (cached by Next.js when called multiple times in same request)
   const session = await getSession();
 
   // Check if authentication is required
-  if (!session) {
+  if (!session && !options.byPassAuth) {
     throw new Error("Not authenticated");
   }
 
-  // Check if organization is required
+  // Check if active organization is required
   if (options.requireOrg && !session?.session.activeOrganizationId) {
     throw new Error("No active organization");
   }
 
-  // Check if course is required
+  // Check if active course is required
   if (options.requireCourse && !session?.session.activeCourseId) {
     throw new Error("No active course");
   }
 
   // Check resource access if needed
-  if (options.resource?.requiredRoles?.length) {
-    const hasAccess = await validateResourceAccess(
-      session.session.userId,
-      options.resource,
+  if (options.access) {
+    const hasAccess = await hasPermission(
+      { ...options.access.resource },
+      options.access.action,
     );
 
     if (!hasAccess) {
       throw new Error(
-        `Insufficient permissions for ${options.resource.type} ${options.resource.id}`,
+        `Insufficient permissions for ${options.access.action} ${options.access.resource.id}`,
       );
     }
   }
 
   // Execute the actual query function with the right type
   return queryFn(session, db);
-}
-
-async function validateResourceAccess(
-  userId: string,
-  resource: ResourceOptions,
-): Promise<boolean> {
-  switch (resource.type) {
-    case "course": {
-      const [memberEntry] = await db
-        .select()
-        .from(courseMember)
-        .where(
-          and(
-            eq(courseMember.userId, userId),
-            eq(courseMember.courseId, resource.id),
-          ),
-        );
-
-      return memberEntry
-        ? (resource.requiredRoles?.includes(memberEntry.role as CourseRole) ??
-            true)
-        : false;
-    }
-
-    case "organization": {
-      const [memberEntry] = await db
-        .select()
-        .from(member)
-        .where(
-          and(
-            eq(member.userId, userId),
-            eq(member.organizationId, resource.id),
-          ),
-        );
-
-      return memberEntry
-        ? (resource.requiredRoles?.includes(
-            memberEntry.role as OrganizationRole,
-          ) ?? true)
-        : false;
-    }
-  }
 }

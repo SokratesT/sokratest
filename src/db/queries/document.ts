@@ -11,7 +11,7 @@ function isValidColumnId(id: Document["id"]): id is keyof Document {
   );
 }
 
-export const getAvailableFiles = async (
+export const getAvailableDocuments = async (
   sort: { id: string; desc: boolean }[],
   pageIndex: number,
   pageSize: number,

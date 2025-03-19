@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { getUserCoursesOnLogin } from "@/db/queries/courses";
+import { getUserCoursesOnLogin } from "@/db/queries/course";
 import { getUserOrganizationsOnLogin } from "@/db/queries/organizations";
 import {
   account,

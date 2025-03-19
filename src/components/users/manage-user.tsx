@@ -14,7 +14,7 @@ import {
 import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import type { User } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
-import { DEFAULT_ROLE, roles } from "@/settings/roles";
+import { DEFAULT_ROLES, organizationRoles } from "@/settings/roles";
 import { ROUTES } from "@/settings/routes";
 import type { Session } from "better-auth";
 import { useEffect, useState } from "react";
@@ -115,15 +115,15 @@ const ManageUser = ({ user }: { user: User }) => {
 
       <Select
         onValueChange={(value) => handleRoleChange(value)}
-        defaultValue={user.role || DEFAULT_ROLE}
+        defaultValue={user.role || DEFAULT_ROLES.organization}
       >
         <SelectTrigger className="w-full">
           <SelectValue placeholder="User role" />
         </SelectTrigger>
         <SelectContent>
-          {roles.map((role) => (
-            <SelectItem key={role.slug} value={role.slug}>
-              {role.name}
+          {organizationRoles.map((role) => (
+            <SelectItem key={role} value={role}>
+              {role}
             </SelectItem>
           ))}
         </SelectContent>

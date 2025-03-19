@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getSession } from "@/db/queries/auth";
-import { getAllPosts } from "@/db/queries/posts";
+import { getAllPosts } from "@/db/queries/post";
 import { ROUTES } from "@/settings/routes";
 import { MoveRight } from "lucide-react";
 import Link from "next/link";

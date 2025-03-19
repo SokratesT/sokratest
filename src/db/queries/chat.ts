@@ -3,7 +3,7 @@
 import { db } from "@/db/drizzle";
 import { chat } from "@/db/schema/chat";
 import { desc, eq } from "drizzle-orm";
-import { withAuthQuery } from "./common";
+import { withAuthQuery } from "./utils/with-auth-query";
 
 // TODO: Improve queries
 
