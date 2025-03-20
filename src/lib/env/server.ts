@@ -12,7 +12,11 @@ export const serverEnv = createEnv({
     BETTER_AUTH_URL: z.string(),
 
     // Database
-    DATABASE_URL: z.string(),
+    POSTGRES_USER: z.string(),
+    POSTGRES_PASSWORD: z.string(),
+    POSTGRES_HOST: z.string(),
+    POSTGRES_DB: z.string(),
+    POSTGRES_PORT: z.coerce.number().optional(),
 
     // Nodemailer
     SMTP_HOST: z.string(),

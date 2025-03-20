@@ -12,7 +12,14 @@ import * as embedding from "./schema/embedding";
 import * as post from "./schema/post";
 
 const pool = new Pool({
-  connectionString: serverEnv.DATABASE_URL,
+  database: serverEnv.POSTGRES_DB,
+  host: serverEnv.POSTGRES_HOST,
+  password: serverEnv.POSTGRES_PASSWORD,
+  port: serverEnv.POSTGRES_PORT ? Number(serverEnv.POSTGRES_PORT) : 5432,
+  user: serverEnv.POSTGRES_USER,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 export const db = drizzle(pool, {

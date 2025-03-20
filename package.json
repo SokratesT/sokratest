@@ -114,7 +114,7 @@
     "cmdk": "^1.0.4",
     "convert": "^5.8.0",
     "date-fns": "^3.6.0",
-    "drizzle-orm": "^0.40.0",
+    "drizzle-orm": "^0.40.1",
     "drizzle-zod": "^0.7.0",
     "html2canvas": "^1.4.1",
     "langfuse-vercel": "^3.36.0",
