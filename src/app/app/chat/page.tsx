@@ -1,9 +1,14 @@
 import { ChatsList } from "@/components/chat/chats-list";
 import { NewChatButton } from "@/components/chat/new-chat-button";
+import { Placeholder } from "@/components/ui/custom/placeholder";
 import { getUserChatsForActiveCourse } from "@/db/queries/chat";
 
 const ChatsPage = async () => {
-  const { query } = await getUserChatsForActiveCourse();
+  const result = await getUserChatsForActiveCourse();
+
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
 
   return (
     <div className="flex flex-col gap-14">
@@ -16,7 +21,7 @@ const ChatsPage = async () => {
         </div>
       </div>
 
-      <ChatsList chats={query} />
+      <ChatsList chats={result.data.query} />
     </div>
   );
 };

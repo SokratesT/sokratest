@@ -8,15 +8,19 @@ const EditCoursePage = async ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
-  const { query } = await getCourseById(id);
+  const result = await getCourseById(id);
 
-  if (!query) {
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
+
+  if (!result.data.query) {
     return <Placeholder>No such course</Placeholder>;
   }
 
   return (
     <div>
-      <CourseForm course={query} />
+      <CourseForm course={result.data.query} />
     </div>
   );
 };

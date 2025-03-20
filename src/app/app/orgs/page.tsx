@@ -2,6 +2,7 @@ import { SearchInput } from "@/components/documents/search-input";
 import { OrganizationTableActions } from "@/components/organizations/table/organization-table-actions";
 import { organizationTableColumns } from "@/components/organizations/table/organization-table-columns";
 import { Button } from "@/components/ui/button";
+import { Placeholder } from "@/components/ui/custom/placeholder";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
@@ -24,12 +25,16 @@ const UsersPage = async ({
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
   const { search } = await bucketSearchParamsCache.parse(searchParams);
 
-  const { query, rowCount } = await getAvailableOrganizations({
+  const result = await getAvailableOrganizations({
     sort,
     pageIndex,
     pageSize,
     search,
   });
+
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
 
   return (
     <div className="flex flex-col gap-14">
@@ -47,10 +52,10 @@ const UsersPage = async ({
       </div>
       <div>
         <DataTable
-          data={query}
+          data={result.data.query}
           columns={organizationTableColumns}
           options={{
-            rowCount: rowCount.count,
+            rowCount: result.data.rowCount.count,
             uidAccessor: "id",
             placeholderClassName: "h-8",
           }}

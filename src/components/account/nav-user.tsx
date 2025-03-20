@@ -21,6 +21,7 @@ import type { Organization } from "@/db/schema/auth";
 import { sidebarUserMenu } from "@/settings/menus";
 import { ChevronsUpDown, LogOut } from "lucide-react";
 import Link from "next/link";
+import { Placeholder } from "../ui/custom/placeholder";
 
 const userInitial = (name: string) => name[0].toUpperCase();
 
@@ -34,11 +35,15 @@ const NavUser = async () => {
   let activeOrganization: Organization | null = null;
 
   if (session.session.activeOrganizationId) {
-    const { query } = await getOrganizationById(
+    const result = await getOrganizationById(
       session.session.activeOrganizationId,
     );
 
-    activeOrganization = query;
+    if (!result.success) {
+      return <Placeholder>{result.error.message}</Placeholder>;
+    }
+
+    activeOrganization = result.data.query;
   }
 
   return (

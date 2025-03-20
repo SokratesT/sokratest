@@ -18,11 +18,13 @@ const CoursePreview = async () => {
     return <Placeholder>Please select an active course first</Placeholder>;
   }
 
-  const { query: course } = await getCourseById(
-    session?.session.activeCourseId,
-  );
+  const result = await getCourseById(session?.session.activeCourseId);
 
-  if (!course) {
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
+
+  if (!result.data.query) {
     return <Placeholder>No such course</Placeholder>;
   }
 
@@ -32,10 +34,10 @@ const CoursePreview = async () => {
         <p className="text-muted-foreground text-xs">Active Course</p>
         <CardTitle className="flex items-center gap-2">
           <BookMarkedIcon />
-          {course.title}
+          {result.data.query.title}
         </CardTitle>
       </CardHeader>
-      <CardContent>{course.description}</CardContent>
+      <CardContent>{result.data.query.description}</CardContent>
       <CardFooter>
         <Button>More</Button>
       </CardFooter>

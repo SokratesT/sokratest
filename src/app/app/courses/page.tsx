@@ -1,6 +1,7 @@
 import { columns } from "@/components/courses/table/columns";
 import { CoursesDataTableSelectActions } from "@/components/courses/table/courses-data-table-select-actions";
 import { Button } from "@/components/ui/button";
+import { Placeholder } from "@/components/ui/custom/placeholder";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
@@ -21,11 +22,15 @@ const CoursesPage = async ({
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
 
-  const { query, rowCount } = await getUserCoursesForActiveOrganization({
+  const result = await getUserCoursesForActiveOrganization({
     sort,
     pageIndex,
     pageSize,
   });
+
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
 
   return (
     <div className="flex flex-col gap-14">
@@ -41,10 +46,10 @@ const CoursesPage = async ({
       </div>
       <div>
         <DataTable
-          data={query}
+          data={result.data.query}
           columns={columns}
           options={{
-            rowCount: rowCount.count,
+            rowCount: result.data.rowCount.count,
             uidAccessor: "id",
             placeholderClassName: "h-8",
           }}

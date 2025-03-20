@@ -71,6 +71,7 @@ export const getOrganizationById = async (id: Organization["id"]) => {
       return { query };
     },
     {
+      requireOrg: true,
       access: {
         resource: { context: "organization", type: "organization", id },
         action: "read",

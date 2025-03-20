@@ -12,10 +12,13 @@ const ViewCoursePage = async ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
-  const { query } = await getCourseById(id);
+  const result = await getCourseById(id);
 
-  if (!query) {
-    console.log("No course found", query);
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
+
+  if (!result.data.query) {
     return <Placeholder>No such course</Placeholder>;
   }
 
@@ -23,7 +26,7 @@ const ViewCoursePage = async ({
     <div className="flex flex-col gap-14">
       <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
         <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          {query.title}
+          {result.data.query.title}
         </h4>
         <div className="flex gap-2">
           <Button asChild>
@@ -39,7 +42,10 @@ const ViewCoursePage = async ({
       <div className="flex justify-center">
         <Card className="max-w-full lg:w-[60%]">
           <CardContent className="p-4">
-            <PlateEditor options={{ value: query.content }} readOnly />
+            <PlateEditor
+              options={{ value: result.data.query.content }}
+              readOnly
+            />
           </CardContent>
         </Card>
       </div>
