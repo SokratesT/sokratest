@@ -1,4 +1,3 @@
-import { serverEnv } from "@/lib/env/server";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
@@ -12,14 +11,7 @@ import * as embedding from "./schema/embedding";
 import * as post from "./schema/post";
 
 const pool = new Pool({
-  database: serverEnv.POSTGRES_DB,
-  host: serverEnv.POSTGRES_HOST,
-  password: serverEnv.POSTGRES_PASSWORD,
-  port: serverEnv.POSTGRES_PORT ? Number(serverEnv.POSTGRES_PORT) : 5432,
-  user: serverEnv.POSTGRES_USER,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  connectionString: `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT ?? 5432}/${process.env.POSTGRES_DB}`,
 });
 
 export const db = drizzle(pool, {
