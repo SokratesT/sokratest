@@ -20,14 +20,15 @@ export const saveDocumentInfo = authActionClient
   .schema(fileInsertSchema)
   .action(
     async ({
-      parsedInput: { bucket, filename, size, fileType },
+      parsedInput: { id, bucket, title, size, fileType },
       ctx: { userId, activeCourseId },
     }) => {
       await db.insert(document).values({
+        id,
         courseId: activeCourseId,
         bucket,
         prefix: activeCourseId,
-        filename,
+        title,
         size,
         fileType,
         uploadedBy: userId,
@@ -53,7 +54,7 @@ export const deleteDocumentInfo = authActionClient
       filesToDelete.map(async (file) => {
         await deleteFileFromBucket({
           bucketName: file.bucket,
-          fileName: file.filename,
+          fileName: file.id,
         });
       }),
     );

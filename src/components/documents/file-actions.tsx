@@ -7,6 +7,7 @@ import { deleteDocumentInfo } from "@/db/actions/document";
 import { enqueueEmbeddings } from "@/db/actions/test-trigger";
 import type { Document } from "@/db/schema/document";
 import { cn } from "@/lib/utils";
+import { ROUTES } from "@/settings/routes";
 import { convert } from "convert";
 import Link from "next/link";
 
@@ -23,7 +24,7 @@ const FileActions = ({
     <div className={cn("flex min-h-20 pb-0", className)}>
       <div className="flex w-full flex-wrap justify-between gap-2 p-2">
         <div className="flex flex-col justify-between">
-          <p className="font-bold">{fileInfo.filename}</p>
+          <p className="font-bold">{fileInfo.title}</p>
           <div className="flex gap-4 text-muted-foreground text-sm">
             <Badge variant="outline">
               Date
@@ -63,7 +64,11 @@ const FileActions = ({
           <Button onClick={() => window.open(filePath, "_blank")}>
             Download
           </Button>
-          <Link href={`/app/repo/file/${fileInfo.id}/chunks`}>
+          <Link
+            href={ROUTES.PRIVATE.documents.chunks.root.getPath({
+              id: fileInfo.id,
+            })}
+          >
             <Button variant="secondary">View Chunks</Button>
           </Link>
         </div>

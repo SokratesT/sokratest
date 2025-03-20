@@ -1,7 +1,7 @@
 import { generateTitleFromUserMessage } from "@/db/actions/ai-actions";
 import { saveChat, saveMessages } from "@/db/queries/ai-queries";
 import { getSession } from "@/db/queries/auth";
-import { customModelWithTracing } from "@/lib/ai";
+import { getModel } from "@/lib/ai/models";
 import {
   getMostRecentUserMessage,
   sanitizeResponseMessages,
@@ -99,14 +99,8 @@ export async function POST(request: Request) {
       relevantChunks.map((chunk) => dataStream.writeMessageAnnotation(chunk));
 
       const result = streamText({
-        model: customModelWithTracing({
-          model: {
-            id: "deepseek-r1:14b",
-            label: "Deepseek R1",
-            apiIdentifier: "deepseek-r1:14b",
-            description: "Local R1",
-          },
-          mode: "local",
+        model: getModel({
+          type: "chatReasoning",
           traceParams: {
             userId: session.user.id,
             messageId: userMessage.id,

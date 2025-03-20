@@ -16,6 +16,7 @@ import { deleteDocumentInfo } from "@/db/actions/document";
 import { enqueueEmbeddings } from "@/db/actions/test-trigger";
 import type { Document } from "@/db/schema/document";
 import { cn } from "@/lib/utils";
+import { ROUTES } from "@/settings/routes";
 import type { ColumnDef } from "@tanstack/react-table";
 import { convert } from "convert";
 import { MoreHorizontal } from "lucide-react";
@@ -24,7 +25,7 @@ import { toast } from "sonner";
 
 const handleDelete = async (id: string) => {
   deleteDocumentInfo({ ids: [id] });
-  toast.success("File deleted");
+  toast.success("Document deleted");
 };
 
 const handleEnqueueEmbedding = async (id: string) => {
@@ -58,15 +59,15 @@ export const columns: ColumnDef<Document>[] = [
   },
   {
     size: 500,
-    accessorKey: "filename",
+    accessorKey: "title",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="File Name" />
+      <DataTableColumnHeader column={column} title="Title" />
     ),
   },
   {
     accessorKey: "size",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="File Size" />
+      <DataTableColumnHeader column={column} title="Size" />
     ),
     cell: ({ row }) => {
       return convert(row.original.size, "bytes").to("best").toString(2);
@@ -102,7 +103,7 @@ export const columns: ColumnDef<Document>[] = [
     id: "actions",
     size: 32,
     cell: ({ row }) => {
-      const file = row.original;
+      const document = row.original;
 
       return (
         <DropdownMenu>
@@ -114,18 +115,24 @@ export const columns: ColumnDef<Document>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/app/repo/edit/${file.id}`}>
-              <DropdownMenuItem>Edit File</DropdownMenuItem>
+            <Link
+              href={ROUTES.PRIVATE.documents.edit.getPath({ id: document.id })}
+            >
+              <DropdownMenuItem>Edit Document</DropdownMenuItem>
             </Link>
-            <Link href={`/app/repo/file/${file.id}`}>
-              <DropdownMenuItem>View File</DropdownMenuItem>
+            <Link
+              href={ROUTES.PRIVATE.documents.view.getPath({ id: document.id })}
+            >
+              <DropdownMenuItem>View Document</DropdownMenuItem>
             </Link>
-            <DropdownMenuItem onClick={() => handleEnqueueEmbedding(file.id)}>
-              Embed File
+            <DropdownMenuItem
+              onClick={() => handleEnqueueEmbedding(document.id)}
+            >
+              Embed Document
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleDelete(file.id)}>
-              Delete File
+            <DropdownMenuItem onClick={() => handleDelete(document.id)}>
+              Delete Document
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -120,7 +120,7 @@ export const ROUTES = {
       },
       view: {
         name: "View Document",
-        pathTemplate: "/app/docs/:id",
+        pathTemplate: "/app/docs/view/:id",
         getPath: function (params: { id: string }) {
           return makePath(this.pathTemplate, params);
         },
@@ -130,6 +130,15 @@ export const ROUTES = {
         pathTemplate: "/app/docs/edit/:id",
         getPath: function (params: { id: string }) {
           return makePath(this.pathTemplate, params);
+        },
+      },
+      chunks: {
+        root: {
+          name: "View Chunks",
+          pathTemplate: "/app/docs/view/:id/chunks",
+          getPath: function (params: { id: string }) {
+            return makePath(this.pathTemplate, params);
+          },
         },
       },
     },

@@ -67,8 +67,9 @@ export const handleUpload = async (
       return uploadToS3(presignedUrl, file).then(async (res) => {
         if (res.status === 200) {
           await saveDocumentInfo({
+            id: presignedUrl.id,
             bucket,
-            filename: presignedUrl.originalFileName,
+            title: presignedUrl.originalFileName,
             size: presignedUrl.fileSize,
             fileType: getFileTypeFromMime(file),
           });

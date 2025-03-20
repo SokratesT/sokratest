@@ -10,6 +10,7 @@ export const fileUploadSchema = z.object({
 export type FileUploadSchemaType = z.infer<typeof fileUploadSchema>;
 
 export const fileInsertSchema = createInsertSchema(document, {
+  id: z.string(),
   courseId: z.string().optional(),
   uploadedBy: z.string().optional(),
   prefix: z.string().optional(),

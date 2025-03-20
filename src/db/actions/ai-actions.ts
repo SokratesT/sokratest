@@ -4,7 +4,7 @@ import {
   deleteMessagesByChatIdAfterTimestamp,
   getMessageById,
 } from "@/db/queries/ai-queries";
-import { customModel } from "@/lib/ai";
+import { getModel } from "@/lib/ai/models";
 import { authActionClient } from "@/lib/safe-action";
 import { generateText } from "ai";
 import { string, z } from "zod";
@@ -14,15 +14,7 @@ export const generateTitleFromUserMessage = authActionClient
   .schema(z.object({ message: string() }))
   .action(async ({ parsedInput: { message } }) => {
     const { text: title } = await generateText({
-      model: customModel({
-        model: {
-          id: "llama3.1",
-          label: "Llama 3.1",
-          apiIdentifier: "llama3.1:latest",
-          description: "Local Llama",
-        },
-        mode: "local",
-      }),
+      model: getModel({ type: "small" }),
       system: `\n
       - you will generate a short title based on the first message a user begins a conversation with
       - ensure it is not more than 80 characters long

@@ -20,7 +20,6 @@ export const GET = async (
   const [fileObject] = await db
     .select({
       id: document.id,
-      fileName: document.filename,
       bucket: document.bucket,
     })
     .from(document)
@@ -34,10 +33,8 @@ export const GET = async (
 
   const presignedUrl = await createPresignedUrlToDownload({
     bucketName: fileObject.bucket,
-    fileName: fileObject?.fileName,
+    fileName: fileObject?.id,
   });
-
-  console.log("Presigned URL: ", presignedUrl);
 
   return new NextResponse(JSON.stringify(presignedUrl), {
     status: 200,

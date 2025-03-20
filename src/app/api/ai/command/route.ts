@@ -1,4 +1,4 @@
-import { customModel } from "@/lib/ai";
+import { getModel } from "@/lib/ai/models";
 import { convertToCoreMessages, streamText } from "ai";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -10,15 +10,7 @@ export async function POST(req: NextRequest) {
     const result = streamText({
       maxTokens: 2048,
       messages: convertToCoreMessages(messages),
-      model: customModel({
-        model: {
-          id: "llama3.1",
-          label: "Llama 3.1",
-          apiIdentifier: "llama3.1:latest",
-          description: "Local Llama",
-        },
-        mode: "local",
-      }),
+      model: getModel({ type: "small" }),
       system: system,
     });
 

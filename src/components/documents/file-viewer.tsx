@@ -19,8 +19,7 @@ const FileViewer = ({ fileInfo }: { fileInfo: Document }) => {
       const presignedUrl = await getPresignedUrl(fileInfo.id);
       setFilePath(presignedUrl);
     };
-    fetchUrl();
-    setIsLoading(false);
+    fetchUrl().then(() => setIsLoading(false));
   }, [fileInfo]);
 
   if (!filePath || isLoading) {

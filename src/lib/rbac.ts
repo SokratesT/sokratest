@@ -48,6 +48,7 @@ const getCoursePermissionsForRole = (
   if (!courseRoles.includes(role)) {
     throw new Error(`Invalid course role: ${role}`);
   }
+
   return coursePermissions[role];
 };
 
@@ -63,6 +64,7 @@ const getOrganizationPermissionsForRole = (
   if (!organizationRoles.includes(role)) {
     throw new Error(`Invalid organization role: ${role}`);
   }
+
   return organizationPermissions[role];
 };
 

@@ -36,6 +36,9 @@ export const serverEnv = createEnv({
     // AI Service
     OPENAI_COMPATIBLE_BASE_URL: z.string(),
     OPENAI_COMPATIBLE_API_KEY: z.string(),
+
+    // Development
+    USE_LOCAL_AI_MODEL: z.string().optional(),
   },
   experimental__runtimeEnv: process.env,
 });

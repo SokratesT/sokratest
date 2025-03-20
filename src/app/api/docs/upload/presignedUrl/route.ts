@@ -19,6 +19,8 @@ export const POST = async (req: NextRequest) => {
           expiry: 60 * 60, // 24 hours
         });
 
+        console.log("URL for Upload: ", url);
+
         // add presigned url to the list
         presignedUrls.push({
           id: file.id,

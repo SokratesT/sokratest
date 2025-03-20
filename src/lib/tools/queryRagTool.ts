@@ -1,11 +1,11 @@
 import { db } from "@/db/drizzle";
 import { embedding } from "@/db/schema/embedding";
-import { customModel } from "@/lib/ai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { type DataStreamWriter, embed, streamText, tool } from "ai";
 import { cosineDistance, desc, gt, sql } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
+import { getModel } from "../ai/models";
 
 export const queryRagTool = (dataStream: DataStreamWriter) =>
   tool({
@@ -52,12 +52,10 @@ export const queryRagTool = (dataStream: DataStreamWriter) =>
         name: "ollama",
       });
 
-      const embeddingModel = openai.embedding("mxbai-embed-large:latest");
-
       const generateEmbedding = async (value: string): Promise<number[]> => {
         const input = value.replaceAll("\\n", " ");
         const { embedding } = await embed({
-          model: embeddingModel,
+          model: getModel({ type: "embedding" }),
           value: input,
         });
         return embedding;
@@ -96,15 +94,7 @@ export const queryRagTool = (dataStream: DataStreamWriter) =>
       }));
 
       const { fullStream } = streamText({
-        model: customModel({
-          model: {
-            id: "deepseek-r1:14b",
-            label: "Deepseek R1",
-            apiIdentifier: "deepseek-r1:14b",
-            description: "Local R1",
-          },
-          mode: "local",
-        }),
+        model: getModel({ type: "chatReasoning" }),
         experimental_telemetry: { isEnabled: true },
         system: `Respond to the query using the provided context. In your response, include citations by referencing the fileId that certain information correspond to like this: <fileId:{fileId}> \n The context: ${JSON.stringify(cont)}`,
         prompt: query,

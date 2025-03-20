@@ -21,7 +21,7 @@ export const document = pgTable("document", {
   id: uuid("id").primaryKey().defaultRandom(),
   bucket: text("bucket").notNull(),
   prefix: text("prefix").notNull(),
-  filename: text("filename").notNull(),
+  title: text("title").notNull(),
   size: integer("size").notNull(),
   // TODO: Should probably be an enum
   fileType: text("file_type").notNull(),

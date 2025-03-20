@@ -4,11 +4,10 @@ import { db } from "@/db/drizzle";
 import { type Document, document } from "@/db/schema/document";
 import { and, asc, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 import { getSession } from "./auth";
+import { withAuthQuery } from "./utils/with-auth-query";
 
 function isValidColumnId(id: Document["id"]): id is keyof Document {
-  return ["title", "filename", "createdAt", "size", "embeddingStatus"].includes(
-    id,
-  );
+  return ["title", "createdAt", "size", "embeddingStatus"].includes(id);
 }
 
 export const getAvailableDocuments = async (
@@ -30,15 +29,7 @@ export const getAvailableDocuments = async (
     const sortOrder = sort
       ?.filter((s) => isValidColumnId(s.id))
       .map((s) => {
-        if (
-          [
-            "title",
-            "filename",
-            "createdAt",
-            "size",
-            "embeddingStatus",
-          ].includes(s.id)
-        ) {
+        if (["title", "createdAt", "size", "embeddingStatus"].includes(s.id)) {
           const column = document[s.id as keyof Document];
           return s.desc ? desc(column) : asc(column);
         } else {
@@ -51,7 +42,7 @@ export const getAvailableDocuments = async (
       .from(document)
       .where(
         and(
-          ilike(document.filename, `%${search}%`),
+          ilike(document.title, `%${search}%`),
           eq(document.courseId, session.session.activeCourseId),
         ),
       )
@@ -62,10 +53,30 @@ export const getAvailableDocuments = async (
     [rowCount] = await db
       .select({ count: count() })
       .from(document)
-      .where(ilike(document.filename, `%${search}%`));
+      .where(ilike(document.title, `%${search}%`));
   } catch (error) {
     console.error(error);
   }
 
   return { query, rowCount };
+};
+
+export const getDocumentById = async (id: Document["id"]) => {
+  const [query] = await db
+    .select({ ...getTableColumns(document) })
+    .from(document)
+    .where(eq(document.id, id))
+    .limit(1);
+
+  return withAuthQuery(
+    async () => {
+      return { query };
+    },
+    {
+      access: {
+        resource: { context: "course", type: "document", id: query.courseId },
+        action: "read",
+      },
+    },
+  );
 };

@@ -1,6 +1,6 @@
-import { customModel } from "@/lib/ai";
 import { type DataStreamWriter, type Message, streamText, tool } from "ai";
 import { z } from "zod";
+import { getModel } from "../ai/models";
 
 export const finalResponseTool = (
   dataStream: DataStreamWriter,
@@ -17,15 +17,7 @@ export const finalResponseTool = (
       });
 
       const { fullStream } = streamText({
-        model: customModel({
-          model: {
-            id: "deepseek-r1:14b",
-            label: "Deepseek R1",
-            apiIdentifier: "deepseek-r1:14b",
-            description: "Local R1",
-          },
-          mode: "local",
-        }),
+        model: getModel({ type: "chat" }),
         messages,
       });
 

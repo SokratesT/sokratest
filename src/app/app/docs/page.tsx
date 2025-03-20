@@ -1,6 +1,6 @@
 import { SearchInput } from "@/components/documents/search-input";
 import { columns } from "@/components/documents/table/columns";
-import { FilesDataTableSelectActions } from "@/components/documents/table/files-data-table-select-actions";
+import { DocumentTableActions } from "@/components/documents/table/document-table-actions";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
@@ -14,7 +14,7 @@ import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
 
-const FilesPage = async ({
+const DocumentsPage = async ({
   searchParams,
 }: {
   searchParams: Promise<SearchParams>;
@@ -35,11 +35,13 @@ const FilesPage = async ({
     <div className="flex flex-col gap-14">
       <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
         <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          Files
+          Documents
         </h4>
         <div className="flex gap-2">
           <Button asChild>
-            <Link href={ROUTES.PRIVATE.documents.add.getPath()}>Add File</Link>
+            <Link href={ROUTES.PRIVATE.documents.add.getPath()}>
+              Add Document
+            </Link>
           </Button>
         </div>
       </div>
@@ -55,7 +57,7 @@ const FilesPage = async ({
         >
           <div className="flex items-center gap-2">
             <DataTableViewOptions />
-            <FilesDataTableSelectActions />
+            <DocumentTableActions />
             <SearchInput />
           </div>
           <DataTableBody />
@@ -66,4 +68,4 @@ const FilesPage = async ({
   );
 };
 
-export default FilesPage;
+export default DocumentsPage;

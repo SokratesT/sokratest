@@ -15,7 +15,7 @@ import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
 
-const FilesDataTableSelectActions = () => {
+const DocumentTableActions = () => {
   const { table } = useTable();
 
   const handleDelete = async () => {
@@ -61,4 +61,4 @@ const FilesDataTableSelectActions = () => {
   );
 };
 
-export { FilesDataTableSelectActions };
+export { DocumentTableActions };

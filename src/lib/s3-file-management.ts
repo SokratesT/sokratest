@@ -58,11 +58,6 @@ export async function createPresignedUrlToDownload({
 }) {
   const filePath = path ? `${path}/${fileName}` : fileName;
 
-  console.log(
-    "URL: ",
-    s3Client.presignedUrl("GET", "sokratest", filePath, expiry),
-  );
-
   return await s3Client.presignedGetObject(bucketName, filePath, expiry);
 }
 
