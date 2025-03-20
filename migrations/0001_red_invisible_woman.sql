@@ -36,7 +36,7 @@ CREATE TABLE "member" (
 CREATE TABLE "organization" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
-	"slug" text,
+	"slug" text NOT NULL,
 	"logo" text,
 	"created_at" timestamp NOT NULL,
 	"metadata" text,
@@ -135,7 +135,7 @@ CREATE TABLE "document" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"bucket" text NOT NULL,
 	"prefix" text NOT NULL,
-	"filename" text NOT NULL,
+	"title" text NOT NULL,
 	"size" integer NOT NULL,
 	"file_type" text NOT NULL,
 	"course_id" uuid NOT NULL,
