@@ -16,7 +16,7 @@ const bucketUrlKeys = {
 const bucketParser = (startTransition?: React.TransitionStartFunction) => ({
   page: parseAsInteger.withDefault(1).withOptions({ shallow: false }),
   bucket: parseAsString
-    .withDefault(buckets[0].name)
+    .withDefault(buckets.main.name)
     .withOptions({ shallow: false }),
   search: parseAsString.withDefault("").withOptions({ shallow: false }),
 });

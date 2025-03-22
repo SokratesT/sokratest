@@ -13,7 +13,9 @@ export const s3Client = new Minio.Client({
 
 export async function createBucketIfNotExists(bucketName: string) {
   const bucketExists = await s3Client.bucketExists(bucketName);
-  const allowedBuckets = buckets.map((bucket) => bucket.name);
+  const allowedBuckets = Object.keys(buckets).map(
+    (bucket) => buckets[bucket as keyof typeof buckets].name,
+  );
 
   if (!bucketExists && allowedBuckets.includes(bucketName)) {
     await s3Client.makeBucket(bucketName);

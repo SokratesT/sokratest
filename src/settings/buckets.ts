@@ -1,10 +1,7 @@
-export type BucketName = (typeof buckets)[number]["name"];
+export type BucketName = (typeof buckets)[keyof typeof buckets]["name"];
 
-export const buckets = [
-  {
+export const buckets = {
+  main: {
     name: "sokratest",
   },
-  {
-    name: "test-bucket",
-  },
-];
+};

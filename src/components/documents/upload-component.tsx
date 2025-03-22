@@ -1,6 +1,5 @@
 "use client";
 
-import { FormSelect } from "@/components/forms/fields/formSelect";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,10 +13,9 @@ import { type FileUploadSchemaType, fileUploadSchema } from "@/db/zod/document";
 import type { ShortFileProp } from "@/lib/files/types";
 import { getPresignedUrls, handleUpload } from "@/lib/files/uploadHelpers";
 import { getErrorMessage } from "@/lib/handle-error";
-import { useBucketSearchParams } from "@/lib/nuqs/search-params.bucket";
 import { buckets } from "@/settings/buckets";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
@@ -25,9 +23,6 @@ import { FileUploader } from "./file-uploader";
 
 const UploadComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
-
-  const [isBucketChanging, startTransition] = useTransition();
-  const [{ bucket }] = useBucketSearchParams(startTransition);
 
   const onUploadSuccess = () => {
     console.log("Files uploaded successfully");
@@ -40,7 +35,8 @@ const UploadComponent = () => {
       id: uuidv4(),
       originalFileName: file.name,
       fileSize: file.size,
-      bucketName: bucket,
+      // TODO: Move this out as the bucket shouldn't come from the client
+      bucketName: buckets.main.name,
     }));
 
     const presignedUrls = await getPresignedUrls(filesInfo);
@@ -55,7 +51,6 @@ const UploadComponent = () => {
     resolver: zodResolver(fileUploadSchema),
     defaultValues: {
       files: [],
-      bucket,
     },
   });
 
@@ -83,20 +78,6 @@ const UploadComponent = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex w-full flex-col gap-6"
         >
-          <FormField
-            control={form.control}
-            name="bucket"
-            render={({ field }) => (
-              <FormSelect
-                field={field}
-                options={buckets.map((bucket) => ({
-                  value: bucket.name,
-                  label: bucket.name,
-                }))}
-                placeholder="test"
-              />
-            )}
-          />
           <FormField
             control={form.control}
             name="files"
@@ -130,7 +111,7 @@ const UploadComponent = () => {
             )}
           />
 
-          <Button className="w-fit" disabled={isLoading || isBucketChanging}>
+          <Button className="w-fit" disabled={isLoading}>
             Save
           </Button>
         </form>
