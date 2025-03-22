@@ -50,7 +50,12 @@ const FileActions = ({
         </div>
         <div className="flex h-full justify-center gap-2">
           <Button
-            onClick={() => enqueueEmbeddings({ ids: [fileInfo.id] })}
+            onClick={() =>
+              enqueueEmbeddings({
+                ids: [fileInfo.id],
+                courseId: fileInfo.courseId,
+              })
+            }
             disabled={fileInfo.embeddingStatus === "processing"}
           >
             Generate Embedding

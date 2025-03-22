@@ -17,6 +17,7 @@ import { toast } from "sonner";
 
 const DocumentTableActions = () => {
   const { table } = useTable();
+  const courseId = table.options.meta?.courseId;
 
   const handleDelete = async () => {
     const fileIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
@@ -25,10 +26,10 @@ const DocumentTableActions = () => {
     toast.success("Files deleted");
   };
 
-  const handleEnqueueEmbeddings = async () => {
+  const handleEnqueueEmbeddings = async (courseId: string) => {
     const fileIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    enqueueEmbeddings({ ids: fileIds });
+    enqueueEmbeddings({ ids: fileIds, courseId });
     toast.success("Files enqueued for embeddings");
   };
 
@@ -43,12 +44,15 @@ const DocumentTableActions = () => {
       <DropdownMenuContent align="end" className="w-[200px]">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={handleEnqueueEmbeddings}
-          disabled={table.getSelectedRowModel().rows.length === 0}
-        >
-          Generate Embeddings
-        </DropdownMenuItem>
+        {courseId && (
+          <DropdownMenuItem
+            onClick={() => handleEnqueueEmbeddings(courseId)}
+            disabled={table.getSelectedRowModel().rows.length === 0}
+          >
+            Generate Embeddings
+          </DropdownMenuItem>
+        )}
+
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={handleDelete}
