@@ -28,7 +28,7 @@ const UploadComponent = () => {
     console.log("Files uploaded successfully");
   };
 
-  const onUpload = async (files: File[], bucket: string) => {
+  const onUpload = async (files: File[]) => {
     setIsLoading(true);
     // validate files
     const filesInfo: ShortFileProp[] = files.map((file) => ({
@@ -42,7 +42,7 @@ const UploadComponent = () => {
     const presignedUrls = await getPresignedUrls(filesInfo);
 
     // upload files to s3 endpoint directly and save file info to db
-    await handleUpload(files, bucket, presignedUrls, onUploadSuccess);
+    await handleUpload(files, presignedUrls, onUploadSuccess);
 
     setIsLoading(false);
   };
@@ -57,7 +57,7 @@ const UploadComponent = () => {
   function onSubmit(input: FileUploadSchemaType) {
     setIsLoading(true);
 
-    toast.promise(onUpload(input.files, input.bucket), {
+    toast.promise(onUpload(input.files), {
       loading: "Uploading files...",
       success: () => {
         form.reset();

@@ -1,5 +1,6 @@
 import { saveDocumentInfo } from "@/db/actions/document";
 import { clientEnv } from "@/lib/env/client";
+import { buckets } from "@/settings/buckets";
 import type { PresignedUrlProp, ShortFileProp } from "./types";
 
 /**
@@ -48,7 +49,6 @@ export const uploadToS3 = async (
  */
 export const handleUpload = async (
   files: File[],
-  bucket: string,
   presignedUrls: PresignedUrlProp[],
   onUploadSuccess: () => void,
 ) => {
@@ -68,7 +68,7 @@ export const handleUpload = async (
         if (res.status === 200) {
           await saveDocumentInfo({
             id: presignedUrl.id,
-            bucket,
+            bucket: buckets.main.name,
             title: presignedUrl.originalFileName,
             size: presignedUrl.fileSize,
             fileType: getFileTypeFromMime(file),
