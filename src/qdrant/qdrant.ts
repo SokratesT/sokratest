@@ -1,12 +1,46 @@
 import { QdrantClient } from "@qdrant/js-client-rest";
 import type { EmbedManyResult } from "ai";
 import { v4 as uuidv4 } from "uuid";
-
-const collectionName = "sokratest-documents";
+import { qdrantCollections } from "./qdrant-constants";
 
 let client: QdrantClient | null = null;
 
-export const getQdrantClient = async (): Promise<QdrantClient> => {
+const initCollectionIfNeeded = async (qdrant: QdrantClient) => {
+  const collections = await qdrant.getCollections();
+  const exists = collections.collections.some(
+    (c) => c.name === qdrantCollections.chunks.name,
+  );
+
+  if (!exists) {
+    await qdrant.createCollection(qdrantCollections.chunks.name, {
+      vectors: {
+        size: 4096,
+        distance: "Cosine",
+      },
+      hnsw_config: {
+        payload_m: 16,
+        m: 0,
+      },
+      optimizers_config: {
+        default_segment_number: 2,
+      },
+    });
+
+    await qdrant.createPayloadIndex(qdrantCollections.chunks.name, {
+      field_name: qdrantCollections.chunks.index.name,
+      field_schema: {
+        type: "uuid",
+        is_tenant: true,
+      },
+    });
+
+    console.log(
+      `[Qdrant] Collection '${qdrantCollections.chunks.name}' created.`,
+    );
+  }
+};
+
+const getQdrantClient = async (): Promise<QdrantClient> => {
   if (client) return client;
 
   client = new QdrantClient({
@@ -21,36 +55,7 @@ export const getQdrantClient = async (): Promise<QdrantClient> => {
   return client;
 };
 
-const initCollectionIfNeeded = async (qdrant: QdrantClient) => {
-  const collections = await qdrant.getCollections();
-  const exists = collections.collections.some((c) => c.name === collectionName);
-
-  if (!exists) {
-    await qdrant.createCollection(collectionName, {
-      vectors: {
-        size: 4096,
-        distance: "Cosine",
-      },
-      hnsw_config: {
-        payload_m: 16,
-        m: 0,
-      },
-      optimizers_config: {
-        default_segment_number: 2,
-      },
-    });
-
-    await qdrant.createPayloadIndex(collectionName, {
-      field_name: "course_id",
-      field_schema: {
-        type: "keyword",
-        is_tenant: true,
-      },
-    });
-
-    console.log(`[Qdrant] Collection '${collectionName}' created.`);
-  }
-};
+export const qdrant = await getQdrantClient();
 
 export const upsertChunksToQdrant = async ({
   courseId,
@@ -59,8 +64,6 @@ export const upsertChunksToQdrant = async ({
   courseId: string;
   embedManyResult: EmbedManyResult<string>;
 }) => {
-  const qdrant = await getQdrantClient();
-
   const chunks = embedManyResult.values.map((text, i) => ({
     id: uuidv4(),
     text,
@@ -76,5 +79,5 @@ export const upsertChunksToQdrant = async ({
     },
   }));
 
-  await qdrant.upsert(collectionName, { points });
+  await qdrant.upsert(qdrantCollections.chunks.name, { points });
 };

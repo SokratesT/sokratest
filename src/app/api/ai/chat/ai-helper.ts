@@ -1,6 +1,7 @@
-import { getQdrantClient } from "@/db/qdrant";
+import { generateEmbedding } from "@/lib/ai/embedding";
 import { getModel } from "@/lib/ai/models";
-import { type Message, embed, generateText } from "ai";
+import { qdrant } from "@/qdrant/qdrant";
+import { type Message, generateText } from "ai";
 
 interface QdrantChunkResult {
   id: string;
@@ -16,18 +17,8 @@ export const getRelevantChunks = async (
   messages: Message[],
   courseId: string,
 ) => {
-  const generateEmbedding = async (value: string): Promise<number[]> => {
-    const input = value.replaceAll("\\n", " ");
-    const { embedding } = await embed({
-      model: getModel({ type: "embedding" }),
-      value: input,
-    });
-    return embedding;
-  };
-
   const findRelevantContent = async (userQuery: string) => {
     const userQueryEmbedded = await generateEmbedding(userQuery);
-    const qdrant = await getQdrantClient();
 
     const response = await qdrant.query("sokratest-documents", {
       query: userQueryEmbedded,

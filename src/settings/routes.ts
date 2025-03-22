@@ -141,6 +141,13 @@ export const ROUTES = {
           },
         },
       },
+      playground: {
+        name: "Document Playground",
+        pathTemplate: "/app/docs/playground",
+        getPath: function () {
+          return makePath(this.pathTemplate);
+        },
+      },
     },
     users: {
       root: {

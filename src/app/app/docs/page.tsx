@@ -38,6 +38,11 @@ const DocumentsPage = async ({
           Documents
         </h4>
         <div className="flex gap-2">
+          <Button asChild variant="outline">
+            <Link href={ROUTES.PRIVATE.documents.playground.getPath()}>
+              Playground
+            </Link>
+          </Button>
           <Button asChild>
             <Link href={ROUTES.PRIVATE.documents.add.getPath()}>
               Add Document
