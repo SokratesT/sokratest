@@ -1,5 +1,5 @@
-import { upsertChunksToQdrant } from "@/db/qdrant";
 import { getModel } from "@/lib/ai/models";
+import { upsertChunksToQdrant } from "@/qdrant/qdrant";
 import { logger, task } from "@trigger.dev/sdk/v3";
 import { embedMany } from "ai";
 import { chunk } from "llm-chunk";
