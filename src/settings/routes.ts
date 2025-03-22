@@ -196,7 +196,7 @@ export const ROUTES = {
       },
       view: {
         name: "View Course",
-        pathTemplate: "/app/courses/:id",
+        pathTemplate: "/app/courses/view/:id",
         getPath: function (params: { id: string }) {
           return makePath(this.pathTemplate, params);
         },
