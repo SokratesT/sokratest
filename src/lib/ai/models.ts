@@ -5,6 +5,8 @@ import { extractReasoningMiddleware, wrapLanguageModel } from "ai";
 import type { LanguageModelV1 } from "ai";
 import { PostHog } from "posthog-node";
 
+// TODO: Migrate to `customProvider` of vercel ai sdk
+
 // Define interfaces for different model types
 interface BaseModel {
   id: string;
