@@ -41,6 +41,10 @@ export const serverEnv = createEnv({
     OPENAI_COMPATIBLE_BASE_URL: z.string(),
     OPENAI_COMPATIBLE_API_KEY: z.string(),
 
+    // Qdrant
+    QDRANT_URL: z.string(),
+    QDRANT_API_KEY: z.string(),
+
     // Development
     USE_LOCAL_AI_MODEL: z.string().optional(),
   },

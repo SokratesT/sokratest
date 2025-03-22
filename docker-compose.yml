@@ -24,6 +24,8 @@ services:
         SMTP_PORT: ${SMTP_PORT}
         SMTP_USERNAME: ${SMTP_USERNAME}
         SMTP_PASSWORD: ${SMTP_PASSWORD}
+        QDRANT_URL: ${QDRANT_URL}
+        QDRANT_API_KEY: ${QDRANT_API_KEY}
     ports:
       - "3000:3000"
     depends_on:
@@ -56,6 +58,8 @@ services:
       SMTP_PORT: ${SMTP_PORT}
       SMTP_USERNAME: ${SMTP_USERNAME}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
+      QDRANT_URL: ${QDRANT_URL}
+      QDRANT_API_KEY: ${QDRANT_API_KEY}
     command: [ "/bin/sh", "-c", "node server.js" ]
 
   migrations:

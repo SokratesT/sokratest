@@ -34,11 +34,7 @@ export async function POST(request: Request) {
     return new Response("No active organization", { status: 400 });
   }
 
-  const {
-    id,
-    messages,
-    modelId,
-  }: { id: string; messages: Array<Message>; modelId: string } =
+  const { id, messages }: { id: string; messages: Array<Message> } =
     await request.json();
 
   const userMessage = getMostRecentUserMessage(messages);
@@ -94,9 +90,12 @@ export async function POST(request: Request) {
 
   return createDataStreamResponse({
     execute: async (dataStream) => {
-      const relevantChunks = await getRelevantChunks(messages);
+      const relevantChunks = await getRelevantChunks(messages, activeCourseId);
 
-      relevantChunks.map((chunk) => dataStream.writeMessageAnnotation(chunk));
+      relevantChunks.map((chunk) =>
+        // TODO: Handle this properly
+        dataStream.writeMessageAnnotation(JSON.stringify(chunk)),
+      );
 
       const result = streamText({
         model: getModel({
@@ -117,9 +116,8 @@ export async function POST(request: Request) {
         /* system:
           "You are a helpful assistant. You can use tools to help the user.", */
         system: createSystemPrompt(
-          JSON.stringify(
-            relevantChunks.map((c) => ({ fileId: c.fileId, text: c.text })),
-          ),
+          // TODO: Handle this properly
+          JSON.stringify(relevantChunks),
         ),
         // system: "You are a helpful assistant.",
         /* tools: {
@@ -139,7 +137,7 @@ export async function POST(request: Request) {
                 sanitizeResponseMessages({
                   messages: response.messages,
                   reasoning,
-                  annotations: relevantChunks,
+                  annotations: [JSON.stringify(relevantChunks)],
                 });
 
               await saveMessages({

@@ -1,10 +1,21 @@
-import { db } from "@/db/drizzle";
-import { embedding } from "@/db/schema/embedding";
+import { getQdrantClient } from "@/db/qdrant";
 import { getModel } from "@/lib/ai/models";
 import { type Message, embed, generateText } from "ai";
-import { cosineDistance, desc, gt, sql } from "drizzle-orm";
 
-export const getRelevantChunks = async (messages: Message[]) => {
+interface QdrantChunkResult {
+  id: string;
+  payload: {
+    text: string;
+    file_id?: string;
+    course_id?: string;
+    [key: string]: unknown;
+  };
+}
+
+export const getRelevantChunks = async (
+  messages: Message[],
+  courseId: string,
+) => {
   const generateEmbedding = async (value: string): Promise<number[]> => {
     const input = value.replaceAll("\\n", " ");
     const { embedding } = await embed({
@@ -15,6 +26,29 @@ export const getRelevantChunks = async (messages: Message[]) => {
   };
 
   const findRelevantContent = async (userQuery: string) => {
+    const userQueryEmbedded = await generateEmbedding(userQuery);
+    const qdrant = await getQdrantClient();
+
+    const response = await qdrant.query("sokratest-documents", {
+      query: userQueryEmbedded,
+      filter: {
+        must: [
+          {
+            key: "course_id",
+            match: {
+              value: courseId,
+            },
+          },
+        ],
+      },
+      limit: 5,
+      with_payload: true,
+    });
+
+    return response;
+  };
+
+  /* const findRelevantContent = async (userQuery: string) => {
     const userQueryEmbedded = await generateEmbedding(userQuery);
     const similarity = sql<number>`1 - (${cosineDistance(
       embedding.vector,
@@ -32,7 +66,7 @@ export const getRelevantChunks = async (messages: Message[]) => {
       .limit(5);
 
     return similarGuides;
-  };
+  }; */
 
   const generatedQuery = await generateText({
     model: getModel({ type: "small" }),
@@ -43,10 +77,15 @@ export const getRelevantChunks = async (messages: Message[]) => {
 
   console.log(`Generated query: ${generatedQuery.text}`);
 
-  const context = await findRelevantContent(generatedQuery.text);
+  const points = (await findRelevantContent(generatedQuery.text)).points;
 
-  return context.map((c) => ({
-    ...c,
-    type: "reference",
-  }));
+  return points.map((point) => {
+    if (!point.payload) return;
+
+    return {
+      // TODO: Type properly
+      text: point.payload.text,
+      type: "reference",
+    };
+  });
 };
