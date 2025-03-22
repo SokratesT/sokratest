@@ -42,7 +42,6 @@ export const processDocumentTask = task({
           options: {
             image_export_mode: "placeholder",
             do_ocr: false,
-            table_mode: "accurate",
           },
           http_sources: [
             {
