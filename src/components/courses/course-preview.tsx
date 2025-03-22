@@ -9,7 +9,9 @@ import {
 import { Placeholder } from "@/components/ui/custom/placeholder";
 import { getSession } from "@/db/queries/auth";
 import { getCourseById } from "@/db/queries/course";
+import { ROUTES } from "@/settings/routes";
 import { BookMarkedIcon } from "lucide-react";
+import Link from "next/link";
 
 const CoursePreview = async () => {
   const session = await getSession();
@@ -28,18 +30,22 @@ const CoursePreview = async () => {
     return <Placeholder>No such course</Placeholder>;
   }
 
+  const { id, title, description } = result.data.query;
+
   return (
     <Card>
       <CardHeader>
         <p className="text-muted-foreground text-xs">Active Course</p>
         <CardTitle className="flex items-center gap-2">
           <BookMarkedIcon />
-          {result.data.query.title}
+          {title}
         </CardTitle>
       </CardHeader>
-      <CardContent>{result.data.query.description}</CardContent>
+      <CardContent>{description}</CardContent>
       <CardFooter>
-        <Button>More</Button>
+        <Button>
+          <Link href={ROUTES.PRIVATE.courses.view.getPath({ id })}>More</Link>
+        </Button>
       </CardFooter>
     </Card>
   );
