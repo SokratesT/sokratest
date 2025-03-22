@@ -12,12 +12,17 @@ const QdrantPlaygroundResults = async ({
     return <Placeholder>{result.error.message}</Placeholder>;
   }
 
+  const points = result.data.query.points;
+
   return (
     <div>
-      {(await result.data.query).points.map((point) => (
+      {points.map((point) => (
         <div key={point.id} className="border-b p-4">
           <h3 className="font-semibold text-lg">{point.id}</h3>
-          {point.payload && <p>{point.payload.text as string}</p>}
+          <p className="text-muted-foreground text-sm">
+            {point.score.toFixed(2)}
+          </p>
+          <p>{point.payload.text as string}</p>
         </div>
       ))}
     </div>

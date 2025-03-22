@@ -23,8 +23,9 @@ export const getChunks = async ({ search }: { search: string }) => {
             },
           ],
         },
-        limit: 5,
+        limit: 20,
         with_payload: true,
+        score_threshold: 0.5,
         // FIXME: Not liking this, but qdrant types are not flexible enough
       })) as unknown as QdrantChunk;
 
