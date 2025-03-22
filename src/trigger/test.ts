@@ -29,10 +29,10 @@ export const testTask = task({
   id: "test-task",
   maxDuration: 3000, // Stop executing after 300 secs (5 mins) of compute
   run: async (payload: Payload, { ctx }) => {
-    const doclingUrl = `${process.env.DOCLING_API}/v1alpha/convert/source`;
+    const doclingApi = `${process.env.DOCLING_API}/v1alpha/convert/source`;
 
     logger.info(`Processing document...`);
-    const doclingResponse = await fetch(doclingUrl, {
+    const doclingResponse = await fetch(doclingApi, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export const testTask = task({
         },
         http_sources: [
           {
-            url: "https://arxiv.org/pdf/2501.17887",
+            url: payload.url,
           },
         ],
       }),

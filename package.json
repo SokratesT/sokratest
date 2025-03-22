@@ -19,7 +19,8 @@
     "db:check": "drizzle-kit check",
     "db:up": "drizzle-kit up",
     "trigger:dev": "npx trigger.dev@latest dev",
-    "knip": "knip"
+    "knip": "knip",
+    "trigger:deploy": "npx trigger.dev deploy -p proj_tfobsghmqalnxwzabpqm --self-hosted --push --registry ghcr.io --namespace sokratest"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.2.0",
