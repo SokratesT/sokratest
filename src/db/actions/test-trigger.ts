@@ -42,13 +42,13 @@ export const enqueueEmbeddings = authActionClient
       "test-task",
       docsWithUrls.map((doc) => ({
         payload: { url: doc.url, documentId: doc.id, courseId },
-        options: {
+        /* options: {
           concurrencyKey: "TEST_CONCURRENCY_KEY",
           queue: {
             name: "my-task-queue",
-            concurrencyLimit: 1,
+            concurrencyLimit: 2,
           },
-        },
+        }, */
       })),
     );
 

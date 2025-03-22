@@ -1,4 +1,3 @@
-import { serverEnv } from "@/lib/env/server";
 import { QdrantClient } from "@qdrant/js-client-rest";
 import type { EmbedManyResult } from "ai";
 import { v4 as uuidv4 } from "uuid";
@@ -11,9 +10,9 @@ export const getQdrantClient = async (): Promise<QdrantClient> => {
   if (client) return client;
 
   client = new QdrantClient({
-    url: serverEnv.QDRANT_URL,
+    url: process.env.QDRANT_URL,
     port: null,
-    apiKey: serverEnv.QDRANT_API_KEY,
+    apiKey: process.env.QDRANT_API_KEY,
   });
 
   // Init only once when client is first created

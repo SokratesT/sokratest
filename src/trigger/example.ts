@@ -1,4 +1,3 @@
-// import { serverEnv } from "@/lib/env/server";
 import { createOpenAI } from "@ai-sdk/openai";
 import { logger, task, wait } from "@trigger.dev/sdk/v3";
 import { embedMany } from "ai";
@@ -92,7 +91,7 @@ export const helloWorldTask = task({
       logger.log("Index built successfully.");
 
       const response = await fetch(
-        `${"http://localhost:3000"}/api/ai/save-embedding`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/ai/save-embedding`,
         {
           method: "POST",
           headers: {
@@ -113,7 +112,7 @@ export const helloWorldTask = task({
         response: await response.json(),
       };
     } catch (error) {
-      await fetch(`${"http://localhost:3000"}/api/ai/save-embedding`, {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/ai/save-embedding`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

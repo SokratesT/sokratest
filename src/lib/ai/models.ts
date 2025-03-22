@@ -1,5 +1,3 @@
-import { clientEnv } from "@/lib/env/client";
-import { serverEnv } from "@/lib/env/server";
 import { createOpenAI } from "@ai-sdk/openai";
 import type { EmbeddingModelV1 } from "@ai-sdk/provider";
 import { withTracing } from "@posthog/ai";
@@ -27,8 +25,8 @@ interface EmbeddingModel extends BaseModel {
 type Model = ChatModel | EmbeddingModel;
 
 const remoteProvider = createOpenAI({
-  baseURL: serverEnv.OPENAI_COMPATIBLE_BASE_URL,
-  apiKey: serverEnv.OPENAI_COMPATIBLE_API_KEY,
+  baseURL: process.env.OPENAI_COMPATIBLE_BASE_URL,
+  apiKey: process.env.OPENAI_COMPATIBLE_API_KEY,
   name: "chatAi",
   compatibility: "compatible",
 });
@@ -125,8 +123,8 @@ const models = {
   },
 };
 
-const phClient = new PostHog(clientEnv.NEXT_PUBLIC_POSTHOG_KEY, {
-  host: `https://${clientEnv.NEXT_PUBLIC_POSTHOG_HOST}`,
+const phClient = new PostHog(process.env.NEXT_PUBLIC_POSTHOG_KEY || "", {
+  host: `https://${process.env.NEXT_PUBLIC_POSTHOG_HOST}`,
 });
 
 interface PostHogTraceParams {
@@ -148,7 +146,7 @@ export const getModel = <
 }): T extends "embedding" ? EmbeddingModelV1<string> : LanguageModelV1 => {
   let model = models.remote[type];
 
-  if (serverEnv.USE_LOCAL_AI_MODEL === "true") {
+  if (process.env.USE_LOCAL_AI_MODEL === "true") {
     model = models.local[type];
   }
 
