@@ -2,7 +2,7 @@
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";
 import { authActionClient } from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
-import type { testTask } from "@/trigger/test";
+import type { processDocumentTask } from "@/trigger/process-document-task";
 import { tasks } from "@trigger.dev/sdk/v3";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -38,8 +38,8 @@ export const enqueueEmbeddings = authActionClient
       })),
     ); */
 
-    const handle = await tasks.batchTrigger<typeof testTask>(
-      "test-task",
+    const handle = await tasks.batchTrigger<typeof processDocumentTask>(
+      "process-document-task",
       docsWithUrls.map((doc) => ({
         payload: { url: doc.url, documentId: doc.id, courseId },
         /* options: {
@@ -51,8 +51,6 @@ export const enqueueEmbeddings = authActionClient
         }, */
       })),
     );
-
-    console.log("Handle", handle);
 
     revalidatePath(ROUTES.PRIVATE.documents.root.getPath());
 

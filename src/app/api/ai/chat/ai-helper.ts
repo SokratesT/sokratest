@@ -1,17 +1,8 @@
 import { generateEmbedding } from "@/lib/ai/embedding";
 import { getModel } from "@/lib/ai/models";
 import { qdrant } from "@/qdrant/qdrant";
+import { qdrantCollections } from "@/qdrant/qdrant-constants";
 import { type Message, generateText } from "ai";
-
-interface QdrantChunkResult {
-  id: string;
-  payload: {
-    text: string;
-    file_id?: string;
-    course_id?: string;
-    [key: string]: unknown;
-  };
-}
 
 export const getRelevantChunks = async (
   messages: Message[],
@@ -20,12 +11,12 @@ export const getRelevantChunks = async (
   const findRelevantContent = async (userQuery: string) => {
     const userQueryEmbedded = await generateEmbedding(userQuery);
 
-    const response = await qdrant.query("sokratest-documents", {
+    const response = await qdrant.query(qdrantCollections.chunks.name, {
       query: userQueryEmbedded,
       filter: {
         must: [
           {
-            key: "course_id",
+            key: qdrantCollections.chunks.index.name,
             match: {
               value: courseId,
             },
@@ -38,26 +29,6 @@ export const getRelevantChunks = async (
 
     return response;
   };
-
-  /* const findRelevantContent = async (userQuery: string) => {
-    const userQueryEmbedded = await generateEmbedding(userQuery);
-    const similarity = sql<number>`1 - (${cosineDistance(
-      embedding.vector,
-      userQueryEmbedded,
-    )})`;
-    const similarGuides = await db
-      .select({
-        similarity,
-        text: embedding.text,
-        fileId: embedding.fileId,
-      })
-      .from(embedding)
-      .where(gt(similarity, 0))
-      .orderBy((t) => desc(t.similarity))
-      .limit(5);
-
-    return similarGuides;
-  }; */
 
   const generatedQuery = await generateText({
     model: getModel({ type: "small" }),

@@ -79,5 +79,5 @@ export const upsertChunksToQdrant = async ({
     },
   }));
 
-  await qdrant.upsert(qdrantCollections.chunks.name, { points });
+  return qdrant.upsert(qdrantCollections.chunks.name, { points });
 };
