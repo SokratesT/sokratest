@@ -28,7 +28,9 @@ const AnnotationBlock = ({ annotations }: { annotations: JSONValue[] }) => {
       <div className="flex flex-wrap gap-2">
         {annotations.map((annotation, i) => {
           // FIXME: Bit awkward. Check if there's a better way to do this.
-          const typedAnnotation = annotation as unknown as BaseAnnotation;
+          const typedAnnotation = JSON.parse(
+            annotation?.toString() ?? "",
+          ) as BaseAnnotation;
 
           switch (typedAnnotation.type) {
             case "reference": {

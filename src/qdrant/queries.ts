@@ -2,7 +2,7 @@
 
 import { withAuthQuery } from "@/db/queries/utils/with-auth-query";
 import { generateEmbedding } from "@/lib/ai/embedding";
-import type { QdrantChunk } from "./models/chunk";
+import type { QdrantChunk } from "@/types/qdrant";
 import { qdrant } from "./qdrant";
 import { qdrantCollections } from "./qdrant-constants";
 

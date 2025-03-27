@@ -1,6 +1,6 @@
+"server only";
+
 import { QdrantClient } from "@qdrant/js-client-rest";
-import type { EmbedManyResult } from "ai";
-import { v4 as uuidv4 } from "uuid";
 import { qdrantCollections } from "./qdrant-constants";
 
 let client: QdrantClient | null = null;
@@ -56,28 +56,3 @@ const getQdrantClient = async (): Promise<QdrantClient> => {
 };
 
 export const qdrant = await getQdrantClient();
-
-export const upsertChunksToQdrant = async ({
-  courseId,
-  embedManyResult,
-}: {
-  courseId: string;
-  embedManyResult: EmbedManyResult<string>;
-}) => {
-  const chunks = embedManyResult.values.map((text, i) => ({
-    id: uuidv4(),
-    text,
-    embedding: embedManyResult.embeddings[i],
-  }));
-
-  const points = chunks.map((chunk) => ({
-    id: chunk.id,
-    vector: chunk.embedding,
-    payload: {
-      course_id: courseId,
-      text: chunk.text,
-    },
-  }));
-
-  return qdrant.upsert(qdrantCollections.chunks.name, { points });
-};

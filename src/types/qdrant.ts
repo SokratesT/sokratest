@@ -27,7 +27,14 @@ export interface QdrantChunk {
   }[];
 }
 
-export interface ChunkPayload {
-  text: string;
+export type ChunkPayload = {
   course_id: string;
-}
+  document_id: string;
+  text: string;
+  title: string;
+  depth: number;
+  tokens: number;
+  chunkIndex: number;
+  chunkCount: number;
+  createdAt: string;
+};

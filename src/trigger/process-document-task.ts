@@ -1,34 +1,17 @@
 import { getModel } from "@/lib/ai/models";
-import { upsertChunksToQdrant } from "@/qdrant/qdrant";
+import { splitMarkdownAtHeaders } from "@/lib/chunk/markdown-chunker";
+import { upsertChunksToQdrant } from "@/qdrant/mutations";
+
+import type { DoclingData } from "@/types/docling";
+import type { ProcessDocumentTaskPayload } from "@/types/trigger";
 import { logger, task } from "@trigger.dev/sdk/v3";
 import { embedMany } from "ai";
-import { chunk } from "llm-chunk";
-
-interface Payload {
-  url: string;
-  documentId: string;
-  courseId: string;
-}
-
-interface DoclingData {
-  document: {
-    filename: string;
-    md_content: string | null;
-    json_content: string | null;
-    html_content: string | null;
-    text_content: string | null;
-    doctags_content: string | null;
-  };
-  status: string;
-  errors: [];
-  processing_time: number;
-  timings: object;
-}
+import { v4 as uuidv4 } from "uuid";
 
 export const processDocumentTask = task({
   id: "process-document-task",
   maxDuration: 600, // Stop executing after 600 secs (10 mins) of compute
-  run: async (payload: Payload, { ctx }) => {
+  run: async (payload: ProcessDocumentTaskPayload, { ctx }) => {
     const doclingApi = `${process.env.DOCLING_API}/v1alpha/convert/source`;
 
     const doclingResponse = await logger.trace("process-document", async () =>
@@ -54,26 +37,38 @@ export const processDocumentTask = task({
     const processedDocument = (await doclingResponse.json()) as DoclingData;
 
     const documentChunks = await logger.trace("chunk-document", async () =>
-      chunk(processedDocument.document.md_content || "", {
-        minLength: 0, // number of minimum characters into chunk
-        maxLength: 512, // number of maximum characters into chunk
-        splitter: "paragraph", // paragraph | sentence
-        overlap: 64, // number of overlap chracters
-        delimiters: "", // regex for base split method
-      }),
+      splitMarkdownAtHeaders(
+        processedDocument.document.md_content || "",
+        256, // max length in tokens
+      ),
     );
 
     const embedResults = await logger.trace("embed-chunks", async () =>
       embedMany({
         model: getModel({ type: "embedding" }),
-        values: documentChunks,
+        values: documentChunks.map((chunk) => chunk.content),
       }),
     );
 
+    const metaDataChunks = documentChunks.map((chunk, index) => ({
+      id: uuidv4(),
+      vector: embedResults.embeddings[index],
+      payload: {
+        course_id: payload.courseId,
+        document_id: payload.documentId,
+        text: embedResults.values[index],
+        title: chunk.title,
+        depth: chunk.depth,
+        tokens: chunk.length,
+        chunkIndex: index,
+        chunkCount: documentChunks.length,
+        createdAt: new Date().toISOString(),
+      },
+    }));
+
     const qdrantResult = await logger.trace("save-embeddings", async () =>
       upsertChunksToQdrant({
-        courseId: payload.courseId,
-        embedManyResult: embedResults,
+        chunks: metaDataChunks,
       }),
     );
 

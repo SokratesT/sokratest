@@ -119,6 +119,7 @@
     "drizzle-zod": "^0.7.0",
     "html2canvas": "^1.4.1",
     "langfuse-vercel": "^3.37.0",
+    "llama-tokenizer-js": "^1.2.2",
     "llm-chunk": "^0.0.1",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.483.0",
