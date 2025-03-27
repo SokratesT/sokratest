@@ -3,13 +3,15 @@
 import { db } from "@/db/drizzle";
 import { document } from "@/db/schema/document";
 import { fileDeleteSchema, fileInsertSchema } from "@/db/zod/document";
-import { deleteFileFromBucket } from "@/lib/s3-file-management";
+import { deleteFileFromBucket } from "@/lib/s3/file-functions";
 import {
   authActionClient,
   requireCourseMiddleware,
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
+import { buckets } from "@/settings/buckets";
 import { ROUTES } from "@/settings/routes";
+import type { FileType } from "@/types/file";
 import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -20,13 +22,13 @@ export const saveDocumentInfo = authActionClient
   .schema(fileInsertSchema)
   .action(
     async ({
-      parsedInput: { id, bucket, title, size, fileType },
+      parsedInput: { id, title, size, fileType },
       ctx: { userId, activeCourseId },
     }) => {
       await db.insert(document).values({
         id,
         courseId: activeCourseId,
-        bucket,
+        bucket: buckets.main.name,
         prefix: activeCourseId,
         title,
         size,
@@ -53,8 +55,10 @@ export const deleteDocumentInfo = authActionClient
     Promise.all(
       filesToDelete.map(async (file) => {
         await deleteFileFromBucket({
-          bucketName: file.bucket,
-          fileName: file.id,
+          bucket: file.bucket,
+          id: file.id,
+          prefix: file.prefix,
+          type: file.fileType as FileType,
         });
       }),
     );

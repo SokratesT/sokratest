@@ -1,6 +1,7 @@
 import { saveDocumentInfo } from "@/db/actions/document";
+import type { Document } from "@/db/schema/document";
 import { clientEnv } from "@/lib/env/client";
-import { buckets } from "@/settings/buckets";
+import type { FileType } from "@/types/file";
 import type { PresignedUrlProp, ShortFileProp } from "./types";
 
 /**
@@ -9,7 +10,7 @@ import type { PresignedUrlProp, ShortFileProp } from "./types";
  * @returns
  */
 export const getPresignedUrls = async (files: ShortFileProp[]) => {
-  const response = await fetch("/api/docs/upload/presignedUrl", {
+  const response = await fetch("/api/docs/upload/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -49,15 +50,21 @@ export const uploadToS3 = async (
  */
 export const handleUpload = async (
   files: File[],
-  presignedUrls: PresignedUrlProp[],
   onUploadSuccess: () => void,
 ) => {
+  const filesInfo: ShortFileProp[] = files.map((file) => ({
+    name: file.name,
+    size: file.size,
+    type: getFileTypeFromMime(file),
+  }));
+
+  const presignedUrls = await getPresignedUrls(filesInfo);
+
   const uploadToS3Response = await Promise.all(
-    presignedUrls.map((presignedUrl) => {
+    presignedUrls.map(async (presignedUrl) => {
       const file = files.find(
         (file) =>
-          file.name === presignedUrl.originalFileName &&
-          file.size === presignedUrl.fileSize,
+          file.name === presignedUrl.name && file.size === presignedUrl.size,
       );
 
       if (!file) {
@@ -68,10 +75,9 @@ export const handleUpload = async (
         if (res.status === 200) {
           await saveDocumentInfo({
             id: presignedUrl.id,
-            bucket: buckets.main.name,
-            title: presignedUrl.originalFileName,
-            size: presignedUrl.fileSize,
-            fileType: getFileTypeFromMime(file),
+            title: presignedUrl.name,
+            size: presignedUrl.size,
+            fileType: presignedUrl.type,
           });
         }
         return res;
@@ -84,17 +90,12 @@ export const handleUpload = async (
     return;
   }
 
-  // await saveFileInfoInDB(presignedUrls);
   onUploadSuccess();
 };
 
-interface FileProps {
-  id: string;
-}
-
 export async function getPresignedUrl(fileId: string) {
   const response = await fetch(
-    `${clientEnv.NEXT_PUBLIC_BASE_URL}/api/docs/download/presignedUrl/${fileId}`,
+    `${clientEnv.NEXT_PUBLIC_BASE_URL}/api/docs/download/${fileId}`,
   );
 
   console.log(response);
@@ -102,19 +103,19 @@ export async function getPresignedUrl(fileId: string) {
   return (await response.json()) as string;
 }
 
-export const downloadFile = async (file: FileProps) => {
-  const presignedUrl = await getPresignedUrl(file.id);
+export const downloadFile = async ({ id }: { id: Document["id"] }) => {
+  const presignedUrl = await getPresignedUrl(id);
   window.open(presignedUrl, "_blank");
 };
 
-export function getFileTypeFromMime(file: File): string {
+export function getFileTypeFromMime(file: File): FileType {
   const mimeType = file.type;
-  if (mimeType.startsWith("image/")) {
-    return "image";
-  } else if (mimeType.startsWith("video/")) {
-    return "video";
-  } else if (mimeType.startsWith("text/")) {
-    return "text";
+  if (mimeType.startsWith("image/jpeg")) {
+    return "jpeg";
+    /* } else if (mimeType.startsWith("video/")) {
+    return "video"; */
+  } else if (mimeType.startsWith("text/markdown")) {
+    return "md";
   } else if (mimeType.startsWith("application/pdf")) {
     return "pdf";
   } else {

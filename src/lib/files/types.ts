@@ -1,14 +1,14 @@
-import type { BucketName } from "@/settings/buckets";
+import type { FileType } from "@/types/file";
 
 export interface ShortFileProp {
-  id: string;
-  originalFileName: string;
-  fileSize: number;
-  bucketName: BucketName;
+  name: string;
+  size: number;
+  type: FileType;
 }
 export interface PresignedUrlProp {
-  originalFileName: string;
-  fileSize: number;
   id: string;
   url: string;
+  name: string;
+  size: number;
+  type: FileType;
 }

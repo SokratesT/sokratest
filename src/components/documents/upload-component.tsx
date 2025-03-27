@@ -10,15 +10,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { type FileUploadSchemaType, fileUploadSchema } from "@/db/zod/document";
-import type { ShortFileProp } from "@/lib/files/types";
-import { getPresignedUrls, handleUpload } from "@/lib/files/uploadHelpers";
+import { handleUpload } from "@/lib/files/uploadHelpers";
 import { getErrorMessage } from "@/lib/handle-error";
-import { buckets } from "@/settings/buckets";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { v4 as uuidv4 } from "uuid";
 import { FileUploader } from "./file-uploader";
 
 const UploadComponent = () => {
@@ -31,18 +28,9 @@ const UploadComponent = () => {
   const onUpload = async (files: File[]) => {
     setIsLoading(true);
     // validate files
-    const filesInfo: ShortFileProp[] = files.map((file) => ({
-      id: uuidv4(),
-      originalFileName: file.name,
-      fileSize: file.size,
-      // TODO: Move this out as the bucket shouldn't come from the client
-      bucketName: buckets.main.name,
-    }));
-
-    const presignedUrls = await getPresignedUrls(filesInfo);
 
     // upload files to s3 endpoint directly and save file info to db
-    await handleUpload(files, presignedUrls, onUploadSuccess);
+    await handleUpload(files, onUploadSuccess);
 
     setIsLoading(false);
   };

@@ -13,6 +13,7 @@ export const fileInsertSchema = createInsertSchema(document, {
   courseId: z.string().optional(),
   uploadedBy: z.string().optional(),
   prefix: z.string().optional(),
+  bucket: z.string().optional(),
 });
 
 export const fileDeleteSchema = z.object({ ids: z.array(z.string()) });
