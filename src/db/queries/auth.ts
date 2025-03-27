@@ -1,13 +1,13 @@
 "server only";
 
 import { db } from "@/db/drizzle";
+import { member } from "@/db/schema/auth";
+import { courseMember } from "@/db/schema/course";
 import { auth } from "@/lib/auth";
 import type { CourseRole, OrganizationRole } from "@/settings/roles";
 import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { cache } from "react";
-import { member } from "../schema/auth";
-import { courseMember } from "../schema/course";
 
 /**
  * Get the current session from the auth API

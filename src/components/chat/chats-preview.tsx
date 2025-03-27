@@ -1,5 +1,5 @@
+import { Placeholder } from "@/components/ui/custom/placeholder";
 import { getUserChatsForActiveCourse } from "@/db/queries/chat";
-import { Placeholder } from "../ui/custom/placeholder";
 import { ChatsList } from "./chats-list";
 
 const ChatsPreview = async () => {

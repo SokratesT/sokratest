@@ -1,6 +1,7 @@
 import { SignOutButton } from "@/components/auth/signout-button";
 import { OrganizationSwitcher } from "@/components/organizations/organization-switcher";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Placeholder } from "@/components/ui/custom/placeholder";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +22,6 @@ import type { Organization } from "@/db/schema/auth";
 import { sidebarUserMenu } from "@/settings/menus";
 import { ChevronsUpDown, LogOut } from "lucide-react";
 import Link from "next/link";
-import { Placeholder } from "../ui/custom/placeholder";
 
 const userInitial = (name: string) => name[0].toUpperCase();
 

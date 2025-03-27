@@ -1,7 +1,6 @@
 "server only";
 
 import { getCourseRole, getOrganizationRole } from "@/db/queries/auth";
-import { cache } from "react";
 import {
   type CourseResourceTypePermissions,
   type CourseRole,
@@ -11,7 +10,8 @@ import {
   courseRoles,
   organizationPermissions,
   organizationRoles,
-} from "../settings/roles";
+} from "@/settings/roles";
+import { cache } from "react";
 
 // Define resource type literals
 export type CourseResourceType = "course" | "document";

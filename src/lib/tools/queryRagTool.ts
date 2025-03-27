@@ -1,11 +1,10 @@
 import { db } from "@/db/drizzle";
 import { embedding } from "@/db/schema/embedding";
+import { getModel } from "@/lib/ai/models";
 import { createOpenAI } from "@ai-sdk/openai";
 import { type DataStreamWriter, embed, streamText, tool } from "ai";
 import { cosineDistance, desc, gt, sql } from "drizzle-orm";
-import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
-import { getModel } from "../ai/models";
 
 export const queryRagTool = (dataStream: DataStreamWriter) =>
   tool({
@@ -19,7 +18,6 @@ export const queryRagTool = (dataStream: DataStreamWriter) =>
         ),
     }),
     execute: async ({ query }, { toolCallId }) => {
-      const id = uuidv4();
       let draftText = "";
 
       console.log("QUERY: ", query);
