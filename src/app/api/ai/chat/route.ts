@@ -6,6 +6,7 @@ import {
   getMostRecentUserMessage,
   sanitizeResponseMessages,
 } from "@/lib/ai/utils";
+import { createSocraticSystemPrompt } from "@/settings/prompts";
 import {
   type Message,
   createDataStreamResponse,
