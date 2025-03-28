@@ -19,4 +19,3 @@ RUN export DRIZZLE_KIT_VERSION=$(node -pe "require('./package.json').devDependen
 # Copy only necessary files for migrations
 COPY drizzle.config.ts ./
 COPY migrations ./migrations
-COPY src/lib/env/server.ts ./src/lib/env/server.ts

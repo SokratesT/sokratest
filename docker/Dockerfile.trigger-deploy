@@ -26,4 +26,3 @@ RUN npm install --force
 # Copy only necessary files for migrations
 COPY trigger.config.ts ./
 COPY src/trigger ./src/trigger
-COPY src/lib/env/server.ts ./src/lib/env/server.ts
