@@ -36,7 +36,6 @@ import { TableElementStatic } from "@/components/plate-ui/table-element-static";
 import { TableRowElementStatic } from "@/components/plate-ui/table-row-element-static";
 import { TocElementStatic } from "@/components/plate-ui/toc-element-static";
 import { ToggleElementStatic } from "@/components/plate-ui/toggle-element-static";
-import { clientEnv } from "@/lib/env/client";
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { withProps } from "@udecode/cn";
 import {
@@ -105,7 +104,6 @@ import { BaseTogglePlugin } from "@udecode/plate-toggle";
 import { useEditorRef } from "@udecode/plate/react";
 import { all, createLowlight } from "lowlight";
 import { ArrowDownToLineIcon } from "lucide-react";
-import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -119,7 +117,7 @@ import { EquationElementStatic } from "./equation-element-static";
 import { InlineEquationElementStatic } from "./inline-equation-element-static";
 import { ToolbarButton } from "./toolbar";
 
-const siteUrl = clientEnv.NEXT_PUBLIC_BASE_URL;
+const siteUrl = process.env.NEXT_PUBLIC_BASE_URL;
 const lowlight = createLowlight(all);
 
 export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {

@@ -1,9 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { clientEnv } from "./lib/env/client";
 
 export function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
-  const hostname = clientEnv.NEXT_PUBLIC_POSTHOG_HOST;
+  const hostname = process.env.NEXT_PUBLIC_POSTHOG_HOST || "eu.i.posthog.com";
   const requestHeaders = new Headers(request.headers);
 
   requestHeaders.set("host", hostname);

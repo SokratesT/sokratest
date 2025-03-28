@@ -5,7 +5,6 @@ import {
   usernameClient,
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
-import { clientEnv } from "./env/client";
 
 export const authClient = createAuthClient({
   plugins: [
@@ -22,5 +21,5 @@ export const authClient = createAuthClient({
       },
     }),
   ],
-  baseURL: clientEnv.NEXT_PUBLIC_BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
 });

@@ -1,6 +1,5 @@
 import { saveDocumentInfo } from "@/db/actions/document";
 import type { Document } from "@/db/schema/document";
-import { clientEnv } from "@/lib/env/client";
 import type { BucketName } from "@/settings/buckets";
 import type { FileType } from "@/types/file";
 import type { PresignedUrlProp, ShortFileProp } from "./types";
@@ -97,7 +96,7 @@ export async function getPresignedUrl(
     | { fileId: string; prefix: string; type: FileType; bucket: BucketName },
 ) {
   const response = await fetch(
-    `${clientEnv.NEXT_PUBLIC_BASE_URL}/api/docs/download/`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/docs/download/`,
     {
       method: "POST",
       headers: {

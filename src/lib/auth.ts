@@ -10,7 +10,6 @@ import {
   user,
   verification,
 } from "@/db/schema/auth";
-import { serverEnv } from "@/lib/env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
@@ -118,13 +117,13 @@ export const auth = betterAuth({
 });
 
 const smtpConfig: SMTPTransport.Options = {
-  host: serverEnv.SMTP_HOST,
-  port: serverEnv.SMTP_PORT,
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT) || 587,
   secure: false, // upgrade later with STARTTLS
   tls: { rejectUnauthorized: false },
   auth: {
-    user: serverEnv.SMTP_USERNAME,
-    pass: serverEnv.SMTP_PASSWORD,
+    user: process.env.SMTP_USERNAME,
+    pass: process.env.SMTP_PASSWORD,
   },
 };
 
