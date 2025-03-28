@@ -15,8 +15,8 @@ import { navigationItems } from "@/settings/menus";
 import { ROUTES } from "@/settings/routes";
 import { Menu, MoveRight, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { NavigationAuthButtons } from "./navigation-auth-buttons";
 
@@ -120,7 +120,7 @@ const PublicNavigation = () => {
             alt="SokratesT Logo"
             width={150}
             height={40}
-            className="h-14 w-auto hidden dark:block"
+            className="hidden h-14 w-auto dark:block"
           />
         </Link>
         <div className="flex w-full items-center justify-end gap-4">
@@ -130,7 +130,9 @@ const PublicNavigation = () => {
           <ThemeSwitcher className="size-9" />
           <div className="hidden h-6 border-border/60 border-r md:inline" />
 
-          <NavigationAuthButtons />
+          <div className="hidden lg:block">
+            <NavigationAuthButtons />
+          </div>
         </div>
         <div className="flex w-12 shrink items-end justify-end lg:hidden">
           <Button

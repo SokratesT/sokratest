@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { sidebarInstructorMenu, sidebarStudentMenu } from "@/settings/menus";
+import { ROUTES } from "@/settings/routes";
+import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -21,9 +23,25 @@ const AppSidebar = async () => {
   return (
     <Sidebar id="tour1-step1">
       <SidebarHeader>
-        <Suspense fallback={<Skeleton className="h-12 w-full" />}>
-          <CourseSwitcherServer />
-        </Suspense>
+        <Link
+          href={ROUTES.PRIVATE.root.getPath()}
+          className="flex items-center lg:justify-center"
+        >
+          <Image
+            src="/logo/text_color.svg"
+            alt="SokratesT Logo"
+            width={150}
+            height={40}
+            className="h-14 w-auto dark:hidden"
+          />
+          <Image
+            src="/logo/text_white.svg"
+            alt="SokratesT Logo"
+            width={150}
+            height={40}
+            className="hidden h-14 w-auto dark:block"
+          />
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -60,6 +78,9 @@ const AppSidebar = async () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
+        <Suspense fallback={<Skeleton className="h-12 w-full" />}>
+          <CourseSwitcherServer />
+        </Suspense>
         <Suspense fallback={<Skeleton className="h-12 w-full" />}>
           <NavUser />
         </Suspense>
