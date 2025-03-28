@@ -16,6 +16,7 @@ import { ROUTES } from "@/settings/routes";
 import { Menu, MoveRight, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { NavigationAuthButtons } from "./navigation-auth-buttons";
 
@@ -107,14 +108,20 @@ const PublicNavigation = () => {
           href={ROUTES.PUBLIC.root.getPath()}
           className="flex items-center lg:justify-center"
         >
-          <motion.div
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="bg-gradient-to-r from-primary to-secondary bg-clip-text font-bold text-transparent text-xl"
-          >
-            SokratesT
-          </motion.div>
+          <Image
+            src="/logo/text_color.svg"
+            alt="SokratesT Logo"
+            width={150}
+            height={40}
+            className="h-14 w-auto dark:hidden"
+          />
+          <Image
+            src="/logo/text_white.svg"
+            alt="SokratesT Logo"
+            width={150}
+            height={40}
+            className="h-14 w-auto hidden dark:block"
+          />
         </Link>
         <div className="flex w-full items-center justify-end gap-4">
           <Button variant="ghost" className="hidden hover:bg-accent md:inline">
