@@ -16,7 +16,7 @@ export const getRelevantChunks = async (
       filter: {
         must: [
           {
-            key: qdrantCollections.chunks.index.name,
+            key: qdrantCollections.chunks.index.courseId,
             match: {
               value: courseId,
             },

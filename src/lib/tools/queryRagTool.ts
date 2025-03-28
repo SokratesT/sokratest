@@ -20,8 +20,6 @@ export const queryRagTool = (dataStream: DataStreamWriter) =>
     execute: async ({ query }, { toolCallId }) => {
       let draftText = "";
 
-      console.log("QUERY: ", query);
-
       dataStream.writeData({
         type: "id",
         content: toolCallId,

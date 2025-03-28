@@ -1,3 +1,5 @@
+import type { BucketName } from "@/settings/buckets";
+
 export type FileType =
   | "pdf"
   | "jpeg"
@@ -8,7 +10,7 @@ export type FileType =
   | "unknown";
 
 export type FilePayload = {
-  bucket: string;
+  bucket: BucketName;
   prefix: string;
   id: string;
   type: FileType;

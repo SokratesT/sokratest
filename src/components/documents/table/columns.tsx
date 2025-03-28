@@ -28,8 +28,8 @@ const handleDelete = async (id: string) => {
   toast.success("Document deleted");
 };
 
-const handleEnqueueEmbedding = async (id: string, courseId: string) => {
-  enqueueEmbeddings({ ids: [id], courseId });
+const handleEnqueueEmbedding = async (id: string) => {
+  enqueueEmbeddings({ ids: [id] });
   toast.success("Enqueued for embedding");
 };
 
@@ -126,9 +126,7 @@ export const columns: ColumnDef<Document>[] = [
               <DropdownMenuItem>View Document</DropdownMenuItem>
             </Link>
             <DropdownMenuItem
-              onClick={() =>
-                handleEnqueueEmbedding(document.id, document.courseId)
-              }
+              onClick={() => handleEnqueueEmbedding(document.id)}
             >
               Embed Document
             </DropdownMenuItem>

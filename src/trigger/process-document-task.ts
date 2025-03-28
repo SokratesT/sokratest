@@ -1,18 +1,24 @@
-import { getModel } from "@/lib/ai/models";
-import { splitMarkdownAtHeaders } from "@/lib/chunk/markdown-chunker";
-import { upsertChunksToQdrant } from "@/qdrant/mutations";
-
+import { extractMarkdownImages } from "@/lib/chunk/utils";
+import { getFileTypeFromMime } from "@/lib/files/uploadHelpers";
+import {
+  createPresignedUrlToDownload,
+  deletePrefixRecursively,
+} from "@/lib/s3/file-functions";
+import { s3Client } from "@/lib/s3/s3client";
+import { buckets } from "@/settings/buckets";
 import type { DoclingData } from "@/types/docling";
 import type { ProcessDocumentTaskPayload } from "@/types/trigger";
 import { logger, task } from "@trigger.dev/sdk/v3";
-import { embedMany } from "ai";
-import { v4 as uuidv4 } from "uuid";
 
 export const processDocumentTask = task({
   id: "process-document-task",
   maxDuration: 600, // Stop executing after 600 secs (10 mins) of compute
   run: async (payload: ProcessDocumentTaskPayload, { ctx }) => {
     const doclingApi = `${process.env.DOCLING_API}/v1alpha/convert/source`;
+
+    const presignedUrl = await createPresignedUrlToDownload(
+      payload.documentRef,
+    );
 
     const doclingResponse = await logger.trace("process-document", async () =>
       fetch(doclingApi, {
@@ -23,55 +29,62 @@ export const processDocumentTask = task({
         },
         body: JSON.stringify({
           options: {
-            image_export_mode: "placeholder",
+            image_export_mode: "embedded",
             do_ocr: false,
           },
           http_sources: [
             {
-              url: payload.url,
+              url: presignedUrl,
             },
           ],
         }),
       }),
     );
+
     const processedDocument = (await doclingResponse.json()) as DoclingData;
 
-    const documentChunks = await logger.trace("chunk-document", async () =>
-      splitMarkdownAtHeaders(
-        processedDocument.document.md_content || "",
-        256, // max length in tokens
-      ),
+    const { modifiedMarkdown, extractedImages } = extractMarkdownImages(
+      processedDocument.document.md_content || "",
     );
 
-    const embedResults = await logger.trace("embed-chunks", async () =>
-      embedMany({
-        model: getModel({ type: "embedding" }),
-        values: documentChunks.map((chunk) => chunk.content),
-      }),
-    );
+    await logger.trace("clear-prefix", async () => {
+      await deletePrefixRecursively({
+        bucket: buckets.processed.name,
+        prefix: `${payload.documentRef.id}/`,
+      });
+    });
 
-    const metaDataChunks = documentChunks.map((chunk, index) => ({
-      id: uuidv4(),
-      vector: embedResults.embeddings[index],
-      payload: {
-        course_id: payload.courseId,
-        document_id: payload.documentId,
-        text: embedResults.values[index],
-        title: chunk.title,
-        depth: chunk.depth,
-        tokens: chunk.length,
-        chunkIndex: index,
-        chunkCount: documentChunks.length,
-        createdAt: new Date().toISOString(),
-      },
-    }));
+    await logger.trace("upload-markdown", async () => {
+      await s3Client.putObject(
+        buckets.processed.name,
+        `${payload.documentRef.id}/content.md`,
+        Buffer.from(modifiedMarkdown, "utf-8"),
+      );
+    });
 
-    const qdrantResult = await logger.trace("save-embeddings", async () =>
-      upsertChunksToQdrant({
-        chunks: metaDataChunks,
-      }),
-    );
+    // Upload each extracted image
+    await logger.trace("upload-images", async () => {
+      for (let i = 0; i < extractedImages.length; i++) {
+        const image = extractedImages[i];
+        const type = getFileTypeFromMime(image.mimeType);
 
-    return { payload, result: { success: true, qdrant: qdrantResult } };
+        logger.info(
+          `Uploading image ${i + 1} of ${extractedImages.length}: ${image.placeholder} (${type})`,
+        );
+
+        if (type === "unknown") {
+          logger.error(`Unknown image type for ${image.alt}. Skipping upload.`);
+          continue;
+        }
+
+        await s3Client.putObject(
+          buckets.processed.name,
+          `${payload.documentRef.id}/${image.placeholder}.${type}`,
+          Buffer.from(image.imageData, "base64"),
+        );
+      }
+    });
+
+    return { payload, result: { success: true } };
   },
 });

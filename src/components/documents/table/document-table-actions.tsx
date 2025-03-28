@@ -26,10 +26,10 @@ const DocumentTableActions = () => {
     toast.success("Files deleted");
   };
 
-  const handleEnqueueEmbeddings = async (courseId: string) => {
+  const handleEnqueueEmbeddings = async () => {
     const fileIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    enqueueEmbeddings({ ids: fileIds, courseId });
+    enqueueEmbeddings({ ids: fileIds });
     toast.success("Files enqueued for embeddings");
   };
 
@@ -46,7 +46,7 @@ const DocumentTableActions = () => {
         <DropdownMenuSeparator />
         {courseId && (
           <DropdownMenuItem
-            onClick={() => handleEnqueueEmbeddings(courseId)}
+            onClick={() => handleEnqueueEmbeddings()}
             disabled={table.getSelectedRowModel().rows.length === 0}
           >
             Generate Embeddings

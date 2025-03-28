@@ -1,6 +1,7 @@
 import { saveDocumentInfo } from "@/db/actions/document";
 import type { Document } from "@/db/schema/document";
 import { clientEnv } from "@/lib/env/client";
+import type { BucketName } from "@/settings/buckets";
 import type { FileType } from "@/types/file";
 import type { PresignedUrlProp, ShortFileProp } from "./types";
 
@@ -26,11 +27,8 @@ export const getPresignedUrls = async (files: ShortFileProp[]) => {
  * @param file  file to upload
  * @returns  response from S3
  */
-export const uploadToS3 = async (
-  presignedUrl: PresignedUrlProp,
-  file: File,
-) => {
-  const response = await fetch(presignedUrl.url, {
+export const uploadToS3 = async (presignedUrl: string, file: File) => {
+  const response = await fetch(presignedUrl, {
     method: "PUT",
     body: file,
     headers: {
@@ -55,7 +53,7 @@ export const handleUpload = async (
   const filesInfo: ShortFileProp[] = files.map((file) => ({
     name: file.name,
     size: file.size,
-    type: getFileTypeFromMime(file),
+    type: getFileTypeFromMime(file.type),
   }));
 
   const presignedUrls = await getPresignedUrls(filesInfo);
@@ -71,7 +69,7 @@ export const handleUpload = async (
         throw new Error("File not found");
       }
 
-      return uploadToS3(presignedUrl, file).then(async (res) => {
+      return uploadToS3(presignedUrl.url, file).then(async (res) => {
         if (res.status === 200) {
           await saveDocumentInfo({
             id: presignedUrl.id,
@@ -93,27 +91,41 @@ export const handleUpload = async (
   onUploadSuccess();
 };
 
-export async function getPresignedUrl(fileId: string) {
+export async function getPresignedUrl(
+  params:
+    | { fileId: string }
+    | { fileId: string; prefix: string; type: FileType; bucket: BucketName },
+) {
   const response = await fetch(
-    `${clientEnv.NEXT_PUBLIC_BASE_URL}/api/docs/download/${fileId}`,
+    `${clientEnv.NEXT_PUBLIC_BASE_URL}/api/docs/download/`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    },
   );
 
-  console.log(response);
+  if (!response.ok) {
+    throw new Error(`Failed to get presigned URL: ${response.statusText}`);
+  }
 
   return (await response.json()) as string;
 }
 
 export const downloadFile = async ({ id }: { id: Document["id"] }) => {
-  const presignedUrl = await getPresignedUrl(id);
+  const presignedUrl = await getPresignedUrl({ fileId: id });
   window.open(presignedUrl, "_blank");
 };
 
-export function getFileTypeFromMime(file: File): FileType {
-  const mimeType = file.type;
+export function getFileTypeFromMime(mimeType: File["type"]): FileType {
   if (mimeType.startsWith("image/jpeg")) {
     return "jpeg";
     /* } else if (mimeType.startsWith("video/")) {
     return "video"; */
+  } else if (mimeType.startsWith("image/png")) {
+    return "png";
   } else if (mimeType.startsWith("text/markdown")) {
     return "md";
   } else if (mimeType.startsWith("application/pdf")) {

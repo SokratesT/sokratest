@@ -25,8 +25,6 @@ const CourseSwitcher = ({
   const router = useRouter();
 
   const handleCourseChange = async (course: Course) => {
-    console.log(course);
-
     await setActiveCourse({ courseId: course.id });
 
     router.push(ROUTES.PRIVATE.root.getPath());

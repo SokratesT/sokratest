@@ -33,7 +33,7 @@ const OrganizationTableActions = () => {
     });
 
     Promise.all(deletions).then((errors) => {
-      console.log("Organization errors", errors.filter(Boolean));
+      console.error("Organization errors", errors.filter(Boolean));
 
       if (errors.filter(Boolean).length > 0) {
         toast.error("Something went wrong, please try again!");

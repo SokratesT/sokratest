@@ -16,7 +16,7 @@ const FileViewer = ({ fileInfo }: { fileInfo: Document }) => {
 
   useEffect(() => {
     const fetchUrl = async () => {
-      const presignedUrl = await getPresignedUrl(fileInfo.id);
+      const presignedUrl = await getPresignedUrl({ fileId: fileInfo.id });
       setFilePath(presignedUrl);
     };
     fetchUrl().then(() => setIsLoading(false));
@@ -69,7 +69,7 @@ const Viewport = ({
           >
             <Image
               src={filePath}
-              alt="test"
+              alt="test" // FIXME: Add proper alt text
               width={1000}
               height={500}
               className={cn("w-auto object-contain")}

@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { deleteDocumentInfo } from "@/db/actions/document";
-import { enqueueEmbeddings } from "@/db/actions/test-trigger";
+import { enqueueDocuments, enqueueEmbeddings } from "@/db/actions/test-trigger";
 import type { Document } from "@/db/schema/document";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
@@ -53,13 +53,23 @@ const FileActions = ({
             onClick={() =>
               enqueueEmbeddings({
                 ids: [fileInfo.id],
-                courseId: fileInfo.courseId,
               })
             }
             disabled={fileInfo.embeddingStatus === "processing"}
           >
             Generate Embedding
           </Button>
+          <Button
+            onClick={() =>
+              enqueueDocuments({
+                ids: [fileInfo.id],
+              })
+            }
+            disabled={fileInfo.embeddingStatus === "processing"}
+          >
+            Process Docs
+          </Button>
+
           <Button
             variant="destructive"
             onClick={() => deleteDocumentInfo({ ids: [fileInfo.id] })}

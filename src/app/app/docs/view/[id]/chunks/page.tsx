@@ -1,9 +1,7 @@
-import { Markdown } from "@/components/chat/markdown";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { db } from "@/db/drizzle";
+import { Placeholder } from "@/components/ui/custom/placeholder";
 import type { Document } from "@/db/schema/document";
-import { embedding } from "@/db/schema/embedding";
-import { eq } from "drizzle-orm";
+import { getChunksByDocument } from "@/qdrant/queries";
+import { DisplayChunk } from "./_components/display-chunk";
 
 const EditPostPage = async ({
   params,
@@ -12,27 +10,19 @@ const EditPostPage = async ({
 }) => {
   const { id } = await params;
 
-  const queryFileChunks = await db
-    .select()
-    .from(embedding)
-    .where(eq(embedding.fileId, id));
+  const result = await getChunksByDocument({ documentId: id });
+
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
+
+  const chunks = result.data.query.points;
 
   return (
     <div className="grid grid-cols-1 gap-2">
-      {queryFileChunks.map((chunk) => {
-        return (
-          <Card key={chunk.id}>
-            <CardHeader>
-              <CardTitle>
-                {chunk.fileId} / {chunk.nodeId}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Markdown>{chunk.text}</Markdown>
-            </CardContent>
-          </Card>
-        );
-      })}
+      {chunks.map((chunk) => (
+        <DisplayChunk key={chunk.id} chunk={chunk} />
+      ))}
     </div>
   );
 };

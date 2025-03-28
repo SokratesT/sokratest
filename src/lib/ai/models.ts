@@ -15,7 +15,7 @@ interface BaseModel {
 }
 
 interface ChatModel extends BaseModel {
-  type: "chatReasoning" | "chat" | "small";
+  type: "chatReasoning" | "chat" | "small" | "vision";
   getProvider: () => LanguageModelV1;
 }
 
@@ -72,6 +72,15 @@ const models = {
         return remoteProvider(this.id);
       },
     },
+    vision: {
+      id: "qwen2.5-vl-72b-instruct",
+      label: "Qwen 2.5 VL (72b)",
+      description: "Model description for Qwen 2.5 VL (72b)",
+      type: "vision" as const,
+      getProvider: function () {
+        return remoteProvider(this.id);
+      },
+    },
     embedding: {
       id: "e5-mistral-7b-instruct",
       label: "E5 Mistral 7b",
@@ -113,6 +122,15 @@ const models = {
         return localProvider(this.id);
       },
     },
+    vision: {
+      id: "llama3.2-vision:11b",
+      label: "Llama 3.2 (11b)",
+      description: "Model description for Llama 3.2 (11b)",
+      type: "vision" as const,
+      getProvider: function () {
+        return remoteProvider(this.id);
+      },
+    },
     embedding: {
       id: "mxbai-embed-large:latest",
       label: "Mxbai Embed Large",
@@ -138,7 +156,7 @@ interface PostHogTraceParams {
 }
 
 export const getModel = <
-  T extends "chatReasoning" | "chat" | "small" | "embedding",
+  T extends "chatReasoning" | "chat" | "small" | "embedding" | "vision",
 >({
   type,
   traceParams,

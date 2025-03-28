@@ -27,10 +27,17 @@ const initCollectionIfNeeded = async (qdrant: QdrantClient) => {
     });
 
     await qdrant.createPayloadIndex(qdrantCollections.chunks.name, {
-      field_name: qdrantCollections.chunks.index.name,
+      field_name: qdrantCollections.chunks.index.courseId,
       field_schema: {
         type: "uuid",
         is_tenant: true,
+      },
+    });
+
+    await qdrant.createPayloadIndex(qdrantCollections.chunks.name, {
+      field_name: qdrantCollections.chunks.index.chunkIndex,
+      field_schema: {
+        type: "integer",
       },
     });
 

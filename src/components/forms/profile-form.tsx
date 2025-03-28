@@ -37,8 +37,6 @@ const ProfileForm = () => {
   }, [data]);
 
   const onSubmit = async (values: UserUpdateSchemaType) => {
-    console.log("values", values);
-
     const { data, error } = await authClient.updateUser(
       {
         name: values.name,

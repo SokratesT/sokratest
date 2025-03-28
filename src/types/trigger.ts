@@ -1,5 +1,6 @@
+import type { FilePayload } from "./file";
+
 export interface ProcessDocumentTaskPayload {
-  url: string;
-  documentId: string;
   courseId: string;
+  documentRef: Omit<FilePayload, "expiry">;
 }

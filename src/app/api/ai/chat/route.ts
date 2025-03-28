@@ -124,12 +124,6 @@ export async function POST(request: Request) {
           // generateFinalResponse: finalResponseTool(dataStream, messages),
           queryRag: queryRagTool(dataStream),
         }, */
-        onStepFinish: ({ toolCalls, finishReason }) => {
-          /* if (toolCalls?.some((call) => call.toolName === "queryRag")) {
-            console.log("queryRag tool call finished");
-          } */
-          return;
-        },
         onFinish: async ({ response, reasoning }) => {
           if (session.user?.id) {
             try {
