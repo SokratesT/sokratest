@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,

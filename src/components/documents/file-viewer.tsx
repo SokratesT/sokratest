@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import type { Document } from "@/db/schema/document";
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";

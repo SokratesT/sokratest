@@ -1,5 +1,5 @@
 import { Markdown } from "@/components/chat/markdown";
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { getChunks } from "@/qdrant/queries";
 
 const QdrantPlaygroundResults = async ({

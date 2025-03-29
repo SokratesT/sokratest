@@ -1,5 +1,5 @@
 import { ManageOrganization } from "@/components/organizations/manage-organization";
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { getOrganizationById } from "@/db/queries/organizations";
 
 const EditOrganizationPage = async ({

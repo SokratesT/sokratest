@@ -1,4 +1,4 @@
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { querySearchParamsCache } from "@/lib/nuqs/search-params.search";
 import type { SearchParams } from "nuqs/server";
 import { QdrantPlaygroundForm } from "./_components/qdrant-playground-form";

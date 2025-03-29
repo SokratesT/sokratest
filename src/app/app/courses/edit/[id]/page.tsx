@@ -1,5 +1,5 @@
 import { CourseForm } from "@/components/courses/course-form";
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { getCourseById } from "@/db/queries/course";
 
 const EditCoursePage = async ({

@@ -2,7 +2,7 @@ import { SearchInput } from "@/components/documents/search-input";
 import { OrganizationTableActions } from "@/components/organizations/table/organization-table-actions";
 import { organizationTableColumns } from "@/components/organizations/table/organization-table-columns";
 import { buttonVariants } from "@/components/ui/button";
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";

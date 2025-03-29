@@ -1,5 +1,5 @@
 import { buttonVariants } from "@/components/ui/button";
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { AddUserForm } from "@/components/users/add-user-form";
 import { db } from "@/db/drizzle";
 import { getSession } from "@/db/queries/auth";

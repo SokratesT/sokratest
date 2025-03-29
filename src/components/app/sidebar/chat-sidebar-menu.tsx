@@ -1,4 +1,4 @@
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -23,7 +23,7 @@ const ChatSidebarMenu = async () => {
         <SidebarMenuItem key={chat.id}>
           <SidebarMenuButton asChild>
             <Link href={ROUTES.PRIVATE.chat.view.getPath({ id: chat.id })}>
-              <span>{chat.title}</span>
+              {chat.title}
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>

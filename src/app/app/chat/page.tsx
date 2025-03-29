@@ -1,6 +1,6 @@
 import { ChatsList } from "@/components/chat/chats-list";
 import { NewChatButton } from "@/components/chat/new-chat-button";
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { getUserChatsForActiveCourse } from "@/db/queries/chat";
 
 const ChatsPage = async () => {

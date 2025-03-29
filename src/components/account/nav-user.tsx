@@ -1,7 +1,7 @@
 import { SignOutButton } from "@/components/auth/signout-button";
 import { OrganizationSwitcher } from "@/components/organizations/organization-switcher";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import {
   DropdownMenu,
   DropdownMenuContent,

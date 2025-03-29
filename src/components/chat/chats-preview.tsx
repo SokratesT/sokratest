@@ -1,4 +1,4 @@
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { getUserChatsForActiveCourse } from "@/db/queries/chat";
 import { ChatsList } from "./chats-list";
 

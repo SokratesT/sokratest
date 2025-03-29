@@ -1,4 +1,4 @@
-import { Placeholder } from "@/components/ui/custom/placeholder";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import type { Document } from "@/db/schema/document";
 import { getChunksByDocument } from "@/qdrant/queries";
 import { DisplayChunk } from "./_components/display-chunk";
