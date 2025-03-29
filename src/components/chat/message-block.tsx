@@ -173,9 +173,7 @@ const MessageBlock = ({
               </div>
             ))}
 
-            {message.annotations && (
-              <AnnotationBlock annotations={message.annotations} />
-            )}
+            <AnnotationBlock annotations={message.annotations} />
             {message.role === "user" && (
               <ChatBubbleActionWrapper
                 variant="sent"

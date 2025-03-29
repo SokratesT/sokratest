@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -7,6 +9,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import type { JSONValue } from "ai";
+import { useEffect, useState } from "react";
 import { Markdown } from "./markdown";
 
 interface BaseAnnotation {
@@ -21,28 +24,46 @@ interface AnnotationReference extends BaseAnnotation {
   type: "reference";
 }
 
-const AnnotationBlock = ({ annotations }: { annotations: JSONValue[] }) => {
+const AnnotationBlock = ({
+  annotations,
+}: { annotations: JSONValue[] | undefined }) => {
+  const [typedAnnotations, setTypedAnnotations] = useState<BaseAnnotation[]>(
+    [],
+  );
+
+  // FIXME: Terrible implementation. Definitely needs some refactoring.
+  useEffect(() => {
+    try {
+      const parsed = JSON.parse(annotations?.toString() ?? "[]");
+      setTypedAnnotations(parsed);
+      console.log("PARSED");
+    } catch (error) {
+      const parsed = annotations?.map((annotation) =>
+        JSON.parse(annotation as string),
+      );
+      setTypedAnnotations(parsed ?? []);
+      console.log("FALLBACK");
+    }
+  }, []);
+
+  if (!typedAnnotations || typedAnnotations.length <= 0) {
+    return null;
+  }
+
   return (
     <div className="mt-4">
-      <p className="font-bold">Annotations</p>
+      <p className="font-bold">References</p>
       <div className="flex flex-wrap gap-2">
-        {annotations.map((annotation, i) => {
+        {typedAnnotations.map((annotation, i) => {
           // FIXME: Bit awkward. Check if there's a better way to do this.
-          const typedAnnotation = JSON.parse(
-            annotation?.toString() ?? "",
-          ) as BaseAnnotation;
 
-          switch (typedAnnotation.type) {
+          switch (annotation.type) {
             case "reference": {
-              const referenceAnnotation =
-                typedAnnotation as AnnotationReference;
+              const referenceAnnotation = annotation as AnnotationReference;
               return (
                 // TODO: Add annotationId instead of this
-                <Popover
-                  key={
-                    referenceAnnotation.fileId + referenceAnnotation.similarity
-                  }
-                >
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                <Popover key={i}>
                   <PopoverTrigger asChild>
                     <Button>Ref. {i + 1}</Button>
                   </PopoverTrigger>
