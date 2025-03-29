@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { deleteDocumentInfo } from "@/db/actions/document";
 import { enqueueDocuments, enqueueEmbeddings } from "@/db/actions/test-trigger";
@@ -83,8 +83,9 @@ const FileActions = ({
             href={ROUTES.PRIVATE.documents.chunks.root.getPath({
               id: fileInfo.id,
             })}
+            className={buttonVariants({ variant: "secondary" })}
           >
-            <Button variant="secondary">View Chunks</Button>
+            View Chunks
           </Link>
         </div>
       </div>

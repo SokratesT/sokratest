@@ -1,6 +1,6 @@
 import { columns } from "@/components/posts/table/columns";
 import { PostsDataTableSelectActions } from "@/components/posts/table/posts-data-table-select-actions";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
@@ -34,12 +34,19 @@ const PostsPage = async ({
           Posts
         </h4>
         <div className="flex gap-2">
-          <Button variant="outline" asChild>
-            <Link href={ROUTES.PUBLIC.blog.getPath()}>View Posts</Link>
-          </Button>
-          <Button asChild>
-            <Link href={ROUTES.PRIVATE.posts.add.getPath()}>Add Post</Link>
-          </Button>
+          <Link
+            href={ROUTES.PUBLIC.blog.getPath()}
+            className={buttonVariants({ variant: "outline" })}
+          >
+            View Posts
+          </Link>
+
+          <Link
+            href={ROUTES.PRIVATE.posts.add.getPath()}
+            className={buttonVariants({ variant: "default" })}
+          >
+            Add Post
+          </Link>
         </div>
       </div>
       <div>

@@ -1,6 +1,6 @@
 import { NewChatButton } from "@/components/chat/new-chat-button";
 import { AppTourButton } from "@/components/next-step/app-tour-button";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ROUTES } from "@/settings/routes";
 import { FilesIcon, PlusIcon, SettingsIcon } from "lucide-react";
@@ -15,18 +15,26 @@ const QuickActions = () => {
           New Chat
         </NewChatButton>
 
-        <Link href={ROUTES.PRIVATE.documents.root.getPath()}>
-          <Button variant="secondary" className="w-full justify-start">
-            <FilesIcon className="mr-2 h-4 w-4" />
-            Course Files
-          </Button>
+        <Link
+          href={ROUTES.PRIVATE.documents.root.getPath()}
+          className={buttonVariants({
+            variant: "secondary",
+            className: "w-full justify-start",
+          })}
+        >
+          <FilesIcon className="mr-2 h-4 w-4" />
+          Course Files
         </Link>
 
-        <Link href={ROUTES.PRIVATE.app.account.getPath()}>
-          <Button variant="secondary" className="w-full justify-start">
-            <SettingsIcon className="mr-2 h-4 w-4" />
-            Settings
-          </Button>
+        <Link
+          href={ROUTES.PRIVATE.app.account.getPath()}
+          className={buttonVariants({
+            variant: "secondary",
+            className: "w-full justify-start",
+          })}
+        >
+          <SettingsIcon className="mr-2 h-4 w-4" />
+          Settings
         </Link>
         <AppTourButton />
       </CardContent>

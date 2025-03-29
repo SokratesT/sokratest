@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -43,9 +43,12 @@ const CoursePreview = async () => {
       </CardHeader>
       <CardContent>{description}</CardContent>
       <CardFooter>
-        <Button>
-          <Link href={ROUTES.PRIVATE.courses.view.getPath({ id })}>More</Link>
-        </Button>
+        <Link
+          href={ROUTES.PRIVATE.courses.view.getPath({ id })}
+          className={buttonVariants({ variant: "default" })}
+        >
+          More
+        </Link>
       </CardFooter>
     </Card>
   );

@@ -35,6 +35,6 @@ export const deleteChat = authActionClient
   .action(async ({ parsedInput: { ids } }) => {
     await db.delete(chat).where(inArray(chat.id, ids));
 
-    revalidatePath(ROUTES.PRIVATE.chat.root.getPath());
+    revalidatePath(ROUTES.PRIVATE.chat.add.getPath());
     return { error: null };
   });

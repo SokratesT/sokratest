@@ -2,7 +2,7 @@
 
 import { PageTitle } from "@/components/app/page-title";
 import { ThemeSwitcher } from "@/components/app/theme-switcher";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
@@ -32,11 +32,16 @@ const Header = () => {
         <PageTitle />
       </div>
       <div className="flex gap-2">
-        <Button size="icon" className="size-8" variant="outline" asChild>
-          <Link href={ROUTES.PUBLIC.root.getPath()}>
-            <ArrowLeftToLine />
-          </Link>
-        </Button>
+        <Link
+          href={ROUTES.PUBLIC.root.getPath()}
+          className={buttonVariants({
+            variant: "outline",
+            size: "icon",
+            className: "size-8",
+          })}
+        >
+          <ArrowLeftToLine />
+        </Link>
         <ThemeSwitcher className="size-8 px-0" />
       </div>
     </header>

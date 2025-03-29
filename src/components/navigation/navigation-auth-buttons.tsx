@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
 import { ROUTES } from "@/settings/routes";
@@ -28,24 +28,38 @@ const NavigationAuthButtons = () => {
   if (session?.session) {
     return (
       <div className="flex gap-2">
-        <Button variant="outline" asChild>
-          <Link href={ROUTES.PRIVATE.app.account.getPath()}>Account</Link>
-        </Button>
-        <Button asChild>
-          <Link href={ROUTES.PRIVATE.root.getPath()}>Go to App</Link>
-        </Button>
+        <Link
+          href={ROUTES.PRIVATE.app.account.getPath()}
+          className={buttonVariants({ variant: "outline" })}
+        >
+          Account
+        </Link>
+
+        <Link
+          href={ROUTES.PRIVATE.root.getPath()}
+          className={buttonVariants({ variant: "default" })}
+        >
+          Go to App
+        </Link>
       </div>
     );
   }
 
   return (
     <div className="flex gap-2">
-      <Button variant="outline" asChild>
-        <Link href={ROUTES.PUBLIC.login.getPath()}>Sign in</Link>
-      </Button>
-      <Button asChild>
-        <Link href={ROUTES.PUBLIC.signup.getPath()}>Get started</Link>
-      </Button>
+      <Link
+        href={ROUTES.PUBLIC.login.getPath()}
+        className={buttonVariants({ variant: "outline" })}
+      >
+        Sign in
+      </Link>
+
+      <Link
+        href={ROUTES.PUBLIC.signup.getPath()}
+        className={buttonVariants({ variant: "default" })}
+      >
+        Get started
+      </Link>
     </div>
   );
 };

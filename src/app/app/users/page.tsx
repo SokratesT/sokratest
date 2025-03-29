@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
@@ -37,9 +37,12 @@ const UsersPage = async ({
           Users
         </h4>
         <div className="flex gap-2">
-          <Button asChild>
-            <Link href={ROUTES.PRIVATE.users.add.getPath()}>Add User</Link>
-          </Button>
+          <Link
+            href={ROUTES.PRIVATE.users.add.getPath()}
+            className={buttonVariants({ variant: "default" })}
+          >
+            Add User
+          </Link>
         </div>
       </div>
       <div>

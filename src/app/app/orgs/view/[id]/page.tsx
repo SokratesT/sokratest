@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Placeholder } from "@/components/ui/custom/placeholder";
 import { getOrganizationById } from "@/db/queries/organizations";
+import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
 
 const ViewCoursePage = async ({
@@ -27,9 +28,12 @@ const ViewCoursePage = async ({
           {result.data.query.name}
         </h4>
         <div className="flex gap-2">
-          <Button asChild>
-            <Link href={`/app/orgs/view/${id}/members`}>Manage Users</Link>
-          </Button>
+          <Link
+            href={ROUTES.PRIVATE.organizations.members.getPath({ id })}
+            className={buttonVariants({ variant: "default" })}
+          >
+            Manage Users
+          </Link>
         </div>
       </div>
       <div className="flex justify-center">

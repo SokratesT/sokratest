@@ -1,33 +1,12 @@
 import {
   BookMarkedIcon,
   Building2Icon,
-  FilesIcon,
-  HomeIcon,
-  MessagesSquareIcon,
   NewspaperIcon,
   SettingsIcon,
   UserIcon,
   UsersIcon,
 } from "lucide-react";
 import { ROUTES } from "./routes";
-
-export const sidebarStudentMenu = [
-  {
-    title: "Home",
-    url: ROUTES.PRIVATE.root.getPath(),
-    icon: HomeIcon,
-  },
-  {
-    title: "Chat",
-    url: ROUTES.PRIVATE.chat.root.getPath(),
-    icon: MessagesSquareIcon,
-  },
-  {
-    title: "Documents",
-    url: ROUTES.PRIVATE.documents.root.getPath(),
-    icon: FilesIcon,
-  },
-];
 
 export const sidebarInstructorMenu = [
   {

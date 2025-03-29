@@ -1,7 +1,7 @@
 import { SearchInput } from "@/components/documents/search-input";
 import { OrganizationTableActions } from "@/components/organizations/table/organization-table-actions";
 import { organizationTableColumns } from "@/components/organizations/table/organization-table-columns";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Placeholder } from "@/components/ui/custom/placeholder";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
@@ -43,11 +43,12 @@ const UsersPage = async ({
           Organisations
         </h4>
         <div className="flex gap-2">
-          <Button asChild>
-            <Link href={ROUTES.PRIVATE.organizations.add.getPath()}>
-              Add Organisation
-            </Link>
-          </Button>
+          <Link
+            href={ROUTES.PRIVATE.organizations.add.getPath()}
+            className={buttonVariants({ variant: "default" })}
+          >
+            Add Organisation
+          </Link>
         </div>
       </div>
       <div>

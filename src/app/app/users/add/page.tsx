@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Placeholder } from "@/components/ui/custom/placeholder";
 import { AddUserForm } from "@/components/users/add-user-form";
 import { db } from "@/db/drizzle";
@@ -25,9 +25,13 @@ const addUserPage = async () => {
     return (
       <Placeholder>
         <p>No courses found. Please create a course first.</p>
-        <Button asChild variant="outline">
-          <Link href={ROUTES.PRIVATE.courses.add.getPath()}>Create Course</Link>
-        </Button>
+
+        <Link
+          href={ROUTES.PRIVATE.courses.add.getPath()}
+          className={buttonVariants({ variant: "outline" })}
+        >
+          Create Course
+        </Link>
       </Placeholder>
     );
   }

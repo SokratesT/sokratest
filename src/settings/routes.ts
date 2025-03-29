@@ -81,16 +81,9 @@ export const ROUTES = {
       },
     },
     chat: {
-      root: {
-        name: "Chat",
-        pathTemplate: "/app/chat",
-        getPath: function () {
-          return makePath(this.pathTemplate);
-        },
-      },
       add: {
-        name: "Add Chat",
-        pathTemplate: "/app/chat/add",
+        name: "New Chat",
+        pathTemplate: "/app/chat/",
         getPath: function () {
           return makePath(this.pathTemplate);
         },

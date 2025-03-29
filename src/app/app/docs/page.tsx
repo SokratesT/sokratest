@@ -1,7 +1,7 @@
 import { SearchInput } from "@/components/documents/search-input";
 import { columns } from "@/components/documents/table/columns";
 import { DocumentTableActions } from "@/components/documents/table/document-table-actions";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
@@ -38,16 +38,19 @@ const DocumentsPage = async ({
           Documents
         </h4>
         <div className="flex gap-2">
-          <Button asChild variant="outline">
-            <Link href={ROUTES.PRIVATE.documents.playground.getPath()}>
-              Playground
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href={ROUTES.PRIVATE.documents.add.getPath()}>
-              Add Document
-            </Link>
-          </Button>
+          <Link
+            href={ROUTES.PRIVATE.documents.playground.getPath()}
+            className={buttonVariants({ variant: "outline" })}
+          >
+            Playground
+          </Link>
+
+          <Link
+            href={ROUTES.PRIVATE.documents.add.getPath()}
+            className={buttonVariants({ variant: "default" })}
+          >
+            Add Document
+          </Link>
         </div>
       </div>
       <div>

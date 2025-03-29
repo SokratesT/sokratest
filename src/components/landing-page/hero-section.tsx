@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { ROUTES } from "@/settings/routes";
 import { ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -37,12 +37,17 @@ const HeroSection = () => {
           </p>
 
           <div className="space-y-4 md:space-x-4 md:space-y-0">
-            <Button asChild className="group/arrow w-5/6 font-bold md:w-1/4">
-              <Link href={ROUTES.PRIVATE.root.getPath()} target="_blank">
-                Get Started
-                <ArrowRight className="ml-2 size-5 transition-transform group-hover/arrow:translate-x-1" />
-              </Link>
-            </Button>
+            <Link
+              href={ROUTES.PRIVATE.root.getPath()}
+              target="_blank"
+              className={buttonVariants({
+                variant: "default",
+                className: "group/arrow w-5/6 font-bold md:w-1/4",
+              })}
+            >
+              Get Started
+              <ArrowRight className="ml-2 size-5 transition-transform group-hover/arrow:translate-x-1" />
+            </Link>
           </div>
         </div>
 

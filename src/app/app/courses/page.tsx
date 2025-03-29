@@ -1,6 +1,6 @@
 import { columns } from "@/components/courses/table/columns";
 import { CoursesDataTableSelectActions } from "@/components/courses/table/courses-data-table-select-actions";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Placeholder } from "@/components/ui/custom/placeholder";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
@@ -39,9 +39,12 @@ const CoursesPage = async ({
           Courses
         </h4>
         <div className="flex gap-2">
-          <Button asChild>
-            <Link href={ROUTES.PRIVATE.courses.add.getPath()}>Add Course</Link>
-          </Button>
+          <Link
+            href={ROUTES.PRIVATE.courses.add.getPath()}
+            className={buttonVariants({ variant: "default" })}
+          >
+            Add Course
+          </Link>
         </div>
       </div>
       <div>

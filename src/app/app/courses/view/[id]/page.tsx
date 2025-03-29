@@ -1,5 +1,5 @@
 import { PlateEditor } from "@/components/editor/plate-editor";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Placeholder } from "@/components/ui/custom/placeholder";
 import { getCourseById } from "@/db/queries/course";
@@ -29,14 +29,19 @@ const ViewCoursePage = async ({
           {result.data.query.title}
         </h4>
         <div className="flex gap-2">
-          <Button asChild>
-            <Link href={ROUTES.PRIVATE.courses.members.getPath({ id })}>
-              Manage Users
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href={ROUTES.PRIVATE.documents.add.getPath()}>Add Files</Link>
-          </Button>
+          <Link
+            href={ROUTES.PRIVATE.courses.members.getPath({ id })}
+            className={buttonVariants({ variant: "default" })}
+          >
+            Manage Users
+          </Link>
+
+          <Link
+            href={ROUTES.PRIVATE.documents.add.getPath()}
+            className={buttonVariants({ variant: "default" })}
+          >
+            Add Files
+          </Link>
         </div>
       </div>
       <div className="flex justify-center">
