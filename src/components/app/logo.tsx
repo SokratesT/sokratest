@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Logo = () => {
   return (
-    <>
+    <div className="flex w-full items-center justify-center">
       <Image
         src="/logo/text_color.svg"
         alt="SokratesT Logo"
@@ -17,7 +17,7 @@ const Logo = () => {
         height={40}
         className="hidden h-14 w-auto dark:block"
       />
-    </>
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
 import { PlateEditor } from "@/components/editor/plate-editor";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Placeholder } from "@/components/placeholders/placeholder";
 import { getCourseById } from "@/db/queries/course";
 import { ROUTES } from "@/settings/routes";
 import Link from "next/link";

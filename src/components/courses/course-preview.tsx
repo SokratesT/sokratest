@@ -1,3 +1,4 @@
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -6,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Placeholder } from "@/components/placeholders/placeholder";
 import { getSession } from "@/db/queries/auth";
 import { getCourseById } from "@/db/queries/course";
 import { ROUTES } from "@/settings/routes";

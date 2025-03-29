@@ -3,9 +3,9 @@
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormTextField } from "@/components/forms/fields/formTextField";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Placeholder } from "@/components/placeholders/placeholder";
 import { Form, FormField } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";

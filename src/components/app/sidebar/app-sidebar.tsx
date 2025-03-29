@@ -1,4 +1,5 @@
 import { NavUser } from "@/components/account/nav-user";
+import { Logo } from "@/components/app/logo";
 import { CourseSwitcherServer } from "@/components/courses/course-switcher/course-switcher-server";
 import { SkeletonsArray } from "@/components/placeholders/skeletons-array";
 import { buttonVariants } from "@/components/ui/button";
@@ -16,7 +17,6 @@ import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ChatSidebarMenu } from "./chat-sidebar-menu";
-import { Logo } from "@/components/app/logo";
 import { ManageSidebarGroup } from "./manage-sidebar-group";
 
 const AppSidebar = async () => {

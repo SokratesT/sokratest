@@ -19,7 +19,7 @@ const ViewDocumentPage = async ({
     return <div>No such document</div>;
   }
 
-  return <FileViewer fileInfo={result.data.query} />;
+  return <FileViewer document={result.data.query} />;
 };
 
 export default ViewDocumentPage;

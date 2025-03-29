@@ -1,6 +1,6 @@
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Placeholder } from "@/components/placeholders/placeholder";
 import { getOrganizationById } from "@/db/queries/organizations";
 import { ROUTES } from "@/settings/routes";
 import Link from "next/link";

@@ -1,7 +1,7 @@
 import { columns } from "@/components/courses/table/columns";
 import { CoursesDataTableSelectActions } from "@/components/courses/table/courses-data-table-select-actions";
-import { buttonVariants } from "@/components/ui/button";
 import { Placeholder } from "@/components/placeholders/placeholder";
+import { buttonVariants } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
