@@ -10,7 +10,9 @@ import {
 import { sidebarInstructorMenu } from "@/settings/menus";
 import Link from "next/link";
 
-const ManageSidebarContent = async () => {
+const ManageSidebarGroup = async () => {
+  // TODO: Check for user roles here
+
   return (
     <SidebarContent>
       <SidebarGroup>
@@ -34,4 +36,4 @@ const ManageSidebarContent = async () => {
   );
 };
 
-export { ManageSidebarContent };
+export { ManageSidebarGroup };

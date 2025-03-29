@@ -1,0 +1,69 @@
+import { NavUser } from "@/components/account/nav-user";
+import { CourseSwitcherServer } from "@/components/courses/course-switcher/course-switcher-server";
+import { SkeletonsArray } from "@/components/placeholders/skeletons-array";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+} from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ROUTES } from "@/settings/routes";
+import Link from "next/link";
+import { Suspense } from "react";
+import { ChatSidebarMenu } from "./chat-sidebar-menu";
+import { Logo } from "@/components/app/logo";
+import { ManageSidebarGroup } from "./manage-sidebar-group";
+
+const AppSidebar = async () => {
+  return (
+    <Sidebar id="tour1-step1">
+      <SidebarHeader>
+        <Link
+          href={ROUTES.PRIVATE.root.getPath()}
+          className="flex items-center lg:justify-center"
+        >
+          <Logo />
+        </Link>
+        <Suspense fallback={<Skeleton className="h-12 w-full" />}>
+          <CourseSwitcherServer />
+        </Suspense>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <Link
+            href={ROUTES.PRIVATE.chat.add.getPath()}
+            className={buttonVariants({ variant: "default" })}
+          >
+            New Chat
+          </Link>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Chats</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <Suspense
+              fallback={<SkeletonsArray className="mt-2 max-h-8" count={6} />}
+            >
+              <ChatSidebarMenu />
+            </Suspense>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+
+      <SidebarFooter>
+        <SidebarContent>
+          <ManageSidebarGroup />
+        </SidebarContent>
+        <Suspense fallback={<Skeleton className="h-12 w-full" />}>
+          <NavUser />
+        </Suspense>
+      </SidebarFooter>
+    </Sidebar>
+  );
+};
+
+export { AppSidebar };
