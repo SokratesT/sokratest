@@ -1,7 +1,7 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
 import { Placeholder } from "@/components/placeholders/placeholder";
+import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import type { Document } from "@/db/schema/document";
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";
@@ -9,18 +9,19 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FileActions } from "./file-actions";
+import { FileMeta } from "./file-meta";
 
-const FileViewer = ({ fileInfo }: { fileInfo: Document }) => {
+const FileViewer = ({ document }: { document: Document }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [filePath, setFilePath] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const fetchUrl = async () => {
-      const presignedUrl = await getPresignedUrl({ fileId: fileInfo.id });
+      const presignedUrl = await getPresignedUrl({ fileId: document.id });
       setFilePath(presignedUrl);
     };
     fetchUrl().then(() => setIsLoading(false));
-  }, [fileInfo]);
+  }, [document]);
 
   if (!filePath || isLoading) {
     return (
@@ -32,9 +33,22 @@ const FileViewer = ({ fileInfo }: { fileInfo: Document }) => {
 
   return (
     <div className="flex h-full flex-col gap-4">
-      <FileActions fileInfo={fileInfo} filePath={filePath} />
-      <div className="size-full">
-        <Viewport fileType={fileInfo.fileType} filePath={filePath} />
+      <div className="flex items-center justify-between">
+        <h3
+          className="max-w-[80%] truncate font-semibold text-lg"
+          title={document.title}
+        >
+          {document.title}
+        </h3>
+      </div>
+      <div className="flex size-full flex-col gap-4 xl:grid xl:grid-cols-4">
+        <div className="size-full xl:col-span-3">
+          <Viewport fileType={document.fileType} filePath={filePath} />
+        </div>
+        <div className="col-span-1 flex flex-col gap-4">
+          <FileMeta document={document} />
+          <FileActions fileInfo={document} filePath={filePath} />
+        </div>
       </div>
     </div>
   );

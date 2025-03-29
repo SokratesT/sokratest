@@ -1,15 +1,27 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Database, Download, FileSearch, Loader2, Trash2 } from "lucide-react";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { deleteDocumentInfo } from "@/db/actions/document";
 import { enqueueDocuments, enqueueEmbeddings } from "@/db/actions/test-trigger";
 import type { Document } from "@/db/schema/document";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
-import { convert } from "convert";
-import Link from "next/link";
 
 const FileActions = ({
   fileInfo,
@@ -20,74 +32,110 @@ const FileActions = ({
   filePath: string;
   className?: string;
 }) => {
-  return (
-    <div className={cn("flex min-h-20 pb-0", className)}>
-      <div className="flex w-full flex-wrap justify-between gap-2 p-2">
-        <div className="flex flex-col justify-between">
-          <p className="font-bold">{fileInfo.title}</p>
-          <div className="flex gap-4 text-muted-foreground text-sm">
-            <Badge variant="outline">
-              Date
-              <Separator orientation="vertical" className="mx-1" />{" "}
-              {fileInfo.createdAt?.getDate()}
-            </Badge>
-            <Badge variant="outline">
-              Size
-              <Separator orientation="vertical" className="mx-1" />
-              {convert(fileInfo.size, "bytes").to("best").toString()}
-            </Badge>
-            <Badge variant="outline">
-              Type
-              <Separator orientation="vertical" className="mx-1" />{" "}
-              {fileInfo.fileType}
-            </Badge>
-            <Badge variant="outline">
-              Bucket
-              <Separator orientation="vertical" className="mx-1" />{" "}
-              {fileInfo.bucket}
-            </Badge>
-          </div>
-        </div>
-        <div className="flex h-full justify-center gap-2">
-          <Button
-            onClick={() =>
-              enqueueEmbeddings({
-                ids: [fileInfo.id],
-              })
-            }
-            disabled={fileInfo.embeddingStatus === "processing"}
-          >
-            Generate Embedding
-          </Button>
-          <Button
-            onClick={() =>
-              enqueueDocuments({
-                ids: [fileInfo.id],
-              })
-            }
-            disabled={fileInfo.embeddingStatus === "processing"}
-          >
-            Process Docs
-          </Button>
+  const isProcessing = fileInfo.embeddingStatus === "processing";
 
-          <Button
-            variant="destructive"
-            onClick={() => deleteDocumentInfo({ ids: [fileInfo.id] })}
-          >
-            Delete
-          </Button>
-          <Button onClick={() => window.open(filePath, "_blank")}>
-            Download
-          </Button>
-          <Link
-            href={ROUTES.PRIVATE.documents.chunks.root.getPath({
-              id: fileInfo.id,
-            })}
-            className={buttonVariants({ variant: "secondary" })}
-          >
-            View Chunks
-          </Link>
-        </div>
+  return (
+    <div
+      className={cn(
+        className,
+        "flex flex-wrap items-center justify-between gap-2",
+      )}
+    >
+      {/* Primary Action Buttons */}
+      <div className="flex flex-wrap gap-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => window.open(filePath, "_blank")}
+              className="flex items-center gap-1"
+            >
+              <Download className="h-4 w-4" />
+              <span className="hidden sm:inline">Download</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Download this document</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href={ROUTES.PRIVATE.documents.chunks.root.getPath({
+                id: fileInfo.id,
+              })}
+            >
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-1"
+              >
+                <FileSearch className="h-4 w-4" />
+                <span className="hidden sm:inline">View Chunks</span>
+              </Button>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent>View document chunks</TooltipContent>
+        </Tooltip>
+      </div>
+
+      {/* Processing Actions */}
+      <div className="flex flex-wrap items-center gap-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="flex items-center gap-1"
+            >
+              <Database className="h-4 w-4" />
+              <span className="hidden sm:inline">Process</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Processing Options</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              disabled={isProcessing}
+              onClick={() => enqueueEmbeddings({ ids: [fileInfo.id] })}
+              className="flex items-center gap-2"
+            >
+              {isProcessing ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Database className="h-4 w-4" />
+              )}
+              Generate Embedding
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={isProcessing}
+              onClick={() => enqueueDocuments({ ids: [fileInfo.id] })}
+              className="flex items-center gap-2"
+            >
+              {isProcessing ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <FileSearch className="h-4 w-4" />
+              )}
+              Process Document
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => deleteDocumentInfo({ ids: [fileInfo.id] })}
+              className="flex items-center gap-1"
+            >
+              <Trash2 className="h-4 w-4" />
+              <span className="hidden sm:inline">Delete</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Delete this document</TooltipContent>
+        </Tooltip>
       </div>
     </div>
   );
