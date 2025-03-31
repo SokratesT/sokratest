@@ -36,14 +36,15 @@ const RegisterPage = async ({
         <CardTitle>Sign Up</CardTitle>
         <CardDescription>Create a new account to continue.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent>Registration is currently disabled.</CardContent>
+      {/* <CardContent>
         <SignUpForm invitation={invitation} />
       </CardContent>
       <CardFooter className="text-muted-foreground text-sm">
         <Link href={ROUTES.PUBLIC.login.getPath()}>
           Already have an account?
         </Link>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 };
