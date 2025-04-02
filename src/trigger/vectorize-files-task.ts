@@ -19,11 +19,14 @@ import { logger, task } from "@trigger.dev/sdk/v3";
 import { embedMany, generateText } from "ai";
 import { v4 as uuidv4 } from "uuid";
 
+// Helper function to introduce delay
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const vectorizeFilesTask = task({
   id: "vectorize-files-task",
   maxDuration: 600, // Stop executing after 600 secs (10 mins) of compute
   run: async (payload: { prefix: string; courseId: string }, { ctx }) => {
-    const list = await listAllFilesInPrefix({
+    const files = await listAllFilesInPrefix({
       bucket: buckets.processed.name,
       prefix: `${payload.prefix}/`,
     });
@@ -36,41 +39,45 @@ export const vectorizeFilesTask = task({
     }[] = [];
     const markdown: MarkdownNode[] = [];
 
-    const results = await Promise.all(
-      list.map(async (item) => {
-        const fileExtension = item.name.split(".").pop()?.toLowerCase();
-        if (!fileExtension) {
-          return;
-        } else if (fileExtension === "md" || fileExtension === "markdown") {
-          const text = (await getMarkdownAsString({
-            bucket: buckets.processed.name,
-            name: item.name,
-          })) as string;
+    // Process files sequentially instead of in parallel
+    for (const file of files) {
+      const fileExtension = file.name.split(".").pop()?.toLowerCase();
+      if (!fileExtension) {
+        continue;
+      } else if (fileExtension === "md" || fileExtension === "markdown") {
+        const text = (await getMarkdownAsString({
+          bucket: buckets.processed.name,
+          name: file.name,
+        })) as string;
 
-          markdown.push(...(await processMarkdownFile(text, item.name)));
-        } else if (["jpeg", "png"].includes(fileExtension)) {
-          const image = await getImageAsBase64({
-            bucket: buckets.processed.name,
-            name: item.name,
-          });
+        const processedMarkdown = await processMarkdownFile(text, file.name);
+        markdown.push(...processedMarkdown);
+      } else if (["jpeg", "png"].includes(fileExtension)) {
+        // TODO: Expand supported file types, centralised with upload formats
+        const image = await getImageAsBase64({
+          bucket: buckets.processed.name,
+          name: file.name,
+        });
 
-          const processedImage = await processImageFile(
-            image,
-            item.name,
-            fileExtension as FileType,
-          );
+        const processedImage = await processImageFile(
+          image,
+          file.name,
+          fileExtension as FileType,
+        );
 
-          if (!processedImage) return;
-
+        if (processedImage) {
           images.push(processedImage);
-        } else {
-          logger.info(`Skipping unsupported file type: ${fileExtension}`, {
-            fileName: item.name,
-          });
-          return;
         }
-      }),
-    );
+      } else {
+        logger.info(`Skipping unsupported file type: ${fileExtension}`, {
+          fileName: file.name,
+        });
+      }
+
+      // Adding a delay to avoid rate limiting.
+      // TODO: Think of a better way to handle this
+      await delay(5000);
+    }
 
     const mergedChunks = markdown
       .map((chunk) => {
@@ -211,7 +218,7 @@ async function generateEmbeddings({
   });
 
   await logger.trace(
-    "delete-previous-embeddings",
+    "delete-existing-embeddings",
     async () => await deleteChunksByDocumentId({ courseId, documentId }),
   );
 
