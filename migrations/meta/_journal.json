@@ -15,6 +15,13 @@
       "when": 1742480459310,
       "tag": "0001_red_invisible_woman",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1743600702189,
+      "tag": "0002_stormy_purifiers",
+      "breakpoints": true
     }
   ]
 }

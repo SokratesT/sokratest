@@ -9,7 +9,6 @@ import type * as ChatMessage from "./schema/chat-message";
 import type * as ChatMessageVote from "./schema/chat-message-vote";
 import type * as Course from "./schema/course";
 import type * as Document from "./schema/document";
-import type * as Embedding from "./schema/embedding";
 import type * as Post from "./schema/post";
 
 type Schema = typeof Auth &
@@ -18,7 +17,6 @@ type Schema = typeof Auth &
   typeof Chat &
   typeof Course &
   typeof Document &
-  typeof Embedding &
   typeof Post;
 type TSchema = ExtractTablesWithRelations<Schema>;
 

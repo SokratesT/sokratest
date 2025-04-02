@@ -7,7 +7,6 @@ import * as chatMessage from "./schema/chat-message";
 import * as chatMessageVote from "./schema/chat-message-vote";
 import * as course from "./schema/course";
 import * as document from "./schema/document";
-import * as embedding from "./schema/embedding";
 import * as post from "./schema/post";
 
 const pool = new Pool({
@@ -22,7 +21,6 @@ export const db = drizzle(pool, {
     chat,
     course,
     document,
-    embedding,
     post,
   },
 });
