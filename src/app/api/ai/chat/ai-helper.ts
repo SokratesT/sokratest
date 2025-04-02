@@ -1,35 +1,40 @@
+import type { Course } from "@/db/schema/course";
 import { generateEmbedding } from "@/lib/ai/embedding";
 import { getModel } from "@/lib/ai/models";
 import { qdrant } from "@/qdrant/qdrant";
 import { qdrantCollections } from "@/qdrant/qdrant-constants";
+import type { QdrantPoints } from "@/types/qdrant";
 import { type Message, generateText } from "ai";
+
+export const findRelevantContent = async ({
+  userQuery,
+  courseId,
+}: { userQuery: string; courseId: Course["id"] }) => {
+  const userQueryEmbedded = await generateEmbedding(userQuery);
+
+  const response = (await qdrant.query(qdrantCollections.chunks.name, {
+    query: userQueryEmbedded,
+    filter: {
+      must: [
+        {
+          key: qdrantCollections.chunks.index.courseId,
+          match: {
+            value: courseId,
+          },
+        },
+      ],
+    },
+    limit: 5,
+    with_payload: true,
+  })) as QdrantPoints;
+
+  return response;
+};
 
 export const getRelevantChunks = async (
   messages: Message[],
-  courseId: string,
+  courseId: Course["id"],
 ) => {
-  const findRelevantContent = async (userQuery: string) => {
-    const userQueryEmbedded = await generateEmbedding(userQuery);
-
-    const response = await qdrant.query(qdrantCollections.chunks.name, {
-      query: userQueryEmbedded,
-      filter: {
-        must: [
-          {
-            key: qdrantCollections.chunks.index.courseId,
-            match: {
-              value: courseId,
-            },
-          },
-        ],
-      },
-      limit: 5,
-      with_payload: true,
-    });
-
-    return response;
-  };
-
   const generatedQuery = await generateText({
     model: getModel({ type: "small" }),
     messages,
@@ -39,7 +44,9 @@ export const getRelevantChunks = async (
 
   console.log(`Generated query: ${generatedQuery.text}`);
 
-  const points = (await findRelevantContent(generatedQuery.text)).points;
+  const points = (
+    await findRelevantContent({ userQuery: generatedQuery.text, courseId })
+  ).points;
 
   return points.map((point) => {
     if (!point.payload) return;

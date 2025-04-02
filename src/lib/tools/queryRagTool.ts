@@ -1,12 +1,13 @@
-import { db } from "@/db/drizzle";
-import { embedding } from "@/db/schema/embedding";
+import { findRelevantContent } from "@/app/api/ai/chat/ai-helper";
+import type { Course } from "@/db/schema/course";
 import { getModel } from "@/lib/ai/models";
-import { createOpenAI } from "@ai-sdk/openai";
 import { type DataStreamWriter, embed, streamText, tool } from "ai";
-import { cosineDistance, desc, gt, sql } from "drizzle-orm";
 import { z } from "zod";
 
-export const queryRagTool = (dataStream: DataStreamWriter) =>
+export const queryRagTool = ({
+  dataStream,
+  courseId,
+}: { dataStream: DataStreamWriter; courseId: Course["id"] }) =>
   tool({
     description:
       "Use this tool to respond to questions. It will return some documents, which you should use to respond to the query.",
@@ -40,14 +41,6 @@ export const queryRagTool = (dataStream: DataStreamWriter) =>
         content: "",
       }); */
 
-      const openai = createOpenAI({
-        // custom settings, e.g.
-        compatibility: "compatible",
-        baseURL: "http://localhost:11434/v1",
-        apiKey: "ollama",
-        name: "ollama",
-      });
-
       const generateEmbedding = async (value: string): Promise<number[]> => {
         const input = value.replaceAll("\\n", " ");
         const { embedding } = await embed({
@@ -57,36 +50,21 @@ export const queryRagTool = (dataStream: DataStreamWriter) =>
         return embedding;
       };
 
-      const findRelevantContent = async (userQuery: string) => {
-        const userQueryEmbedded = await generateEmbedding(userQuery);
-        const similarity = sql<number>`1 - (${cosineDistance(
-          embedding.vector,
-          userQueryEmbedded,
-        )})`;
-        const similarGuides = await db
-          .select({
-            name: embedding.vector,
-            similarity,
-            text: embedding.text,
-            fileId: embedding.fileId,
-          })
-          .from(embedding)
-          .where(gt(similarity, 0.6))
-          .orderBy((t) => desc(t.similarity))
-          .limit(5);
-
-        return similarGuides;
-      };
-
-      const context = await findRelevantContent(query);
-      context.forEach((doc) => {
-        dataStream.writeMessageAnnotation({ ...doc, type: "reference" });
+      const { points } = await findRelevantContent({
+        userQuery: query,
+        courseId,
+      });
+      points.forEach((point) => {
+        dataStream.writeMessageAnnotation({
+          text: point.payload.text,
+          type: "reference",
+        });
       });
 
-      const cont = context.map((doc) => ({
-        fileId: doc.fileId,
-        text: doc.text,
-        similarity: doc.similarity,
+      const cont = points.map((point) => ({
+        fileId: point.payload.document_id,
+        text: point.payload.text,
+        similarity: point.score,
       }));
 
       const { fullStream } = streamText({
