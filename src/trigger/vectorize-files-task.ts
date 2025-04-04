@@ -24,7 +24,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const vectorizeFilesTask = task({
   id: "vectorize-files-task",
-  maxDuration: 600, // Stop executing after 600 secs (10 mins) of compute
+  maxDuration: 1800, // Stop executing after 600 secs (30 mins) of compute
   run: async (payload: { prefix: string; courseId: string }, { ctx }) => {
     const files = await listAllFilesInPrefix({
       bucket: buckets.processed.name,
@@ -76,7 +76,7 @@ export const vectorizeFilesTask = task({
 
       // Adding a delay to avoid rate limiting.
       // TODO: Think of a better way to handle this
-      await delay(5000);
+      await delay(2000);
     }
 
     const mergedChunks = markdown
