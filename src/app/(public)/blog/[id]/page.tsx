@@ -1,11 +1,9 @@
 import { PlateEditor } from "@/components/editor/plate-editor";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { db } from "@/db/drizzle";
-import { user } from "@/db/schema/auth";
-import { post } from "@/db/schema/post";
-import { eq } from "drizzle-orm";
+import { getPostById } from "@/db/queries/post";
 import { UserIcon } from "lucide-react";
 
 const EditPostPage = async ({
@@ -15,12 +13,13 @@ const EditPostPage = async ({
 }) => {
   const { id } = await params;
 
-  // TODO: Use function instead
-  const [queryPost] = await db.select().from(post).where(eq(post.id, id));
-  const [author] = await db
-    .select({ name: user.name })
-    .from(user)
-    .where(eq(user.id, queryPost.userId));
+  const result = await getPostById(id);
+
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
+
+  const post = result.data.query;
 
   return (
     <div>
@@ -28,12 +27,12 @@ const EditPostPage = async ({
         <div className="flex flex-col items-center justify-center gap-8 py-10 lg:py-20">
           <div>
             <Button variant="secondary" size="sm" className="gap-4">
-              <UserIcon className="size-4" /> {author.name}
+              <UserIcon className="size-4" /> {post.createdAt?.getUTCDate()}
             </Button>
           </div>
           <div className="flex flex-col gap-4">
             <h1 className="max-w-2xl text-center font-regular text-5xl tracking-tighter md:text-7xl">
-              {queryPost.title}
+              {post.title}
             </h1>
             <p className="max-w-2xl text-center text-lg text-muted-foreground leading-relaxed tracking-tight md:text-xl">
               Managing a small business today is already tough. Avoid further
@@ -43,10 +42,10 @@ const EditPostPage = async ({
             </p>
             <div className="flex justify-center gap-2">
               <Badge variant="outline">
-                Created: {queryPost.createdAt?.getDate()}
+                Created: {post.createdAt?.getDate()}
               </Badge>
               <Badge variant="outline">
-                Updated: {queryPost.updatedAt?.getDate()}
+                Updated: {post.updatedAt?.getDate()}
               </Badge>
             </div>
           </div>
@@ -54,7 +53,7 @@ const EditPostPage = async ({
       </div>
       <Card className="mx-auto max-w-full lg:max-w-[60%]">
         <CardContent className="p-4">
-          <PlateEditor options={{ value: queryPost.content }} readOnly />
+          <PlateEditor options={{ value: post.content }} readOnly />
         </CardContent>
       </Card>
     </div>
