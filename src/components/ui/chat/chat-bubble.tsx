@@ -18,7 +18,7 @@ const chatBubbleVariant = cva(
     variants: {
       variant: {
         received: "self-start",
-        sent: "flex-row-reverse self-end",
+        sent: "mb-4 flex-row-reverse self-end",
       },
       layout: {
         default: "",
@@ -200,7 +200,7 @@ const ChatBubbleActionWrapper = ({
   <div
     data-slot="chat-bubble-action-wrapper"
     className={cn(
-      "flex opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+      "flex transition-opacity duration-200",
       { "-right-1 absolute top-full flex-row-reverse": variant === "sent" },
       className,
     )}
