@@ -1,0 +1,1 @@
+DROP TABLE "chat_message_vote" CASCADE;

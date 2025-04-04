@@ -22,6 +22,13 @@
       "when": 1743600702189,
       "tag": "0002_stormy_purifiers",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1743785317722,
+      "tag": "0003_crazy_snowbird",
+      "breakpoints": true
     }
   ]
 }
