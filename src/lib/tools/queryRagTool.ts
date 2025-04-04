@@ -50,10 +50,29 @@ export const queryRagTool = ({
         return embedding;
       };
 
-      const { points } = await findRelevantContent({
+      const result = await findRelevantContent({
         userQuery: query,
         courseId,
       });
+
+      if (!result.success) {
+        dataStream.writeData({
+          type: "text-delta",
+          content: `Error: ${result.error}`,
+        });
+        return;
+      }
+
+      if (!result.data.points || result.data.points.length === 0) {
+        dataStream.writeData({
+          type: "text-delta",
+          content: "No relevant content found.",
+        });
+        return;
+      }
+
+      const points = result.data.points;
+
       points.forEach((point) => {
         dataStream.writeMessageAnnotation({
           text: point.payload.text,
