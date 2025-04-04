@@ -1,17 +1,13 @@
-import { SignUpForm } from "@/components/auth/signup-form";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { getInvitationById } from "@/db/queries/invitation";
 import type { Invitation } from "@/db/schema/auth";
-import { ROUTES } from "@/settings/routes";
 import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Register",
