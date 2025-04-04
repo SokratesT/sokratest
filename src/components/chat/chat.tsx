@@ -7,6 +7,7 @@ import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { deleteTrailingMessages } from "@/db/actions/ai-actions";
 import { useStreamingText } from "@/hooks/use-streaming-text";
 import { type Message, useChat } from "@ai-sdk/react";
+import type { ApiGetScoresResponseData } from "langfuse";
 import { PaperclipIcon, RefreshCcwIcon } from "lucide-react";
 import { MessageBlock } from "./message-block";
 
@@ -28,7 +29,12 @@ type DataStreamDelta = {
 const Chat = ({
   id,
   initialMessages,
-}: { id: string; initialMessages: Message[] }) => {
+  scores,
+}: {
+  id: string;
+  initialMessages: Message[];
+  scores: ApiGetScoresResponseData[];
+}) => {
   const {
     data: dataStream,
     messages,
@@ -70,10 +76,12 @@ const Chat = ({
           <MessageBlock
             key={m.id}
             message={m}
+            chatId={id}
             toolStream={toolStream}
             setMessages={setMessages}
             reload={reload}
             isLoading={isLoading}
+            score={scores.find((s) => s.id === m.id)}
           />
         ))}
       </ChatMessageList>

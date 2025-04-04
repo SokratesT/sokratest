@@ -1,4 +1,7 @@
-import { chatMessageVote } from "@/db/schema/chat-message-vote";
-import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 
-export const voteInsertSchema = createInsertSchema(chatMessageVote);
+export const voteInsertSchema = z.object({
+  messageId: z.string(),
+  sentiment: z.number(),
+  chatId: z.string(),
+});

@@ -14,16 +14,24 @@ import {
 } from "@/components/ui/chat/chat-bubble";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { voteMessage } from "@/db/actions/chat-message-vote";
+import type { Chat } from "@/db/schema/chat";
 import { cn } from "@/lib/utils";
 import type { ChatRequestOptions, Message } from "ai";
-import { BotIcon, CopyIcon, PencilIcon, UserIcon } from "lucide-react";
+import type { ApiGetScoresResponseData } from "langfuse";
+import {
+  BotIcon,
+  CheckIcon,
+  CopyIcon,
+  PencilIcon,
+  UserIcon,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -39,14 +47,19 @@ interface ToolStream {
   };
 }
 
+// TODO: This is a mess. Refactor into composable components
+
 const MessageBlock = ({
   message,
+  chatId,
   toolStream,
   setMessages,
   reload,
   isLoading,
+  score,
 }: {
   message: Message;
+  chatId: Chat["id"];
   toolStream: ToolStream | null;
   setMessages: (
     messages: Message[] | ((messages: Message[]) => Message[]),
@@ -55,6 +68,7 @@ const MessageBlock = ({
     chatRequestOptions?: ChatRequestOptions,
   ) => Promise<string | null | undefined>;
   isLoading: boolean;
+  score?: ApiGetScoresResponseData;
 }) => {
   const [, copy] = useCopyToClipboard();
   const [mode, setMode] = useState<"view" | "edit">("view");
@@ -69,15 +83,33 @@ const MessageBlock = ({
     toast.error("Failed to copy to clipboard");
   };
 
+  const [optimisticScore, setOptimisticScore] = useState<
+    number | undefined | null
+  >(score?.value);
+
   const handleVote = async (sentiment: number) => {
+    // Update UI optimistically
+    setOptimisticScore(sentiment);
+
     await voteMessage({
       messageId: message.id,
       sentiment,
-    }).then((res) => {
-      res?.data?.error
-        ? toast.error("Failed to rate")
-        : toast.success("Rated successfully");
-    });
+      chatId,
+    })
+      .then((res) => {
+        if (res?.data?.error) {
+          // Revert on error
+          setOptimisticScore(score?.value);
+          toast.error("Failed to rate");
+        } else {
+          toast.success("Rated successfully");
+        }
+      })
+      .catch((error) => {
+        // Revert on error
+        setOptimisticScore(score?.value);
+        toast.error("Failed to rate");
+      });
   };
 
   const handleModeChange = () => {
@@ -117,7 +149,7 @@ const MessageBlock = ({
           initial={{ y: 5, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: "easeIn" }}
-          // data-role={message.role}
+          data-role={message.role}
         >
           <ChatBubbleMessage
             isLoading={message.parts?.length === 0}
@@ -204,27 +236,46 @@ const MessageBlock = ({
                     onClick={fn}
                   />
                 ))}
+                {/** TODO: Add optimistic updates and refactor as separate component */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-6 px-2 text-xs">
-                      Rate
+                    <Button variant={"ghost"} className="h-6 px-2 text-xs">
+                      {optimisticScore !== undefined ? (
+                        <span className="flex items-center gap-2">
+                          Rated <CheckIcon className="size-3" />
+                        </span>
+                      ) : (
+                        <span>Rate</span>
+                      )}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuLabel>Rate Response</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => handleVote(10)}>
+                    <DropdownMenuCheckboxItem
+                      onClick={() => handleVote(10)}
+                      checked={optimisticScore === 10}
+                    >
                       Excellent
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleVote(5)}>
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem
+                      onClick={() => handleVote(5)}
+                      checked={optimisticScore === 5}
+                    >
                       Good
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleVote(-5)}>
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem
+                      onClick={() => handleVote(-5)}
+                      checked={optimisticScore === -5}
+                    >
                       Poor
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleVote(-10)}>
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem
+                      onClick={() => handleVote(-10)}
+                      checked={optimisticScore === -10}
+                    >
                       Terrible
-                    </DropdownMenuItem>
+                    </DropdownMenuCheckboxItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </ChatBubbleActionWrapper>

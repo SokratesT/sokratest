@@ -13,6 +13,7 @@ import {
   smoothStream,
   streamText,
 } from "ai";
+import { v4 as uuidv4 } from "uuid";
 import { getRelevantChunks } from "./ai-helper";
 
 export const maxDuration = 120;
@@ -60,6 +61,8 @@ export async function POST(request: Request) {
     }
   }
 
+  const aiMessageId = uuidv4();
+
   // TODO: Save user messages
   await saveMessages({
     messages: [
@@ -93,8 +96,15 @@ export async function POST(request: Request) {
           },
         }),
         messages,
+        experimental_generateMessageId: () => aiMessageId,
         experimental_transform: smoothStream(),
-        experimental_telemetry: { isEnabled: true },
+        experimental_telemetry: {
+          isEnabled: true,
+          metadata: {
+            langfuseTraceId: aiMessageId,
+            sessionId: id,
+          },
+        },
         // maxSteps: 1,
         // experimental_toolCallStreaming: true,
         /* system:
