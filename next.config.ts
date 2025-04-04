@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
     ],
   },
   skipTrailingSlashRedirect: true, // Required for PostHog
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/app",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
