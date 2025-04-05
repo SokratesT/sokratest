@@ -2,6 +2,7 @@ import { SendVerificationEmail } from "@/components/account/send-verification-em
 import { ProfileForm } from "@/components/forms/profile-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Metadata } from "next";
+import { CourseInvitationsList } from "./_components/course-invitations-list";
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -24,6 +25,14 @@ const AccountPage = async () => {
         </CardHeader>
         <CardContent>
           <SendVerificationEmail />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Course Invitations</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <CourseInvitationsList />
         </CardContent>
       </Card>
     </div>

@@ -79,6 +79,13 @@ export const ROUTES = {
           return makePath(this.pathTemplate);
         },
       },
+      init: {
+        name: "Initialization",
+        pathTemplate: "/app/account/init",
+        getPath: function (params: { inv: string }) {
+          return makePath(`${this.pathTemplate}?inv=${params.inv}`);
+        },
+      },
     },
     chat: {
       add: {

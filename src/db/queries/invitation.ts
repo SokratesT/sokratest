@@ -1,16 +1,19 @@
-"server only";
+import "server-only";
 
 import { db } from "@/db/drizzle";
-import { type Invitation, invitation } from "@/db/schema/auth";
+import {
+  type CourseInvitation,
+  courseInvitation,
+} from "@/db/schema/course-invitation";
 import { eq, getTableColumns } from "drizzle-orm";
 
-export const getInvitationById = async (
+export const getCourseInvitationById = async (
   id: string,
-): Promise<{ query: Invitation | undefined }> => {
+): Promise<{ query: CourseInvitation | undefined }> => {
   const [query] = await db
-    .select({ ...getTableColumns(invitation) })
-    .from(invitation)
-    .where(eq(invitation.id, id))
+    .select({ ...getTableColumns(courseInvitation) })
+    .from(courseInvitation)
+    .where(eq(courseInvitation.id, id))
     .limit(1);
 
   return { query };

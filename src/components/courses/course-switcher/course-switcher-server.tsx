@@ -49,7 +49,7 @@ const CourseSwitcherServer = async () => {
           <Link
             className={cn(
               buttonVariants({ variant: "outline", size: "sm" }),
-              "w-full",
+              "w-1/2",
             )}
             href={ROUTES.PRIVATE.courses.view.getPath({ id: activeCourse.id })}
           >
@@ -58,7 +58,7 @@ const CourseSwitcherServer = async () => {
           <Link
             className={cn(
               buttonVariants({ variant: "outline", size: "sm" }),
-              "w-full",
+              "w-1/2",
             )}
             href={ROUTES.PRIVATE.documents.root.getPath()}
           >

@@ -1,6 +1,6 @@
+import { CourseInvitationForm } from "@/components/courses/members/course-invitation-form";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
-import { AddUserForm } from "@/components/users/add-user-form";
 import { db } from "@/db/drizzle";
 import { getSession } from "@/db/queries/auth";
 import { course } from "@/db/schema/course";
@@ -36,7 +36,7 @@ const addUserPage = async () => {
     );
   }
 
-  return <AddUserForm courses={queryCourses} />;
+  return <CourseInvitationForm courses={queryCourses} />;
 };
 
 export default addUserPage;

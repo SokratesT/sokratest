@@ -1,13 +1,18 @@
+import { SignUpForm } from "@/components/auth/signup-form";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getInvitationById } from "@/db/queries/invitation";
-import type { Invitation } from "@/db/schema/auth";
+import { getCourseInvitationById } from "@/db/queries/invitation";
+import type { CourseInvitation } from "@/db/schema/course-invitation";
+import { ROUTES } from "@/settings/routes";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Register",
@@ -19,10 +24,20 @@ const RegisterPage = async ({
   searchParams: Promise<{ inv: string | undefined }>;
 }) => {
   const { inv } = await searchParams;
-  let invitation: Invitation | undefined;
+  let invitation: CourseInvitation | undefined;
 
   if (inv) {
-    const { query } = await getInvitationById(inv);
+    const { query } = await getCourseInvitationById(inv);
+
+    if (query?.status !== "pending") {
+      return (
+        <Placeholder>
+          Registration is currently restricted. If you have been invited, please
+          check your invitation link.
+        </Placeholder>
+      );
+    }
+
     invitation = query;
   }
 
@@ -32,15 +47,21 @@ const RegisterPage = async ({
         <CardTitle>Sign Up</CardTitle>
         <CardDescription>Create a new account to continue.</CardDescription>
       </CardHeader>
-      <CardContent>Registration is currently disabled.</CardContent>
-      {/* <CardContent>
-        <SignUpForm invitation={invitation} />
+      <CardContent>
+        {invitation ? (
+          <SignUpForm invitation={invitation} />
+        ) : (
+          <Placeholder>
+            Registration is currently restricted. If you have been invited,
+            please check your invitation link.
+          </Placeholder>
+        )}
       </CardContent>
       <CardFooter className="text-muted-foreground text-sm">
         <Link href={ROUTES.PUBLIC.login.getPath()}>
           Already have an account?
         </Link>
-      </CardFooter> */}
+      </CardFooter>
     </Card>
   );
 };
