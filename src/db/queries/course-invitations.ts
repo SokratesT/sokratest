@@ -1,8 +1,8 @@
 import "server-only";
 
 import { db } from "@/db/drizzle";
+import { courseInvitation } from "@/db/schema/course-invitation";
 import { desc, eq } from "drizzle-orm";
-import { courseInvitation } from "../schema/course-invitation";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 export const getUserCourseInvitations = async () => {

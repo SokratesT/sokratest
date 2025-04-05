@@ -1,5 +1,7 @@
 "use server";
 
+import { db } from "@/db/drizzle";
+import { document } from "@/db/schema/document";
 import { authActionClient, requireCourseMiddleware } from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
 import type { processDocumentTask } from "@/trigger/process-document-task";
@@ -9,8 +11,6 @@ import { tasks } from "@trigger.dev/sdk/v3";
 import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { db } from "../drizzle";
-import { document } from "../schema/document";
 
 export const enqueueDocuments = authActionClient
   .metadata({ actionName: "enqueueDocuments" })

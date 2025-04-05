@@ -1,5 +1,6 @@
 "use client";
 
+import { LogoAnimated } from "@/components/app/logo-animated";
 import { ThemeSwitcher } from "@/components/app/theme-switcher";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +18,6 @@ import { Menu, MoveRight, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
-import { LogoAnimated } from "../app/logo-animated";
 import { NavigationAuthButtons } from "./navigation-auth-buttons";
 
 const PublicNavigation = () => {

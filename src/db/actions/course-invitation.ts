@@ -1,6 +1,13 @@
 "use server";
 
 import { db } from "@/db/drizzle";
+import { course } from "@/db/schema/course";
+import { courseInvitation } from "@/db/schema/course-invitation";
+import {
+  courseInvitationDeleteSchema,
+  courseInvitationSelectSchema,
+  courseInvitationsInsertSchema,
+} from "@/db/zod/course-invitation";
 import { auth } from "@/lib/auth";
 import {
   authActionClient,
@@ -10,13 +17,6 @@ import { ROUTES } from "@/settings/routes";
 import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { course } from "../schema/course";
-import { courseInvitation } from "../schema/course-invitation";
-import {
-  courseInvitationDeleteSchema,
-  courseInvitationSelectSchema,
-  courseInvitationsInsertSchema,
-} from "../zod/course-invitation";
 import { addCourseMember, setActiveCourse } from "./course";
 
 export const createCourseInvitations = authActionClient
