@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
-import { ArrowLeftToLine } from "lucide-react";
+import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 
 const Header = () => {
@@ -33,14 +33,18 @@ const Header = () => {
       </div>
       <div className="flex gap-2">
         <Link
-          href={ROUTES.PUBLIC.root.getPath()}
-          className={buttonVariants({
-            variant: "outline",
-            size: "icon",
-            className: "size-8",
-          })}
+          href={ROUTES.PRIVATE.root.getPath()}
+          className={cn(
+            buttonVariants({
+              variant: "outline",
+              size: "icon",
+              className: "size-8",
+            }),
+            "size-8",
+          )}
         >
-          <ArrowLeftToLine />
+          <HomeIcon />
+          <span className="sr-only">Go to dashboard</span>
         </Link>
         <ThemeSwitcher className="size-8 px-0" />
       </div>
