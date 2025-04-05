@@ -39,6 +39,7 @@ const ThemeSwitcher = ({ className }: { className?: string }) => {
             transition={{ duration: 0.3 }}
           >
             <SunIcon className="block" />
+            <span className="sr-only">Toggle dark mode</span>
           </motion.div>
         ) : (
           <motion.div
@@ -49,6 +50,7 @@ const ThemeSwitcher = ({ className }: { className?: string }) => {
             transition={{ duration: 0.3 }}
           >
             <MoonIcon className="block" />
+            <span className="sr-only">Toggle light mode</span>
           </motion.div>
         )}
       </AnimatePresence>
