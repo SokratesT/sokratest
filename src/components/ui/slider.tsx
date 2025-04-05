@@ -1,10 +1,8 @@
 "use client";
 
-import * as SliderPrimitive from "@radix-ui/react-slider";
-import * as React from "react";
-
 import { cn } from "@/lib/utils";
-import { useId } from "react";
+import * as SliderPrimitive from "@radix-ui/react-slider";
+import { useMemo } from "react";
 
 function Slider({
   className,
@@ -14,7 +12,7 @@ function Slider({
   max = 100,
   ...props
 }: React.ComponentProps<typeof SliderPrimitive.Root>) {
-  const _values = React.useMemo(
+  const _values = useMemo(
     () =>
       Array.isArray(value)
         ? value
@@ -23,8 +21,6 @@ function Slider({
           : [min, max],
     [value, defaultValue, min, max],
   );
-
-  const key = useId();
 
   return (
     <SliderPrimitive.Root
@@ -55,7 +51,8 @@ function Slider({
       {Array.from({ length: _values.length }, (_, index) => (
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
-          key={key}
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+          key={index}
           className="block size-4 shrink-0 rounded-full border border-primary bg-background shadow-sm ring-ring/50 transition-[color,box-shadow] hover:ring-4 focus-visible:outline-hidden focus-visible:ring-4 disabled:pointer-events-none disabled:opacity-50"
         />
       ))}
