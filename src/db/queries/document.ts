@@ -1,4 +1,4 @@
-"server only";
+import "server-only";
 
 import { db } from "@/db/drizzle";
 import { type Document, document } from "@/db/schema/document";

@@ -1,4 +1,4 @@
-"server only";
+import "server-only";
 
 import type { Course } from "@/db/schema/course";
 import type { Document } from "@/db/schema/document";

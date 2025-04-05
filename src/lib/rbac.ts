@@ -1,4 +1,4 @@
-"server only";
+import "server-only";
 
 import { getCourseRole, getOrganizationRole } from "@/db/queries/auth";
 import {

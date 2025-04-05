@@ -1,4 +1,4 @@
-"server only";
+import "server-only";
 
 import { db } from "@/db/drizzle";
 import { member } from "@/db/schema/auth";

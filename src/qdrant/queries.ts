@@ -1,4 +1,4 @@
-"server only";
+import "server-only";
 
 import { withAuthQuery } from "@/db/queries/utils/with-auth-query";
 import type { Document } from "@/db/schema/document";

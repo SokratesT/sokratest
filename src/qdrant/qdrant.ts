@@ -1,4 +1,4 @@
-"server only";
+import "server-only";
 
 import { QdrantClient } from "@qdrant/js-client-rest";
 import { qdrantCollections } from "./qdrant-constants";
