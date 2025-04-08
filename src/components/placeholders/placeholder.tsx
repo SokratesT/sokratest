@@ -15,7 +15,7 @@ const Placeholder = ({
 
   return (
     <Card className={cn(className, "flex h-full items-center justify-center")}>
-      <CardHeader>
+      <CardHeader className="w-full">
         <CardTitle className="text-muted-foreground">
           <div className="flex flex-col items-center gap-4">
             <Icon size={size} />
