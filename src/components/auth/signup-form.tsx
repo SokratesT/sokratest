@@ -134,7 +134,9 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
             />
           )}
         />
-        <Button type="submit">Sign Up</Button>
+        <Button type="submit" className="w-full">
+          Sign Up
+        </Button>
       </form>
     </Form>
   );

@@ -72,7 +72,9 @@ const SignInForm = () => {
             />
           )}
         />
-        <Button type="submit">Login</Button>
+        <Button type="submit" className="w-full">
+          Login
+        </Button>
       </form>
     </Form>
   );
