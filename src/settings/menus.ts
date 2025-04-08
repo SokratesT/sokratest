@@ -1,7 +1,6 @@
 import {
   BookMarkedIcon,
   Building2Icon,
-  NewspaperIcon,
   SettingsIcon,
   UserIcon,
   UsersIcon,
@@ -9,11 +8,11 @@ import {
 import { ROUTES } from "./routes";
 
 export const sidebarInstructorMenu = [
-  {
+  /* {
     title: "Posts",
     url: ROUTES.PRIVATE.posts.root.getPath(),
     icon: NewspaperIcon,
-  },
+  }, */
   {
     title: "Courses",
     url: ROUTES.PRIVATE.courses.root.getPath(),
