@@ -16,13 +16,12 @@ const Header = () => {
   return (
     <header
       className={cn(
-        "fixed z-50 flex h-14 items-center justify-between gap-2 border-b bg-background p-4 transition-all",
+        "fixed z-50 flex h-14 items-center justify-between gap-2 border-b bg-background p-4 w-full",
+        "transition-[width] duration-200 ease-linear", // Replace transition-all with specific width transition
         {
           "w-full": isMobile,
           "w-[calc(100%-var(--sidebar-width))]":
             !isMobile && state === "expanded",
-          "w-[calc(100%-var(--sidebar-width-icon))]":
-            !isMobile && state === "collapsed",
         },
       )}
     >
