@@ -2,7 +2,7 @@ import "server-only";
 
 import { db } from "@/db/drizzle";
 import { chat } from "@/db/schema/chat";
-import { desc, eq, and } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 // TODO: Improve queries
