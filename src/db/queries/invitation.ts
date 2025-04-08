@@ -10,11 +10,16 @@ import { eq, getTableColumns } from "drizzle-orm";
 export const getCourseInvitationById = async (
   id: string,
 ): Promise<{ query: CourseInvitation | undefined }> => {
-  const [query] = await db
-    .select({ ...getTableColumns(courseInvitation) })
-    .from(courseInvitation)
-    .where(eq(courseInvitation.id, id))
-    .limit(1);
+  try {
+    const [query] = await db
+      .select({ ...getTableColumns(courseInvitation) })
+      .from(courseInvitation)
+      .where(eq(courseInvitation.id, id))
+      .limit(1);
 
-  return { query };
+    return { query };
+  } catch (error) {
+    console.error("Error parsing UUID:", error);
+    return { query: undefined };
+  }
 };
