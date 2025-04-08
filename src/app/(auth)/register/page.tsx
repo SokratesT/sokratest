@@ -1,5 +1,5 @@
 import { SignUpForm } from "@/components/auth/signup-form";
-import { Placeholder } from "@/components/placeholders/placeholder";
+import { SimplePlaceholder } from "@/components/placeholders/simple-placeholder";
 import {
   Card,
   CardContent,
@@ -31,10 +31,9 @@ const RegisterPage = async ({
 
     if (query?.status !== "pending") {
       return (
-        <Placeholder>
-          Registration is currently restricted. If you have been invited, please
-          check your invitation link.
-        </Placeholder>
+        <Card className="w-full max-w-md">
+          <RegistrationDisabled className="border-0" />
+        </Card>
       );
     }
 
@@ -42,7 +41,7 @@ const RegisterPage = async ({
   }
 
   return (
-    <Card>
+    <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle>Sign Up</CardTitle>
         <CardDescription>Create a new account to continue.</CardDescription>
@@ -51,10 +50,7 @@ const RegisterPage = async ({
         {invitation ? (
           <SignUpForm invitation={invitation} />
         ) : (
-          <Placeholder>
-            Registration is currently restricted. If you have been invited,
-            please check your invitation link.
-          </Placeholder>
+          <RegistrationDisabled />
         )}
       </CardContent>
       <CardFooter className="text-muted-foreground text-sm">
@@ -63,6 +59,18 @@ const RegisterPage = async ({
         </Link>
       </CardFooter>
     </Card>
+  );
+};
+
+const RegistrationDisabled = ({
+  className,
+  ...props
+}: React.ComponentProps<"div">) => {
+  return (
+    <SimplePlaceholder className={className} {...props}>
+      Registration is currently restricted. If you have been invited, please
+      check your invitation link.
+    </SimplePlaceholder>
   );
 };
 

@@ -3,13 +3,10 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ROUTES } from "@/settings/routes";
 import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -17,7 +14,7 @@ export const metadata: Metadata = {
 
 const LoginPage = async () => {
   return (
-    <Card>
+    <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle>Login</CardTitle>
         <CardDescription>Sign in to your account to continue.</CardDescription>
@@ -25,9 +22,9 @@ const LoginPage = async () => {
       <CardContent>
         <SignInForm />
       </CardContent>
-      <CardFooter className="text-muted-foreground text-sm">
+      {/* <CardFooter className="text-muted-foreground text-sm">
         <Link href={ROUTES.PUBLIC.signup.getPath()}>Create a new account?</Link>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 };
