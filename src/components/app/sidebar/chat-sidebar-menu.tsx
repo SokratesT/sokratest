@@ -1,4 +1,4 @@
-import { Placeholder } from "@/components/placeholders/placeholder";
+import { SimplePlaceholder } from "@/components/placeholders/simple-placeholder";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -6,16 +6,29 @@ import {
 } from "@/components/ui/sidebar";
 import { getUserChatsForActiveCourse } from "@/db/queries/chat";
 import { ROUTES } from "@/settings/routes";
+import { MessagesSquareIcon } from "lucide-react";
 import Link from "next/link";
 
 const ChatSidebarMenu = async () => {
   const result = await getUserChatsForActiveCourse();
 
   if (!result.success) {
-    return <Placeholder>{result.error.message}</Placeholder>;
+    return (
+      <SimplePlaceholder variant="muted">
+        {result.error.message}
+      </SimplePlaceholder>
+    );
   }
 
   const chats = result.data.query;
+
+  if (!chats || chats.length === 0) {
+    return (
+      <SimplePlaceholder Icon={MessagesSquareIcon} variant="muted">
+        Your chats will appear here
+      </SimplePlaceholder>
+    );
+  }
 
   return (
     <SidebarMenu>
