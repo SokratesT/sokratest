@@ -56,7 +56,9 @@ const AppSidebar = async () => {
 
       <SidebarFooter>
         <SidebarContent>
-          <ManageSidebarGroup />
+          <Suspense>
+            <ManageSidebarGroup />
+          </Suspense>
         </SidebarContent>
         <Suspense fallback={<Skeleton className="h-12 w-full" />}>
           <NavUser />
