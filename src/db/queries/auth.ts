@@ -2,6 +2,7 @@ import "server-only";
 
 import { db } from "@/db/drizzle";
 import { member } from "@/db/schema/auth";
+import { chat } from "@/db/schema/chat";
 import { courseMember } from "@/db/schema/course";
 import { auth } from "@/lib/auth";
 import type { CourseRole, OrganizationRole } from "@/settings/roles";
@@ -93,4 +94,25 @@ export const getOrganizationRole = async (
 
   // TODO: Make type safe by using enum in PG
   return query.role as OrganizationRole;
+};
+
+/**
+ * Check if the current user is the owner of a specific chat
+ * @param chatId The chat ID to check ownership for
+ * @returns Whether the user is the owner of the chat
+ * @throws Error if session not found
+ */
+export const isChatOwner = async (chatId: string): Promise<boolean> => {
+  const session = await getSession();
+
+  if (!session) {
+    throw new Error("Session not found");
+  }
+
+  const [query] = await db
+    .select({ id: chat.id })
+    .from(chat)
+    .where(and(eq(chat.userId, session.session.userId), eq(chat.id, chatId)));
+
+  return !!query;
 };
