@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useConfirm } from "@/components/ui/dialog/confirm-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,11 +13,25 @@ import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 
 const ChatCardOptions = ({ chatId }: { chatId: string }) => {
+  const confirm = useConfirm();
+
   const onDelete = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    await deleteChat({ ids: [chatId] }).then(() => {
-      toast.success("Chat deleted");
+
+    const isConfirmed = await confirm({
+      title: "Delete Chat",
+      description: "Are you sure you want to delete this chat?",
+      confirmText: "Delete",
+      cancelText: "Cancel",
     });
+
+    if (isConfirmed) {
+      toast.promise(deleteChat({ ids: [chatId] }), {
+        loading: "Deleting chat...",
+        success: "Chat deleted",
+        error: "Failed to delete chat",
+      });
+    }
   };
 
   return (
