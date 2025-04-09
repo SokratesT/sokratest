@@ -3,7 +3,7 @@ import { AppTourButton } from "@/components/next-step/app-tour-button";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ROUTES } from "@/settings/routes";
-import { FilesIcon, PlusIcon, SettingsIcon } from "lucide-react";
+import { FilesIcon, PlusIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 
 const QuickActions = () => {
@@ -33,8 +33,8 @@ const QuickActions = () => {
             className: "w-full justify-start",
           })}
         >
-          <SettingsIcon className="mr-2 h-4 w-4" />
-          Settings
+          <UserIcon className="mr-2 h-4 w-4" />
+          Account
         </Link>
         <AppTourButton />
       </CardContent>
