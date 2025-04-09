@@ -1,6 +1,12 @@
 import { SendVerificationEmail } from "@/components/account/send-verification-email";
 import { ProfileForm } from "@/components/forms/profile-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import type { Metadata } from "next";
 import { CourseInvitationsList } from "./_components/course-invitations-list";
 
@@ -30,6 +36,7 @@ const AccountPage = async () => {
       <Card>
         <CardHeader>
           <CardTitle>Course Invitations</CardTitle>
+          <CardDescription>Manage your course invitations here</CardDescription>
         </CardHeader>
         <CardContent>
           <CourseInvitationsList />

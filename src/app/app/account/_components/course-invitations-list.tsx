@@ -1,29 +1,101 @@
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUserCourseInvitations } from "@/db/queries/course-invitations";
+import type { CourseInvitation } from "@/db/schema/course-invitation";
+import { BadgeCheck, BadgeX, ClipboardList } from "lucide-react";
 import { CourseInvitationEntry } from "./course-invitation-entry";
 
 const CourseInvitationsList = async () => {
   const result = await getUserCourseInvitations();
 
   if (!result.success) {
-    return (
-      <div className="flex flex-col gap-4">
-        <h2 className="font-bold text-2xl">Course Invitations</h2>
-        <p className="text-gray-500 text-sm">
-          You have no course invitations at this time.
-        </p>
-      </div>
-    );
+    return <span>You have no course invitations at this time.</span>;
   }
 
   const invitations = result.data.query;
 
+  // Group invitations by status
+  const pendingInvitations = invitations.filter(
+    (inv) => inv.status === "pending",
+  );
+  const acceptedInvitations = invitations.filter(
+    (inv) => inv.status === "accepted",
+  );
+  const rejectedInvitations = invitations.filter(
+    (inv) => inv.status === "rejected",
+  );
+
+  const renderInvitationList = (
+    filteredInvitations: CourseInvitation[],
+    emptyMessage: string,
+  ) => {
+    if (filteredInvitations.length === 0) {
+      return (
+        <div className="py-8 text-center">
+          <p className="text-muted-foreground">{emptyMessage}</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex flex-col space-y-4">
+        {filteredInvitations.map((invitation) => (
+          <CourseInvitationEntry key={invitation.id} invitation={invitation} />
+        ))}
+      </div>
+    );
+  };
+
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="font-bold text-2xl">Course Invitations</h2>
-      {invitations.map((invitation) => (
-        <CourseInvitationEntry key={invitation.id} invitation={invitation} />
-      ))}
-    </div>
+    <Tabs defaultValue="pending" className="w-full">
+      <TabsList className="mb-6 grid w-full grid-cols-3">
+        <TabsTrigger value="pending" className="flex items-center gap-2">
+          <ClipboardList className="h-4 w-4" />
+          <span className="hidden sm:inline">Pending</span>
+          {pendingInvitations.length > 0 && (
+            <span className="ml-1 rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary text-xs">
+              {pendingInvitations.length}
+            </span>
+          )}
+        </TabsTrigger>
+        <TabsTrigger value="accepted" className="flex items-center gap-2">
+          <BadgeCheck className="h-4 w-4" />
+          <span className="hidden sm:inline">Accepted</span>
+          {acceptedInvitations.length > 0 && (
+            <span className="ml-1 rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary text-xs">
+              {acceptedInvitations.length}
+            </span>
+          )}
+        </TabsTrigger>
+        <TabsTrigger value="rejected" className="flex items-center gap-2">
+          <BadgeX className="h-4 w-4" />
+          <span className="hidden sm:inline">Rejected</span>
+          {rejectedInvitations.length > 0 && (
+            <span className="ml-1 rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary text-xs">
+              {rejectedInvitations.length}
+            </span>
+          )}
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="pending" className="space-y-4 px-1">
+        {renderInvitationList(
+          pendingInvitations,
+          "You don't have any pending invitations.",
+        )}
+      </TabsContent>
+      <TabsContent value="accepted" className="space-y-4 px-1">
+        {renderInvitationList(
+          acceptedInvitations,
+          "You don't have any accepted invitations.",
+        )}
+      </TabsContent>
+      <TabsContent value="rejected" className="space-y-4 px-1">
+        {renderInvitationList(
+          rejectedInvitations,
+          "You don't have any rejected invitations.",
+        )}
+      </TabsContent>
+    </Tabs>
   );
 };
+
 export { CourseInvitationsList };

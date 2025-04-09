@@ -17,6 +17,7 @@ import { ROUTES } from "@/settings/routes";
 import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
+import { z } from "zod";
 import { addCourseMember, setActiveCourse } from "./course";
 
 export const createCourseInvitations = authActionClient
@@ -125,5 +126,21 @@ export const acceptCourseInvitation = authActionClient
     });
 
     revalidatePath(ROUTES.PRIVATE.root.getPath());
+    return { error: null };
+  });
+
+export const rejectCourseInvitation = authActionClient
+  .metadata({ actionName: "deleteCourseInvitations" })
+  .schema(z.object({ id: z.string().uuid() }))
+  .action(async ({ parsedInput: { id } }) => {
+    await db
+      .update(courseInvitation)
+      .set({
+        status: "rejected",
+        updatedAt: new Date(),
+      })
+      .where(eq(courseInvitation.id, id));
+
+    revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
     return { error: null };
   });
