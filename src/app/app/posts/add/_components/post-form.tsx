@@ -21,13 +21,19 @@ const PostForm = ({ post }: { post?: Post }) => {
     },
   });
 
-  const onSubmit = (values: PostInsertSchemaType) => {
+  const onSubmit = async (values: PostInsertSchemaType) => {
     if (post) {
-      updatePost({ ...values, id: post.id });
-      toast.success("Post updated successfully");
+      toast.promise(updatePost({ ...values, id: post.id }), {
+        loading: "Updating post...",
+        success: "Post updated successfully",
+        error: "Failed to update post",
+      });
     } else {
-      createPost(values);
-      toast.success("Post created successfully");
+      toast.promise(createPost(values), {
+        loading: "Creating post...",
+        success: "Post created successfully",
+        error: "Failed to create post",
+      });
     }
   };
 
