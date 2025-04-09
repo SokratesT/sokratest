@@ -62,7 +62,7 @@ const FormPasswordField = ({
           {showTogglePassword && (
             <div className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-0">
               <Button
-                className="h-full w-12 rounded-l-none p-1"
+                className="h-full w-12 rounded-l-none p-1 shadow-none"
                 type="button"
                 variant={"outline"}
                 tabIndex={-1}
