@@ -34,28 +34,30 @@ const FormSwitch = ({
   className?: string;
   required?: boolean;
 }) => (
-  <FormItem
-    className={cn(
-      className,
-      "flex flex-row items-center justify-between rounded-lg border p-4",
-    )}
-  >
-    <div className="space-y-0.5">
-      {label && (
-        <FormLabel className="text-base">
-          {label}
-          {required && <span className="bold text-muted-foreground"> *</span>}
-        </FormLabel>
+  <FormItem>
+    <div
+      className={cn(
+        className,
+        "flex flex-row items-center justify-between gap-2 rounded-lg border p-4",
       )}
-      {description && <FormDescription>{description}</FormDescription>}
+    >
+      <div className="space-y-0.5">
+        {label && (
+          <FormLabel className="text-base" htmlFor="">
+            {label}
+            {required && <span className="bold text-muted-foreground"> *</span>}
+          </FormLabel>
+        )}
+        {description && <FormDescription>{description}</FormDescription>}
+      </div>
+      <FormControl>
+        <Switch
+          checked={field.value}
+          onCheckedChange={field.onChange}
+          disabled={disabled}
+        />
+      </FormControl>
     </div>
-    <FormControl>
-      <Switch
-        checked={field.value}
-        onCheckedChange={field.onChange}
-        disabled={disabled}
-      />
-    </FormControl>
     <FormMessage />
   </FormItem>
 );
