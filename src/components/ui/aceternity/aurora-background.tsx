@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
 interface AuroraBackgroundProps extends React.HTMLProps<HTMLDivElement> {
-  children: ReactNode;
+  children?: ReactNode;
   showRadialGradient?: boolean;
 }
 
