@@ -27,7 +27,7 @@ const FAQList: FAQProps[] = [
   {
     question: "How is this funded?",
     answer:
-      "The project is funded by KI:Edu.NRW, a program of the Ministry of Culture and Science of the State of North Rhine-Westphalia, Germany.",
+      "The project is funded by KI:edu.nrw, a program of the Ministry of Culture and Science of the State of North Rhine-Westphalia, Germany.",
     value: "item-3",
   },
 ];

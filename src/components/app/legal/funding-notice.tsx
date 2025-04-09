@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -11,34 +11,44 @@ interface FundingNoticeProps {
 
 const FundingNotice = ({ className }: FundingNoticeProps) => {
   return (
-    <Card className={cn("bg-white py-6", className)}>
+    <Card
+      className={cn(
+        "bg-white py-6 text-foreground dark:text-background",
+        className,
+      )}
+    >
       <CardContent className="flex flex-col items-center justify-center gap-4">
         <div>
-          <p className="text-center text-muted-foreground text-sm">
-            SokratesT is an Applied Project of KI:Edu.NRW and currently in
+          <p className="text-center text-sm text-muted-foreground dark:text-background/60">
+            SokratesT is an Applied Project of KI:edu.nrw and currently in
             closed access at Rhine-Waal University.
           </p>
-          <div className="mt-4 flex justify-center gap-4 text-foreground">
+          <div className="mt-4 flex justify-center gap-4">
             <Link
               href="https://www.hochschule-rhein-waal.de/de/fakultaeten/kommunikation-und-umwelt/forschungsprojekte/sokratest"
-              className={buttonVariants({ variant: "outline" })}
+              className={cn(
+                buttonVariants({
+                  variant: "outline",
+                  size: "sm",
+                }),
+              )}
             >
               About SokratesT
             </Link>
             <Link
               href="https://ki-edu-nrw.ruhr-uni-bochum.de/ueber-das-projekt/phase-2/praxis-transferprojekte/aktuelle-praxisprojekte/#sokratest"
-              className={buttonVariants({ variant: "outline" })}
+              className={buttonVariants({ variant: "outline", size: "sm" })}
             >
-              About KI:Edu.NRW
+              About KI:edu.nrw
             </Link>
           </div>
         </div>
-        <Separator />
+        <Separator className="bg-muted-foreground/50" />
         <div className="container">
           <div className="flex flex-col items-center justify-center gap-6 text-center text-muted-foreground text-sm sm:flex-row sm:gap-8 md:gap-12">
             <div className="flex flex-col items-center gap-10 sm:flex-row sm:gap-12 md:gap-16">
               <Image
-                src="/funding/Logo_KI.EDU.NRW_rgb.png"
+                src="/funding/KIedu.nrw_Praxisprojekt.png"
                 alt="KI.EDU.NRW Logo"
                 width={220}
                 height={100}
