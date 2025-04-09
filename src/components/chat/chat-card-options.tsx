@@ -10,13 +10,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { deleteChat } from "@/db/actions/chat";
 import { MoreHorizontal } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const ChatCardOptions = ({ chatId }: { chatId: string }) => {
   const confirm = useConfirm();
 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const onDelete = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
+    setIsDropdownOpen(false);
 
     const isConfirmed = await confirm({
       title: "Delete Chat",
@@ -35,7 +39,7 @@ const ChatCardOptions = ({ chatId }: { chatId: string }) => {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
