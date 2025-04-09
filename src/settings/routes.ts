@@ -55,6 +55,13 @@ export const ROUTES = {
         return makePath(this.pathTemplate);
       },
     },
+    privacyPolicy: {
+      name: "Privacy Policy",
+      pathTemplate: "/privacy",
+      getPath: function () {
+        return makePath(this.pathTemplate);
+      },
+    },
     blog: {
       name: "Blog",
       pathTemplate: "/blog",

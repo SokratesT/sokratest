@@ -2,16 +2,18 @@
 
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormPasswordField } from "@/components/forms/fields/formPasswordField";
-import { Button } from "@/components/ui/button";
+import { FormSwitch } from "@/components/forms/fields/formSwitch";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
 import { type SignupSchemaType, signupSchema } from "@/db/zod/signup";
 import { authClient } from "@/lib/auth-client";
 import { ROUTES } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FileTextIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { FormSwitch } from "../forms/fields/formSwitch";
 
 const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
   const router = useRouter();
@@ -136,13 +138,28 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
             />
           )}
         />
-        <div className="flex flex-col gap-2">
-          <p className="font-bold">Privacy Policy</p>
-          <p className="text-muted-foreground text-sm">
-            By signing up, you agree to our Privacy Policy.
-          </p>
-          {/* TODO: Implement as Modal */}
-          <Button size="sm">Review</Button>
+        <div className="space-y-4 rounded-lg border bg-background/50 p-4 shadow-sm">
+          <div className="space-y-2">
+            <h3 className="font-semibold">Privacy Policy</h3>
+            <p className="text-muted-foreground text-sm">
+              By signing up, you agree to our Privacy Policy. Please review it
+              before continuing.
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Link
+              className={buttonVariants({
+                variant: "outline",
+                size: "sm",
+              })}
+              href={ROUTES.PUBLIC.privacyPolicy.getPath()}
+              target="_blank"
+            >
+              <FileTextIcon /> Review Privacy Policy
+            </Link>
+          </div>
+
           <FormField
             control={form.control}
             name="privacyConsent"
@@ -155,7 +172,7 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
           />
         </div>
         <Button type="submit" className="w-full">
-          Sign Up
+          Register
         </Button>
       </form>
     </Form>
