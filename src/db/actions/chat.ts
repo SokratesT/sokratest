@@ -5,6 +5,7 @@ import { chat } from "@/db/schema/chat";
 import { chatDeleteSchema } from "@/db/zod/chat";
 import {
   authActionClient,
+  checkPermissionMiddleware,
   requireCourseMiddleware,
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
@@ -30,8 +31,15 @@ export const createChat = authActionClient
   });
 
 export const deleteChat = authActionClient
-  .metadata({ actionName: "deleteChat" })
+  .metadata({
+    actionName: "deleteChat",
+    permission: {
+      resource: { context: "course", type: "chat" },
+      action: "delete",
+    },
+  })
   .schema(chatDeleteSchema)
+  .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { ids } }) => {
     await db.delete(chat).where(inArray(chat.id, ids));
 

@@ -7,7 +7,7 @@ import {
   postInsertSchema,
   postUpdateSchema,
 } from "@/db/zod/post";
-import { authActionClient } from "@/lib/safe-action";
+import { authActionClient, checkPermissionMiddleware } from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
 import { eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -36,8 +36,15 @@ export const updatePost = authActionClient
   });
 
 export const deletePosts = authActionClient
-  .metadata({ actionName: "deletePost" })
+  .metadata({
+    actionName: "deletePost",
+    permission: {
+      resource: { context: "organization", type: "post" },
+      action: "delete",
+    },
+  })
   .schema(postDeleteSchema)
+  .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { refs } }) => {
     const ids = refs.map((ref) => ref.id);
 
