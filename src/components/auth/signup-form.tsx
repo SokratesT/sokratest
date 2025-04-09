@@ -11,6 +11,7 @@ import { ROUTES } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { FormSwitch } from "../forms/fields/formSwitch";
 
 const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
   const router = useRouter();
@@ -23,6 +24,7 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
       password: undefined,
       confirmPassword: undefined,
       invitationId: invitation.id,
+      privacyConsent: false,
     },
   });
 
@@ -134,6 +136,24 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
             />
           )}
         />
+        <div className="flex flex-col gap-2">
+          <p className="font-bold">Privacy Policy</p>
+          <p className="text-muted-foreground text-sm">
+            By signing up, you agree to our Privacy Policy.
+          </p>
+          {/* TODO: Implement as Modal */}
+          <Button size="sm">Review</Button>
+          <FormField
+            control={form.control}
+            name="privacyConsent"
+            render={({ field }) => (
+              <FormSwitch
+                field={field}
+                description="Yes, I have read and understood the privacy policy for use of the SokratesT platform."
+              />
+            )}
+          />
+        </div>
         <Button type="submit" className="w-full">
           Sign Up
         </Button>

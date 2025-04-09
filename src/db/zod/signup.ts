@@ -10,6 +10,9 @@ export const signupSchema = z
     password: sharedSchemas.password,
     confirmPassword: sharedSchemas.password,
     invitationId: z.string(),
+    privacyConsent: z.boolean().refine((val) => val === true, {
+      message: "You must accept the privacy policy",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords must match",
