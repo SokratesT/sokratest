@@ -22,7 +22,6 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
     resolver: zodResolver(signupSchema),
     defaultValues: {
       email: invitation.email,
-      username: undefined,
       password: undefined,
       confirmPassword: undefined,
       invitationId: invitation.id,
@@ -37,8 +36,7 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
 
     const { data, error } = await authClient.signUp.email(
       {
-        name: values.name,
-        username: values.username,
+        name: values.name ?? "User",
         email: values.email,
         password: values.password,
       },
@@ -72,18 +70,6 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
               field={field}
               placeholder="Your Name"
               label="Name"
-              inputType="text"
-            />
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormInputField
-              field={field}
-              placeholder="Your Username"
-              label="Username"
               inputType="text"
             />
           )}

@@ -12,11 +12,7 @@ import {
 } from "@/db/schema/auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import {
-  admin,
-  organization as organizationPlugin,
-  username,
-} from "better-auth/plugins";
+import { admin, organization as organizationPlugin } from "better-auth/plugins";
 import { createTransport } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { v4 as uuidv4 } from "uuid";
@@ -25,7 +21,6 @@ export const auth = betterAuth({
   trustedOrigins: ["http://localhost:3000", "http://host.docker.internal:3000"],
   plugins: [
     admin(),
-    username(),
     organizationPlugin({
       async sendInvitationEmail(data) {
         const inviteLink = `https://example.com/accept-invitation/${data.id}`;

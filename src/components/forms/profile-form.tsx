@@ -19,7 +19,6 @@ const ProfileForm = () => {
     defaultValues: {
       email: data?.user.email,
       name: data?.user.name,
-      username: data?.user.username,
     },
   });
 
@@ -28,7 +27,6 @@ const ProfileForm = () => {
     form.reset({
       email: data?.user.email,
       name: data?.user.name,
-      username: data?.user.username,
     });
 
     if (!isPending && data) {
@@ -40,7 +38,6 @@ const ProfileForm = () => {
     const { data, error } = await authClient.updateUser(
       {
         name: values.name,
-        username: values.username,
       },
       {
         onRequest: (ctx) => {
@@ -83,19 +80,6 @@ const ProfileForm = () => {
               field={field}
               placeholder="Your name"
               label="Name"
-              inputType="text"
-              loading={loading}
-            />
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormInputField
-              field={field}
-              placeholder="Your username"
-              label="Username"
               inputType="text"
               loading={loading}
             />

@@ -13,8 +13,6 @@ export const user = pgTable("user", {
   banned: boolean("banned"),
   banReason: text("ban_reason"),
   banExpires: timestamp("ban_expires"),
-  username: text("username").unique(),
-  displayUsername: text("display_username"),
 });
 
 export type User = InferSelectModel<typeof user>;
