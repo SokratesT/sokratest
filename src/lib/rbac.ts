@@ -1,6 +1,10 @@
 import "server-only";
 
-import { getCourseRole, getOrganizationRole } from "@/db/queries/auth";
+import {
+  getCourseRole,
+  getOrganizationRole,
+  isChatOwner,
+} from "@/db/queries/auth";
 import {
   type CourseResourceTypePermissions,
   type CourseRole,
@@ -14,7 +18,7 @@ import {
 import { cache } from "react";
 
 // Define resource type literals
-export type CourseResourceType = "course" | "document";
+export type CourseResourceType = "course" | "document" | "chat";
 export type OrganizationResourceType = "organization" | "post" | "user";
 
 // Define resource object structure with context
@@ -132,6 +136,28 @@ export const hasOrganizationPermission = async (
 };
 
 /**
+ * Check if the current user is the owner of a specific chat
+ * @param resource The course resource object
+ * @param action The action to check
+ * @returns Whether the user has permission
+ */
+export const hasChatPermission = async (
+  resource: CourseResource,
+  action: Action,
+): Promise<boolean> => {
+  try {
+    if (await isChatOwner(resource.id)) {
+      console.log("User is chat owner");
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error("Chat permission check failed:", error);
+    return false;
+  }
+};
+
+/**
  * Universal permission checker that routes to the appropriate
  * context-specific permission checker
  * @param resource The resource object (either course or organization)
@@ -140,7 +166,9 @@ export const hasOrganizationPermission = async (
  */
 export const hasPermission = cache(
   async (resource: Resource, action: Action): Promise<boolean> => {
-    if (resource.context === "course") {
+    if (resource.type === "chat") {
+      return hasChatPermission(resource, action);
+    } else if (resource.context === "course") {
       return hasCoursePermission(resource, action);
     } else {
       return hasOrganizationPermission(resource, action);

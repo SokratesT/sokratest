@@ -29,14 +29,17 @@ export const coursePermissions: CourseRolePermissions = {
   instructor: {
     course: ["read", "write", "delete"],
     document: ["read", "write", "delete"],
+    chat: ["read", "write", "delete"],
   },
   student: {
     course: ["read"],
     document: ["read"],
+    chat: ["read", "write", "delete"],
   },
   guest: {
     course: [],
     document: [],
+    chat: [],
   },
 };
 

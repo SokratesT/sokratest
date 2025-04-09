@@ -6,6 +6,13 @@ import {
   createSafeActionClient,
 } from "next-safe-action";
 import { z } from "zod";
+import {
+  type Action,
+  type CourseResource,
+  type OrganizationResource,
+  type Resource,
+  hasPermission,
+} from "./rbac";
 
 class ActionError extends Error {}
 
@@ -22,6 +29,16 @@ const actionClient = createSafeActionClient({
   defineMetadataSchema() {
     return z.object({
       actionName: z.string(),
+      permission: z
+        .object({
+          resource: z.object({
+            context: z.enum(["course", "organization"]),
+            type: z.enum(["course", "document", "post", "user", "chat"]),
+            orgId: z.string().optional(),
+          }),
+          action: z.string(),
+        })
+        .optional(),
     });
   },
   // Define logging middleware.
@@ -89,4 +106,60 @@ export const requireCourseMiddleware = createMiddleware<{
   }
 
   return next({ ctx: { ...ctx, activeCourseId } });
+});
+
+export const checkPermissionMiddleware = createMiddleware<{
+  ctx: { userId: User["id"] };
+  metadata: {
+    permission?: {
+      resource: {
+        context: "course" | "organization";
+        type: string;
+        orgId?: string;
+      };
+      action: string;
+    };
+  };
+}>().define(async ({ next, ctx, metadata, clientInput }) => {
+  if (!metadata.permission) {
+    throw new Error("No permission metadata provided");
+  }
+
+  const { resource, action } = metadata.permission;
+
+  if (
+    typeof clientInput !== "object" ||
+    clientInput === null ||
+    !("ids" in clientInput) ||
+    !Array.isArray(clientInput.ids)
+  ) {
+    throw new Error("Input must contain an ids array field");
+  }
+
+  // Check all permissions and wait for all promises to resolve
+  // TODO: Quite terrible performance, needs improvement
+  await Promise.all(
+    clientInput.ids.map(async (id) => {
+      if (typeof id !== "string") {
+        throw new Error("ID must be a string");
+      }
+
+      const fullResource: Resource =
+        resource.context === "course"
+          ? {
+              ...(resource as Omit<CourseResource, "id">),
+              id,
+            }
+          : {
+              ...(resource as Omit<OrganizationResource, "id">),
+              id,
+            };
+
+      if (!(await hasPermission(fullResource, action as Action))) {
+        throw new Error(`Permission denied for ID: ${id}`);
+      }
+    }),
+  );
+
+  return next({ ctx });
 });
