@@ -11,11 +11,11 @@ import {
 } from "@/components/ui/card";
 import type { Chat } from "@/db/schema/chat";
 import { ROUTES } from "@/settings/routes";
+import { format } from "date-fns";
 import { MessagesSquareIcon } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { ChatCardOptions } from "./chat-card-options";
-import { format } from "date-fns";
 
 const ChatsList = ({ chats }: { chats: Chat[] }) => {
   if (!chats.length) {
