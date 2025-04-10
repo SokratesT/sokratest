@@ -1,8 +1,5 @@
-import { buttonVariants } from "@/components/plate-ui/button";
 import { getSession } from "@/db/queries/auth";
 import { getAllPosts } from "@/db/queries/post";
-import { ROUTES } from "@/settings/routes";
-import { MoveRight } from "lucide-react";
 import Link from "next/link";
 
 const PostsPage = async () => {
@@ -15,17 +12,6 @@ const PostsPage = async () => {
         <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
           Posts
         </h4>
-        {session && session.user.role === "admin" && (
-          <Link
-            href={ROUTES.PRIVATE.posts.root.getPath()}
-            className={buttonVariants({
-              variant: "default",
-              className: "gap-4",
-            })}
-          >
-            Manage Posts <MoveRight className="size-4" />
-          </Link>
-        )}
       </div>
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {queryPosts.map((post) => (

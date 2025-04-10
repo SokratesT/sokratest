@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -19,7 +19,7 @@ const FundingNotice = ({ className }: FundingNoticeProps) => {
     >
       <CardContent className="flex flex-col items-center justify-center gap-4">
         <div>
-          <p className="text-center text-sm text-muted-foreground dark:text-background/60">
+          <p className="text-center text-muted-foreground text-sm dark:text-background/60">
             SokratesT is an Applied Project of KI:edu.nrw and currently in
             closed access at Rhine-Waal University.
           </p>
