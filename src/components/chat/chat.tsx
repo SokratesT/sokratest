@@ -8,7 +8,7 @@ import { deleteTrailingMessages } from "@/db/actions/ai-actions";
 import { useStreamingText } from "@/hooks/use-streaming-text";
 import { type Message, useChat } from "@ai-sdk/react";
 import type { ApiGetScoresResponseData } from "langfuse";
-import { PaperclipIcon, RefreshCcwIcon } from "lucide-react";
+import { RefreshCcwIcon } from "lucide-react";
 import { MessageBlock } from "./message-block";
 
 type DataStreamDelta = {
@@ -99,11 +99,6 @@ const Chat = ({
           />
 
           <div className="absolute bottom-0 flex w-fit flex-row justify-start p-2">
-            <Button type="button" variant="ghost" size="icon">
-              <PaperclipIcon className="size-4" />
-              <span className="sr-only">Attach file</span>
-            </Button>
-
             <Button
               type="button"
               variant="ghost"
