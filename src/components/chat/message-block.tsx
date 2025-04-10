@@ -284,6 +284,7 @@ const MessageBlock = ({
           {message.content && mode === "edit" && (
             <div className="mt-10 flex flex-row items-start gap-2">
               <MessageEditor
+                chatId={chatId}
                 key={message.id}
                 message={message}
                 setMode={setMode}

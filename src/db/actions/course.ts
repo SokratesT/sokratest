@@ -28,7 +28,7 @@ export const createCourse = authActionClient
     actionName: "createCourse",
     permission: {
       resource: { context: "organization", type: "organization" },
-      action: "write",
+      action: "create",
     },
   })
   .use(requireOrganizationMiddleware)
@@ -61,7 +61,14 @@ export const createCourse = authActionClient
   );
 
 export const updateCourse = authActionClient
-  .metadata({ actionName: "updateCourse" })
+  .metadata({
+    actionName: "updateCourse",
+    permission: {
+      resource: { context: "course", type: "course" },
+      action: "update",
+    },
+  })
+  .use(checkPermissionMiddleware)
   .schema(courseUpdateSchema)
   .action(async ({ parsedInput: { id, description, content, title } }) => {
     await db
@@ -74,7 +81,14 @@ export const updateCourse = authActionClient
   });
 
 export const deleteCourses = authActionClient
-  .metadata({ actionName: "deleteCourses" })
+  .metadata({
+    actionName: "deleteCourses",
+    permission: {
+      resource: { context: "course", type: "course" },
+      action: "delete",
+    },
+  })
+  .use(checkPermissionMiddleware)
   .schema(courseDeleteSchema)
   .action(async ({ parsedInput: { refs } }) => {
     const ids = refs.map((ref) => ref.id);
@@ -84,6 +98,8 @@ export const deleteCourses = authActionClient
     revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
     return { error: null };
   });
+
+// TODO: Dont use these as server actions?
 
 export const addCourseMember = authActionClient
   .metadata({ actionName: "addCourseMember" })
@@ -103,7 +119,14 @@ export const addCourseMember = authActionClient
   });
 
 export const removeCourseMembers = authActionClient
-  .metadata({ actionName: "removeCourseMembers" })
+  .metadata({
+    actionName: "removeCourseMembers",
+    permission: {
+      resource: { context: "course", type: "course" },
+      action: "update",
+    },
+  })
+  .use(checkPermissionMiddleware)
   .schema(courseMemberDeleteSchema)
   .action(async ({ parsedInput: { ids, courseId } }) => {
     await db
@@ -119,7 +142,14 @@ export const removeCourseMembers = authActionClient
   });
 
 export const setActiveCourse = authActionClient
-  .metadata({ actionName: "setActiveCourse" })
+  .metadata({
+    actionName: "setActiveCourse",
+    permission: {
+      resource: { context: "course", type: "course" },
+      action: "read",
+    },
+  })
+  .use(checkPermissionMiddleware)
   .schema(z.object({ courseId: z.string().optional() }))
   .action(async ({ parsedInput: { courseId }, ctx: { userId } }) => {
     await db

@@ -63,7 +63,8 @@ const Chat = ({
 
   const handleReload = () => {
     deleteTrailingMessages({
-      id: messages[messages.length - 1].id,
+      chatId: id,
+      messageId: messages[messages.length - 1].id,
     }).then(() => {
       reload();
     });

@@ -3,11 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { deleteTrailingMessages } from "@/db/actions/ai-actions";
+import type { Chat } from "@/db/schema/chat";
 import type { ChatRequestOptions, Message } from "ai";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 type MessageEditorProps = {
+  chatId: Chat["id"];
   message: Message;
   setMode: React.Dispatch<React.SetStateAction<"view" | "edit">>;
   setMessages: (
@@ -20,6 +22,7 @@ type MessageEditorProps = {
 };
 
 const MessageEditor = ({
+  chatId,
   message,
   setMode,
   setMessages,
@@ -56,7 +59,8 @@ const MessageEditor = ({
     }
 
     await deleteTrailingMessages({
-      id: messageId,
+      chatId,
+      messageId: messageId,
     });
 
     setMessages((messages) => {

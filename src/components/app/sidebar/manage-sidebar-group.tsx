@@ -27,17 +27,8 @@ const ManageSidebarGroup = async () => {
 
   const hasCourseEditPermission = await hasPermission(
     { context: "course", id: session.session.activeCourseId, type: "course" },
-    "write",
+    "update",
   );
-
-  /* const hasOrganizationEditPermission = hasPermission(
-    {
-      context: "organization",
-      id: session.session.activeOrganizationId,
-      type: "organization",
-    },
-    "write",
-  ); */
 
   if (!hasCourseEditPermission) {
     return null;

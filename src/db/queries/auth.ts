@@ -104,17 +104,20 @@ export const getOrganizationRole = async (
  * @returns Whether the user is the owner of the chat
  * @throws Error if session not found
  */
-export const isChatOwner = async (chatId: string): Promise<boolean> => {
-  const session = await getSession();
+export const isChatOwner = async (
+  chatId: string,
+): Promise<AuthResult<boolean>> => {
+  return withAuthQuery(
+    async (session) => {
+      const [query] = await db
+        .select({ id: chat.id })
+        .from(chat)
+        .where(
+          and(eq(chat.userId, session.session.userId), eq(chat.id, chatId)),
+        );
 
-  if (!session) {
-    throw new Error("Session not found");
-  }
-
-  const [query] = await db
-    .select({ id: chat.id })
-    .from(chat)
-    .where(and(eq(chat.userId, session.session.userId), eq(chat.id, chatId)));
-
-  return !!query;
+      return !!query;
+    },
+    { requireCourse: true },
+  );
 };

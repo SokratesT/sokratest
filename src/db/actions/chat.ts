@@ -14,9 +14,16 @@ import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export const createChat = authActionClient
-  .metadata({ actionName: "createChat" })
+  .metadata({
+    actionName: "createChat",
+    permission: {
+      resource: { context: "course", type: "chat" },
+      action: "create",
+    },
+  })
   .use(requireCourseMiddleware)
   .use(requireOrganizationMiddleware)
+  .use(checkPermissionMiddleware)
   .action(async ({ ctx: { activeCourseId, userId } }) => {
     const [query] = await db
       .insert(chat)

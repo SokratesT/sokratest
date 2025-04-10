@@ -5,7 +5,7 @@ import {
   getMessageById,
 } from "@/db/queries/ai-queries";
 import { getModel } from "@/lib/ai/models";
-import { authActionClient } from "@/lib/safe-action";
+import { authActionClient, checkPermissionMiddleware } from "@/lib/safe-action";
 import { generateText } from "ai";
 import { string, z } from "zod";
 
@@ -27,10 +27,17 @@ export const generateTitleFromUserMessage = authActionClient
   });
 
 export const deleteTrailingMessages = authActionClient
-  .metadata({ actionName: "deleteTrailingMessages" })
-  .schema(z.object({ id: string() }))
-  .action(async ({ parsedInput: { id } }) => {
-    const [message] = await getMessageById({ id });
+  .metadata({
+    actionName: "deleteTrailingMessages",
+    permission: {
+      resource: { context: "course", type: "chat" },
+      action: "update",
+    },
+  })
+  .schema(z.object({ chatId: string(), messageId: string() }))
+  .use(checkPermissionMiddleware)
+  .action(async ({ parsedInput: { messageId } }) => {
+    const [message] = await getMessageById({ id: messageId });
 
     await deleteMessagesByChatIdAfterTimestamp({
       chatId: message.chatId,

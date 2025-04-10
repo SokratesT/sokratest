@@ -2,12 +2,19 @@
 
 import { voteInsertSchema } from "@/db/zod/vote";
 import { langfuseServer } from "@/lib/langfuse/langfuse-server";
-import { authActionClient } from "@/lib/safe-action";
+import { authActionClient, checkPermissionMiddleware } from "@/lib/safe-action";
 import { revalidatePath } from "next/cache";
 
 export const voteMessage = authActionClient
-  .metadata({ actionName: "voteMessage" })
+  .metadata({
+    actionName: "voteMessage",
+    permission: {
+      resource: { context: "course", type: "chat" },
+      action: "update",
+    },
+  })
   .schema(voteInsertSchema)
+  .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { messageId, sentiment, chatId }, ctx }) => {
     langfuseServer.score({
       id: messageId,

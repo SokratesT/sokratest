@@ -17,7 +17,7 @@ export const updateUserRole = authActionClient
     actionName: "updateUserRole",
     permission: {
       resource: { context: "organization", type: "user" },
-      action: "write",
+      action: "update",
     },
   })
   .schema(

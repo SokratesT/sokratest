@@ -34,7 +34,7 @@ const actionClient = createSafeActionClient({
           resource: z.discriminatedUnion("context", [
             z.object({
               context: z.literal("course"),
-              type: z.enum(["course", "document", "chat"]),
+              type: z.enum(["course", "document", "chat", "invitation"]),
             }),
             z.object({
               context: z.literal("organization"),
@@ -42,7 +42,7 @@ const actionClient = createSafeActionClient({
               orgId: z.string().optional(),
             }),
           ]),
-          action: z.enum(["read", "write", "delete"]),
+          action: z.enum(["read", "update", "delete", "create"]),
         })
         .optional(),
     });
@@ -123,27 +123,38 @@ export const checkPermissionMiddleware = createMiddleware<{
     };
   };
 }>().define(async ({ next, ctx, metadata, clientInput }) => {
+  const input = clientInput;
+
   if (!metadata.permission) {
     throw new Error("No permission metadata provided");
   }
 
   const { resource, action } = metadata.permission;
 
-  if (
-    typeof clientInput !== "object" ||
-    clientInput === null ||
-    !("ids" in clientInput) ||
-    !Array.isArray(clientInput.ids)
-  ) {
-    throw new Error("Input must contain an ids array field");
-  }
+  let ids: string[] = [];
 
-  // TODO: Check against the ORGANIZATION ID, not the resource ID!!
+  if (typeof input !== "object" || input === null) {
+    if (metadata.permission.action === "create" && "activeCourseId" in ctx) {
+      ids = [ctx.activeCourseId as string];
+    } else {
+      throw new Error("Input must contain an ids array field");
+    }
+  } else if ("ids" in input && Array.isArray(input.ids)) {
+    ids = input.ids as string[];
+  } else if ("id" in input) {
+    ids = [input.id as string];
+  } else if ("courseId" in input) {
+    ids = [input.courseId as string];
+  } else if ("chatId" in input) {
+    ids = [input.chatId as string];
+  } else {
+    throw new Error("Unknown input");
+  }
 
   // Check all permissions and wait for all promises to resolve
   // TODO: Quite terrible performance, needs improvement
   await Promise.all(
-    clientInput.ids.map(async (id) => {
+    ids.map(async (id) => {
       if (typeof id !== "string") {
         throw new Error("ID must be a string");
       }

@@ -13,7 +13,14 @@ import { eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export const createPost = authActionClient
-  .metadata({ actionName: "createPost" })
+  .metadata({
+    actionName: "createPost",
+    permission: {
+      resource: { context: "organization", type: "post" },
+      action: "create",
+    },
+  })
+  .use(checkPermissionMiddleware)
   .schema(postInsertSchema)
   .action(async ({ parsedInput: { content, title }, ctx: { userId } }) => {
     await db.insert(post).values({ content, title, userId });
@@ -23,7 +30,14 @@ export const createPost = authActionClient
   });
 
 export const updatePost = authActionClient
-  .metadata({ actionName: "updatePost" })
+  .metadata({
+    actionName: "updatePost",
+    permission: {
+      resource: { context: "organization", type: "post" },
+      action: "update",
+    },
+  })
+  .use(checkPermissionMiddleware)
   .schema(postUpdateSchema)
   .action(async ({ parsedInput: { id, content, title }, ctx: { userId } }) => {
     await db

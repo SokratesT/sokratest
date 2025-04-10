@@ -11,7 +11,8 @@ import {
 import { auth } from "@/lib/auth";
 import {
   authActionClient,
-  requireOrganizationMiddleware,
+  checkPermissionMiddleware,
+  requireCourseMiddleware,
 } from "@/lib/safe-action";
 import { DEFAULT_ROLES } from "@/settings/roles";
 import { ROUTES } from "@/settings/routes";
@@ -22,13 +23,20 @@ import { z } from "zod";
 import { addCourseMember, setActiveCourse } from "./course";
 
 export const createCourseInvitations = authActionClient
-  .metadata({ actionName: "createCourseInvitations" })
-  .use(requireOrganizationMiddleware)
+  .metadata({
+    actionName: "createCourseInvitations",
+    permission: {
+      resource: { context: "course", type: "invitation" },
+      action: "create",
+    },
+  })
+  .use(requireCourseMiddleware)
+  .use(checkPermissionMiddleware)
   .schema(courseInvitationsInsertSchema)
   .action(
     async ({
       parsedInput: { expiresAt, items, courseId, role },
-      ctx: { userId, activeOrganizationId },
+      ctx: { userId },
     }) => {
       const invitations = items.map((item) => ({
         email: item.email,
@@ -46,22 +54,16 @@ export const createCourseInvitations = authActionClient
     },
   );
 
-/* export const updateCourseInvitation = authActionClient
-  .metadata({ actionName: "updateCourseInvitation" })
-  .schema(courseInvitationUpdateSchema)
-  .action(async ({ parsedInput: { id, email, expireAt, invitationCode } }) => {
-    await db
-      .update(course)
-      .set({ id, content, title, description, updatedAt: sql`now()` })
-      .where(eq(courseInvitation.id, id));
-
-    revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
-    return { error: null };
-  }); */
-
 export const deleteCourseInvitations = authActionClient
-  .metadata({ actionName: "deleteCourseInvitations" })
+  .metadata({
+    actionName: "deleteCourseInvitations",
+    permission: {
+      resource: { context: "course", type: "invitation" },
+      action: "delete",
+    },
+  })
   .schema(courseInvitationDeleteSchema)
+  .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { refs } }) => {
     const ids = refs.map((ref) => ref.id);
 
@@ -72,16 +74,21 @@ export const deleteCourseInvitations = authActionClient
   });
 
 export const acceptCourseInvitation = authActionClient
-  .metadata({ actionName: "acceptCourseInvitation" })
+  .metadata({
+    actionName: "acceptCourseInvitation",
+    permission: {
+      resource: { context: "course", type: "invitation" },
+      action: "update",
+    },
+  })
   .schema(courseInvitationSelectSchema)
+  .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { id, courseId, role }, ctx }) => {
     const [query] = await db
       .select({ organizationId: course.organizationId })
       .from(course)
       .where(eq(course.id, courseId))
       .limit(1);
-
-    console.log("query", query);
 
     const userOrganizations = await auth.api.listOrganizations({
       headers: await headers(),
@@ -131,8 +138,15 @@ export const acceptCourseInvitation = authActionClient
   });
 
 export const rejectCourseInvitation = authActionClient
-  .metadata({ actionName: "deleteCourseInvitations" })
+  .metadata({
+    actionName: "rejectCourseInvitation",
+    permission: {
+      resource: { context: "course", type: "invitation" },
+      action: "update",
+    },
+  })
   .schema(z.object({ id: z.string().uuid() }))
+  .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { id } }) => {
     await db
       .update(courseInvitation)

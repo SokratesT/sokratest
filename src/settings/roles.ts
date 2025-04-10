@@ -27,27 +27,29 @@ type OrganizationRolePermissions = Record<
 
 export const coursePermissions: CourseRolePermissions = {
   instructor: {
-    course: ["read", "write", "delete"],
-    document: ["read", "write", "delete"],
-    chat: ["read", "write", "delete"],
+    course: ["read", "update", "delete", "create"],
+    document: ["read", "update", "delete", "create"],
+    chat: ["read", "update", "delete", "create"],
+    invitation: ["read", "update", "delete", "create"],
   },
   student: {
     course: ["read"],
     document: [],
-    chat: ["read", "write", "delete"],
+    chat: ["read", "update", "delete", "create"],
+    invitation: ["read", "update"],
   },
 };
 
 export const organizationPermissions: OrganizationRolePermissions = {
   owner: {
-    organization: ["read", "write", "delete"],
-    post: ["read", "write", "delete"],
-    user: ["read", "write", "delete"],
+    organization: ["read", "update", "delete", "create"],
+    post: ["read", "update", "delete", "create"],
+    user: ["read", "update", "delete", "create"],
   },
   admin: {
-    organization: ["read", "write"],
-    post: ["read", "write", "delete"],
-    user: ["read", "write", "delete"],
+    organization: ["read", "update"],
+    post: ["read", "update", "delete", "create"],
+    user: ["read", "update", "delete", "create"],
   },
   member: {
     organization: ["read"],

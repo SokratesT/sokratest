@@ -17,7 +17,13 @@ import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export const saveDocumentInfo = authActionClient
-  .metadata({ actionName: "saveDocumentInfo" })
+  .metadata({
+    actionName: "saveDocumentInfo",
+    permission: {
+      resource: { context: "course", type: "document" },
+      action: "create",
+    },
+  })
   .use(requireCourseMiddleware)
   .use(requireOrganizationMiddleware)
   .use(checkPermissionMiddleware)

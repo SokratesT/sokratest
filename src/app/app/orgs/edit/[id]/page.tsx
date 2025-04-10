@@ -7,7 +7,7 @@ const EditOrganizationPage = async ({
 }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
 
-  const result = await getOrganizationById(id, "write");
+  const result = await getOrganizationById(id, "update");
 
   if (!result.success) {
     return <Placeholder>{result.error.message}</Placeholder>;

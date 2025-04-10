@@ -18,7 +18,7 @@ import {
 } from "@/settings/roles";
 
 // Define resource type literals
-export type CourseResourceType = "course" | "document" | "chat";
+export type CourseResourceType = "course" | "document" | "chat" | "invitation";
 export type OrganizationResourceType = "organization" | "post" | "user";
 
 // Define resource object structure with context
@@ -38,7 +38,7 @@ export interface OrganizationResource {
 export type Resource = CourseResource | OrganizationResource;
 
 // Define action types
-export type Action = "read" | "write" | "delete";
+export type Action = "read" | "update" | "delete" | "create";
 
 /**
  * Get permissions for a specific course role
@@ -161,6 +161,41 @@ export const hasOrganizationPermission = async (
  * @returns Whether the user has permission
  */
 export const hasChatPermission = async (
+  resource: CourseResource,
+  action: Action,
+): Promise<boolean> => {
+  if (action === "create") {
+    return await hasCoursePermission(resource, action);
+  }
+
+  if (!resource.id) return false;
+
+  const result = await isChatOwner(resource.id);
+
+  if (!result.success) {
+    console.error("Error checking chat permission: ", result.error);
+    return false;
+  }
+
+  try {
+    if (result.data) {
+      console.log("User is chat owner");
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error("Chat permission check failed:", error);
+    return false;
+  }
+};
+
+/**
+ * Check if the current user is the owner of a specific chat
+ * @param resource The course resource object
+ * @param action The action to check
+ * @returns Whether the user has permission
+ */
+export const hasInvitationPermission = async (
   resource: CourseResource,
   action: Action,
 ): Promise<boolean> => {

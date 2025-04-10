@@ -45,7 +45,7 @@ export const POST = async (req: NextRequest) => {
           type: "course",
           id: session?.session.activeCourseId,
         },
-        action: "write",
+        action: "update",
       },
     },
   );

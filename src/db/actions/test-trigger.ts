@@ -2,7 +2,11 @@
 
 import { db } from "@/db/drizzle";
 import { document } from "@/db/schema/document";
-import { authActionClient, requireCourseMiddleware } from "@/lib/safe-action";
+import {
+  authActionClient,
+  checkPermissionMiddleware,
+  requireCourseMiddleware,
+} from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
 import type { processDocumentTask } from "@/trigger/process-document-task";
 import type { vectorizeFilesTask } from "@/trigger/vectorize-files-task";
@@ -13,9 +17,16 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export const enqueueDocuments = authActionClient
-  .metadata({ actionName: "enqueueDocuments" })
+  .metadata({
+    actionName: "enqueueDocuments",
+    permission: {
+      resource: { context: "course", type: "document" },
+      action: "update",
+    },
+  })
   .schema(z.object({ ids: z.array(z.string()) }))
   .use(requireCourseMiddleware)
+  .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { ids }, ctx }) => {
     const docs = await db
       .select({
@@ -50,9 +61,16 @@ export const enqueueDocuments = authActionClient
   });
 
 export const enqueueEmbeddings = authActionClient
-  .metadata({ actionName: "enqueueEmbeddings" })
+  .metadata({
+    actionName: "enqueueEmbeddings",
+    permission: {
+      resource: { context: "course", type: "document" },
+      action: "delete",
+    },
+  })
   .schema(z.object({ ids: z.array(z.string()) }))
   .use(requireCourseMiddleware)
+  .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { ids }, ctx }) => {
     const handle = await tasks.batchTrigger<typeof vectorizeFilesTask>(
       "vectorize-files-task",

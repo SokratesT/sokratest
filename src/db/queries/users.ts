@@ -218,7 +218,7 @@ export const getUserById = async (id: User["id"]) => {
     {
       access: {
         resource: { context: "organization", type: "user", id },
-        action: "write",
+        action: "read",
       },
     },
   );
