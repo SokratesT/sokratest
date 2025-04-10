@@ -14,6 +14,7 @@ import {
 import { deleteCourses } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
 import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -63,6 +64,9 @@ export const columns: ColumnDef<Course>[] = [
     accessorKey: "createdAt",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Created At" />
+    ),
+    cell: ({ row }) => (
+      <span>{format(row.original.createdAt || "", "MMM dd, yyyy HH:mm")}</span>
     ),
   },
   {
