@@ -3,6 +3,7 @@ import "server-only";
 import {
   getCourseRole,
   getOrganizationRole,
+  getSession,
   isChatOwner,
 } from "@/db/queries/auth";
 import {
@@ -15,7 +16,6 @@ import {
   organizationPermissions,
   organizationRoles,
 } from "@/settings/roles";
-import { cache } from "react";
 
 // Define resource type literals
 export type CourseResourceType = "course" | "document" | "chat";
@@ -25,7 +25,7 @@ export type OrganizationResourceType = "organization" | "post" | "user";
 export interface CourseResource {
   context: "course";
   type: CourseResourceType;
-  id: string;
+  id: string | undefined | null | "all";
   orgId?: string; // Optional reference to parent organization
 }
 
@@ -82,9 +82,15 @@ export const hasCoursePermission = async (
   resource: CourseResource,
   action: Action,
 ): Promise<boolean> => {
+  if (!resource.id) return false;
+
   try {
-    const courseRole = await getCourseRole(resource.id);
-    const courseRolePermissions = getCoursePermissionsForRole(courseRole);
+    const result = await getCourseRole();
+    if (!result.success || !result.data) {
+      console.error("No course role found for user.");
+      return false;
+    }
+    const courseRolePermissions = getCoursePermissionsForRole(result.data);
 
     // Check course-specific permissions
     if (courseRolePermissions[resource.type].includes(action)) {
@@ -101,8 +107,8 @@ export const hasCoursePermission = async (
         return true;
       }
 
-      // Managers can read any course but not modify
-      if (orgRole === "manager" && action === "read") {
+      // Admins can read any course but not modify
+      if (orgRole === "admin" && action === "read") {
         return true;
       }
     }
@@ -125,7 +131,20 @@ export const hasOrganizationPermission = async (
   action: Action,
 ): Promise<boolean> => {
   try {
-    const orgRole = await getOrganizationRole(resource.id);
+    const session = await getSession();
+
+    if (!session?.session.activeOrganizationId) {
+      console.error("No active organization ID found in session");
+      return false;
+    }
+
+    const orgRole = await getOrganizationRole(
+      session.session.activeOrganizationId,
+    );
+    if (!orgRole) {
+      console.error("No organization role found for user");
+      return false;
+    }
     const orgPermissions = getOrganizationPermissionsForRole(orgRole);
 
     return orgPermissions[resource.type].includes(action);
@@ -145,6 +164,8 @@ export const hasChatPermission = async (
   resource: CourseResource,
   action: Action,
 ): Promise<boolean> => {
+  if (!resource.id) return false;
+
   try {
     if (await isChatOwner(resource.id)) {
       console.log("User is chat owner");
@@ -164,14 +185,15 @@ export const hasChatPermission = async (
  * @param action The action to check
  * @returns Whether the user has permission
  */
-export const hasPermission = cache(
-  async (resource: Resource, action: Action): Promise<boolean> => {
-    if (resource.type === "chat") {
-      return hasChatPermission(resource, action);
-    } else if (resource.context === "course") {
-      return hasCoursePermission(resource, action);
-    } else {
-      return hasOrganizationPermission(resource, action);
-    }
-  },
-);
+export const hasPermission = async (
+  resource: Resource,
+  action: Action,
+): Promise<boolean> => {
+  if (resource.type === "chat") {
+    return hasChatPermission(resource, action);
+  } else if (resource.context === "course") {
+    return hasCoursePermission(resource, action);
+  } else {
+    return hasOrganizationPermission(resource, action);
+  }
+};

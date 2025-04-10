@@ -1,3 +1,4 @@
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
@@ -23,12 +24,12 @@ const UsersPage = async ({
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
   const { bucket, search } = await bucketSearchParamsCache.parse(searchParams);
 
-  const { query, rowCount } = await getAvailableUsers(
-    sort,
-    pageIndex,
-    pageSize,
-    search,
-  );
+  const result = await getAvailableUsers(sort, pageIndex, pageSize, search);
+
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
+  const { query, rowCount } = result.data;
 
   return (
     <div className="flex flex-col gap-14">

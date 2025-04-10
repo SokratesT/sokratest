@@ -2,7 +2,6 @@ import "server-only";
 
 import { db } from "@/db/drizzle";
 import { type Course, course, courseMember } from "@/db/schema/course";
-import { hasPermission } from "@/lib/rbac";
 import type { Session as AuthSession } from "better-auth";
 import { and, count, eq, getTableColumns } from "drizzle-orm";
 import { buildPagination, buildSortOrder } from "./utils/query-builders";
@@ -77,15 +76,6 @@ export const getUserCoursesForActiveOrganization = async (options: {
 export const getCourseById = async (id: Course["id"]) => {
   return withAuthQuery(
     async () => {
-      if (
-        !(await hasPermission(
-          { context: "course", type: "course", id },
-          "read",
-        ))
-      ) {
-        return { query: null };
-      }
-
       const [query] = await db
         .select({ ...getTableColumns(course) })
         .from(course)

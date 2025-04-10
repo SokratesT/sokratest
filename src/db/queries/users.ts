@@ -2,7 +2,7 @@ import "server-only";
 
 import { db } from "@/db/drizzle";
 import { type User, member, user } from "@/db/schema/auth";
-import { type Course, courseMember } from "@/db/schema/course";
+import { courseMember } from "@/db/schema/course";
 import {
   and,
   asc,
@@ -15,6 +15,7 @@ import {
   not,
   or,
 } from "drizzle-orm";
+import { withAuthQuery } from "./utils/with-auth-query";
 
 // TODO: Centralise this in a shared file
 
@@ -29,162 +30,248 @@ export const getAvailableUsers = async (
   pageSize: number,
   search: string,
 ) => {
-  let query: User[] = [];
-  let rowCount: { count: number } = { count: 0 };
+  return withAuthQuery(async (session) => {
+    let query: User[] = [];
+    let rowCount: { count: number } = { count: 0 };
 
-  try {
-    const sortOrder = sort
-      ?.filter((s) => isValidColumnId(s.id))
-      .map((s) => {
-        if (["name", "email", "role"].includes(s.id)) {
-          const column = user[s.id as keyof User];
-          return s.desc ? desc(column) : asc(column);
-        } else {
-          return asc(user.createdAt);
-        }
-      }) ?? [asc(user.createdAt)]; // Fallback default sort
+    try {
+      const sortOrder = sort
+        ?.filter((s) => isValidColumnId(s.id))
+        .map((s) => {
+          if (["name", "email", "role"].includes(s.id)) {
+            const column = user[s.id as keyof User];
+            return s.desc ? desc(column) : asc(column);
+          } else {
+            return asc(user.createdAt);
+          }
+        }) ?? [asc(user.createdAt)]; // Fallback default sort
 
-    query = await db
-      .select({ ...getTableColumns(user) })
-      .from(user)
-      .where(ilike(user.email, `%${search}%`))
-      .limit(pageSize)
-      .orderBy(...sortOrder)
-      .offset(pageIndex * pageSize);
+      query = await db
+        .select({ ...getTableColumns(user) })
+        .from(user)
+        .where(ilike(user.email, `%${search}%`))
+        .limit(pageSize)
+        .orderBy(...sortOrder)
+        .offset(pageIndex * pageSize);
 
-    [rowCount] = await db
-      .select({ count: count() })
-      .from(user)
-      .where(ilike(user.email, `%${search}%`));
-  } catch (error) {
-    console.error(error);
-  }
+      [rowCount] = await db
+        .select({ count: count() })
+        .from(user)
+        .where(ilike(user.email, `%${search}%`));
+    } catch (error) {
+      console.error(error);
+    }
 
-  return { query, rowCount };
+    return { query, rowCount };
+  }, {});
 };
 
-export const getCourseUsers = async (
-  courseId: Course["id"],
-  options: {
-    sort: { id: string; desc: boolean }[];
-    pageIndex: number;
-    pageSize: number;
-    // search?: string;
-  },
-) => {
-  const { sort, pageIndex, pageSize } = options;
+export const getCourseUsers = async ({
+  sort,
+  pageIndex,
+  pageSize,
+}: {
+  sort: { id: string; desc: boolean }[];
+  pageIndex: number;
+  pageSize: number;
+  // search?: string;
+}) => {
+  return withAuthQuery(
+    async (session) => {
+      let query: User[] = [];
+      let rowCount: { count: number } = { count: 0 };
 
-  let query: User[] = [];
-  let rowCount: { count: number } = { count: 0 };
+      try {
+        const sortOrder = sort
+          ?.filter((s) => isValidColumnId(s.id))
+          .map((s) => {
+            if (["name", "email", "role"].includes(s.id)) {
+              const column = user[s.id as keyof User];
+              return s.desc ? desc(column) : asc(column);
+            } else {
+              return asc(user.createdAt);
+            }
+          }) ?? [asc(user.createdAt)]; // Fallback default sort
 
-  try {
-    const sortOrder = sort
-      ?.filter((s) => isValidColumnId(s.id))
-      .map((s) => {
-        if (["name", "email", "role"].includes(s.id)) {
-          const column = user[s.id as keyof User];
-          return s.desc ? desc(column) : asc(column);
-        } else {
-          return asc(user.createdAt);
-        }
-      }) ?? [asc(user.createdAt)]; // Fallback default sort
+        query = await db
+          .select({ ...getTableColumns(user) })
+          .from(user)
+          .innerJoin(courseMember, eq(user.id, courseMember.userId))
+          .where(eq(courseMember.courseId, session.session.activeCourseId))
+          .limit(pageSize)
+          .orderBy(...sortOrder)
+          .offset(pageIndex * pageSize);
 
-    query = await db
-      .select({ ...getTableColumns(user) })
-      .from(user)
-      .innerJoin(courseMember, eq(user.id, courseMember.userId))
-      .where(eq(courseMember.courseId, courseId))
-      .limit(pageSize)
-      .orderBy(...sortOrder)
-      .offset(pageIndex * pageSize);
+        [rowCount] = await db
+          .select({ count: count() })
+          .from(user)
+          .innerJoin(courseMember, eq(user.id, courseMember.userId))
+          .where(eq(courseMember.courseId, session.session.activeCourseId));
+      } catch (error) {
+        console.error(error);
+      }
 
-    [rowCount] = await db
-      .select({ count: count() })
-      .from(user)
-      .innerJoin(courseMember, eq(user.id, courseMember.userId))
-      .where(eq(courseMember.courseId, courseId));
-  } catch (error) {
-    console.error(error);
-  }
-
-  return { query, rowCount };
+      return { query, rowCount };
+    },
+    {
+      requireCourse: true,
+      access: {
+        resource: { context: "organization", type: "user", id: "all" },
+        action: "read",
+      },
+    },
+  );
 };
 
-export const getOrganizationUsers = async (
-  organizationId: Course["id"],
-  options: {
-    sort: { id: string; desc: boolean }[];
-    pageIndex: number;
-    pageSize: number;
-    // search?: string;
-  },
-) => {
-  const { sort, pageIndex, pageSize } = options;
+export const getOrganizationUsers = async ({
+  sort,
+  pageIndex,
+  pageSize,
+}: {
+  sort: { id: string; desc: boolean }[];
+  pageIndex: number;
+  pageSize: number;
+}) => {
+  return withAuthQuery(
+    async (session) => {
+      let query: User[] = [];
+      let rowCount: { count: number } = { count: 0 };
 
-  let query: User[] = [];
-  let rowCount: { count: number } = { count: 0 };
+      try {
+        const sortOrder = sort
+          ?.filter((s) => isValidColumnId(s.id))
+          .map((s) => {
+            if (["name", "email", "role"].includes(s.id)) {
+              const column = user[s.id as keyof User];
+              return s.desc ? desc(column) : asc(column);
+            } else {
+              return asc(user.createdAt);
+            }
+          }) ?? [asc(user.createdAt)]; // Fallback default sort
 
-  try {
-    const sortOrder = sort
-      ?.filter((s) => isValidColumnId(s.id))
-      .map((s) => {
-        if (["name", "email", "role"].includes(s.id)) {
-          const column = user[s.id as keyof User];
-          return s.desc ? desc(column) : asc(column);
-        } else {
-          return asc(user.createdAt);
-        }
-      }) ?? [asc(user.createdAt)]; // Fallback default sort
+        query = await db
+          .select({ ...getTableColumns(user) })
+          .from(user)
+          .innerJoin(member, eq(user.id, member.userId))
+          .where(
+            eq(member.organizationId, session.session.activeOrganizationId),
+          )
+          .limit(pageSize)
+          .orderBy(...sortOrder)
+          .offset(pageIndex * pageSize);
 
-    query = await db
-      .select({ ...getTableColumns(user) })
-      .from(user)
-      .innerJoin(member, eq(user.id, member.userId))
-      .where(eq(member.organizationId, organizationId))
-      .limit(pageSize)
-      .orderBy(...sortOrder)
-      .offset(pageIndex * pageSize);
+        [rowCount] = await db
+          .select({ count: count() })
+          .from(user)
+          .innerJoin(member, eq(user.id, member.userId))
+          .where(
+            eq(member.organizationId, session.session.activeOrganizationId),
+          );
+      } catch (error) {
+        console.error(error);
+      }
 
-    [rowCount] = await db
-      .select({ count: count() })
-      .from(user)
-      .innerJoin(member, eq(user.id, member.userId))
-      .where(eq(member.organizationId, organizationId));
-  } catch (error) {
-    console.error(error);
-  }
-
-  return { query, rowCount };
+      return { query, rowCount };
+    },
+    { requireOrg: true },
+  );
 };
 
-export const getOrganizationUsersNotInCourse = async (
-  search: string,
-  organizationId: string,
-  courseId: string,
-) => {
-  let query: User[] = [];
-
-  try {
-    query = await db
-      .select({ ...getTableColumns(user) })
-      .from(user)
-      .leftJoin(courseMember, eq(user.id, courseMember.userId))
-      .innerJoin(member, eq(user.id, member.userId))
-      .where(
-        and(
-          ilike(user.email, `%${search}%`),
-          eq(member.organizationId, organizationId),
-          or(
-            isNull(courseMember.courseId),
-            not(eq(courseMember.courseId, courseId)),
+export const getOrganizationUsersNotInCourse = async (search: string) => {
+  return withAuthQuery(
+    async (session) => {
+      const query = await db
+        .select({ ...getTableColumns(user) })
+        .from(user)
+        .leftJoin(courseMember, eq(user.id, courseMember.userId))
+        .innerJoin(member, eq(user.id, member.userId))
+        .where(
+          and(
+            ilike(user.email, `%${search}%`),
+            eq(member.organizationId, session.session.activeOrganizationId),
+            or(
+              isNull(courseMember.courseId),
+              not(eq(courseMember.courseId, session.session.activeCourseId)),
+            ),
           ),
-        ),
-      )
-      .limit(10)
-      .orderBy(asc(user.email));
-  } catch (error) {
-    console.error(error);
-  }
+        )
+        .limit(10)
+        .orderBy(asc(user.email));
 
-  return { query };
+      return { query };
+    },
+    { requireCourse: true, requireOrg: true },
+  );
+};
+
+export const getUserById = async (id: User["id"]) => {
+  return withAuthQuery(
+    async () => {
+      const [query] = await db
+        .select({ ...getTableColumns(user) })
+        .from(user)
+        .where(eq(user.id, id))
+        .limit(1);
+
+      return { query };
+    },
+    {
+      access: {
+        resource: { context: "organization", type: "user", id },
+        action: "write",
+      },
+    },
+  );
+};
+
+export const getUserCourseMembershipById = async (id: User["id"]) => {
+  return withAuthQuery(
+    async (session) => {
+      const [query] = await db
+        .select({ ...getTableColumns(courseMember) })
+        .from(courseMember)
+        .where(
+          and(
+            eq(courseMember.userId, id),
+            eq(courseMember.courseId, session.session.activeCourseId),
+          ),
+        )
+        .limit(1);
+
+      return { query };
+    },
+    {
+      requireCourse: true,
+      access: {
+        resource: { context: "organization", type: "user", id },
+        action: "read",
+      },
+    },
+  );
+};
+
+export const getUserOrganizationMembershipById = async (id: User["id"]) => {
+  return withAuthQuery(
+    async (session) => {
+      const [query] = await db
+        .select({ ...getTableColumns(member) })
+        .from(member)
+        .where(
+          and(
+            eq(member.userId, id),
+            eq(member.organizationId, session.session.activeOrganizationId),
+          ),
+        )
+        .limit(1);
+
+      return { query };
+    },
+    {
+      requireOrg: true,
+      access: {
+        resource: { context: "organization", type: "user", id },
+        action: "read",
+      },
+    },
+  );
 };

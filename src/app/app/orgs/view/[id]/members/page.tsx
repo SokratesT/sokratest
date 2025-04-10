@@ -1,11 +1,11 @@
 import { OrganizationMemberTableActions } from "@/components/organizations/members/table/organization-member-table-actions";
 import { organizationMemberTableColumns } from "@/components/organizations/members/table/organization-member-table-columns";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
-import { getSession } from "@/db/queries/auth";
 import { getOrganizationUsers } from "@/db/queries/users";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
@@ -20,23 +20,23 @@ const OrganizationMembersPage = async ({
   params: Promise<{ id: string }>;
   searchParams: Promise<SearchParams>;
 }) => {
-  const session = await getSession();
-
-  if (!session?.session.activeOrganizationId) {
-    throw new Error("No session or active organization");
-  }
-
   const { id } = await params;
 
   const { pageIndex, pageSize } =
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
 
-  const { query, rowCount } = await getOrganizationUsers(id, {
+  const result = await getOrganizationUsers({
     sort,
     pageIndex,
     pageSize,
   });
+
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
+
+  const { query, rowCount } = result.data;
 
   return (
     <div className="flex flex-col gap-14">

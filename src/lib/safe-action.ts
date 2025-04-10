@@ -31,12 +31,18 @@ const actionClient = createSafeActionClient({
       actionName: z.string(),
       permission: z
         .object({
-          resource: z.object({
-            context: z.enum(["course", "organization"]),
-            type: z.enum(["course", "document", "post", "user", "chat"]),
-            orgId: z.string().optional(),
-          }),
-          action: z.string(),
+          resource: z.discriminatedUnion("context", [
+            z.object({
+              context: z.literal("course"),
+              type: z.enum(["course", "document", "chat"]),
+            }),
+            z.object({
+              context: z.literal("organization"),
+              type: z.enum(["organization", "post", "user"]),
+              orgId: z.string().optional(),
+            }),
+          ]),
+          action: z.enum(["read", "write", "delete"]),
         })
         .optional(),
     });
@@ -112,11 +118,7 @@ export const checkPermissionMiddleware = createMiddleware<{
   ctx: { userId: User["id"] };
   metadata: {
     permission?: {
-      resource: {
-        context: "course" | "organization";
-        type: string;
-        orgId?: string;
-      };
+      resource: Omit<CourseResource, "id"> | Omit<OrganizationResource, "id">;
       action: string;
     };
   };
@@ -135,6 +137,8 @@ export const checkPermissionMiddleware = createMiddleware<{
   ) {
     throw new Error("Input must contain an ids array field");
   }
+
+  // TODO: Check against the ORGANIZATION ID, not the resource ID!!
 
   // Check all permissions and wait for all promises to resolve
   // TODO: Quite terrible performance, needs improvement

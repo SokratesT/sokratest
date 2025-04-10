@@ -9,6 +9,7 @@ import type { CourseRole, OrganizationRole } from "@/settings/roles";
 import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { cache } from "react";
+import { type AuthResult, withAuthQuery } from "./utils/with-auth-query";
 
 /**
  * Get the current session from the auth API
@@ -38,29 +39,30 @@ export const getActiveOrganization = cache(async () => {
  * @returns The user's role in the course
  * @throws Error if session not found or user has no role
  */
-export const getCourseRole = async (courseId: string): Promise<CourseRole> => {
-  const session = await getSession();
+export const getCourseRole = async (): Promise<
+  AuthResult<CourseRole | undefined>
+> => {
+  return withAuthQuery(
+    async (session) => {
+      const [query] = await db
+        .select({ role: courseMember.role })
+        .from(courseMember)
+        .where(
+          and(
+            eq(courseMember.userId, session.session.userId),
+            eq(courseMember.courseId, session.session.activeCourseId),
+          ),
+        );
 
-  if (!session) {
-    throw new Error("Session not found");
-  }
+      if (!query) {
+        return undefined;
+      }
 
-  const [query] = await db
-    .select({ role: courseMember.role })
-    .from(courseMember)
-    .where(
-      and(
-        eq(courseMember.userId, session.session.userId),
-        eq(courseMember.courseId, courseId),
-      ),
-    );
-
-  if (!query) {
-    return "guest" as CourseRole; // Default role if no membership found
-  }
-
-  // TODO: Make type safe by using enum in PG
-  return query.role as CourseRole;
+      // TODO: Make type safe by using enum in PG
+      return query.role as CourseRole;
+    },
+    { requireCourse: true },
+  );
 };
 
 /**
@@ -71,7 +73,7 @@ export const getCourseRole = async (courseId: string): Promise<CourseRole> => {
  */
 export const getOrganizationRole = async (
   organizationId: string,
-): Promise<OrganizationRole> => {
+): Promise<OrganizationRole | undefined> => {
   const session = await getSession();
 
   if (!session) {
@@ -89,7 +91,7 @@ export const getOrganizationRole = async (
     );
 
   if (!query) {
-    return "guest" as OrganizationRole; // Default role if no membership found
+    return undefined;
   }
 
   // TODO: Make type safe by using enum in PG

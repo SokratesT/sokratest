@@ -13,6 +13,7 @@ import {
   authActionClient,
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
+import { DEFAULT_ROLES } from "@/settings/roles";
 import { ROUTES } from "@/settings/routes";
 import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -94,7 +95,7 @@ export const acceptCourseInvitation = authActionClient
         body: {
           userId: ctx.userId,
           organizationId: query.organizationId,
-          role: "member",
+          role: DEFAULT_ROLES.organization,
         },
       });
     }

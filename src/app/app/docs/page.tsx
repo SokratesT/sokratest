@@ -1,12 +1,13 @@
 import { SearchInput } from "@/components/documents/search-input";
 import { columns } from "@/components/documents/table/columns";
 import { DocumentTableActions } from "@/components/documents/table/document-table-actions";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
-import { getAvailableDocuments } from "@/db/queries/document";
+import { getActiveCourseDocuments } from "@/db/queries/document";
 import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
@@ -24,12 +25,17 @@ const DocumentsPage = async ({
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
   const { search } = await bucketSearchParamsCache.parse(searchParams);
 
-  const { query, rowCount } = await getAvailableDocuments(
+  const result = await getActiveCourseDocuments(
     sort,
     pageIndex,
     pageSize,
     search,
   );
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
+
+  const { query, rowCount } = result.data;
 
   return (
     <div className="flex flex-col gap-14">

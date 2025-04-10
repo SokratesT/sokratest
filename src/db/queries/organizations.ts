@@ -2,6 +2,7 @@ import "server-only";
 
 import { db } from "@/db/drizzle";
 import { type Organization, member, organization } from "@/db/schema/auth";
+import type { Action } from "@/lib/rbac";
 import type { Session } from "better-auth";
 import { count, eq, getTableColumns, ilike } from "drizzle-orm";
 import { buildPagination, buildSortOrder } from "./utils/query-builders";
@@ -59,7 +60,10 @@ export const getAvailableOrganizations = async (options: {
   }, {});
 };
 
-export const getOrganizationById = async (id: Organization["id"]) => {
+export const getOrganizationById = async (
+  id: Organization["id"],
+  action?: Action,
+) => {
   return withAuthQuery(
     async () => {
       const [query] = await db
@@ -74,7 +78,7 @@ export const getOrganizationById = async (id: Organization["id"]) => {
       requireOrg: true,
       access: {
         resource: { context: "organization", type: "organization", id },
-        action: "read",
+        action: action ?? "read",
       },
     },
   );

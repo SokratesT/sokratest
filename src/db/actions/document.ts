@@ -6,6 +6,7 @@ import { fileDeleteSchema, fileInsertSchema } from "@/db/zod/document";
 import { deleteFileFromBucket } from "@/lib/s3/file-functions";
 import {
   authActionClient,
+  checkPermissionMiddleware,
   requireCourseMiddleware,
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
@@ -19,6 +20,7 @@ export const saveDocumentInfo = authActionClient
   .metadata({ actionName: "saveDocumentInfo" })
   .use(requireCourseMiddleware)
   .use(requireOrganizationMiddleware)
+  .use(checkPermissionMiddleware)
   .schema(fileInsertSchema)
   .action(
     async ({
@@ -44,8 +46,15 @@ export const saveDocumentInfo = authActionClient
 
 // TODO: This function should get the prefix instead of looking up files
 export const deleteDocumentInfo = authActionClient
-  .metadata({ actionName: "deleteDocumentInfo" })
+  .metadata({
+    actionName: "deleteDocumentInfo",
+    permission: {
+      resource: { context: "course", type: "document" },
+      action: "delete",
+    },
+  })
   .schema(fileDeleteSchema)
+  .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { ids } }) => {
     const filesToDelete = await db
       .select()

@@ -6,8 +6,8 @@ import type {
 
 // Define role types
 // TODO: Make enum from PG
-export type CourseRole = "instructor" | "student" | "guest";
-export type OrganizationRole = "owner" | "manager" | "member" | "guest";
+export type CourseRole = "instructor" | "student";
+export type OrganizationRole = "owner" | "admin" | "member";
 
 // Define permission structure - now indexed by resource type
 export type CourseResourceTypePermissions = Record<
@@ -33,13 +33,8 @@ export const coursePermissions: CourseRolePermissions = {
   },
   student: {
     course: ["read"],
-    document: ["read"],
-    chat: ["read", "write", "delete"],
-  },
-  guest: {
-    course: [],
     document: [],
-    chat: [],
+    chat: ["read", "write", "delete"],
   },
 };
 
@@ -49,7 +44,7 @@ export const organizationPermissions: OrganizationRolePermissions = {
     post: ["read", "write", "delete"],
     user: ["read", "write", "delete"],
   },
-  manager: {
+  admin: {
     organization: ["read", "write"],
     post: ["read", "write", "delete"],
     user: ["read", "write", "delete"],
@@ -57,11 +52,6 @@ export const organizationPermissions: OrganizationRolePermissions = {
   member: {
     organization: ["read"],
     post: ["read"],
-    user: [],
-  },
-  guest: {
-    organization: [],
-    post: [],
     user: [],
   },
 };

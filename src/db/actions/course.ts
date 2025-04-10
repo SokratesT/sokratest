@@ -14,16 +14,25 @@ import {
 } from "@/db/zod/course-member";
 import {
   authActionClient,
+  checkPermissionMiddleware,
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
+import { DEFAULT_ROLES } from "@/settings/roles";
 import { ROUTES } from "@/settings/routes";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export const createCourse = authActionClient
-  .metadata({ actionName: "createCourse" })
+  .metadata({
+    actionName: "createCourse",
+    permission: {
+      resource: { context: "organization", type: "organization" },
+      action: "write",
+    },
+  })
   .use(requireOrganizationMiddleware)
+  .use(checkPermissionMiddleware)
   .schema(courseInsertSchema)
   .action(
     async ({
@@ -85,7 +94,7 @@ export const addCourseMember = authActionClient
       .values({
         courseId,
         userId,
-        role: "student",
+        role: DEFAULT_ROLES.course,
       })
       .onConflictDoNothing();
 

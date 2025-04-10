@@ -1,3 +1,4 @@
+import { getSession } from "@/db/queries/auth";
 import { withAuthQuery } from "@/db/queries/utils/with-auth-query";
 import type { PresignedUrlProp, ShortFileProp } from "@/lib/files/types";
 import { createPresignedUrlToUpload } from "@/lib/s3/file-functions";
@@ -10,6 +11,8 @@ export const POST = async (req: NextRequest) => {
 
   // TODO: Can probably be optimized
   const presignedUrls = [] as PresignedUrlProp[];
+
+  const session = await getSession();
 
   const result = await withAuthQuery(
     async (session) => {
@@ -34,7 +37,17 @@ export const POST = async (req: NextRequest) => {
         }),
       );
     },
-    { requireCourse: true },
+    {
+      requireCourse: true,
+      access: {
+        resource: {
+          context: "course",
+          type: "course",
+          id: session?.session.activeCourseId,
+        },
+        action: "write",
+      },
+    },
   );
 
   if (!result.success) {

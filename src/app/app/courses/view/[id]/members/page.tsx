@@ -1,11 +1,11 @@
 import { AddCourseMembers } from "@/components/courses/members/add-course-members";
 import { CourseMemberTableActions } from "@/components/courses/members/table/course-member-table-actions";
 import { courseMemberTableColumns } from "@/components/courses/members/table/course-member-table-columns";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
-import { getSession } from "@/db/queries/auth";
 import {
   getCourseUsers,
   getOrganizationUsersNotInCourse,
@@ -22,12 +22,6 @@ const UsersPage = async ({
   params: Promise<{ id: string }>;
   searchParams: Promise<SearchParams>;
 }) => {
-  const session = await getSession();
-
-  if (!session?.session.activeOrganizationId) {
-    throw new Error("No session or active organization");
-  }
-
   const { id } = await params;
 
   const { pageIndex, pageSize } =
@@ -35,17 +29,25 @@ const UsersPage = async ({
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
   const { search } = await bucketSearchParamsCache.parse(searchParams);
 
-  const { query: organizationUsers } = await getOrganizationUsersNotInCourse(
-    search,
-    session.session.activeOrganizationId,
-    id,
-  );
+  const resultOrgUsersNotInCourse =
+    await getOrganizationUsersNotInCourse(search);
 
-  const { query, rowCount } = await getCourseUsers(id, {
+  if (!resultOrgUsersNotInCourse.success) {
+    return <Placeholder>{resultOrgUsersNotInCourse.error.message}</Placeholder>;
+  }
+
+  const organizationUsers = resultOrgUsersNotInCourse.data.query;
+
+  const result = await getCourseUsers({
     sort,
     pageIndex,
     pageSize,
   });
+
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
+  const { query, rowCount } = result.data;
 
   return (
     <div className="flex flex-col gap-14">
