@@ -1,8 +1,8 @@
 import { NavUser } from "@/components/account/nav-user";
 import { Logo } from "@/components/app/logo";
+import { NewChatButton } from "@/components/chat/new-chat-button";
 import { CourseSwitcherServer } from "@/components/courses/course-switcher/course-switcher-server";
 import { SkeletonsArray } from "@/components/placeholders/skeletons-array";
-import { buttonVariants } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -35,12 +35,7 @@ const AppSidebar = async () => {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <Link
-            href={ROUTES.PRIVATE.chat.add.getPath()}
-            className={buttonVariants({ variant: "default" })}
-          >
-            New Chat
-          </Link>
+          <NewChatButton>New Chat</NewChatButton>
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Chats</SidebarGroupLabel>

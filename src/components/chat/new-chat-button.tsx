@@ -22,11 +22,17 @@ const NewChatButton = ({
   const router = useRouter();
 
   const handleNewChat = async () => {
-    const res = await createChat();
+    const t = toast.promise(createChat(), {
+      loading: "Creating new chat...",
+      success: "New chat created",
+      error: "Failed to create chat",
+    });
+
+    const res = await t.unwrap();
+
     const chatId = res?.data?.chat.id;
 
     if (!chatId) {
-      toast.error("Failed to create chat");
       return;
     }
 
