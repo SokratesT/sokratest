@@ -25,7 +25,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 const handleDelete = async (id: string) => {
-  deleteDocumentInfo({ ids: [id] });
+  deleteDocumentInfo({ refs: [{ id }] });
   toast.success("Document deleted");
 };
 

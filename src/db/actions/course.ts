@@ -8,16 +8,12 @@ import {
   courseInsertSchema,
   courseUpdateSchema,
 } from "@/db/zod/course";
-import {
-  courseMemberDeleteSchema,
-  courseMemberInsertSchema,
-} from "@/db/zod/course-member";
+import { courseMemberDeleteSchema } from "@/db/zod/course-member";
 import {
   authActionClient,
   checkPermissionMiddleware,
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
-import { DEFAULT_ROLES } from "@/settings/roles";
 import { ROUTES } from "@/settings/routes";
 import { and, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -99,25 +95,6 @@ export const deleteCourses = authActionClient
     return { error: null };
   });
 
-// TODO: Dont use these as server actions?
-
-export const addCourseMember = authActionClient
-  .metadata({ actionName: "addCourseMember" })
-  .schema(courseMemberInsertSchema)
-  .action(async ({ parsedInput: { userId, courseId } }) => {
-    await db
-      .insert(courseMember)
-      .values({
-        courseId,
-        userId,
-        role: DEFAULT_ROLES.course,
-      })
-      .onConflictDoNothing();
-
-    // TODO: Make more granular
-    revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
-  });
-
 export const removeCourseMembers = authActionClient
   .metadata({
     actionName: "removeCourseMembers",
@@ -128,7 +105,9 @@ export const removeCourseMembers = authActionClient
   })
   .use(checkPermissionMiddleware)
   .schema(courseMemberDeleteSchema)
-  .action(async ({ parsedInput: { ids, courseId } }) => {
+  .action(async ({ parsedInput: { refs, courseId } }) => {
+    const ids = refs.map((ref) => ref.id);
+
     await db
       .delete(courseMember)
       .where(

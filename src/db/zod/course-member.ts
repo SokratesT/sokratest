@@ -12,7 +12,11 @@ export const courseMemberUpdateSchema = createUpdateSchema(courseMember, {
 });
 
 export const courseMemberDeleteSchema = z.object({
-  ids: z.array(z.string()),
+  refs: z.array(
+    z.object({
+      id: z.string(),
+    }),
+  ),
   courseId: z.string(),
 });
 

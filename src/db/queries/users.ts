@@ -31,36 +31,29 @@ export const getAvailableUsers = async (
   search: string,
 ) => {
   return withAuthQuery(async (session) => {
-    let query: User[] = [];
-    let rowCount: { count: number } = { count: 0 };
+    const sortOrder = sort
+      ?.filter((s) => isValidColumnId(s.id))
+      .map((s) => {
+        if (["name", "email", "role"].includes(s.id)) {
+          const column = user[s.id as keyof User];
+          return s.desc ? desc(column) : asc(column);
+        } else {
+          return asc(user.createdAt);
+        }
+      }) ?? [asc(user.createdAt)]; // Fallback default sort
 
-    try {
-      const sortOrder = sort
-        ?.filter((s) => isValidColumnId(s.id))
-        .map((s) => {
-          if (["name", "email", "role"].includes(s.id)) {
-            const column = user[s.id as keyof User];
-            return s.desc ? desc(column) : asc(column);
-          } else {
-            return asc(user.createdAt);
-          }
-        }) ?? [asc(user.createdAt)]; // Fallback default sort
+    const query = await db
+      .select({ ...getTableColumns(user) })
+      .from(user)
+      .where(ilike(user.email, `%${search}%`))
+      .limit(pageSize)
+      .orderBy(...sortOrder)
+      .offset(pageIndex * pageSize);
 
-      query = await db
-        .select({ ...getTableColumns(user) })
-        .from(user)
-        .where(ilike(user.email, `%${search}%`))
-        .limit(pageSize)
-        .orderBy(...sortOrder)
-        .offset(pageIndex * pageSize);
-
-      [rowCount] = await db
-        .select({ count: count() })
-        .from(user)
-        .where(ilike(user.email, `%${search}%`));
-    } catch (error) {
-      console.error(error);
-    }
+    const [rowCount] = await db
+      .select({ count: count() })
+      .from(user)
+      .where(ilike(user.email, `%${search}%`));
 
     return { query, rowCount };
   }, {});
@@ -78,38 +71,31 @@ export const getCourseUsers = async ({
 }) => {
   return withAuthQuery(
     async (session) => {
-      let query: User[] = [];
-      let rowCount: { count: number } = { count: 0 };
+      const sortOrder = sort
+        ?.filter((s) => isValidColumnId(s.id))
+        .map((s) => {
+          if (["name", "email", "role"].includes(s.id)) {
+            const column = user[s.id as keyof User];
+            return s.desc ? desc(column) : asc(column);
+          } else {
+            return asc(user.createdAt);
+          }
+        }) ?? [asc(user.createdAt)]; // Fallback default sort
 
-      try {
-        const sortOrder = sort
-          ?.filter((s) => isValidColumnId(s.id))
-          .map((s) => {
-            if (["name", "email", "role"].includes(s.id)) {
-              const column = user[s.id as keyof User];
-              return s.desc ? desc(column) : asc(column);
-            } else {
-              return asc(user.createdAt);
-            }
-          }) ?? [asc(user.createdAt)]; // Fallback default sort
+      const query = await db
+        .select({ ...getTableColumns(user) })
+        .from(user)
+        .innerJoin(courseMember, eq(user.id, courseMember.userId))
+        .where(eq(courseMember.courseId, session.session.activeCourseId))
+        .limit(pageSize)
+        .orderBy(...sortOrder)
+        .offset(pageIndex * pageSize);
 
-        query = await db
-          .select({ ...getTableColumns(user) })
-          .from(user)
-          .innerJoin(courseMember, eq(user.id, courseMember.userId))
-          .where(eq(courseMember.courseId, session.session.activeCourseId))
-          .limit(pageSize)
-          .orderBy(...sortOrder)
-          .offset(pageIndex * pageSize);
-
-        [rowCount] = await db
-          .select({ count: count() })
-          .from(user)
-          .innerJoin(courseMember, eq(user.id, courseMember.userId))
-          .where(eq(courseMember.courseId, session.session.activeCourseId));
-      } catch (error) {
-        console.error(error);
-      }
+      const [rowCount] = await db
+        .select({ count: count() })
+        .from(user)
+        .innerJoin(courseMember, eq(user.id, courseMember.userId))
+        .where(eq(courseMember.courseId, session.session.activeCourseId));
 
       return { query, rowCount };
     },
@@ -134,42 +120,31 @@ export const getOrganizationUsers = async ({
 }) => {
   return withAuthQuery(
     async (session) => {
-      let query: User[] = [];
-      let rowCount: { count: number } = { count: 0 };
+      const sortOrder = sort
+        ?.filter((s) => isValidColumnId(s.id))
+        .map((s) => {
+          if (["name", "email", "role"].includes(s.id)) {
+            const column = user[s.id as keyof User];
+            return s.desc ? desc(column) : asc(column);
+          } else {
+            return asc(user.createdAt);
+          }
+        }) ?? [asc(user.createdAt)]; // Fallback default sort
 
-      try {
-        const sortOrder = sort
-          ?.filter((s) => isValidColumnId(s.id))
-          .map((s) => {
-            if (["name", "email", "role"].includes(s.id)) {
-              const column = user[s.id as keyof User];
-              return s.desc ? desc(column) : asc(column);
-            } else {
-              return asc(user.createdAt);
-            }
-          }) ?? [asc(user.createdAt)]; // Fallback default sort
+      const query = await db
+        .select({ ...getTableColumns(user) })
+        .from(user)
+        .innerJoin(member, eq(user.id, member.userId))
+        .where(eq(member.organizationId, session.session.activeOrganizationId))
+        .limit(pageSize)
+        .orderBy(...sortOrder)
+        .offset(pageIndex * pageSize);
 
-        query = await db
-          .select({ ...getTableColumns(user) })
-          .from(user)
-          .innerJoin(member, eq(user.id, member.userId))
-          .where(
-            eq(member.organizationId, session.session.activeOrganizationId),
-          )
-          .limit(pageSize)
-          .orderBy(...sortOrder)
-          .offset(pageIndex * pageSize);
-
-        [rowCount] = await db
-          .select({ count: count() })
-          .from(user)
-          .innerJoin(member, eq(user.id, member.userId))
-          .where(
-            eq(member.organizationId, session.session.activeOrganizationId),
-          );
-      } catch (error) {
-        console.error(error);
-      }
+      const [rowCount] = await db
+        .select({ count: count() })
+        .from(user)
+        .innerJoin(member, eq(user.id, member.userId))
+        .where(eq(member.organizationId, session.session.activeOrganizationId));
 
       return { query, rowCount };
     },

@@ -14,6 +14,7 @@ import {
 import { deletePosts } from "@/db/actions/post";
 import type { Post } from "@/db/schema/post";
 import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -68,6 +69,9 @@ export const columns: ColumnDef<PostWithAuthor>[] = [
     accessorKey: "createdAt",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Created At" />
+    ),
+    cell: ({ row }) => (
+      <span>{format(row.original.createdAt || "", "MMM dd, yyyy HH:mm")}</span>
     ),
   },
   {

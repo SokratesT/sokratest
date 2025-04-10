@@ -127,7 +127,9 @@ const FileActions = ({
             <Button
               variant="destructive"
               size="sm"
-              onClick={() => deleteDocumentInfo({ ids: [fileInfo.id] })}
+              onClick={() =>
+                deleteDocumentInfo({ refs: [{ id: fileInfo.id }] })
+              }
               className="flex items-center gap-1"
             >
               <Trash2 className="h-4 w-4" />

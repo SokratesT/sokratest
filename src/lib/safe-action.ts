@@ -141,6 +141,8 @@ export const checkPermissionMiddleware = createMiddleware<{
     }
   } else if ("ids" in input && Array.isArray(input.ids)) {
     ids = input.ids as string[];
+  } else if ("refs" in input && Array.isArray(input.refs)) {
+    ids = input.refs.map((e) => e.id) as string[];
   } else if ("id" in input) {
     ids = [input.id as string];
   } else if ("courseId" in input) {

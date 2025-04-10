@@ -9,24 +9,29 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { removeCourseMembers } from "@/db/actions/course";
-import type { Course } from "@/db/schema/course";
+import { deleteCourseInvitations } from "@/db/actions/course-invitation";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
 
-const CourseMemberTableActions = ({ courseId }: { courseId: Course["id"] }) => {
+const InvitesTableActions = () => {
   const { table } = useTable();
 
   const handleDelete = async () => {
-    const userIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
+    const courseInvitationIds = table
+      .getSelectedRowModel()
+      .flatRows.map((row) => row.id);
 
-    await removeCourseMembers({
-      refs: userIds.map((id) => ({ id })),
-      courseId,
-    });
-
-    toast.success("Members deleted");
+    toast.promise(
+      deleteCourseInvitations({
+        refs: courseInvitationIds.map((id) => ({ id })),
+      }),
+      {
+        loading: "Deleting course invitations...",
+        success: "Course invitations deleted",
+        error: "Error deleting course invitations",
+      },
+    );
   };
 
   return (
@@ -44,11 +49,11 @@ const CourseMemberTableActions = ({ courseId }: { courseId: Course["id"] }) => {
           onClick={handleDelete}
           disabled={table.getSelectedRowModel().rows.length === 0}
         >
-          Remove selected members
+          Delete selected
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
 
-export { CourseMemberTableActions };
+export { InvitesTableActions };

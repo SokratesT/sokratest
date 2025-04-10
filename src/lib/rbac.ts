@@ -90,6 +90,12 @@ export const hasCoursePermission = async (
       console.error("No course role found for user.");
       return false;
     }
+
+    if (resource.type === "invitation" && resource.id === "all") {
+      // Special case for invitations
+      return result.data === "instructor";
+    }
+
     const courseRolePermissions = getCoursePermissionsForRole(result.data);
 
     // Check course-specific permissions

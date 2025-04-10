@@ -30,7 +30,7 @@ const ChatCardOptions = ({ chatId }: { chatId: string }) => {
     });
 
     if (isConfirmed) {
-      toast.promise(deleteChat({ ids: [chatId] }), {
+      toast.promise(deleteChat({ refs: [{ id: chatId }] }), {
         loading: "Deleting chat...",
         success: "Chat deleted",
         error: "Failed to delete chat",

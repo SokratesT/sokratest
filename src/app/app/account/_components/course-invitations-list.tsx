@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getUserCourseInvitations } from "@/db/queries/course-invitations";
+import { getUserCourseInvitations } from "@/db/queries/course-invitation";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
 import { BadgeCheck, BadgeX, ClipboardList } from "lucide-react";
 import { CourseInvitationEntry } from "./course-invitation-entry";

@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { course } from "@/db/schema/course";
+import { course, courseMember } from "@/db/schema/course";
 import { courseInvitation } from "@/db/schema/course-invitation";
 import {
   courseInvitationDeleteSchema,
@@ -20,7 +20,7 @@ import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { addCourseMember, setActiveCourse } from "./course";
+import { setActiveCourse } from "./course";
 
 export const createCourseInvitations = authActionClient
   .metadata({
@@ -70,6 +70,7 @@ export const deleteCourseInvitations = authActionClient
     await db.delete(courseInvitation).where(inArray(courseInvitation.id, ids));
 
     revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
+    revalidatePath(ROUTES.PRIVATE.app.account.getPath());
     return { error: null };
   });
 
@@ -107,12 +108,15 @@ export const acceptCourseInvitation = authActionClient
       });
     }
 
-    await addCourseMember({
-      courseId,
-      userId: ctx.userId,
-      role,
-      createdAt: new Date(),
-    });
+    await db
+      .insert(courseMember)
+      .values({
+        courseId,
+        userId: ctx.userId,
+        role,
+        createdAt: new Date(),
+      })
+      .onConflictDoNothing();
 
     await db
       .update(courseInvitation)

@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getCourseInvitationById } from "@/db/queries/invitation";
+import { getCourseInvitationById } from "@/db/queries/course-invitation";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
 import { ROUTES } from "@/settings/routes";
 import type { Metadata } from "next";

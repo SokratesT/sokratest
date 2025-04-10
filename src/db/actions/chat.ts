@@ -47,7 +47,9 @@ export const deleteChat = authActionClient
   })
   .schema(chatDeleteSchema)
   .use(checkPermissionMiddleware)
-  .action(async ({ parsedInput: { ids } }) => {
+  .action(async ({ parsedInput: { refs } }) => {
+    const ids = refs.map((ref) => ref.id);
+
     await db.delete(chat).where(inArray(chat.id, ids));
 
     revalidatePath(ROUTES.PRIVATE.chat.add.getPath());

@@ -10,24 +10,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { removeCourseMembers } from "@/db/actions/course";
-import type { User } from "@/db/schema/auth";
-import type { Course } from "@/db/schema/course";
+import { deleteCourseInvitations } from "@/db/actions/course-invitation";
+import type { CourseInvitation } from "@/db/schema/course-invitation";
 import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 
-const handleDelete = async (id: string, courseId?: Course["id"]) => {
-  if (!courseId) {
-    toast.error("Unknown Course");
-    throw new Error("Course ID is missing");
-  }
-
-  await removeCourseMembers({ refs: [{ id }], courseId });
-  toast.success("Member removed");
+const handleDelete = async (id: CourseInvitation["id"]) => {
+  toast.promise(
+    deleteCourseInvitations({
+      refs: [{ id }],
+    }),
+    {
+      loading: "Deleting course invitation...",
+      success: "Course invitation deleted",
+      error: "Error deleting course invitation",
+    },
+  );
 };
 
-export const courseMemberTableColumns: ColumnDef<User>[] = [
+export const invitesTableColumns: ColumnDef<CourseInvitation>[] = [
   {
     id: "select",
     size: 32,
@@ -53,15 +56,24 @@ export const courseMemberTableColumns: ColumnDef<User>[] = [
   },
   {
     size: 500,
-    accessorKey: "name",
+    accessorKey: "email",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "expiresAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email" />
+      <DataTableColumnHeader column={column} title="Expires At" />
+    ),
+    cell: ({ row }) => (
+      <span>{format(row.original.createdAt || "", "MMM dd, yyyy HH:mm")}</span>
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
     ),
   },
   {
@@ -73,7 +85,7 @@ export const courseMemberTableColumns: ColumnDef<User>[] = [
   {
     id: "actions",
     size: 32,
-    cell: ({ row, table }) => {
+    cell: ({ row }) => {
       const user = row.original;
 
       return (
@@ -86,12 +98,8 @@ export const courseMemberTableColumns: ColumnDef<User>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => {
-                handleDelete(user.id, table.options.meta?.courseId);
-              }}
-            >
-              Remove Member
+            <DropdownMenuItem onClick={() => handleDelete(user.id)}>
+              Delete Invitation
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -17,43 +17,36 @@ export const getActiveCourseDocuments = async (
 ) => {
   return withAuthQuery(
     async (session) => {
-      let query: Document[] = [];
-      let rowCount: { count: number } = { count: 0 };
+      const sortOrder = sort
+        ?.filter((s) => isValidColumnId(s.id))
+        .map((s) => {
+          if (
+            ["title", "createdAt", "size", "embeddingStatus"].includes(s.id)
+          ) {
+            const column = document[s.id as keyof Document];
+            return s.desc ? desc(column) : asc(column);
+          } else {
+            return asc(document.createdAt);
+          }
+        }) ?? [asc(document.createdAt)]; // Fallback default sort
 
-      try {
-        const sortOrder = sort
-          ?.filter((s) => isValidColumnId(s.id))
-          .map((s) => {
-            if (
-              ["title", "createdAt", "size", "embeddingStatus"].includes(s.id)
-            ) {
-              const column = document[s.id as keyof Document];
-              return s.desc ? desc(column) : asc(column);
-            } else {
-              return asc(document.createdAt);
-            }
-          }) ?? [asc(document.createdAt)]; // Fallback default sort
+      const query = await db
+        .select({ ...getTableColumns(document) })
+        .from(document)
+        .where(
+          and(
+            ilike(document.title, `%${search}%`),
+            eq(document.courseId, session.session.activeCourseId),
+          ),
+        )
+        .limit(pageSize)
+        .orderBy(...sortOrder)
+        .offset(pageIndex * pageSize);
 
-        query = await db
-          .select({ ...getTableColumns(document) })
-          .from(document)
-          .where(
-            and(
-              ilike(document.title, `%${search}%`),
-              eq(document.courseId, session.session.activeCourseId),
-            ),
-          )
-          .limit(pageSize)
-          .orderBy(...sortOrder)
-          .offset(pageIndex * pageSize);
-
-        [rowCount] = await db
-          .select({ count: count() })
-          .from(document)
-          .where(ilike(document.title, `%${search}%`));
-      } catch (error) {
-        console.error(error);
-      }
+      const [rowCount] = await db
+        .select({ count: count() })
+        .from(document)
+        .where(ilike(document.title, `%${search}%`));
 
       return { query, rowCount };
     },

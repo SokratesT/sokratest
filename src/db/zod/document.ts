@@ -16,4 +16,10 @@ export const fileInsertSchema = createInsertSchema(document, {
   bucket: z.string().optional(),
 });
 
-export const fileDeleteSchema = z.object({ ids: z.array(z.string()) });
+export const fileUpdateSchema = createInsertSchema(document, {
+  id: z.string(),
+});
+
+export const fileDeleteSchema = z.object({
+  refs: z.array(fileUpdateSchema.pick({ id: true })),
+});

@@ -61,7 +61,9 @@ export const deleteDocumentInfo = authActionClient
   })
   .schema(fileDeleteSchema)
   .use(checkPermissionMiddleware)
-  .action(async ({ parsedInput: { ids } }) => {
+  .action(async ({ parsedInput: { refs } }) => {
+    const ids = refs.map((ref) => ref.id);
+
     const filesToDelete = await db
       .select()
       .from(document)

@@ -22,7 +22,7 @@ const DocumentTableActions = () => {
   const handleDelete = async () => {
     const fileIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    deleteDocumentInfo({ ids: fileIds });
+    deleteDocumentInfo({ refs: fileIds.map((id) => ({ id })) });
     toast.success("Files deleted");
   };
 

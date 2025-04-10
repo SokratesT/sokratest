@@ -11,7 +11,9 @@ export const chatUpdateSchema = createUpdateSchema(chat, {
   id: z.string(),
 });
 
-export const chatDeleteSchema = z.object({ ids: z.array(z.string()) });
+export const chatDeleteSchema = z.object({
+  refs: z.array(chatUpdateSchema.pick({ id: true })),
+});
 
 export type ChatInsertSchemaType = z.infer<typeof chatInsertSchema>;
 export type ChatUpdateSchemaType = z.infer<typeof chatUpdateSchema>;
