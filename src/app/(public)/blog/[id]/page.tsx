@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getPostById } from "@/db/queries/post";
+import { format } from "date-fns";
 import { UserIcon } from "lucide-react";
 
 const EditPostPage = async ({
@@ -27,7 +28,8 @@ const EditPostPage = async ({
         <div className="flex flex-col items-center justify-center gap-8 py-10 lg:py-20">
           <div>
             <Button variant="secondary" size="sm" className="gap-4">
-              <UserIcon className="size-4" /> {post.createdAt?.getUTCDate()}
+              <UserIcon className="size-4" />{" "}
+              {format(post.createdAt || "", "MMM dd, yyyy")}
             </Button>
           </div>
           <div className="flex flex-col gap-4">
@@ -42,10 +44,10 @@ const EditPostPage = async ({
             </p>
             <div className="flex justify-center gap-2">
               <Badge variant="outline">
-                Created: {post.createdAt?.getDate()}
+                {format(post.createdAt || "", "MMM dd, yyyy")}
               </Badge>
               <Badge variant="outline">
-                Updated: {post.updatedAt?.getDate()}
+                {format(post.updatedAt || "", "MMM dd, yyyy")}
               </Badge>
             </div>
           </div>

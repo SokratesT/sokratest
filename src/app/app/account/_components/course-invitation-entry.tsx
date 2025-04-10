@@ -58,14 +58,15 @@ async function CourseInvitationContent({
         <div className="flex flex-col text-sm">
           <div className="flex items-center gap-2 text-muted-foreground">
             <CalendarIcon className="h-3.5 w-3.5" />
-            <span>Invited on {invitation.createdAt?.toLocaleDateString()}</span>
+            <span>
+              Invited on {format(invitation.createdAt || "", "MMM d, yyyy")}
+            </span>
           </div>
           {isPending && (
             <div className="mt-1 flex items-center gap-2 text-muted-foreground">
               <Clock4Icon className="h-3.5 w-3.5" />
               <span>
-                Expires on{" "}
-                {format(new Date(invitation.expiresAt), "MMM d, yyyy")}
+                Expires on {format(invitation.expiresAt, "MMM d, yyyy")}
               </span>
             </div>
           )}

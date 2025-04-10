@@ -15,6 +15,7 @@ import { MessagesSquareIcon } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { ChatCardOptions } from "./chat-card-options";
+import { format } from "date-fns";
 
 const ChatsList = ({ chats }: { chats: Chat[] }) => {
   if (!chats.length) {
@@ -51,7 +52,7 @@ const ChatsList = ({ chats }: { chats: Chat[] }) => {
                 </CardTitle>
                 {chat.updatedAt && (
                   <CardDescription className="text-xs">
-                    Last updated: {chat.updatedAt.toLocaleDateString()}
+                    Last updated: {format(chat.updatedAt, "MMM dd, yyyy HH:mm")}
                   </CardDescription>
                 )}
               </CardHeader>

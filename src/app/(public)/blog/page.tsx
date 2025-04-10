@@ -1,5 +1,6 @@
 import { getSession } from "@/db/queries/auth";
 import { getAllPosts } from "@/db/queries/post";
+import { format } from "date-fns";
 import Link from "next/link";
 
 const PostsPage = async () => {
@@ -24,7 +25,7 @@ const PostsPage = async () => {
                 than ever.
               </p>
               <p className="text-muted-foreground text-sm">
-                {post.createdAt?.getDate()}
+                {format(post.createdAt || "", "MMM dd, yyyy")}
               </p>
             </div>
           </Link>
