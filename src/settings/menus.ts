@@ -1,6 +1,7 @@
 import {
   BookMarkedIcon,
   Building2Icon,
+  FolderOpenIcon,
   SettingsIcon,
   UserIcon,
   UsersIcon,
@@ -17,6 +18,11 @@ export const sidebarInstructorMenu = [
     title: "Courses",
     url: ROUTES.PRIVATE.courses.root.getPath(),
     icon: BookMarkedIcon,
+  },
+  {
+    title: "Resources",
+    url: ROUTES.PRIVATE.documents.root.getPath(),
+    icon: FolderOpenIcon,
   },
   {
     title: "Users",
