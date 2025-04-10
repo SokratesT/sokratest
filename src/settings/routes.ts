@@ -51,8 +51,10 @@ export const ROUTES = {
     signup: {
       name: "Sign Up",
       pathTemplate: "/register",
-      getPath: function () {
-        return makePath(this.pathTemplate);
+      getPath: function (params?: { inv: string }) {
+        return makePath(
+          params ? `${this.pathTemplate}?inv=${params.inv}` : this.pathTemplate,
+        );
       },
     },
     privacyPolicy: {

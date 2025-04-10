@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { deleteCourseInvitations } from "@/db/actions/course-invitation";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
+import { ROUTES } from "@/settings/routes";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
@@ -28,6 +29,12 @@ const handleDelete = async (id: CourseInvitation["id"]) => {
       error: "Error deleting course invitation",
     },
   );
+};
+
+const handleCopy = (id: CourseInvitation["id"]) => {
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.PUBLIC.signup.getPath({ inv: id })}`;
+  navigator.clipboard.writeText(url);
+  toast.success("Invitation link copied to clipboard");
 };
 
 export const invitesTableColumns: ColumnDef<CourseInvitation>[] = [
@@ -86,7 +93,7 @@ export const invitesTableColumns: ColumnDef<CourseInvitation>[] = [
     id: "actions",
     size: 32,
     cell: ({ row }) => {
-      const user = row.original;
+      const invitation = row.original;
 
       return (
         <DropdownMenu>
@@ -98,7 +105,10 @@ export const invitesTableColumns: ColumnDef<CourseInvitation>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => handleDelete(user.id)}>
+            <DropdownMenuItem onClick={() => handleCopy(invitation.id)}>
+              Copy Invitation Link
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDelete(invitation.id)}>
               Delete Invitation
             </DropdownMenuItem>
           </DropdownMenuContent>
