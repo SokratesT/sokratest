@@ -26,6 +26,9 @@ services:
         SMTP_PASSWORD: ${SMTP_PASSWORD}
         QDRANT_URL: ${QDRANT_URL}
         QDRANT_API_KEY: ${QDRANT_API_KEY}
+        LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
+        LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
+        LANGFUSE_BASEURL: ${LANGFUSE_BASEURL}
     ports:
       - "3000:3000"
     depends_on:
@@ -60,6 +63,9 @@ services:
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       QDRANT_URL: ${QDRANT_URL}
       QDRANT_API_KEY: ${QDRANT_API_KEY}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
+      LANGFUSE_BASEURL: ${LANGFUSE_BASEURL}
     command: [ "/bin/sh", "-c", "node server.js" ]
 
   migrations:
