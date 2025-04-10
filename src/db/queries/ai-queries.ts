@@ -47,10 +47,15 @@ export async function saveMessages({
   messages,
 }: { messages: Array<ChatMessage> }) {
   try {
-    return await db.insert(chatMessage).values(messages).onConflictDoUpdate({
+    await db.insert(chatMessage).values(messages).onConflictDoUpdate({
       target: chatMessage.id,
       set: chatMessage,
     });
+
+    await db
+      .update(chat)
+      .set({ updatedAt: new Date() })
+      .where(eq(chat.id, messages[0].chatId));
   } catch (error) {
     console.error("Failed to save messages in database", error);
     throw error;

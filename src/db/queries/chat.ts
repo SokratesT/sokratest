@@ -5,8 +5,6 @@ import { chat } from "@/db/schema/chat";
 import { and, desc, eq } from "drizzle-orm";
 import { withAuthQuery } from "./utils/with-auth-query";
 
-// TODO: Improve queries
-
 export const getUserChatsForActiveCourse = async () => {
   return withAuthQuery(
     async (session) => {
@@ -19,7 +17,7 @@ export const getUserChatsForActiveCourse = async () => {
             eq(chat.userId, session.user.id),
           ),
         )
-        .orderBy(desc(chat.createdAt));
+        .orderBy(desc(chat.updatedAt));
 
       return { query };
     },
