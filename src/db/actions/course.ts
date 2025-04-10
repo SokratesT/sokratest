@@ -19,7 +19,7 @@ import {
 } from "@/lib/safe-action";
 import { DEFAULT_ROLES } from "@/settings/roles";
 import { ROUTES } from "@/settings/routes";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -73,7 +73,7 @@ export const updateCourse = authActionClient
   .action(async ({ parsedInput: { id, description, content, title } }) => {
     await db
       .update(course)
-      .set({ id, content, title, description, updatedAt: sql`now()` })
+      .set({ id, content, title, description, updatedAt: new Date() })
       .where(eq(course.id, id));
 
     revalidatePath(ROUTES.PRIVATE.courses.root.getPath());

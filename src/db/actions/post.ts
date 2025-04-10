@@ -9,7 +9,7 @@ import {
 } from "@/db/zod/post";
 import { authActionClient, checkPermissionMiddleware } from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
-import { eq, inArray, sql } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export const createPost = authActionClient
@@ -42,7 +42,7 @@ export const updatePost = authActionClient
   .action(async ({ parsedInput: { id, content, title }, ctx: { userId } }) => {
     await db
       .update(post)
-      .set({ content, title, userId, updatedAt: sql`now()` })
+      .set({ content, title, userId, updatedAt: new Date() })
       .where(eq(post.id, id));
 
     revalidatePath(ROUTES.PRIVATE.posts.root.getPath());
