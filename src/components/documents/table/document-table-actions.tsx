@@ -55,6 +55,7 @@ const DocumentTableActions = () => {
 
         <DropdownMenuSeparator />
         <DropdownMenuItem
+          variant="destructive"
           onClick={handleDelete}
           disabled={table.getSelectedRowModel().rows.length === 0}
         >

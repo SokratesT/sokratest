@@ -90,6 +90,7 @@ export const organizationMemberTableColumns: ColumnDef<User>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
+              variant="destructive"
               onClick={() => {
                 handleDelete(user.id, table.options.meta?.organizationId);
               }}

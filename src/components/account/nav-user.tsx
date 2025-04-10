@@ -117,7 +117,10 @@ const NavUser = async () => {
             <OrganizationSwitcher />
             <DropdownMenuSeparator />
             <SignOutButton asChild>
-              <DropdownMenuItem className="flex items-center gap-2">
+              <DropdownMenuItem
+                variant="destructive"
+                className="flex items-center gap-2"
+              >
                 <LogOut />
                 Sign Out
               </DropdownMenuItem>

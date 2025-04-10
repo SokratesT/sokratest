@@ -135,7 +135,10 @@ export const columns: ColumnDef<Document>[] = [
               Embed Document
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleDelete(document.id)}>
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => handleDelete(document.id)}
+            >
               Delete Document
             </DropdownMenuItem>
           </DropdownMenuContent>

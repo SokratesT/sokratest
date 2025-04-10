@@ -46,6 +46,7 @@ const InvitesTableActions = () => {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
+          variant="destructive"
           onClick={handleDelete}
           disabled={table.getSelectedRowModel().rows.length === 0}
         >

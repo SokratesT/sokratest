@@ -98,7 +98,10 @@ export const organizationTableColumns: ColumnDef<Organization>[] = [
               <DropdownMenuItem>Edit Organisation</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleDelete(user.id)}>
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => handleDelete(user.id)}
+            >
               Delete Organisation
             </DropdownMenuItem>
           </DropdownMenuContent>

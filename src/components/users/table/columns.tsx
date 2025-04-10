@@ -86,7 +86,10 @@ export const columns: ColumnDef<User>[] = [
               <DropdownMenuItem>Edit User</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleDelete(user.id)}>
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => handleDelete(user.id)}
+            >
               Delete User
             </DropdownMenuItem>
           </DropdownMenuContent>

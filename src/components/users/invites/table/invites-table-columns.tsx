@@ -108,7 +108,10 @@ export const invitesTableColumns: ColumnDef<CourseInvitation>[] = [
             <DropdownMenuItem onClick={() => handleCopy(invitation.id)}>
               Copy Invitation Link
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(invitation.id)}>
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => handleDelete(invitation.id)}
+            >
               Delete Invitation
             </DropdownMenuItem>
           </DropdownMenuContent>

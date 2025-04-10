@@ -50,7 +50,9 @@ const ChatCardOptions = ({ chatId }: { chatId: string }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={onDelete}>Delete Chat</DropdownMenuItem>
+        <DropdownMenuItem variant="destructive" onClick={onDelete}>
+          Delete Chat
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

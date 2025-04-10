@@ -97,7 +97,10 @@ export const columns: ColumnDef<PostWithAuthor>[] = [
               <DropdownMenuItem>View Post</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleDelete(post.id)}>
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => handleDelete(post.id)}
+            >
               Delete Post
             </DropdownMenuItem>
           </DropdownMenuContent>
