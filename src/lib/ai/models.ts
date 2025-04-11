@@ -1,9 +1,7 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import type { EmbeddingModelV1 } from "@ai-sdk/provider";
-import { withTracing } from "@posthog/ai";
 import { extractReasoningMiddleware, wrapLanguageModel } from "ai";
 import type { LanguageModelV1 } from "ai";
-import { PostHog } from "posthog-node";
 
 // TODO: Migrate to `customProvider` of vercel ai sdk
 
@@ -143,43 +141,17 @@ const models = {
   },
 };
 
-const phClient = new PostHog(process.env.NEXT_PUBLIC_POSTHOG_KEY || "", {
-  host: `https://${process.env.NEXT_PUBLIC_POSTHOG_HOST}`,
-});
-
-interface PostHogTraceParams {
-  userId: string;
-  messageId: string;
-  chatId: string;
-  courseId: string;
-  organizationId: string;
-}
-
 export const getModel = <
   T extends "chatReasoning" | "chat" | "small" | "embedding" | "vision",
 >({
   type,
-  traceParams,
 }: {
   type: T;
-  traceParams?: PostHogTraceParams;
 }): T extends "embedding" ? EmbeddingModelV1<string> : LanguageModelV1 => {
   let model = models.remote[type];
 
   if (process.env.USE_LOCAL_AI_MODEL === "true") {
     model = models.local[type];
-  }
-
-  if (traceParams && model.type !== "embedding") {
-    const { userId, messageId, chatId, courseId, organizationId } = traceParams;
-
-    return withTracing(model.getProvider(), phClient, {
-      posthogDistinctId: userId,
-      posthogTraceId: messageId,
-      posthogProperties: { conversation_id: chatId },
-      posthogPrivacyMode: false,
-      posthogGroups: { course: courseId, organization: organizationId },
-    }) as T extends "embedding" ? EmbeddingModelV1<string> : LanguageModelV1;
   }
 
   return model.getProvider() as T extends "embedding"

@@ -87,13 +87,6 @@ export async function POST(request: Request) {
       const result = streamText({
         model: getModel({
           type: "chat",
-          traceParams: {
-            userId: session.user.id,
-            messageId: userMessage.id,
-            chatId: id,
-            courseId: activeCourseId,
-            organizationId: activeOrganizationId,
-          },
         }),
         messages,
         experimental_generateMessageId: () => aiMessageId,

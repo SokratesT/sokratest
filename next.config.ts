@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "minio.sokratest.ai" },
     ],
   },
-  skipTrailingSlashRedirect: true, // Required for PostHog
+  skipTrailingSlashRedirect: true,
   async redirects() {
     return [
       {
