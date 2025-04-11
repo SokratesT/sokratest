@@ -8,7 +8,7 @@ const UserStats = async () => {
 
   return (
     <Card className="h-fit">
-      <CardContent className="flex flex-col gap-2 pt-6">
+      <CardContent className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <UserIcon />
           <div className="space-y-0.5">

@@ -8,6 +8,7 @@ import { Slot } from "@radix-ui/react-slot";
 import type { VariantProps } from "class-variance-authority";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useSidebar } from "@/components/ui/sidebar";
 
 const NewChatButton = ({
   className,
@@ -20,6 +21,7 @@ const NewChatButton = ({
     asChild?: boolean;
   }) => {
   const router = useRouter();
+  const { setOpenMobile } = useSidebar();
 
   const handleNewChat = async () => {
     const t = toast.promise(createChat(), {
@@ -36,6 +38,7 @@ const NewChatButton = ({
       return;
     }
 
+    setOpenMobile(false);
     router.push(ROUTES.PRIVATE.chat.view.getPath({ id: chatId }));
   };
 

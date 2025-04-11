@@ -508,14 +508,16 @@ function SidebarMenuButton({
   size = "default",
   tooltip,
   className,
+  closeSidebar = true,
   ...props
 }: React.ComponentProps<"button"> & {
   asChild?: boolean;
   isActive?: boolean;
   tooltip?: string | React.ComponentProps<typeof TooltipContent>;
+  closeSidebar?: boolean;
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const Comp = asChild ? Slot : "button";
-  const { isMobile, state } = useSidebar();
+  const { isMobile, state, setOpenMobile } = useSidebar();
 
   const button = (
     <Comp
@@ -523,6 +525,7 @@ function SidebarMenuButton({
       data-sidebar="menu-button"
       data-size={size}
       data-active={isActive}
+      onClick={() => closeSidebar && setOpenMobile(false)}
       className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
       {...props}
     />

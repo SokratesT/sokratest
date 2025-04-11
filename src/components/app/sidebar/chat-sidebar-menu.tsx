@@ -1,12 +1,14 @@
+import { ChatActionsDropdown } from "@/components/chat/chat-actions-dropdown";
 import { SimplePlaceholder } from "@/components/placeholders/simple-placeholder";
 import {
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { getUserChatsForActiveCourse } from "@/db/queries/chat";
 import { ROUTES } from "@/settings/routes";
-import { MessagesSquareIcon } from "lucide-react";
+import { MessagesSquareIcon, MoreHorizontalIcon } from "lucide-react";
 import Link from "next/link";
 
 const ChatSidebarMenu = async () => {
@@ -39,6 +41,11 @@ const ChatSidebarMenu = async () => {
               {chat.title}
             </Link>
           </SidebarMenuButton>
+          <ChatActionsDropdown chatId={chat.id}>
+            <SidebarMenuAction>
+              <MoreHorizontalIcon />
+            </SidebarMenuAction>
+          </ChatActionsDropdown>
         </SidebarMenuItem>
       ))}
     </SidebarMenu>

@@ -12,10 +12,11 @@ import {
 import type { Chat } from "@/db/schema/chat";
 import { ROUTES } from "@/settings/routes";
 import { format } from "date-fns";
-import { MessagesSquareIcon } from "lucide-react";
+import { MessagesSquareIcon, MoreHorizontalIcon } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { ChatCardOptions } from "./chat-card-options";
+import { ChatActionsDropdown } from "./chat-actions-dropdown";
+import { Button } from "../ui/button";
 
 const ChatsList = ({ chats }: { chats: Chat[] }) => {
   if (!chats.length) {
@@ -45,7 +46,15 @@ const ChatsList = ({ chats }: { chats: Chat[] }) => {
         >
           <Link href={ROUTES.PRIVATE.chat.view.getPath({ id: chat.id })}>
             <Card className="relative h-full transition-all hover:border-primary/50 hover:shadow-md">
-              <ChatCardOptions chatId={chat.id} />
+              <ChatActionsDropdown chatId={chat.id}>
+                <Button
+                  variant="ghost"
+                  className="absolute top-2 right-2 h-8 w-8 p-0 data-[state=open]:bg-muted"
+                >
+                  <MoreHorizontalIcon className="h-4 w-4" />
+                  <span className="sr-only">Open menu</span>
+                </Button>
+              </ChatActionsDropdown>
               <CardHeader className="pb-2">
                 <CardTitle className="line-clamp-1 text-base">
                   {chat.title}

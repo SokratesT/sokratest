@@ -10,6 +10,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { setActiveCourse } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
@@ -24,11 +25,18 @@ const CourseSwitcher = ({
 }: { availableCourses: Course[]; activeCourse: Course | undefined | null }) => {
   const router = useRouter();
 
+  const { setOpenMobile } = useSidebar();
+
   const handleCourseChange = async (course: Course) => {
-    await setActiveCourse({ courseId: course.id });
+    toast.promise(setActiveCourse({ courseId: course.id }), {
+      loading: `Changing course to ${course.title}`,
+      success: `Course changed to ${course.title}`,
+      error: `Failed to change course`,
+    });
+
+    setOpenMobile(false);
 
     router.push(ROUTES.PRIVATE.root.getPath());
-    toast.success(`Course changed to ${course.title}`);
   };
 
   return (
@@ -38,6 +46,7 @@ const CourseSwitcher = ({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
+              closeSidebar={false}
               className="border bg-background/50 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">

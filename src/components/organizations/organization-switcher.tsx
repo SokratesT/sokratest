@@ -11,12 +11,14 @@ import { ROUTES } from "@/settings/routes";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useSidebar } from "@/components/ui/sidebar";
 
 const OrganizationSwitcher = () => {
   const { data: organizations, isPending } = authClient.useListOrganizations();
   const { data: activeOrganization } = authClient.useActiveOrganization();
 
   const router = useRouter();
+  const { setOpenMobile } = useSidebar();
 
   const handleOrganizationChange = async (
     organization: typeof authClient.$Infer.Organization,
@@ -27,6 +29,7 @@ const OrganizationSwitcher = () => {
       })
       .then(() => {
         setActiveCourse({ courseId: undefined });
+        setOpenMobile(false);
         router.push(ROUTES.PRIVATE.root.getPath());
         toast.success(`Organization changed to ${organization?.name}`);
       })

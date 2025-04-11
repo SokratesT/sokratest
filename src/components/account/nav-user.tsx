@@ -5,7 +5,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -19,9 +18,8 @@ import {
 import { getSession } from "@/db/queries/auth";
 import { getOrganizationById } from "@/db/queries/organizations";
 import type { Organization } from "@/db/schema/auth";
-import { sidebarUserMenu } from "@/settings/menus";
 import { ChevronsUpDown, LogOut } from "lucide-react";
-import Link from "next/link";
+import { UserMenuActions } from "./user-menu-actions";
 
 const userInitial = (name: string) => name[0].toUpperCase();
 
@@ -53,6 +51,7 @@ const NavUser = async () => {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
+              closeSidebar={false}
               className="border bg-background/50 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="size-8 rounded-lg">
@@ -103,16 +102,7 @@ const NavUser = async () => {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              {sidebarUserMenu.map((item) => (
-                <DropdownMenuItem key={item.url} asChild>
-                  <Link href={item.url}>
-                    <item.icon />
-                    {item.title}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
+            <UserMenuActions />
             <DropdownMenuSeparator />
             <OrganizationSwitcher />
             <DropdownMenuSeparator />

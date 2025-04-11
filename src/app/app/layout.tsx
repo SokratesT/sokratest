@@ -15,7 +15,7 @@ const AppLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="max-h-screen overflow-auto">
+      <SidebarInset className="max-h-screen">
         <Header />
 
         <div className="z-10 mx-auto mt-14 flex w-full flex-1 flex-col p-6">

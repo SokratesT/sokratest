@@ -1,6 +1,5 @@
 import { NavUser } from "@/components/account/nav-user";
 import { Logo } from "@/components/app/logo";
-import { NewChatButton } from "@/components/chat/new-chat-button";
 import { CourseSwitcherServer } from "@/components/courses/course-switcher/course-switcher-server";
 import { SkeletonsArray } from "@/components/placeholders/skeletons-array";
 import {
@@ -18,6 +17,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ChatSidebarMenu } from "./chat-sidebar-menu";
 import { ManageSidebarGroup } from "./manage-sidebar-group";
+import { NewChatButton } from "@/components/chat/new-chat-button";
 
 const AppSidebar = async () => {
   return (
@@ -32,11 +32,9 @@ const AppSidebar = async () => {
         <Suspense fallback={<Skeleton className="h-12 w-full" />}>
           <CourseSwitcherServer />
         </Suspense>
+        <NewChatButton size="sm">New Chat</NewChatButton>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <NewChatButton>New Chat</NewChatButton>
-        </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Chats</SidebarGroupLabel>
           <SidebarGroupContent>
