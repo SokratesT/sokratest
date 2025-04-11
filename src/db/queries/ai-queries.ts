@@ -1,8 +1,10 @@
 import "server-only";
+
 import { db } from "@/db/drizzle";
 import { chat } from "@/db/schema/chat";
 import { type ChatMessage, chatMessage } from "@/db/schema/chat-message";
 import { and, asc, eq, gte } from "drizzle-orm";
+import { withAuthQuery } from "./utils/with-auth-query";
 
 // TODO: Refactor to "update chat"
 export async function saveChat({
@@ -34,13 +36,11 @@ export async function saveChat({
 }
 
 export async function getChatById({ id }: { id: string }) {
-  try {
-    const [selectedChat] = await db.select().from(chat).where(eq(chat.id, id));
-    return selectedChat;
-  } catch (error) {
-    console.error("Failed to get chat by id from database");
-    throw error;
-  }
+  return withAuthQuery(async () => {
+    const [query] = await db.select().from(chat).where(eq(chat.id, id));
+
+    return { query };
+  }, {});
 }
 
 export async function saveMessages({
@@ -63,16 +63,22 @@ export async function saveMessages({
 }
 
 export async function getMessagesByChatId({ id }: { id: string }) {
-  try {
-    return await db
-      .select()
-      .from(chatMessage)
-      .where(eq(chatMessage.chatId, id))
-      .orderBy(asc(chatMessage.createdAt));
-  } catch (error) {
-    console.error("Failed to get messages by chat id from database", error);
-    throw error;
-  }
+  return withAuthQuery(
+    async () => {
+      const query = await db
+        .select()
+        .from(chatMessage)
+        .where(eq(chatMessage.chatId, id))
+        .orderBy(asc(chatMessage.createdAt));
+      return { query };
+    },
+    {
+      access: {
+        resource: { context: "course", type: "chat", id },
+        action: "read",
+      },
+    },
+  );
 }
 
 export async function getMessageById({ id }: { id: string }) {
