@@ -1,27 +1,35 @@
 import { CourseInvitationForm } from "@/components/courses/members/course-invitation-form";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
-import { db } from "@/db/drizzle";
-import { getSession } from "@/db/queries/auth";
-import { course } from "@/db/schema/course";
+import { getUserCoursesForActiveOrganization } from "@/db/queries/course";
+import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
-import { asc, eq } from "drizzle-orm";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-const addUserPage = async () => {
-  const session = await getSession();
+const AddUsersPage = async () => {
+  const permitted = await hasPermission(
+    { context: "organization", id: "all", type: "user" },
+    "create",
+  );
 
-  if (!session?.session.activeOrganizationId) {
-    return <Placeholder>Please activate an organization first.</Placeholder>;
+  if (!permitted) {
+    return redirect(ROUTES.PRIVATE.root.getPath());
   }
 
-  const queryCourses = await db
-    .select()
-    .from(course)
-    .where(eq(course.organizationId, session.session.activeOrganizationId))
-    .orderBy(asc(course.title));
+  const result = await getUserCoursesForActiveOrganization({
+    sort: [{ id: "title", desc: false }],
+    pageIndex: 0,
+    pageSize: 100,
+  });
 
-  if (!queryCourses.length) {
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
+
+  const courses = result.data.query;
+
+  if (!courses.length) {
     return (
       <Placeholder>
         <p>No courses found. Please create a course first.</p>
@@ -36,7 +44,7 @@ const addUserPage = async () => {
     );
   }
 
-  return <CourseInvitationForm courses={queryCourses} />;
+  return <CourseInvitationForm courses={courses} />;
 };
 
-export default addUserPage;
+export default AddUsersPage;

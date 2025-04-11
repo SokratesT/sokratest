@@ -34,6 +34,10 @@ export const getChunks = async ({ search }: { search: string }) => {
     },
     {
       requireCourse: true,
+      access: {
+        resource: { context: "course", type: "document", id: "all" },
+        action: "read",
+      },
     },
   );
 };
@@ -75,6 +79,10 @@ export const getChunksByDocument = async ({
     },
     {
       requireCourse: true,
+      access: {
+        resource: { context: "course", type: "document", id: documentId },
+        action: "read",
+      },
     },
   );
 };

@@ -8,7 +8,7 @@ const EditCoursePage = async ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
-  const result = await getCourseById(id);
+  const result = await getCourseById(id, "update");
 
   if (!result.success) {
     return <Placeholder>{result.error.message}</Placeholder>;

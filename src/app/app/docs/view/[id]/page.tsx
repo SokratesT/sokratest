@@ -1,4 +1,5 @@
 import { FileViewer } from "@/components/documents/file-viewer";
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { getDocumentById } from "@/db/queries/document";
 import type { Document } from "@/db/schema/document";
 
@@ -12,11 +13,11 @@ const ViewDocumentPage = async ({
   const result = await getDocumentById(id);
 
   if (!result.success) {
-    return <div>{result.error.message}</div>;
+    return <Placeholder>{result.error.message}</Placeholder>;
   }
 
   if (!result.data.query) {
-    return <div>No such document</div>;
+    return <Placeholder>No such document</Placeholder>;
   }
 
   return <FileViewer document={result.data.query} />;
