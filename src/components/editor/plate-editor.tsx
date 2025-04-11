@@ -40,7 +40,7 @@ const PlateEditor = ({
         <EditorContainer
           className={cn(!readOnly && "rounded-md border", className)}
         >
-          <Editor variant="default" readOnly={readOnly} />
+          <Editor variant={readOnly ? "none" : "default"} readOnly={readOnly} />
         </EditorContainer>
       </Plate>
     </DndProvider>

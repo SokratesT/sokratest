@@ -1,5 +1,6 @@
 import { NavUser } from "@/components/account/nav-user";
 import { Logo } from "@/components/app/logo";
+import { NewChatButton } from "@/components/chat/new-chat-button";
 import { CourseSwitcherServer } from "@/components/courses/course-switcher/course-switcher-server";
 import { SkeletonsArray } from "@/components/placeholders/skeletons-array";
 import {
@@ -17,7 +18,6 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ChatSidebarMenu } from "./chat-sidebar-menu";
 import { ManageSidebarGroup } from "./manage-sidebar-group";
-import { NewChatButton } from "@/components/chat/new-chat-button";
 
 const AppSidebar = async () => {
   return (

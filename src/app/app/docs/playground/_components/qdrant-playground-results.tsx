@@ -1,6 +1,6 @@
+import { DisplayChunk } from "@/app/app/docs/view/[id]/chunks/_components/display-chunk";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { getChunks } from "@/qdrant/queries";
-import { DisplayChunk } from "@/app/app/docs/view/[id]/chunks/_components/display-chunk";
 
 const QdrantPlaygroundResults = async ({
   search,

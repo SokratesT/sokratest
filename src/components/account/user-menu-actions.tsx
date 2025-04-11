@@ -1,12 +1,12 @@
 "use client";
 
-import { sidebarUserMenu } from "@/settings/menus";
 import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
 import { useSidebar } from "@/components/ui/sidebar";
+import { sidebarUserMenu } from "@/settings/menus";
+import Link from "next/link";
 
 const UserMenuActions = () => {
   const { setOpenMobile } = useSidebar();

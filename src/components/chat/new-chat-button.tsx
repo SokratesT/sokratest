@@ -1,6 +1,7 @@
 "use client";
 
 import { buttonVariants } from "@/components/ui/button";
+import { useSidebar } from "@/components/ui/sidebar";
 import { createChat } from "@/db/actions/chat";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
@@ -8,7 +9,6 @@ import { Slot } from "@radix-ui/react-slot";
 import type { VariantProps } from "class-variance-authority";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useSidebar } from "@/components/ui/sidebar";
 
 const NewChatButton = ({
   className,

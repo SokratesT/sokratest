@@ -38,7 +38,7 @@ const ChatSidebarMenu = async () => {
         <SidebarMenuItem key={chat.id}>
           <SidebarMenuButton asChild>
             <Link href={ROUTES.PRIVATE.chat.view.getPath({ id: chat.id })}>
-              {chat.title}
+              <span className="truncate">{chat.title}</span>
             </Link>
           </SidebarMenuButton>
           <ChatActionsDropdown chatId={chat.id}>

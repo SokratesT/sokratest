@@ -22,7 +22,7 @@ const DataTablePagination = () => {
   if (!table) return null;
 
   return (
-    <div className="flex items-center justify-between px-2">
+    <div className="flex flex-col items-center justify-between px-2 sm:flex-row">
       <div className="flex-1 text-muted-foreground text-sm">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.

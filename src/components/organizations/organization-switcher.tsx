@@ -4,6 +4,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { setActiveCourse } from "@/db/actions/course";
 import { authClient } from "@/lib/auth-client";
@@ -11,7 +12,6 @@ import { ROUTES } from "@/settings/routes";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useSidebar } from "@/components/ui/sidebar";
 
 const OrganizationSwitcher = () => {
   const { data: organizations, isPending } = authClient.useListOrganizations();

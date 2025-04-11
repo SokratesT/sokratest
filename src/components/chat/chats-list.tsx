@@ -15,8 +15,8 @@ import { format } from "date-fns";
 import { MessagesSquareIcon, MoreHorizontalIcon } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { ChatActionsDropdown } from "./chat-actions-dropdown";
 import { Button } from "../ui/button";
+import { ChatActionsDropdown } from "./chat-actions-dropdown";
 
 const ChatsList = ({ chats }: { chats: Chat[] }) => {
   if (!chats.length) {
