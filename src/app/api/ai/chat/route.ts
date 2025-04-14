@@ -9,6 +9,7 @@ import { getModel } from "@/lib/ai/models";
 import { getMostRecentUserMessage } from "@/lib/ai/utils";
 import { createSocraticSystemPrompt } from "@/settings/prompts";
 import {
+  type JSONValue,
   type Message,
   appendResponseMessages,
   createDataStreamResponse,
@@ -16,7 +17,7 @@ import {
   streamText,
 } from "ai";
 import { v4 as uuidv4 } from "uuid";
-import { getRelevantChunks } from "./ai-helper";
+import { getDocumentReferencesByIds, getRelevantChunks } from "./ai-helper";
 
 export const maxDuration = 120;
 
@@ -88,10 +89,13 @@ export async function POST(request: Request) {
           activeCourseId,
         );
 
-        relevantChunks.map((chunk) =>
-          // TODO: Handle this properly
-          dataStream.writeMessageAnnotation(JSON.stringify(chunk)),
+        const references = await getDocumentReferencesByIds(
+          relevantChunks.map((chunk) => chunk.documentId),
         );
+
+        references.forEach((reference) => {
+          dataStream.writeMessageAnnotation(reference as unknown as JSONValue);
+        });
 
         const result = streamText({
           model: getModel({
@@ -118,8 +122,6 @@ export async function POST(request: Request) {
             queryRag: queryRagTool({ dataStream, courseId: activeCourseId }),
           }, */
           onFinish: async ({ response }) => {
-            console.log("Finished streaming", JSON.stringify(response));
-
             if (session.user?.id) {
               try {
                 const assistantId = getTrailingMessageId({
@@ -137,8 +139,6 @@ export async function POST(request: Request) {
                   responseMessages: response.messages,
                 });
 
-                console.log("Assistant message", assistantMessage);
-
                 await saveMessages({
                   messages: [
                     {
@@ -146,7 +146,7 @@ export async function POST(request: Request) {
                       chatId: id,
                       role: assistantMessage.role,
                       parts: assistantMessage.parts,
-                      annotations: relevantChunks ?? [],
+                      annotations: references ?? [],
                       attachments:
                         assistantMessage.experimental_attachments ?? [],
                       createdAt: new Date(),

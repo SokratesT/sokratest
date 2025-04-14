@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 @plugin "tailwindcss-animate";
-@plugin "@tailwindcss/typography";
 
 @plugin 'tailwind-scrollbar-hide';
 
@@ -117,6 +116,10 @@
   --color-sidebar: var(--sidebar-background);
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  /* Font family definitions */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 
   @keyframes accordion-down {
     from {

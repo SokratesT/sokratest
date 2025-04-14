@@ -1,6 +1,7 @@
 import type { InferSelectModel } from "drizzle-orm";
 import {
   integer,
+  json,
   pgEnum,
   pgTable,
   text,
@@ -17,11 +18,22 @@ export const embeddingStatusEnum = pgEnum("embedding_status", [
   "failed",
 ]);
 
+export interface DocumentMetadataType {
+  showReference: boolean;
+  relevance: "high" | "medium" | "low";
+  citation?: string;
+  externalUrl?: string;
+}
+
 export const document = pgTable("document", {
   id: uuid("id").primaryKey().defaultRandom(),
   bucket: text("bucket").notNull(),
   prefix: text("prefix").notNull(),
   title: text("title").notNull(),
+  metadata: json("metadata")
+    .notNull()
+    .$type<DocumentMetadataType>()
+    .default({ showReference: true, relevance: "medium" }),
   size: integer("size").notNull(),
   // TODO: Should probably be an enum
   fileType: text("file_type").notNull(),

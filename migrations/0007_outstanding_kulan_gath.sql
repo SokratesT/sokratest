@@ -1,0 +1,1 @@
+ALTER TABLE "document" ADD COLUMN "metadata" json DEFAULT '{"showReference":true,"relevance":"medium"}'::json NOT NULL;

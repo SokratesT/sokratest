@@ -1,5 +1,5 @@
 import { document } from "@/db/schema/document";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const fileUploadSchema = z.object({
@@ -8,18 +8,23 @@ export const fileUploadSchema = z.object({
 
 export type FileUploadSchemaType = z.infer<typeof fileUploadSchema>;
 
-export const fileInsertSchema = createInsertSchema(document, {
+export const documentInsertSchema = createInsertSchema(document, {
   id: z.string(),
-  courseId: z.string().optional(),
-  uploadedBy: z.string().optional(),
-  prefix: z.string().optional(),
-  bucket: z.string().optional(),
+  courseId: (schema) => schema.optional(),
+  uploadedBy: (schema) => schema.optional(),
+  prefix: (schema) => schema.optional(),
+  bucket: (schema) => schema.optional(),
+  metadata: (schema) => schema.optional(),
 });
 
-export const fileUpdateSchema = createInsertSchema(document, {
+export const documentUpdateSchema = createUpdateSchema(document, {
   id: z.string(),
 });
 
-export const fileDeleteSchema = z.object({
-  refs: z.array(fileUpdateSchema.pick({ id: true })),
+export const documentDeleteSchema = z.object({
+  refs: z.array(documentUpdateSchema.pick({ id: true })),
 });
+
+export type DocumentInsertSchemaType = z.infer<typeof documentInsertSchema>;
+export type DocumentUpdateSchemaType = z.infer<typeof documentUpdateSchema>;
+export type DocumentDeleteSchemaType = z.infer<typeof documentDeleteSchema>;

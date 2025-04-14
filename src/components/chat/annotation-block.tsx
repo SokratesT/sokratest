@@ -7,19 +7,19 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
+import type { DocumentMetadataType } from "@/db/schema/document";
 import type { JSONValue } from "ai";
-import { Markdown } from "./markdown";
+import { ArrowUpRightIcon } from "lucide-react";
+import Link from "next/link";
 
 interface BaseAnnotation extends Record<string, JSONValue> {
   type: string;
 }
 
 interface AnnotationReference extends BaseAnnotation {
-  name: string;
-  similarity: number;
-  text: string;
-  fileId: string;
+  id: string;
+  title: string;
+  metadata: DocumentMetadataType & JSONValue;
   type: "reference";
 }
 
@@ -70,24 +70,49 @@ const AnnotationBlock = ({
                 // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 <Popover key={i}>
                   <PopoverTrigger asChild>
-                    <Button>Ref. {i + 1}</Button>
+                    <Button
+                      className="group max-w-[200px] truncate text-left text-sm"
+                      variant="outline"
+                    >
+                      <span className="truncate">
+                        {referenceAnnotation.title}
+                      </span>
+                    </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="h-72 w-[500px]">
-                    <ScrollArea className="size-full">
-                      <div className="rounded-md bg-muted p-4">
-                        <p>
-                          <b>ID:</b> {referenceAnnotation.fileId}
-                        </p>
-                        <p>
-                          <b>Similarity:</b> {referenceAnnotation.similarity}
-                        </p>
-                      </div>
-                      <div className="mt-4">
-                        <p>
-                          <b>Chunk</b>
-                        </p>
-                        <Separator orientation="horizontal" className="mx-1" />
-                        <Markdown>{referenceAnnotation.text}</Markdown>
+                  <PopoverContent
+                    className="w-full max-w-[350px] p-4"
+                    align="start"
+                  >
+                    <ScrollArea className="size-full pr-2">
+                      <div className="space-y-3">
+                        <div>
+                          <p className="text-muted-foreground text-xs">Title</p>
+                          <p className="font-medium text-sm">
+                            {referenceAnnotation.title}
+                          </p>
+                        </div>
+
+                        <div>
+                          <p className="text-muted-foreground text-xs">
+                            Citation
+                          </p>
+                          <p className="text-sm">
+                            {referenceAnnotation.metadata.citation}
+                          </p>
+                        </div>
+
+                        {referenceAnnotation.metadata.externalUrl && (
+                          <div className="pt-2">
+                            <Link
+                              href={referenceAnnotation.metadata.externalUrl}
+                              className="inline-flex items-center gap-1 font-medium text-primary text-sm hover:underline"
+                              target="_blank"
+                            >
+                              View File
+                              <ArrowUpRightIcon size={16} />
+                            </Link>
+                          </div>
+                        )}
                       </div>
                     </ScrollArea>
                   </PopoverContent>

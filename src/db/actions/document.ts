@@ -2,7 +2,11 @@
 
 import { db } from "@/db/drizzle";
 import { document } from "@/db/schema/document";
-import { fileDeleteSchema, fileInsertSchema } from "@/db/zod/document";
+import {
+  documentDeleteSchema,
+  documentInsertSchema,
+  documentUpdateSchema,
+} from "@/db/zod/document";
 import { deleteFileFromBucket } from "@/lib/s3/file-functions";
 import {
   authActionClient,
@@ -13,7 +17,7 @@ import {
 import { buckets } from "@/settings/buckets";
 import { ROUTES } from "@/settings/routes";
 import type { FileType } from "@/types/file";
-import { inArray } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export const saveDocumentInfo = authActionClient
@@ -27,10 +31,10 @@ export const saveDocumentInfo = authActionClient
   .use(requireCourseMiddleware)
   .use(requireOrganizationMiddleware)
   .use(checkPermissionMiddleware)
-  .schema(fileInsertSchema)
+  .schema(documentInsertSchema)
   .action(
     async ({
-      parsedInput: { id, title, size, fileType },
+      parsedInput: { id, title, size, fileType, metadata },
       ctx: { userId, activeCourseId },
     }) => {
       await db.insert(document).values({
@@ -39,6 +43,7 @@ export const saveDocumentInfo = authActionClient
         bucket: buckets.main.name,
         prefix: activeCourseId,
         title,
+        metadata,
         size,
         fileType,
         uploadedBy: userId,
@@ -50,6 +55,26 @@ export const saveDocumentInfo = authActionClient
     },
   );
 
+export const updateDocument = authActionClient
+  .metadata({
+    actionName: "updateDocument",
+    permission: {
+      resource: { context: "course", type: "document" },
+      action: "update",
+    },
+  })
+  .use(checkPermissionMiddleware)
+  .schema(documentUpdateSchema)
+  .action(async ({ parsedInput: { id, title, metadata } }) => {
+    await db
+      .update(document)
+      .set({ title, metadata, updatedAt: new Date() })
+      .where(eq(document.id, id));
+
+    revalidatePath(ROUTES.PRIVATE.documents.root.getPath());
+    return { error: null };
+  });
+
 // TODO: This function should get the prefix instead of looking up files
 export const deleteDocumentInfo = authActionClient
   .metadata({
@@ -59,7 +84,7 @@ export const deleteDocumentInfo = authActionClient
       action: "delete",
     },
   })
-  .schema(fileDeleteSchema)
+  .schema(documentDeleteSchema)
   .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { refs } }) => {
     const ids = refs.map((ref) => ref.id);
