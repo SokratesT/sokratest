@@ -1,25 +1,17 @@
 import { type InferSelectModel, relations } from "drizzle-orm";
-import {
-  json,
-  pgTable,
-  text,
-  timestamp,
-  uuid,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { json, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { chat } from "./chat";
 
-// Using 'MessageDb' instead of 'Message' to avoid conflict with 'Message' from 'ai-sdk'
-
 export const chatMessage = pgTable("chat_message", {
-  id: text("id").primaryKey(),
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   chatId: uuid("chat_id")
     .notNull()
     .references(() => chat.id, { onDelete: "cascade" }),
-  role: varchar("role", { length: 20 }).notNull(),
-  content: json("content").notNull(),
+  role: varchar("role").notNull(),
+  parts: json("parts").notNull(),
+  attachments: json("attachments").notNull(),
+  annotations: json("annotations").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export type ChatMessage = InferSelectModel<typeof chatMessage>;

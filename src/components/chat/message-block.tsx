@@ -23,6 +23,7 @@ import {
 import { voteMessage } from "@/db/actions/chat-message-vote";
 import type { Chat } from "@/db/schema/chat";
 import { cn } from "@/lib/utils";
+import type { UseChatHelpers } from "@ai-sdk/react";
 import type { ChatRequestOptions, Message } from "ai";
 import type { ApiGetScoresResponseData } from "langfuse";
 import {
@@ -55,7 +56,7 @@ const MessageBlock = ({
   toolStream,
   setMessages,
   reload,
-  isLoading,
+  status,
   score,
 }: {
   message: Message;
@@ -67,7 +68,7 @@ const MessageBlock = ({
   reload: (
     chatRequestOptions?: ChatRequestOptions,
   ) => Promise<string | null | undefined>;
-  isLoading: boolean;
+  status: UseChatHelpers["status"];
   score?: ApiGetScoresResponseData;
 }) => {
   const [, copy] = useCopyToClipboard();
@@ -291,7 +292,7 @@ const MessageBlock = ({
                 setMode={setMode}
                 setMessages={setMessages}
                 reload={reload}
-                isLoading={isLoading}
+                status={status}
               />
             </div>
           )}

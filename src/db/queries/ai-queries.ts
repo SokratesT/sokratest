@@ -3,8 +3,12 @@ import "server-only";
 import { db } from "@/db/drizzle";
 import { chat } from "@/db/schema/chat";
 import { type ChatMessage, chatMessage } from "@/db/schema/chat-message";
+import type { CoreAssistantMessage, CoreToolMessage } from "ai";
 import { and, asc, eq, gte } from "drizzle-orm";
 import { withAuthQuery } from "./utils/with-auth-query";
+
+type ResponseMessageWithoutId = CoreToolMessage | CoreAssistantMessage;
+type ResponseMessage = ResponseMessageWithoutId & { id: string };
 
 // TODO: Refactor to "update chat"
 export async function saveChat({
@@ -114,17 +118,14 @@ export async function deleteMessagesByChatIdAfterTimestamp({
   }
 }
 
-export async function updateChatVisiblityById({
-  chatId,
-  visibility,
+export function getTrailingMessageId({
+  messages,
 }: {
-  chatId: string;
-  visibility: "private" | "public";
-}) {
-  try {
-    return await db.update(chat).set({ visibility }).where(eq(chat.id, chatId));
-  } catch (error) {
-    console.error("Failed to update chat visibility in database");
-    throw error;
-  }
+  messages: Array<ResponseMessage>;
+}): string | null {
+  const trailingMessage = messages.at(-1);
+
+  if (!trailingMessage) return null;
+
+  return trailingMessage.id;
 }

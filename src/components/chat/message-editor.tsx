@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { deleteTrailingMessages } from "@/db/actions/ai-actions";
 import type { Chat } from "@/db/schema/chat";
+import type { UseChatHelpers } from "@ai-sdk/react";
 import type { ChatRequestOptions, Message } from "ai";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -18,7 +19,7 @@ type MessageEditorProps = {
   reload: (
     chatRequestOptions?: ChatRequestOptions,
   ) => Promise<string | null | undefined>;
-  isLoading: boolean;
+  status: UseChatHelpers["status"];
 };
 
 const MessageEditor = ({
@@ -27,10 +28,11 @@ const MessageEditor = ({
   setMode,
   setMessages,
   reload,
-  isLoading,
+  status,
 }: MessageEditorProps) => {
   const [draftContent, setDraftContent] = useState<string>(message.content);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const isLoading = status === "streaming" || status === "submitted";
 
   useEffect(() => {
     if (textareaRef.current) {

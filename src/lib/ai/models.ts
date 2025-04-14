@@ -53,7 +53,7 @@ const models = {
       },
     },
     chat: {
-      id: "llama-4-scout-17b-16e-instruct",
+      id: "llama-3.3-70b-instruct",
       label: "Llama 3.3 (70b)",
       description: "Model description for 3.3 70b",
       type: "chat" as const,

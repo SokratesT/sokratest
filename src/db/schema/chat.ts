@@ -5,8 +5,8 @@ import { chatMessage } from "./chat-message";
 import { course } from "./course";
 
 export const chat = pgTable("chat", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  title: varchar("title", { length: 255 }),
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  title: varchar("title"),
   courseId: uuid("course_id")
     .notNull()
     .references(() => course.id, { onDelete: "cascade" }),
@@ -15,9 +15,6 @@ export const chat = pgTable("chat", {
     .references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-  visibility: varchar("visibility", { enum: ["public", "private"] })
-    .notNull()
-    .default("private"),
 });
 
 export type Chat = InferSelectModel<typeof chat>;

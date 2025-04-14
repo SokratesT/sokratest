@@ -1,6 +1,7 @@
 import { findRelevantContent } from "@/app/api/ai/chat/ai-helper";
 import type { Course } from "@/db/schema/course";
-import { type DataStreamWriter, tool } from "ai";
+import { getModel } from "@/lib/ai/models";
+import { type DataStreamWriter, streamText, tool } from "ai";
 import { z } from "zod";
 
 export const queryRagTool = ({
@@ -18,6 +19,8 @@ export const queryRagTool = ({
         ),
     }),
     execute: async ({ query }, { toolCallId }) => {
+      let draftText = "";
+
       dataStream.writeData({
         type: "id",
         content: toolCallId,
@@ -74,7 +77,26 @@ export const queryRagTool = ({
         similarity: point.score,
       }));
 
+      const { fullStream } = streamText({
+        model: getModel({ type: "chatReasoning" }),
+        experimental_telemetry: { isEnabled: true },
+        system: `Respond to the query using the provided context. In your response, include citations by referencing the fileId that certain information correspond to like this: <fileId:{fileId}> \n The context: ${JSON.stringify(cont)}`,
+        prompt: query,
+      });
+
+      for await (const chunk of fullStream) {
+        if (chunk.type === "text-delta" && chunk.textDelta) {
+          draftText += chunk.textDelta;
+          dataStream.writeData({
+            type: "text-delta",
+            content: chunk.textDelta,
+          });
+        }
+        console.log(chunk);
+      }
+      dataStream.writeData({ type: "finish", content: "" });
+
       /* return JSON.stringify(cont); */
-      return JSON.stringify(cont);
+      return draftText;
     },
   });

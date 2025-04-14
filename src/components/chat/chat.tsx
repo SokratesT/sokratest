@@ -9,6 +9,8 @@ import { useStreamingText } from "@/hooks/use-streaming-text";
 import { type Message, useChat } from "@ai-sdk/react";
 import type { ApiGetScoresResponseData } from "langfuse";
 import { RefreshCcwIcon } from "lucide-react";
+import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 import { MessageBlock } from "./message-block";
 
 type DataStreamDelta = {
@@ -41,20 +43,25 @@ const Chat = ({
     input,
     handleInputChange,
     handleSubmit,
-    isLoading,
+    status,
     setMessages,
     setInput,
     stop,
     reload,
   } = useChat({
     id,
+    body: { id },
     api: "/api/ai/chat",
-    maxSteps: 5,
+    experimental_throttle: 100,
+    sendExtraMessageFields: true,
+    generateId: uuidv4,
     initialMessages,
     onFinish: () => {
       resetStream();
     },
-    sendExtraMessageFields: true,
+    onError: () => {
+      toast.error("An error occurred, please try again!");
+    },
   });
 
   const { toolStream, reset: resetStream } = useStreamingText(
@@ -81,7 +88,7 @@ const Chat = ({
             toolStream={toolStream}
             setMessages={setMessages}
             reload={reload}
-            isLoading={isLoading}
+            status={status}
             score={scores.find((s) => s.id === m.id)}
           />
         ))}
@@ -91,7 +98,7 @@ const Chat = ({
         <div className="relative flex w-full flex-col gap-4">
           <ChatInput
             onChange={handleInputChange}
-            isLoading={isLoading}
+            status={status}
             handleSubmit={handleSubmit}
             chatId={id}
             input={input}
@@ -112,7 +119,7 @@ const Chat = ({
           </div>
 
           <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">
-            {isLoading ? (
+            {status === "streaming" || status === "submitted" ? (
               <StopButton stop={stop} setMessages={setMessages} />
             ) : (
               <SendButton input={input} submitForm={handleSubmit} />

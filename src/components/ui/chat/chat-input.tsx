@@ -1,5 +1,6 @@
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import type { UseChatHelpers } from "@ai-sdk/react";
 import type { ChatRequestOptions } from "ai";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
@@ -7,7 +8,7 @@ import { useLocalStorage, useWindowSize } from "usehooks-ts";
 
 interface ChatInputProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  isLoading?: boolean;
+  status?: UseChatHelpers["status"];
   chatId: string;
   handleSubmit: (
     event?: {
@@ -21,7 +22,7 @@ interface ChatInputProps
 
 const ChatInput = ({
   className,
-  isLoading,
+  status,
   chatId,
   handleSubmit,
   input,
@@ -30,6 +31,7 @@ const ChatInput = ({
 }: ChatInputProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
+  const isLoading = status === "streaming" || status === "submitted";
 
   useEffect(() => {
     if (textareaRef.current) {

@@ -1,14 +1,16 @@
 import { generateTitleFromUserMessage } from "@/db/actions/ai-actions";
-import { saveChat, saveMessages } from "@/db/queries/ai-queries";
+import {
+  getTrailingMessageId,
+  saveChat,
+  saveMessages,
+} from "@/db/queries/ai-queries";
 import { getSession } from "@/db/queries/auth";
 import { getModel } from "@/lib/ai/models";
-import {
-  getMostRecentUserMessage,
-  sanitizeResponseMessages,
-} from "@/lib/ai/utils";
+import { getMostRecentUserMessage } from "@/lib/ai/utils";
 import { createSocraticSystemPrompt } from "@/settings/prompts";
 import {
   type Message,
+  appendResponseMessages,
   createDataStreamResponse,
   smoothStream,
   streamText,
@@ -19,130 +21,156 @@ import { getRelevantChunks } from "./ai-helper";
 export const maxDuration = 120;
 
 export async function POST(request: Request) {
-  const session = await getSession();
+  try {
+    const session = await getSession();
 
-  if (!session || !session.user || !session.user.id) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-
-  const activeCourseId = session.session.activeCourseId;
-  const activeOrganizationId = session.session.activeOrganizationId;
-
-  if (!activeCourseId) {
-    return new Response("No active course", { status: 400 });
-  }
-
-  if (!activeOrganizationId) {
-    return new Response("No active organization", { status: 400 });
-  }
-
-  const { id, messages }: { id: string; messages: Array<Message> } =
-    await request.json();
-
-  const userMessage = getMostRecentUserMessage(messages);
-
-  if (!userMessage) {
-    return new Response("No user message found", { status: 400 });
-  }
-
-  if (!messages || messages.length === 1) {
-    const res = await generateTitleFromUserMessage({
-      message: userMessage.content,
-    });
-    const title = res?.data?.title;
-
-    if (title) {
-      await saveChat({
-        id,
-        userId: session.user.id,
-        courseId: activeCourseId,
-        title,
-      });
+    if (!session || !session.user || !session.user.id) {
+      return new Response("Unauthorized", { status: 401 });
     }
-  }
 
-  const aiMessageId = uuidv4();
+    const activeCourseId = session.session.activeCourseId;
+    const activeOrganizationId = session.session.activeOrganizationId;
 
-  // TODO: Save user messages
-  await saveMessages({
-    messages: [
-      {
-        ...userMessage,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        chatId: id,
-      },
-    ],
-  });
+    if (!activeCourseId) {
+      return new Response("No active course", { status: 400 });
+    }
 
-  return createDataStreamResponse({
-    execute: async (dataStream) => {
-      const relevantChunks = await getRelevantChunks(messages, activeCourseId);
+    if (!activeOrganizationId) {
+      return new Response("No active organization", { status: 400 });
+    }
 
-      relevantChunks.map((chunk) =>
-        // TODO: Handle this properly
-        dataStream.writeMessageAnnotation(JSON.stringify(chunk)),
-      );
+    const { id, messages }: { id: string; messages: Array<Message> } =
+      await request.json();
 
-      const result = streamText({
-        model: getModel({
-          type: "chat",
-        }),
-        messages,
-        experimental_generateMessageId: () => aiMessageId,
-        experimental_transform: smoothStream(),
-        experimental_telemetry: {
-          isEnabled: true,
-          metadata: {
-            langfuseTraceId: aiMessageId,
-            sessionId: id,
-          },
+    const userMessage = getMostRecentUserMessage(messages);
+
+    if (!userMessage) {
+      return new Response("No user message found", { status: 400 });
+    }
+
+    if (!messages || messages.length === 1) {
+      const res = await generateTitleFromUserMessage({
+        message: userMessage.content,
+      });
+      const title = res?.data?.title;
+
+      if (title) {
+        await saveChat({
+          id,
+          userId: session.user.id,
+          courseId: activeCourseId,
+          title,
+        });
+      }
+    }
+
+    const messageId = uuidv4();
+
+    // TODO: Save user messages
+    await saveMessages({
+      messages: [
+        {
+          chatId: id,
+          id: userMessage.id,
+          role: "user",
+          parts: userMessage.parts,
+          attachments: userMessage.experimental_attachments ?? [],
+          annotations: userMessage.annotations ?? [],
+          createdAt: new Date(),
         },
-        // maxSteps: 1,
-        // experimental_toolCallStreaming: true,
-        /* system:
-          "You are a helpful assistant. You can use tools to help the user.", */
-        system: createSocraticSystemPrompt(
+      ],
+    });
+
+    return createDataStreamResponse({
+      execute: async (dataStream) => {
+        const relevantChunks = await getRelevantChunks(
+          messages,
+          activeCourseId,
+        );
+
+        relevantChunks.map((chunk) =>
           // TODO: Handle this properly
-          { context: JSON.stringify(relevantChunks) },
-        ),
-        // system: "You are a helpful assistant.",
-        /* tools: {
-          // generateFinalResponse: finalResponseTool(dataStream, messages),
-          queryRag: queryRagTool(dataStream),
-        }, */
-        onFinish: async ({ response, reasoning }) => {
-          if (session.user?.id) {
-            try {
-              const responseMessagesWithoutIncompleteToolCalls =
-                sanitizeResponseMessages({
-                  messages: response.messages,
-                  reasoning,
-                  annotations: [JSON.stringify(relevantChunks)],
+          dataStream.writeMessageAnnotation(JSON.stringify(chunk)),
+        );
+
+        const result = streamText({
+          model: getModel({
+            type: "chat",
+          }),
+          system: createSocraticSystemPrompt(
+            // TODO: Handle this properly
+            { context: JSON.stringify(relevantChunks) },
+          ),
+          messages,
+          experimental_generateMessageId: () => messageId,
+          experimental_transform: smoothStream({ chunking: "word" }),
+          experimental_telemetry: {
+            isEnabled: true,
+            metadata: {
+              langfuseTraceId: messageId,
+              sessionId: id,
+            },
+            functionId: "stream-text",
+          },
+          /* maxSteps: 5,
+          toolCallStreaming: true,
+          tools: {
+            queryRag: queryRagTool({ dataStream, courseId: activeCourseId }),
+          }, */
+          onFinish: async ({ response }) => {
+            console.log("Finished streaming", JSON.stringify(response));
+
+            if (session.user?.id) {
+              try {
+                const assistantId = getTrailingMessageId({
+                  messages: response.messages.filter(
+                    (message) => message.role === "assistant",
+                  ),
                 });
 
-              await saveMessages({
-                messages: responseMessagesWithoutIncompleteToolCalls.map(
-                  (message) => {
-                    return {
-                      id: message.id,
-                      chatId: id,
-                      role: message.role,
-                      content: message.content,
-                      createdAt: new Date(),
-                      updatedAt: new Date(),
-                    };
-                  },
-                ),
-              });
-            } catch (error) {
-              console.error("Failed to save chat");
-            }
-          }
-        },
-      });
+                if (!assistantId) {
+                  throw new Error("No assistant message found!");
+                }
 
-      result.mergeIntoDataStream(dataStream, { sendReasoning: true });
-    },
-  });
+                const [, assistantMessage] = appendResponseMessages({
+                  messages: [userMessage],
+                  responseMessages: response.messages,
+                });
+
+                console.log("Assistant message", assistantMessage);
+
+                await saveMessages({
+                  messages: [
+                    {
+                      id: assistantId,
+                      chatId: id,
+                      role: assistantMessage.role,
+                      parts: assistantMessage.parts,
+                      annotations: relevantChunks ?? [],
+                      attachments:
+                        assistantMessage.experimental_attachments ?? [],
+                      createdAt: new Date(),
+                    },
+                  ],
+                });
+              } catch (error) {
+                console.error("Failed to save chat");
+              }
+            }
+          },
+        });
+
+        result.consumeStream();
+
+        result.mergeIntoDataStream(dataStream, { sendReasoning: true });
+      },
+      onError: () => {
+        return "Oops, an error occurred!";
+      },
+    });
+  } catch (error) {
+    return new Response("An error occurred while processing your request!", {
+      status: 404,
+    });
+  }
 }
