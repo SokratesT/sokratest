@@ -1,6 +1,6 @@
 {
-  "id": "fab804fa-d16a-421b-a88d-3bae92df878d",
-  "prevId": "be475096-4fea-4ecd-9396-d140953f78d9",
+  "id": "022c23bd-ff81-4669-ab4d-1e3532c55ef5",
+  "prevId": "fab804fa-d16a-421b-a88d-3bae92df878d",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -791,6 +791,13 @@
           "type": "varchar(500)",
           "primaryKey": false,
           "notNull": true
+        },
+        "config": {
+          "name": "config",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::json"
         },
         "created_at": {
           "name": "created_at",

@@ -57,6 +57,13 @@
       "when": 1744632485698,
       "tag": "0007_outstanding_kulan_gath",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1744641841561,
+      "tag": "0008_modern_nightcrawler",
+      "breakpoints": true
     }
   ]
 }

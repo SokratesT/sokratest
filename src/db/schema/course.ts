@@ -1,5 +1,6 @@
 import { type InferSelectModel, relations } from "drizzle-orm";
 import {
+  json,
   pgTable,
   primaryKey,
   text,
@@ -9,6 +10,12 @@ import {
 } from "drizzle-orm/pg-core";
 import { organization, user } from "./auth";
 
+export interface CourseConfigType {
+  systemPrompt?: string;
+  maxReferences?: number;
+  model?: string;
+}
+
 export const course = pgTable("course", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(),
@@ -17,6 +24,7 @@ export const course = pgTable("course", {
     .references(() => organization.id, { onDelete: "cascade" }),
   content: text("content").notNull(),
   description: varchar("description", { length: 500 }).notNull(),
+  config: json("config").notNull().$type<CourseConfigType>().default({}),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

@@ -8,6 +8,7 @@ export const courseInsertSchema = createInsertSchema(course, {
     schema.min(20, {
       message: "Description must be at least 20 characters long",
     }),
+  config: (schema) => schema.optional(),
 });
 
 export const courseUpdateSchema = createUpdateSchema(course, {

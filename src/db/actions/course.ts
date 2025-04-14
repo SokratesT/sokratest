@@ -32,7 +32,7 @@ export const createCourse = authActionClient
   .schema(courseInsertSchema)
   .action(
     async ({
-      parsedInput: { title, description, content },
+      parsedInput: { title, description, content, config },
       ctx: { userId, activeOrganizationId },
     }) => {
       const [newCourse] = await db
@@ -42,6 +42,7 @@ export const createCourse = authActionClient
           description,
           content,
           organizationId: activeOrganizationId,
+          config,
         })
         .returning({ id: course.id });
 
@@ -66,15 +67,17 @@ export const updateCourse = authActionClient
   })
   .use(checkPermissionMiddleware)
   .schema(courseUpdateSchema)
-  .action(async ({ parsedInput: { id, description, content, title } }) => {
-    await db
-      .update(course)
-      .set({ id, content, title, description, updatedAt: new Date() })
-      .where(eq(course.id, id));
+  .action(
+    async ({ parsedInput: { id, description, content, title, config } }) => {
+      await db
+        .update(course)
+        .set({ id, content, title, description, config, updatedAt: new Date() })
+        .where(eq(course.id, id));
 
-    revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
-    return { error: null };
-  });
+      revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
+      return { error: null };
+    },
+  );
 
 export const deleteCourses = authActionClient
   .metadata({

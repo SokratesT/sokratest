@@ -93,3 +93,18 @@ export const getCourseById = async (id: Course["id"], action?: Action) => {
     },
   );
 };
+
+export const getCourseConfig = async (id: Course["id"]) => {
+  return withAuthQuery(
+    async () => {
+      const [query] = await db
+        .select({ id: course.id, config: course.config })
+        .from(course)
+        .where(eq(course.id, id))
+        .limit(1);
+
+      return { query };
+    },
+    { requireOrg: true },
+  );
+};

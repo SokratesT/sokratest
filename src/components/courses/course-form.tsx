@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
 import { createCourse, updateCourse } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
 import {
@@ -45,6 +44,11 @@ const CourseForm = ({ course }: { course?: Course }) => {
       title: course?.title ?? undefined,
       description: course?.description ?? "",
       content: course?.content ?? "",
+      config: {
+        systemPrompt: course?.config?.systemPrompt ?? "",
+        maxReferences: course?.config?.maxReferences ?? 5,
+        model: course?.config?.model ?? "",
+      },
     },
   });
 
@@ -126,7 +130,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
             <Card>
               <CardHeader>
                 {/* TODO: Actually implement this */}
-                <CardTitle>Course Settings</CardTitle>
+                <CardTitle>Course AI Settings</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
                 <Select>
@@ -169,15 +173,21 @@ const CourseForm = ({ course }: { course?: Course }) => {
                 </div>
 
                 <div className="grid w-full gap-1.5">
-                  <Label htmlFor="message-2">System Prompt</Label>
-                  <Textarea
-                    placeholder="Type your system prompt here."
-                    id="message-2"
+                  <FormField
+                    control={form.control}
+                    name="config.systemPrompt"
+                    render={({ field }) => (
+                      <FormTextField
+                        field={field}
+                        label="Syste, Prompt"
+                        placeholder="Your custom system prompt..."
+                        required={isFieldRequired(
+                          courseInsertSchema,
+                          field.name,
+                        )}
+                      />
+                    )}
                   />
-                  <p className="text-muted-foreground text-sm">
-                    This is the system prompt that will be used for chats within
-                    this course.
-                  </p>
                 </div>
 
                 <div>

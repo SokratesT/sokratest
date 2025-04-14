@@ -5,6 +5,7 @@ import {
   saveMessages,
 } from "@/db/queries/ai-queries";
 import { getSession } from "@/db/queries/auth";
+import { getCourseConfig } from "@/db/queries/course";
 import { getModel } from "@/lib/ai/models";
 import { getMostRecentUserMessage } from "@/lib/ai/utils";
 import { createSocraticSystemPrompt } from "@/settings/prompts";
@@ -19,7 +20,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { getDocumentReferencesByIds, getRelevantChunks } from "./ai-helper";
 
-export const maxDuration = 120;
+export const maxDuration = 200;
 
 export async function POST(request: Request) {
   try {
@@ -42,6 +43,14 @@ export async function POST(request: Request) {
 
     const { id, messages }: { id: string; messages: Array<Message> } =
       await request.json();
+
+    const result = await getCourseConfig(activeCourseId);
+
+    if (!result.success) {
+      return new Response(result.error.message, { status: 400 });
+    }
+
+    const courseConfig = result.data.query;
 
     const userMessage = getMostRecentUserMessage(messages);
 
@@ -103,7 +112,10 @@ export async function POST(request: Request) {
           }),
           system: createSocraticSystemPrompt(
             // TODO: Handle this properly
-            { context: JSON.stringify(relevantChunks) },
+            {
+              context: JSON.stringify(relevantChunks),
+              override: courseConfig.config.systemPrompt,
+            },
           ),
           messages,
           experimental_generateMessageId: () => messageId,
