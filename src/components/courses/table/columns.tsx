@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { deleteCourses } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
+import { withToastPromise } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
@@ -20,8 +21,14 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 const handleDelete = async (id: string) => {
-  await deleteCourses({ refs: [{ id }] });
-  toast.success("Course deleted");
+  toast.promise(withToastPromise(deleteCourses({ refs: [{ id }] })), {
+    loading: "Deleting course...",
+    success: "Course deleted",
+    error: (error) => ({
+      message: "Failed to delete course",
+      description: error.message,
+    }),
+  });
 };
 
 export const columns: ColumnDef<Course>[] = [

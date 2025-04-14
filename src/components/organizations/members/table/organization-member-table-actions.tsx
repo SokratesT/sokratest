@@ -23,13 +23,24 @@ const OrganizationMemberTableActions = ({
   const handleDelete = async () => {
     const userIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    userIds.forEach((userId) =>
-      authClient.organization
-        .removeMember({ organizationId, memberIdOrEmail: userId })
-        .then((result) => result.error),
+    toast.promise(
+      Promise.all(
+        userIds.map((userId) =>
+          authClient.organization.removeMember({
+            organizationId,
+            memberIdOrEmail: userId,
+          }),
+        ),
+      ),
+      {
+        loading: "Deleting organisation members...",
+        success: "Organisation members deleted",
+        error: (error) => ({
+          message: "Failed to delete organisation members",
+          description: error.message,
+        }),
+      },
     );
-
-    toast.success("Organisation members deleted");
   };
 
   return (

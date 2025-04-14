@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { deleteCourseInvitations } from "@/db/actions/course-invitation";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
+import { withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -20,21 +21,33 @@ import { toast } from "sonner";
 
 const handleDelete = async (id: CourseInvitation["id"]) => {
   toast.promise(
-    deleteCourseInvitations({
-      refs: [{ id }],
-    }),
+    withToastPromise(
+      deleteCourseInvitations({
+        refs: [{ id }],
+      }),
+    ),
     {
       loading: "Deleting course invitation...",
       success: "Course invitation deleted",
-      error: "Error deleting course invitation",
+      error: (error) => ({
+        message: "Failed to delete course invitation",
+        description: error.message,
+      }),
     },
   );
 };
 
-const handleCopy = (id: CourseInvitation["id"]) => {
+const handleCopy = async (id: CourseInvitation["id"]) => {
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.PUBLIC.signup.getPath({ inv: id })}`;
-  navigator.clipboard.writeText(url);
-  toast.success("Invitation link copied to clipboard");
+
+  toast.promise(navigator.clipboard.writeText(url), {
+    loading: "Copying invitation link...",
+    success: "Invitation link copied",
+    error: (error) => ({
+      message: "Failed to copy invitation link",
+      description: error.message,
+    }),
+  });
 };
 
 export const invitesTableColumns: ColumnDef<CourseInvitation>[] = [

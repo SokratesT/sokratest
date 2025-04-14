@@ -1,5 +1,4 @@
 import { SearchInput } from "@/components/documents/search-input";
-import { OrganizationTableActions } from "@/components/organizations/table/organization-table-actions";
 import { organizationTableColumns } from "@/components/organizations/table/organization-table-columns";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
@@ -63,7 +62,6 @@ const UsersPage = async ({
         >
           <div className="flex items-center gap-2">
             <DataTableViewOptions />
-            <OrganizationTableActions />
             <SearchInput />
           </div>
           <DataTableBody />

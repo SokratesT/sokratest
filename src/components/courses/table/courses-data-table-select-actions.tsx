@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { deleteCourses } from "@/db/actions/course";
+import { withToastPromise } from "@/lib/utils";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -22,8 +23,19 @@ const CoursesDataTableSelectActions = () => {
   const handleDelete = async () => {
     const courseIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    deleteCourses({ refs: courseIds.map((id) => ({ id })) });
-    toast.success("Courses deleted");
+    toast.promise(
+      withToastPromise(
+        deleteCourses({ refs: courseIds.map((id) => ({ id })) }),
+      ),
+      {
+        loading: "Deleting courses...",
+        success: "Courses deleted",
+        error: (error) => ({
+          message: "Failed to delete courses",
+          description: error.message,
+        }),
+      },
+    );
   };
 
   return (

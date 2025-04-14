@@ -3,7 +3,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { createChat } from "@/db/actions/chat";
-import { cn } from "@/lib/utils";
+import { cn, withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import { Slot } from "@radix-ui/react-slot";
 import type { VariantProps } from "class-variance-authority";
@@ -24,15 +24,18 @@ const NewChatButton = ({
   const { setOpenMobile } = useSidebar();
 
   const handleNewChat = async () => {
-    const t = toast.promise(createChat(), {
+    const t = toast.promise(withToastPromise(createChat()), {
       loading: "Creating new chat...",
       success: "New chat created",
-      error: "Failed to create chat",
+      error: (error) => ({
+        message: "Failed to create chat",
+        description: error.message,
+      }),
     });
 
     const res = await t.unwrap();
 
-    const chatId = res?.data?.chat.id;
+    const chatId = res?.chat.id;
 
     if (!chatId) {
       return;

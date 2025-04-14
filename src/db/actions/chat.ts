@@ -34,6 +34,7 @@ export const createChat = authActionClient
       })
       .returning({ id: chat.id });
 
+    revalidatePath(ROUTES.PRIVATE.root.getPath());
     return { chat: query, error: null };
   });
 

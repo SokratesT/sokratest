@@ -15,7 +15,7 @@ import {
 import { deleteDocumentInfo } from "@/db/actions/document";
 import { enqueueEmbeddings } from "@/db/actions/test-trigger";
 import type { Document } from "@/db/schema/document";
-import { cn } from "@/lib/utils";
+import { cn, withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import type { ColumnDef } from "@tanstack/react-table";
 import { convert } from "convert";
@@ -25,13 +25,25 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 const handleDelete = async (id: string) => {
-  deleteDocumentInfo({ refs: [{ id }] });
-  toast.success("Document deleted");
+  toast.promise(withToastPromise(deleteDocumentInfo({ refs: [{ id }] })), {
+    loading: "Deleting document...",
+    success: "Document deleted",
+    error: (error) => ({
+      message: "Failed to delete document",
+      description: error.message,
+    }),
+  });
 };
 
 const handleEnqueueEmbedding = async (id: string) => {
-  enqueueEmbeddings({ ids: [id] });
-  toast.success("Enqueued for embedding");
+  toast.promise(withToastPromise(enqueueEmbeddings({ ids: [id] })), {
+    loading: "Enqueuing for embedding...",
+    success: "Enqueued for embedding",
+    error: (error) => ({
+      message: "Failed to enqueue for embedding",
+      description: error.message,
+    }),
+  });
 };
 
 export const columns: ColumnDef<Document>[] = [

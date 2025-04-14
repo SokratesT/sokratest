@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { setActiveCourse } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
+import { withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import { BookMarkedIcon, Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -28,10 +29,13 @@ const CourseSwitcher = ({
   const { setOpenMobile } = useSidebar();
 
   const handleCourseChange = async (course: Course) => {
-    toast.promise(setActiveCourse({ courseId: course.id }), {
+    toast.promise(withToastPromise(setActiveCourse({ courseId: course.id })), {
       loading: `Changing course to ${course.title}`,
       success: `Course changed to ${course.title}`,
-      error: `Failed to change course`,
+      error: (error) => ({
+        message: "Failed to change course",
+        description: error.message,
+      }),
     });
 
     setOpenMobile(false);

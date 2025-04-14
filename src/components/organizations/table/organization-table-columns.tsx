@@ -22,8 +22,15 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 const handleDelete = async (id: string) => {
-  authClient.organization.delete({ organizationId: id });
-  toast.success("Organization deleted");
+  toast.promise(authClient.organization.delete({ organizationId: id }), {
+    loading: "Deleting organisation...",
+    success: "Organisation deleted",
+    error: (error) => ({
+      message: "Failed to delete organisation",
+      description: error.message,
+    }),
+  });
+
   await revalidatePathFromClient({
     path: ROUTES.PRIVATE.organizations.root.getPath(),
   });

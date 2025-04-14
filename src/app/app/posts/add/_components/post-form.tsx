@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { createPost, updatePost } from "@/db/actions/post";
 import type { Post } from "@/db/schema/post";
 import { type PostInsertSchemaType, postInsertSchema } from "@/db/zod/post";
+import { withToastPromise } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,16 +24,22 @@ const PostForm = ({ post }: { post?: Post }) => {
 
   const onSubmit = async (values: PostInsertSchemaType) => {
     if (post) {
-      toast.promise(updatePost({ ...values, id: post.id }), {
+      toast.promise(withToastPromise(updatePost({ ...values, id: post.id })), {
         loading: "Updating post...",
         success: "Post updated successfully",
-        error: "Failed to update post",
+        error: (error) => ({
+          message: "Failed to update post",
+          description: error.message,
+        }),
       });
     } else {
-      toast.promise(createPost(values), {
+      toast.promise(withToastPromise(createPost(values)), {
         loading: "Creating post...",
         success: "Post created successfully",
-        error: "Failed to create post",
+        error: (error) => ({
+          message: "Failed to create post",
+          description: error.message,
+        }),
       });
     }
   };

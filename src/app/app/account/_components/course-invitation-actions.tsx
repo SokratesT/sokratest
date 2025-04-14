@@ -6,6 +6,7 @@ import {
   rejectCourseInvitation,
 } from "@/db/actions/course-invitation";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
+import { withToastPromise } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface CourseInvitationActionsProps {
@@ -16,18 +17,24 @@ export function CourseInvitationActions({
   invitation,
 }: CourseInvitationActionsProps) {
   const handleAccept = async () => {
-    toast.promise(acceptCourseInvitation(invitation), {
+    toast.promise(withToastPromise(acceptCourseInvitation(invitation)), {
       loading: "Accepting invitation...",
       success: "Invitation accepted!",
-      error: "Failed to accept invitation",
+      error: (error) => ({
+        message: "Failed to accept invitation",
+        description: error.message,
+      }),
     });
   };
 
   const handleReject = async () => {
-    toast.promise(rejectCourseInvitation(invitation), {
+    toast.promise(withToastPromise(rejectCourseInvitation(invitation)), {
       loading: "Rejecting invitation...",
       success: "Invitation rejected!",
-      error: "Failed to reject invitation",
+      error: (error) => ({
+        message: "Failed to reject invitation",
+        description: error.message,
+      }),
     });
   };
 

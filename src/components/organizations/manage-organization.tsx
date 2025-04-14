@@ -12,16 +12,17 @@ const ManageOrganization = ({
   organization,
 }: { organization: Organization }) => {
   const handleDeleteOrganization = async (organizationId: string) => {
-    const res = await authClient.organization.delete({ organizationId });
-
-    if (res.error) {
-      toast.error(`Failed to delete organisation: ${res.error.message}`);
-    } else {
-      toast.success("Organisation deleted");
-      revalidatePathFromClient({
-        path: ROUTES.PRIVATE.organizations.root.getPath(),
-      });
-    }
+    toast.promise(authClient.organization.delete({ organizationId }), {
+      loading: "Deleting organisation...",
+      success: "Organisation deleted",
+      error: (error) => ({
+        message: "Failed to delete organisation",
+        description: error.message,
+      }),
+    });
+    revalidatePathFromClient({
+      path: ROUTES.PRIVATE.organizations.root.getPath(),
+    });
   };
 
   return (

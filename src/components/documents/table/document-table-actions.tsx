@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { deleteDocumentInfo } from "@/db/actions/document";
 import { enqueueEmbeddings } from "@/db/actions/test-trigger";
+import { withToastPromise } from "@/lib/utils";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -22,15 +23,32 @@ const DocumentTableActions = () => {
   const handleDelete = async () => {
     const fileIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    deleteDocumentInfo({ refs: fileIds.map((id) => ({ id })) });
-    toast.success("Files deleted");
+    toast.promise(
+      withToastPromise(
+        deleteDocumentInfo({ refs: fileIds.map((id) => ({ id })) }),
+      ),
+      {
+        loading: "Deleting files...",
+        success: "Files deleted",
+        error: (error) => ({
+          message: "Failed to delete files",
+          description: error.message,
+        }),
+      },
+    );
   };
 
   const handleEnqueueEmbeddings = async () => {
     const fileIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    enqueueEmbeddings({ ids: fileIds });
-    toast.success("Files enqueued for embeddings");
+    toast.promise(withToastPromise(enqueueEmbeddings({ ids: fileIds })), {
+      loading: "Enqueuing for embedding...",
+      success: "Enqueued for embedding",
+      error: (error) => ({
+        message: "Failed to enqueue for embedding",
+        description: error.message,
+      }),
+    });
   };
 
   return (

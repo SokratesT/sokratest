@@ -13,18 +13,30 @@ import {
 import { removeCourseMembers } from "@/db/actions/course";
 import type { User } from "@/db/schema/auth";
 import type { Course } from "@/db/schema/course";
+import { withToastPromise } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 
 const handleDelete = async (id: string, courseId?: Course["id"]) => {
   if (!courseId) {
-    toast.error("Unknown Course");
-    throw new Error("Course ID is missing");
+    toast.error("Course ID is required", {
+      description: "Try switching your active course.",
+    });
+    return;
   }
 
-  await removeCourseMembers({ refs: [{ id }], courseId });
-  toast.success("Member removed");
+  toast.promise(
+    withToastPromise(removeCourseMembers({ refs: [{ id }], courseId })),
+    {
+      loading: "Removing member...",
+      success: "Member removed",
+      error: (error) => ({
+        message: "Failed to remove member",
+        description: error.message,
+      }),
+    },
+  );
 };
 
 export const courseMemberTableColumns: ColumnDef<User>[] = [

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { deletePosts } from "@/db/actions/post";
 import type { Post } from "@/db/schema/post";
+import { withToastPromise } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
@@ -24,8 +25,14 @@ interface PostWithAuthor extends Post {
 }
 
 const handleDelete = async (id: string) => {
-  deletePosts({ refs: [{ id }] });
-  toast.success("Post deleted");
+  toast.promise(withToastPromise(deletePosts({ refs: [{ id }] })), {
+    loading: "Deleting post...",
+    success: "Post deleted",
+    error: (error) => ({
+      message: "Failed to delete post",
+      description: error.message,
+    }),
+  });
 };
 
 export const columns: ColumnDef<PostWithAuthor>[] = [

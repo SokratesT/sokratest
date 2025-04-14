@@ -19,8 +19,14 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 const handleDelete = async (id: string) => {
-  authClient.admin.removeUser({ userId: id });
-  toast.success("User deleted");
+  toast.promise(authClient.admin.removeUser({ userId: id }), {
+    loading: "Deleting user...",
+    success: "User deleted",
+    error: (error) => ({
+      message: "Failed to delete user",
+      description: error.message,
+    }),
+  });
 };
 
 export const columns: ColumnDef<User>[] = [

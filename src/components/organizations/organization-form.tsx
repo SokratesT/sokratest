@@ -26,23 +26,41 @@ const OrganizationForm = ({
 
   const onSubmit = async (values: OrganizationInsertSchemaType) => {
     if (organization) {
-      await authClient.organization.update({
-        data: {
-          name: values.name,
-          /* logo: "new-logo.url",
-          metadata: {}, */
-          slug: values.slug,
+      toast.promise(
+        authClient.organization.update({
+          data: {
+            name: values.name,
+            slug: values.slug,
+            // logo: "new-logo.url",
+            // metadata: {},
+          },
+          organizationId: organization.id,
+        }),
+        {
+          loading: "Updating organisation...",
+          success: "Organisation updated successfully",
+          error: (error) => ({
+            message: "Failed to update organisation",
+            description: error.message,
+          }),
         },
-        organizationId: organization.id,
-      });
-      toast.success("Organisation updated successfully");
+      );
     } else {
-      await authClient.organization.create({
-        name: values.name,
-        slug: values.slug,
-        // logo: "https://example.com/logo.png",
-      });
-      toast.success("Organisation created successfully");
+      toast.promise(
+        authClient.organization.create({
+          name: values.name,
+          slug: values.slug,
+          // logo: "https://example.com/logo.png",
+        }),
+        {
+          loading: "Creating organisation...",
+          success: "Organisation created successfully",
+          error: (error) => ({
+            message: "Failed to create organisation",
+            description: error.message,
+          }),
+        },
+      );
     }
   };
 

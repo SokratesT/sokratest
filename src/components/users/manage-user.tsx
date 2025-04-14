@@ -15,6 +15,7 @@ import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import { updateUserRole } from "@/db/actions/user";
 import type { User } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
+import { withToastPromise } from "@/lib/utils";
 import { DEFAULT_ROLES } from "@/settings/roles";
 import { ROUTES } from "@/settings/routes";
 import type { Session } from "better-auth";
@@ -46,71 +47,83 @@ const ManageUser = ({
   }, []);
 
   const handleBanUser = async (userId: string) => {
-    const res = await authClient.admin.banUser({ userId });
+    toast.promise(authClient.admin.banUser({ userId }), {
+      loading: "Banning user...",
+      success: "User banned",
+      error: (error) => ({
+        message: "Failed to ban user",
+        description: error.message,
+      }),
+    });
 
-    if (res.error) {
-      toast.error(`Failed to ban user: ${res.error.message}`);
-    } else {
-      toast.success("User banned");
-      revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
-    }
+    revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
   };
 
   const handleUnbanUser = async (userId: string) => {
-    const res = await authClient.admin.unbanUser({ userId });
-
-    if (res.error) {
-      toast.error(`Failed to unban user: ${res.error.message}`);
-    } else {
-      toast.success("User unbanned");
-      revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
-    }
+    toast.promise(authClient.admin.unbanUser({ userId }), {
+      loading: "Unbanning user...",
+      success: "User unbanned",
+      error: (error) => ({
+        message: "Failed to unban user",
+        description: error.message,
+      }),
+    });
+    revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
   };
 
   const handleRevokeSession = async (sessionToken: string) => {
-    const res = await authClient.admin.revokeUserSession({
-      sessionToken,
-    });
+    toast.promise(
+      authClient.admin.revokeUserSession({
+        sessionToken,
+      }),
+      {
+        loading: "Revoking session...",
+        success: "Session revoked",
+        error: (error) => ({
+          message: "Failed to revoke session",
+          description: error.message,
+        }),
+      },
+    );
 
-    if (res.error) {
-      toast.error(`Failed to revoke session: ${res.error.message}`);
-    } else {
-      toast.success("Session revoked");
-      revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
-    }
+    revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
   };
 
   const handleRoleChange = async (role: string) => {
-    const res = await authClient.admin.setRole({
-      userId: user.id,
-      role,
+    toast.promise(authClient.admin.setRole({ userId: user.id, role }), {
+      loading: `Updating user role to ${role}...`,
+      success: `User role updated to ${role}`,
+      error: (error) => ({
+        message: "Failed to update user role",
+        description: error.message,
+      }),
     });
 
-    if (res.error) {
-      toast.error(`Failed to update user role: ${res.error.message}`);
-    } else {
-      toast.success("User role updated");
-      revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
-    }
+    revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
   };
 
   const handleCourseRoleChange = async (role: "instructor" | "student") => {
-    toast.promise(updateUserRole({ role, ids: [user.id] }), {
+    toast.promise(withToastPromise(updateUserRole({ role, ids: [user.id] })), {
       loading: "Updating user role...",
       success: "User role updated",
-      error: "Failed to update user role",
+      error: (error) => ({
+        message: "Failed to update user role",
+        description: error.message,
+      }),
     });
   };
 
   const handleDeleteUser = async (userId: string) => {
-    const res = await authClient.admin.removeUser({ userId });
+    toast.promise(authClient.admin.removeUser({ userId }), {
+      loading: "Deleting user...",
+      success: "User deleted",
+      error: (error) => ({
+        message: "Failed to delete user",
+        description: error.message,
+      }),
+    });
 
-    if (res.error) {
-      toast.error(`Failed to delete user: ${res.error.message}`);
-    } else {
-      toast.success("User deleted");
-      revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
-    }
+    revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
   };
 
   return (

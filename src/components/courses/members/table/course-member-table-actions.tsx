@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { removeCourseMembers } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
+import { withToastPromise } from "@/lib/utils";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -21,12 +22,19 @@ const CourseMemberTableActions = ({ courseId }: { courseId: Course["id"] }) => {
   const handleDelete = async () => {
     const userIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    await removeCourseMembers({
-      refs: userIds.map((id) => ({ id })),
-      courseId,
-    });
-
-    toast.success("Members deleted");
+    toast.promise(
+      withToastPromise(
+        removeCourseMembers({ refs: userIds.map((id) => ({ id })), courseId }),
+      ),
+      {
+        loading: "Deleting course members...",
+        success: "Course members deleted",
+        error: (error) => ({
+          message: "Failed to delete course members",
+          description: error.message,
+        }),
+      },
+    );
   };
 
   return (

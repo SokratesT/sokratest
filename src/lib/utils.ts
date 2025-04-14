@@ -60,3 +60,54 @@ export function isFieldRequired(
 
   return true;
 }
+
+/**
+ * Wraps a next-safe-action promise to work with toast.promise
+ * by transforming the action's result structure into a standard Promise.
+ *
+ * This utility converts next-safe-action's returned error structures into
+ * thrown errors that toast.promise can catch in its error handler.
+ *
+ * @template T The expected data type that will be returned on success
+ *
+ * @param {Promise<{
+ *   data?: T;
+ *   serverError?: string;
+ *   validationErrors?: any;
+ *   bindArgsValidationErrors?: any;
+ * } | undefined>} safeAction - The promise returned from a next-safe-action
+ *
+ * @returns {Promise<T>} A promise that resolves with the data or rejects with an error
+ */
+export function withToastPromise<T>(
+  safeAction: Promise<
+    | {
+        data?: T;
+        serverError?: string | undefined;
+        validationErrors?: any;
+        bindArgsValidationErrors?: any;
+      }
+    | undefined
+  >,
+): Promise<T> {
+  return (async () => {
+    const result = await safeAction;
+
+    if (!result) {
+      throw new Error("An unknown error occurred");
+    }
+
+    if (
+      result.serverError ||
+      result.validationErrors ||
+      result.bindArgsValidationErrors
+    ) {
+      const errorMessage =
+        result.serverError || "Validation failed" || "An error occurred";
+
+      throw new Error(errorMessage);
+    }
+
+    return result.data as T;
+  })();
+}

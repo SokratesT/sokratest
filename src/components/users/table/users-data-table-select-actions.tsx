@@ -20,9 +20,19 @@ const UsersDataTableSelectActions = () => {
   const handleDelete = async () => {
     const userIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    userIds.map((userId) => authClient.admin.removeUser({ userId }));
-
-    toast.success("Users deleted");
+    toast.promise(
+      Promise.all(
+        userIds.map((userId) => authClient.admin.removeUser({ userId })),
+      ),
+      {
+        loading: "Deleting users...",
+        success: "Users deleted",
+        error: (error) => ({
+          message: "Failed to delete users",
+          description: error.message,
+        }),
+      },
+    );
   };
 
   return (

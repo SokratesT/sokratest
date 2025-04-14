@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { deletePosts } from "@/db/actions/post";
+import { withToastPromise } from "@/lib/utils";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -22,8 +23,17 @@ const PostsDataTableSelectActions = () => {
   const handleDelete = async () => {
     const postIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    deletePosts({ refs: postIds.map((id) => ({ id })) });
-    toast.success("Posts deleted");
+    toast.promise(
+      withToastPromise(deletePosts({ refs: postIds.map((id) => ({ id })) })),
+      {
+        loading: "Deleting posts...",
+        success: "Posts deleted",
+        error: (error) => ({
+          message: "Failed to delete posts",
+          description: error.message,
+        }),
+      },
+    );
   };
 
   return (

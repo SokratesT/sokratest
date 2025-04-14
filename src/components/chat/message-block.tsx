@@ -74,13 +74,14 @@ const MessageBlock = ({
   const [mode, setMode] = useState<"view" | "edit">("view");
 
   const handleCopy = async (text: string) => {
-    const isCopied = await copy(text);
-
-    if (isCopied) {
-      toast.success("Copied to clipboard!");
-      return;
-    }
-    toast.error("Failed to copy to clipboard");
+    toast.promise(copy(text), {
+      loading: "Copying to clipboard...",
+      success: "Copied to clipboard!",
+      error: (error) => ({
+        message: "Failed to copy to clipboard",
+        description: error.message,
+      }),
+    });
   };
 
   const [optimisticScore, setOptimisticScore] = useState<
@@ -88,28 +89,28 @@ const MessageBlock = ({
   >(score?.value);
 
   const handleVote = async (sentiment: number) => {
-    // Update UI optimistically
-    setOptimisticScore(sentiment);
-
-    await voteMessage({
-      messageId: message.id,
-      sentiment,
-      chatId,
-    })
-      .then((res) => {
-        if (res?.data?.error) {
-          // Revert on error
+    toast.promise(
+      voteMessage({
+        messageId: message.id,
+        sentiment,
+        chatId,
+      }),
+      {
+        loading: "Rating...",
+        success: () => {
+          setOptimisticScore(sentiment);
+          return "Rated successfully";
+        },
+        error: (error) => {
           setOptimisticScore(score?.value);
-          toast.error("Failed to rate");
-        } else {
-          toast.success("Rated successfully");
-        }
-      })
-      .catch((error) => {
-        // Revert on error
-        setOptimisticScore(score?.value);
-        toast.error("Failed to rate");
-      });
+
+          return {
+            message: "Failed to rate",
+            description: error.message,
+          };
+        },
+      },
+    );
   };
 
   const handleModeChange = () => {

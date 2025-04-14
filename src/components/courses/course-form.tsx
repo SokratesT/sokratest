@@ -28,7 +28,7 @@ import {
   courseInsertSchema,
 } from "@/db/zod/course";
 import { authClient } from "@/lib/auth-client";
-import { isFieldRequired } from "@/lib/utils";
+import { isFieldRequired, withToastPromise } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -50,11 +50,26 @@ const CourseForm = ({ course }: { course?: Course }) => {
 
   const onSubmit = (values: CourseInsertSchemaType) => {
     if (course) {
-      updateCourse({ ...values, id: course.id });
-      toast.success("Course updated successfully");
+      toast.promise(
+        withToastPromise(updateCourse({ ...values, id: course.id })),
+        {
+          loading: "Updating course...",
+          success: "Course updated successfully",
+          error: (error) => ({
+            message: "Failed to update course",
+            description: error.message,
+          }),
+        },
+      );
     } else {
-      createCourse(values);
-      toast.success("Course created successfully");
+      toast.promise(withToastPromise(createCourse(values)), {
+        loading: "Creating course...",
+        success: "Course created successfully",
+        error: (error) => ({
+          message: "Failed to create course",
+          description: error.message,
+        }),
+      });
     }
   };
 

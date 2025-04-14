@@ -16,7 +16,7 @@ import {
   courseInvitationsInsertSchema,
 } from "@/db/zod/course-invitation";
 import { authClient } from "@/lib/auth-client";
-import { isFieldRequired } from "@/lib/utils";
+import { isFieldRequired, withToastPromise } from "@/lib/utils";
 import { courseRoles } from "@/settings/roles";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, Building2Icon, CircleMinusIcon } from "lucide-react";
@@ -42,8 +42,14 @@ const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
   });
 
   const onSubmit = (values: CourseInvitationsInsertSchemaType) => {
-    createCourseInvitations(values);
-    toast.success("Course invitation created successfully");
+    toast.promise(withToastPromise(createCourseInvitations(values)), {
+      loading: "Creating course invitation...",
+      success: "Course invitation created successfully",
+      error: (error) => ({
+        message: "Failed to create course invitation",
+        description: error.message,
+      }),
+    });
   };
 
   if (isPending || isPendingActive || !organizations || !activeOrganization) {

@@ -21,13 +21,26 @@ const handleDelete = async (
   organizationId?: Organization["id"],
 ) => {
   if (!organizationId) {
-    toast.error("Unknown Organisation");
-    throw new Error("Organization ID is missing");
+    toast.error("Organisation ID is required", {
+      description: "Try switching your active organisation.",
+    });
+    return;
   }
 
-  authClient.organization.removeMember({ organizationId, memberIdOrEmail: id });
-
-  toast.success("Organisation member removed");
+  toast.promise(
+    authClient.organization.removeMember({
+      organizationId,
+      memberIdOrEmail: id,
+    }),
+    {
+      loading: "Removing organisation member...",
+      success: "Organisation member removed",
+      error: (error) => ({
+        message: "Failed to remove organisation member",
+        description: error.message,
+      }),
+    },
+  );
 };
 
 export const organizationMemberTableColumns: ColumnDef<User>[] = [
