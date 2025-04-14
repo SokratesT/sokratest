@@ -1,3 +1,5 @@
+import type { ProcessingStatus } from "@/app/api/docs/processing/route";
+import type { Document } from "@/db/schema/document";
 import { getModel } from "@/lib/ai/models";
 import {
   type MarkdownNode,
@@ -25,7 +27,10 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export const vectorizeFilesTask = task({
   id: "vectorize-files-task",
   maxDuration: 1800, // Stop executing after 600 secs (30 mins) of compute
-  run: async (payload: { prefix: string; courseId: string }, { ctx }) => {
+  run: async (
+    payload: { prefix: string; courseId: string; documentId: Document["id"] },
+    { ctx },
+  ) => {
     const files = await listAllFilesInPrefix({
       bucket: buckets.processed.name,
       prefix: `${payload.prefix}/`,
@@ -98,13 +103,34 @@ export const vectorizeFilesTask = task({
       })
       .filter(Boolean); // Remove any undefined values that might slip through
 
-    const result = await generateEmbeddings({
+    const qdrantResponse = await generateEmbeddings({
       chunks: mergedChunks,
       courseId: payload.courseId,
       documentId: payload.prefix,
     });
 
-    return { payload, result };
+    const nextResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/docs/processing`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          documentId: payload.documentId,
+          courseId: payload.courseId,
+          step: "embedding",
+          status: "success",
+        } as ProcessingStatus),
+      },
+    );
+
+    if (!nextResponse.ok) {
+      logger.error("Failed to send processing status");
+      throw new Error("Failed to send processing status");
+    }
+
+    return { payload, results: { qdrant: qdrantResponse, next: nextResponse } };
   },
 });
 

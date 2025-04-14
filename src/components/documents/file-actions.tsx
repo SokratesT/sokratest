@@ -39,7 +39,9 @@ const FileActions = ({
   filePath: string;
   className?: string;
 }) => {
-  const isProcessing = fileInfo.embeddingStatus === "processing";
+  const isProcessing =
+    fileInfo.status === "generating-embedding" ||
+    fileInfo.status === "processing-document";
 
   return (
     <div
@@ -104,18 +106,6 @@ const FileActions = ({
             <DropdownMenuSeparator />
             <DropdownMenuItem
               disabled={isProcessing}
-              onClick={() => enqueueEmbeddings({ ids: [fileInfo.id] })}
-              className="flex items-center gap-2"
-            >
-              {isProcessing ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Database className="h-4 w-4" />
-              )}
-              Generate Embedding
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              disabled={isProcessing}
               onClick={() => enqueueDocuments({ ids: [fileInfo.id] })}
               className="flex items-center gap-2"
             >
@@ -125,6 +115,18 @@ const FileActions = ({
                 <FileSearch className="h-4 w-4" />
               )}
               Process Document
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={isProcessing}
+              onClick={() => enqueueEmbeddings({ ids: [fileInfo.id] })}
+              className="flex items-center gap-2"
+            >
+              {isProcessing ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Database className="h-4 w-4" />
+              )}
+              Generate Embedding
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,3 +1,4 @@
+import type { ProcessingStatus } from "@/app/api/docs/processing/route";
 import { extractMarkdownImages } from "@/lib/chunk/utils";
 import { getFileTypeFromMime } from "@/lib/files/uploadHelpers";
 import {
@@ -85,6 +86,27 @@ export const processDocumentTask = task({
       }
     });
 
-    return { payload, result: { success: true } };
+    const updateNextResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/docs/processing`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          documentId: payload.documentRef.id,
+          courseId: payload.courseId,
+          step: "processing",
+          status: "success",
+        } as ProcessingStatus),
+      },
+    );
+
+    if (!updateNextResponse.ok) {
+      logger.error("Failed to send processing status");
+      throw new Error("Failed to send processing status");
+    }
+
+    return { payload, result: { next: updateNextResponse } };
   },
 });

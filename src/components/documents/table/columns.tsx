@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { deleteDocumentInfo } from "@/db/actions/document";
-import { enqueueEmbeddings } from "@/db/actions/test-trigger";
+import { enqueueDocuments } from "@/db/actions/test-trigger";
 import type { Document } from "@/db/schema/document";
 import { cn, withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
@@ -35,12 +35,12 @@ const handleDelete = async (id: string) => {
   });
 };
 
-const handleEnqueueEmbedding = async (id: string) => {
-  toast.promise(withToastPromise(enqueueEmbeddings({ ids: [id] })), {
-    loading: "Enqueuing for embedding...",
-    success: "Enqueued for embedding",
+const handleEnqueueDocuments = async (id: string) => {
+  toast.promise(withToastPromise(enqueueDocuments({ ids: [id] })), {
+    loading: "Enqueuing documents for processing...",
+    success: "Enqueued documents for processing",
     error: (error) => ({
-      message: "Failed to enqueue for embedding",
+      message: "Failed to enqueue documents for processing",
       description: error.message,
     }),
   });
@@ -95,13 +95,14 @@ export const columns: ColumnDef<Document>[] = [
       return (
         <Badge
           className={cn({
-            "bg-emerald-600": row.original.embeddingStatus === "done",
-            "bg-red-600": row.original.embeddingStatus === "failed",
-            "bg-cyan-600": row.original.embeddingStatus === "outstanding",
-            "bg-yellow-600": row.original.embeddingStatus === "processing",
+            "bg-emerald-600": row.original.status === "ready",
+            "bg-red-600": row.original.status === "failed",
+            "bg-cyan-600": row.original.status === "pending",
+            "bg-yellow-600": row.original.status === "processing-document",
+            "bg-yellow-400": row.original.status === "generating-embedding",
           })}
         >
-          {row.original.embeddingStatus}
+          {row.original.status}
         </Badge>
       );
     },
@@ -142,9 +143,9 @@ export const columns: ColumnDef<Document>[] = [
               <DropdownMenuItem>View Document</DropdownMenuItem>
             </Link>
             <DropdownMenuItem
-              onClick={() => handleEnqueueEmbedding(document.id)}
+              onClick={() => handleEnqueueDocuments(document.id)}
             >
-              Embed Document
+              Process Document
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

@@ -140,7 +140,7 @@ const FileMeta = ({ document }: { document: Document }) => {
 
         <div className="mt-4 flex flex-wrap gap-2">
           <Badge variant="outline" className="font-normal text-xs">
-            {document.embeddingStatus === "done" ? "Indexed ✓" : "Indexing..."}
+            {document.status}
           </Badge>
 
           <Badge

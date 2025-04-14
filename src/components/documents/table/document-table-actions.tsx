@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { deleteDocumentInfo } from "@/db/actions/document";
-import { enqueueEmbeddings } from "@/db/actions/test-trigger";
+import { enqueueDocuments } from "@/db/actions/test-trigger";
 import { withToastPromise } from "@/lib/utils";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ReplaceAllIcon } from "lucide-react";
@@ -18,7 +18,6 @@ import { toast } from "sonner";
 
 const DocumentTableActions = () => {
   const { table } = useTable();
-  const courseId = table.options.meta?.courseId;
 
   const handleDelete = async () => {
     const fileIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
@@ -38,14 +37,14 @@ const DocumentTableActions = () => {
     );
   };
 
-  const handleEnqueueEmbeddings = async () => {
+  const handleEnqueueDocument = async () => {
     const fileIds = table.getSelectedRowModel().flatRows.map((row) => row.id);
 
-    toast.promise(withToastPromise(enqueueEmbeddings({ ids: fileIds })), {
-      loading: "Enqueuing for embedding...",
-      success: "Enqueued for embedding",
+    toast.promise(withToastPromise(enqueueDocuments({ ids: fileIds })), {
+      loading: "Enqueuing document for processing...",
+      success: "Enqueued document for processing",
       error: (error) => ({
-        message: "Failed to enqueue for embedding",
+        message: "Failed to enqueue document for processing",
         description: error.message,
       }),
     });
@@ -62,14 +61,13 @@ const DocumentTableActions = () => {
       <DropdownMenuContent align="end" className="w-[200px]">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {courseId && (
-          <DropdownMenuItem
-            onClick={() => handleEnqueueEmbeddings()}
-            disabled={table.getSelectedRowModel().rows.length === 0}
-          >
-            Generate Embeddings
-          </DropdownMenuItem>
-        )}
+
+        <DropdownMenuItem
+          onClick={() => handleEnqueueDocument()}
+          disabled={table.getSelectedRowModel().rows.length === 0}
+        >
+          Process Documents
+        </DropdownMenuItem>
 
         <DropdownMenuSeparator />
         <DropdownMenuItem

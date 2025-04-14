@@ -64,6 +64,13 @@
       "when": 1744641841561,
       "tag": "0008_modern_nightcrawler",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1744656286292,
+      "tag": "0009_skinny_rogue",
+      "breakpoints": true
     }
   ]
 }

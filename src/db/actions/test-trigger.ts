@@ -28,6 +28,11 @@ export const enqueueDocuments = authActionClient
   .use(requireCourseMiddleware)
   .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { ids }, ctx }) => {
+    await db
+      .update(document)
+      .set({ status: "processing-document", updatedAt: new Date() })
+      .where(inArray(document.id, ids));
+
     const docs = await db
       .select({
         id: document.id,
@@ -45,13 +50,13 @@ export const enqueueDocuments = authActionClient
           courseId: ctx.activeCourseId,
           documentRef: doc as FilePayload,
         },
-        /* options: {
-          concurrencyKey: "TEST_CONCURRENCY_KEY",
+        options: {
+          concurrencyKey: "PROCESSING_DOCUMENT_CONCURRENCY_KEY",
           queue: {
-            name: "my-task-queue",
-            concurrencyLimit: 2,
+            name: "processing-documents-queue",
+            concurrencyLimit: 1,
           },
-        }, */
+        },
       })),
     );
 
@@ -72,17 +77,22 @@ export const enqueueEmbeddings = authActionClient
   .use(requireCourseMiddleware)
   .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { ids }, ctx }) => {
+    await db
+      .update(document)
+      .set({ status: "generating-embedding", updatedAt: new Date() })
+      .where(inArray(document.id, ids));
+
     const handle = await tasks.batchTrigger<typeof vectorizeFilesTask>(
       "vectorize-files-task",
       ids.map((id) => ({
-        payload: { prefix: id, courseId: ctx.activeCourseId },
-        /* options: {
-          concurrencyKey: "TEST_CONCURRENCY_KEY",
+        payload: { prefix: id, courseId: ctx.activeCourseId, documentId: id },
+        options: {
+          concurrencyKey: "GENERATING_EMBEDDING_CONCURRENCY_KEY",
           queue: {
-            name: "my-task-queue",
-            concurrencyLimit: 2,
+            name: "processing-embeddings-queue",
+            concurrencyLimit: 1,
           },
-        }, */
+        },
       })),
     );
 

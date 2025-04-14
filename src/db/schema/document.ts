@@ -2,7 +2,6 @@ import type { InferSelectModel } from "drizzle-orm";
 import {
   integer,
   json,
-  pgEnum,
   pgTable,
   text,
   timestamp,
@@ -11,19 +10,19 @@ import {
 import { user } from "./auth";
 import { course } from "./course";
 
-export const embeddingStatusEnum = pgEnum("embedding_status", [
-  "outstanding",
-  "processing",
-  "done",
-  "failed",
-]);
-
 export interface DocumentMetadataType {
   showReference: boolean;
   relevance: "high" | "medium" | "low";
   citation?: string;
   externalUrl?: string;
 }
+
+export type DocumentStatus =
+  | "pending"
+  | "processing-document"
+  | "generating-embedding"
+  | "ready"
+  | "failed";
 
 export const document = pgTable("document", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -44,7 +43,7 @@ export const document = pgTable("document", {
   uploadedBy: uuid("uploaded_by")
     .notNull()
     .references(() => user.id),
-  embeddingStatus: embeddingStatusEnum().default("outstanding").notNull(),
+  status: text("status").$type<DocumentStatus>().notNull().default("pending"),
   updatedAt: timestamp("updated_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
 });
