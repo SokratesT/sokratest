@@ -8,7 +8,14 @@ import {
 import type { Document } from "@/db/schema/document";
 import { convert } from "convert";
 import { formatDistanceToNow } from "date-fns";
-import { Calendar, Clock, HardDrive } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  ExternalLink,
+  FileSpreadsheet,
+  HardDrive,
+  Star,
+} from "lucide-react";
 
 const getFileTypeColor = (fileType: string): string => {
   const typeMap: Record<string, string> = {
@@ -33,8 +40,21 @@ const formatDate = (date: Date | null): string => {
   return formatDistanceToNow(date, { addSuffix: true });
 };
 
+const getRelevanceBadgeColor = (relevance: string): string => {
+  const relevanceMap: Record<string, string> = {
+    high: "bg-green-100 text-green-800",
+    medium: "bg-yellow-100 text-yellow-800",
+    low: "bg-red-100 text-red-800",
+  };
+
+  return relevanceMap[relevance.toLowerCase()] || "bg-zinc-100 text-zinc-800";
+};
+
 const FileMeta = ({ document }: { document: Document }) => {
   const fileTypeColor = getFileTypeColor(document.fileType);
+  const relevanceBadgeColor = getRelevanceBadgeColor(
+    document.metadata.relevance,
+  );
 
   return (
     <Card>
@@ -78,17 +98,59 @@ const FileMeta = ({ document }: { document: Document }) => {
               {convert(document.size, "bytes").to("best").toString()}
             </span>
           </div>
+
+          <div className="flex items-center gap-2">
+            <Star className="h-4 w-4 text-muted-foreground" />
+            <span className="text-muted-foreground">Relevance:</span>
+            <Badge className={`${relevanceBadgeColor} font-normal text-xs`}>
+              {document.metadata.relevance.charAt(0).toUpperCase() +
+                document.metadata.relevance.slice(1)}
+            </Badge>
+          </div>
+
+          {document.metadata.citation && (
+            <div className="flex items-center gap-2">
+              <FileSpreadsheet className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Citation:</span>
+              <span
+                className="truncate font-medium text-xs"
+                title={document.metadata.citation}
+              >
+                {document.metadata.citation}
+              </span>
+            </div>
+          )}
+
+          {document.metadata.externalUrl && (
+            <div className="flex items-center gap-2">
+              <ExternalLink className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">External:</span>
+              <a
+                href={document.metadata.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="truncate font-medium text-primary text-xs hover:underline"
+                title={document.metadata.externalUrl}
+              >
+                View source
+              </a>
+            </div>
+          )}
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
           <Badge variant="outline" className="font-normal text-xs">
             {document.embeddingStatus === "done" ? "Indexed ✓" : "Indexing..."}
           </Badge>
-          {document.courseId && (
-            <Badge variant="outline" className="font-normal text-xs">
-              Course Attached
-            </Badge>
-          )}
+
+          <Badge
+            variant={document.metadata.showReference ? "default" : "outline"}
+            className="font-normal text-xs"
+          >
+            {document.metadata.showReference
+              ? "Reference Shown"
+              : "Reference Hidden"}
+          </Badge>
         </div>
       </CardContent>
     </Card>

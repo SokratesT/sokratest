@@ -1,9 +1,16 @@
 "use client";
 
-import { Database, Download, FileSearch, Loader2, Trash2 } from "lucide-react";
+import {
+  Database,
+  Download,
+  FileSearch,
+  Loader2,
+  PencilIcon,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -121,6 +128,14 @@ const FileActions = ({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <Link
+          className={buttonVariants({ size: "sm", variant: "outline" })}
+          href={ROUTES.PRIVATE.documents.edit.getPath({ id: fileInfo.id })}
+        >
+          <PencilIcon className="h-4 w-4" />
+          <span className="hidden sm:inline">Edit</span>
+        </Link>
 
         <Tooltip>
           <TooltipTrigger asChild>
