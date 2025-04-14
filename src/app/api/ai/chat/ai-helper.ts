@@ -116,7 +116,11 @@ export const getDocumentReferencesByIds = async (documentIds: string[]) => {
     .from(document)
     .where(inArray(document.id, documentIds));
 
-  return query.map((doc) => ({
+  const filteredQuery = query.filter((doc) => {
+    doc.metadata.showReference === true;
+  });
+
+  return filteredQuery.map((doc) => ({
     ...doc,
     type: "reference",
   }));
