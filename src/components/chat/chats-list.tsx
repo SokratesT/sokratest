@@ -46,7 +46,7 @@ const ChatsList = ({ chats }: { chats: Chat[] }) => {
         >
           <Link href={ROUTES.PRIVATE.chat.view.getPath({ id: chat.id })}>
             <Card className="relative h-full transition-all hover:border-primary/50 hover:shadow-md">
-              <ChatActionsDropdown chatId={chat.id}>
+              <ChatActionsDropdown chatId={chat.id} title={chat.title}>
                 <Button
                   variant="ghost"
                   className="absolute top-2 right-2 h-8 w-8 p-0 data-[state=open]:bg-muted"
@@ -55,6 +55,7 @@ const ChatsList = ({ chats }: { chats: Chat[] }) => {
                   <span className="sr-only">Open menu</span>
                 </Button>
               </ChatActionsDropdown>
+
               <CardHeader className="pb-2">
                 <CardTitle className="line-clamp-1 text-base">
                   {chat.title}

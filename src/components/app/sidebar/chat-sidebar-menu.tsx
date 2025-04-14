@@ -41,7 +41,7 @@ const ChatSidebarMenu = async () => {
               <span className="truncate">{chat.title}</span>
             </Link>
           </SidebarMenuButton>
-          <ChatActionsDropdown chatId={chat.id}>
+          <ChatActionsDropdown chatId={chat.id} title={chat.title}>
             <SidebarMenuAction>
               <MoreHorizontalIcon />
             </SidebarMenuAction>

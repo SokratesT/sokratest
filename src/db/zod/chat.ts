@@ -9,6 +9,7 @@ export const chatInsertSchema = createInsertSchema(chat, {
 export const chatUpdateSchema = createUpdateSchema(chat, {
   userId: (schema) => schema.optional(),
   id: z.string(),
+  title: z.string().min(1).max(250),
 });
 
 export const chatDeleteSchema = z.object({

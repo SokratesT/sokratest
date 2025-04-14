@@ -2,7 +2,7 @@
 
 import { db } from "@/db/drizzle";
 import { chat } from "@/db/schema/chat";
-import { chatDeleteSchema } from "@/db/zod/chat";
+import { chatDeleteSchema, chatUpdateSchema } from "@/db/zod/chat";
 import {
   authActionClient,
   checkPermissionMiddleware,
@@ -10,7 +10,7 @@ import {
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
-import { inArray } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export const createChat = authActionClient
@@ -52,6 +52,23 @@ export const deleteChat = authActionClient
     const ids = refs.map((ref) => ref.id);
 
     await db.delete(chat).where(inArray(chat.id, ids));
+
+    revalidatePath(ROUTES.PRIVATE.chat.add.getPath());
+    return { error: null };
+  });
+
+export const renameChat = authActionClient
+  .metadata({
+    actionName: "renameChat",
+    permission: {
+      resource: { context: "course", type: "chat" },
+      action: "update",
+    },
+  })
+  .schema(chatUpdateSchema)
+  .use(checkPermissionMiddleware)
+  .action(async ({ parsedInput: { id, title } }) => {
+    await db.update(chat).set({ title }).where(eq(chat.id, id));
 
     revalidatePath(ROUTES.PRIVATE.chat.add.getPath());
     return { error: null };
