@@ -19,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="apple-mobile-web-app-title" content="SokratesT" />
         {process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL &&
           process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
             <Script
