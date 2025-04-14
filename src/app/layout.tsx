@@ -2,9 +2,8 @@ import { Providers } from "@/app/providers";
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
+import { fontMono, fontSans } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 
 export const metadata: Metadata = {
   title: "SokratesT",
@@ -31,9 +30,9 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          "font-sans antialiased",
-          GeistSans.variable,
-          GeistMono.variable,
+          "bg-background font-sans antialiased",
+          fontSans.variable,
+          fontMono.variable,
         )}
       >
         <Providers>{children}</Providers>
