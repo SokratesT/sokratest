@@ -55,7 +55,9 @@ export const auth = betterAuth({
     },
   },
   advanced: {
-    generateId: () => uuidv4(),
+    database: {
+      generateId: () => uuidv4(),
+    },
   },
   databaseHooks: {
     session: {
