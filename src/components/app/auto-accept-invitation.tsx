@@ -14,8 +14,7 @@ const AutoAcceptInvitation = ({
   useEffect(() => {
     const acceptInvitation = async () => {
       if (invitation) {
-        const res = await acceptCourseInvitation(invitation);
-        console.log(res);
+        await acceptCourseInvitation(invitation);
       }
     };
 
