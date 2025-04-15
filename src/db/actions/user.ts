@@ -6,13 +6,15 @@ import {
   authActionClient,
   checkPermissionMiddleware,
   requireCourseMiddleware,
+  requireOrganizationMiddleware,
 } from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
 import { and, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { member } from "../schema/auth";
 
-export const updateUserRole = authActionClient
+export const updateUserCourseRole = authActionClient
   .metadata({
     actionName: "updateUserRole",
     permission: {
@@ -42,3 +44,36 @@ export const updateUserRole = authActionClient
     revalidatePath(ROUTES.PRIVATE.users.root.getPath());
     return { error: null };
   });
+
+export const updateUserOrganizationRole = authActionClient
+  .metadata({
+    actionName: "updateUserRole",
+    permission: {
+      resource: { context: "organization", type: "user" },
+      action: "update",
+    },
+  })
+  .schema(
+    z.object({
+      ids: z.array(z.string()),
+      role: z.enum(["admin", "member"]),
+    }),
+  )
+  .use(requireOrganizationMiddleware)
+  .use(checkPermissionMiddleware)
+  .action(
+    async ({ parsedInput: { ids, role }, ctx: { activeOrganizationId } }) => {
+      await db
+        .update(member)
+        .set({ role })
+        .where(
+          and(
+            inArray(member.userId, ids),
+            eq(member.organizationId, activeOrganizationId),
+          ),
+        );
+
+      revalidatePath(ROUTES.PRIVATE.users.root.getPath());
+      return { error: null };
+    },
+  );

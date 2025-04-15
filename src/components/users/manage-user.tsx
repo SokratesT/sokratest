@@ -12,7 +12,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
-import { updateUserRole } from "@/db/actions/user";
+import {
+  updateUserCourseRole,
+  updateUserOrganizationRole,
+} from "@/db/actions/user";
 import type { User } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
 import { withToastPromise } from "@/lib/utils";
@@ -89,28 +92,34 @@ const ManageUser = ({
     revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
   };
 
-  const handleRoleChange = async (role: string) => {
-    toast.promise(authClient.admin.setRole({ userId: user.id, role }), {
-      loading: `Updating user role to ${role}...`,
-      success: `User role updated to ${role}`,
-      error: (error) => ({
-        message: "Failed to update user role",
-        description: error.message,
-      }),
-    });
+  const handleRoleChange = async (role: "admin" | "member") => {
+    toast.promise(
+      withToastPromise(updateUserOrganizationRole({ role, ids: [user.id] })),
+      {
+        loading: `Updating user role to ${role}...`,
+        success: `User role updated to ${role}`,
+        error: (error) => ({
+          message: "Failed to update user role",
+          description: error.message,
+        }),
+      },
+    );
 
     revalidatePathFromClient({ path: ROUTES.PRIVATE.users.root.getPath() });
   };
 
   const handleCourseRoleChange = async (role: "instructor" | "student") => {
-    toast.promise(withToastPromise(updateUserRole({ role, ids: [user.id] })), {
-      loading: "Updating user role...",
-      success: "User role updated",
-      error: (error) => ({
-        message: "Failed to update user role",
-        description: error.message,
-      }),
-    });
+    toast.promise(
+      withToastPromise(updateUserCourseRole({ role, ids: [user.id] })),
+      {
+        loading: "Updating user role...",
+        success: "User role updated",
+        error: (error) => ({
+          message: "Failed to update user role",
+          description: error.message,
+        }),
+      },
+    );
   };
 
   const handleDeleteUser = async (userId: string) => {
@@ -172,7 +181,9 @@ const ManageUser = ({
           <div>
             <p className="mb-2 font-medium text-sm">Organization Role</p>
             <Select
-              onValueChange={(value) => handleRoleChange(value)}
+              onValueChange={(value) =>
+                handleRoleChange(value as "admin" | "member")
+              }
               defaultValue={organizationRole || DEFAULT_ROLES.organization}
             >
               <SelectTrigger className="w-full">
