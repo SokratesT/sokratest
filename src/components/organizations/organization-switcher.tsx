@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { setActiveCourse } from "@/db/actions/course";
+import { resetActiveCourse } from "@/db/actions/course";
 import { authClient } from "@/lib/auth-client";
 import { ROUTES } from "@/settings/routes";
 import { Check } from "lucide-react";
@@ -28,7 +28,7 @@ const OrganizationSwitcher = () => {
         organizationId: organization.id,
       })
       .then(() => {
-        setActiveCourse({ courseId: undefined });
+        resetActiveCourse();
         setOpenMobile(false);
         router.push(ROUTES.PRIVATE.root.getPath());
         toast.success(`Organization changed to ${organization?.name}`);
