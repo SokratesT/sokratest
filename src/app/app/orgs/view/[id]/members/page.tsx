@@ -49,7 +49,7 @@ const OrganizationMembersPage = async ({
             href={ROUTES.PRIVATE.users.add.getPath()}
             className={buttonVariants({ variant: "default" })}
           >
-            Add Users
+            Invite Users
           </Link>
         </div>
       </div>

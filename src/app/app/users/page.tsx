@@ -39,10 +39,16 @@ const UsersPage = async ({
         </h4>
         <div className="flex gap-2">
           <Link
+            href={ROUTES.PRIVATE.users.invites.getPath()}
+            className={buttonVariants({ variant: "default" })}
+          >
+            View Invitations
+          </Link>
+          <Link
             href={ROUTES.PRIVATE.users.add.getPath()}
             className={buttonVariants({ variant: "default" })}
           >
-            Add User
+            Invite User
           </Link>
         </div>
       </div>

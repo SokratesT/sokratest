@@ -60,16 +60,16 @@ const AddUserForm = ({ courses }: { courses: Course[] }) => {
         role: "member",
       });
     });
-
-    console.log("Submitted data:", data);
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <p>Add Users</p>
+        <p>Invite Users</p>
         <p className="text-muted-foreground text-sm">
-          You can add multiple users at once by adding additional email fields.
+          You can invite multiple users at once by adding additional email
+          fields. Currently no emails will be sent. Instead you can copy an
+          invitation link that you can manually provide to each user.
         </p>
         <div className="mt-8 flex max-w-[500px] flex-col gap-2">
           <FormField
