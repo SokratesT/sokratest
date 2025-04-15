@@ -2,6 +2,7 @@
 
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { FormInputField } from "@/components/forms/fields/formInputField";
+import { FormSelect } from "@/components/forms/fields/formSelect";
 import { FormTextField } from "@/components/forms/fields/formTextField";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { Button } from "@/components/ui/button";
@@ -9,17 +10,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormField } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
 import { createCourse, updateCourse } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
 import {
@@ -139,47 +129,38 @@ const CourseForm = ({ course }: { course?: Course }) => {
             </Card>
             <Card>
               <CardHeader>
-                {/* TODO: Actually implement this */}
                 <CardTitle>Course AI Settings</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select an LLM" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Models</SelectLabel>
-                      <SelectItem value="apple">Llama 3.1 70B</SelectItem>
-                      <SelectItem value="banana">Deepseek R1</SelectItem>
-                      <SelectItem value="blueberry">Mistral Large</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-
-                <div>
-                  <div className="flex items-center space-x-2">
-                    <Switch id="show-reasoning" checked />
-                    <Label htmlFor="show-reasoning">Show Reasoning</Label>
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    Some models take internal reasoning steps before responding.
-                    Select whether these should be shown to the user.
-                  </p>
-                </div>
-
-                <div>
-                  <div className="flex items-center space-x-2">
-                    <Switch id="show-reasoning" />
-                    <Label htmlFor="show-reasoning">
-                      Reflect on Document Retrieval
-                    </Label>
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    A secondary LLM reviews retrieved documents before they are
-                    processed by the main response LLM. This improves quality,
-                    but increases latency.
-                  </p>
+                <div className="grid w-full gap-1.5">
+                  <FormField
+                    control={form.control}
+                    name="config.model"
+                    render={({ field }) => (
+                      <FormSelect
+                        field={field}
+                        options={[
+                          { label: "Chat (Llama 3.3 70b)", value: "chat" },
+                          {
+                            label:
+                              "Chat-Reasoning (Deepseek R1 Distill Llama 70b)",
+                            value: "chatReasoning",
+                          },
+                          { label: "Small (Llama 3.1 8b)", value: "small" },
+                          {
+                            label: "Vision (Qwen 2.5 VL 72b)",
+                            value: "vision",
+                          },
+                        ]}
+                        label="Model"
+                        placeholder="Choose an AI Model"
+                        required={isFieldRequired(
+                          courseInsertSchema,
+                          field.name,
+                        )}
+                      />
+                    )}
+                  />
                 </div>
 
                 <div className="grid w-full gap-1.5">
@@ -201,12 +182,24 @@ const CourseForm = ({ course }: { course?: Course }) => {
                 </div>
 
                 <div>
-                  <Label htmlFor="message-2">Maximum References</Label>
-                  <Slider defaultValue={[5]} max={10} step={1} />
-                  <p className="text-muted-foreground text-sm">
-                    The maximum number of references that can be used in a
-                    response.
-                  </p>
+                  <FormField
+                    control={form.control}
+                    name="config.maxReferences"
+                    render={({ field }) => (
+                      <FormInputField
+                        field={field}
+                        label="Maximum References"
+                        placeholder="Your custom system prompt..."
+                        required={isFieldRequired(
+                          courseInsertSchema,
+                          field.name,
+                        )}
+                        inputType="number"
+                        description="The maximum number of references that can be used in a
+                    response."
+                      />
+                    )}
+                  />
                 </div>
               </CardContent>
             </Card>

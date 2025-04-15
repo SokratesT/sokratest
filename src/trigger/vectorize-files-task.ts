@@ -1,10 +1,8 @@
+import https from "https";
 import type { ProcessingStatus } from "@/app/api/docs/processing/route";
 import type { Document } from "@/db/schema/document";
 import { getModel } from "@/lib/ai/models";
-import {
-  type MarkdownNode,
-  splitMarkdownAtHeaders,
-} from "@/lib/chunk/markdown-chunker";
+import type { MarkdownNode } from "@/lib/chunk/markdown-chunker";
 import { extractFileInfoFromReference } from "@/lib/chunk/utils";
 import {
   getImageAsBase64,
@@ -20,6 +18,8 @@ import { ROUTES } from "@/settings/routes";
 import type { FileType } from "@/types/file";
 import { logger, task } from "@trigger.dev/sdk/v3";
 import { embedMany, generateText } from "ai";
+import { MarkdownNodeParser, Document as llamaDocument } from "llamaindex";
+import nodeFetch from "node-fetch";
 import { v4 as uuidv4 } from "uuid";
 
 // Helper function to introduce delay
@@ -110,27 +110,59 @@ export const vectorizeFilesTask = task({
       documentId: payload.prefix,
     });
 
-    const nextResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.API.docs.processing.getPath()}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": process.env.SOKRATEST_API_KEY || "",
-        },
-        body: JSON.stringify({
-          documentId: payload.documentId,
-          courseId: payload.courseId,
-          step: "embedding",
-          status: "success",
-        } as ProcessingStatus),
-      },
-    );
+    const nextResponse = await logger.trace("update-next-api", async () => {
+      const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.API.docs.processing.getPath()}`;
+      const requestBody = {
+        documentId: payload.documentId,
+        courseId: payload.courseId,
+        step: "embedding",
+        status: "success",
+      } as ProcessingStatus;
 
-    if (!nextResponse.ok) {
-      logger.error("Failed to send processing status");
-      throw new Error("Failed to send processing status");
-    }
+      logger.info(`Sending processing status update to: ${apiUrl}`);
+      logger.info(`Request body: ${JSON.stringify(requestBody)}`);
+
+      try {
+        // Create an https agent that ignores SSL errors
+        const httpsAgent = new https.Agent({
+          rejectUnauthorized: false,
+        });
+
+        const response = await nodeFetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.SOKRATEST_API_KEY || "",
+          },
+          body: JSON.stringify(requestBody),
+          // Use the agent that ignores SSL errors
+          agent: apiUrl.startsWith("https") ? httpsAgent : undefined,
+        });
+
+        const responseText = await response.text();
+        logger.info(`Response status: ${response.status}`);
+        logger.info(`Response body: ${responseText}`);
+
+        if (!response.ok) {
+          logger.error(
+            `Failed API request with status ${response.status}: ${responseText}`,
+          );
+          throw new Error(
+            `Failed to send processing status: ${response.status} - ${responseText}`,
+          );
+        }
+
+        return response;
+      } catch (error) {
+        logger.error(
+          `Error during API request: ${error instanceof Error ? error.message : String(error)}`,
+        );
+        logger.error(
+          `Stack trace: ${error instanceof Error ? error.stack : "No stack trace"}`,
+        );
+        throw error;
+      }
+    });
 
     return { payload, results: { qdrant: qdrantResponse, next: nextResponse } };
   },
@@ -138,9 +170,25 @@ export const vectorizeFilesTask = task({
 
 async function processMarkdownFile(fileContent: string, fileName: string) {
   return await logger.trace(`process-markdown-${fileName}`, async () => {
-    const chunks = splitMarkdownAtHeaders(fileContent, 100);
+    const markdownNodeParser = new MarkdownNodeParser();
 
-    return chunks.map((chunk) => ({ ...chunk, fileName }));
+    // const chunks = splitMarkdownAtHeaders(fileContent, 100);
+
+    const document = new llamaDocument({ text: fileContent });
+
+    const parsedDocuments = markdownNodeParser([document]);
+
+    const chunks = parsedDocuments.map((chunk) => ({
+      title: "title",
+      depth: chunk.startCharIdx,
+      content: chunk.text,
+      length: chunk.text.length,
+      type: "text",
+      fileName,
+    })) as MarkdownNode[];
+
+    // return chunks.map((chunk) => ({ ...chunk, fileName }));
+    return chunks;
   });
 }
 

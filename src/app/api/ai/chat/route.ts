@@ -93,10 +93,11 @@ export async function POST(request: Request) {
 
     return createDataStreamResponse({
       execute: async (dataStream) => {
-        const relevantChunks = await getRelevantChunks(
+        const relevantChunks = await getRelevantChunks({
           messages,
-          activeCourseId,
-        );
+          courseId: activeCourseId,
+          limit: courseConfig.config.maxReferences ?? 5,
+        });
 
         const references = await getDocumentReferencesByIds(
           relevantChunks.map((chunk) => chunk.documentId),
@@ -106,9 +107,15 @@ export async function POST(request: Request) {
           dataStream.writeMessageAnnotation(reference as unknown as JSONValue);
         });
 
+        const model = courseConfig.config.model as
+          | "chat"
+          | "chatReasoning"
+          | "small"
+          | "vision";
+
         const result = streamText({
           model: getModel({
-            type: "chat",
+            type: model.length > 0 ? model : "chat",
           }),
           system: createSocraticSystemPrompt(
             // TODO: Handle this properly

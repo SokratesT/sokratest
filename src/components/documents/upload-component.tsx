@@ -12,13 +12,13 @@ import {
 import { type FileUploadSchemaType, fileUploadSchema } from "@/db/zod/document";
 import { handleUpload } from "@/lib/files/uploadHelpers";
 import { getErrorMessage } from "@/lib/handle-error";
+import { ROUTES } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { FileUploader } from "./file-uploader";
-import { useRouter } from "next/navigation";
-import { ROUTES } from "@/settings/routes";
 
 const UploadComponent = () => {
   const [isLoading, setIsLoading] = useState(false);

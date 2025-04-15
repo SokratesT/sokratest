@@ -16,9 +16,11 @@ type RelevantContentResult =
 export const findRelevantContent = async ({
   userQuery,
   courseId,
+  limit = 5,
 }: {
   userQuery: string;
   courseId: Course["id"];
+  limit?: number;
 }): Promise<RelevantContentResult> => {
   const userQueryEmbedded = await generateEmbedding(userQuery);
 
@@ -43,7 +45,7 @@ export const findRelevantContent = async ({
           },
         ],
       },
-      limit: 5,
+      limit,
       with_payload: true,
     })) as QdrantPoints;
 
@@ -56,15 +58,20 @@ export const findRelevantContent = async ({
   }
 };
 
-export const getRelevantChunks = async (
-  messages: Message[],
-  courseId: Course["id"],
-) => {
+export const getRelevantChunks = async ({
+  messages,
+  courseId,
+  limit,
+}: {
+  messages: Message[];
+  courseId: Course["id"];
+  limit: number;
+}) => {
   const generatedQuery = await generateText({
     model: getModel({ type: "small" }),
     messages,
     experimental_telemetry: { isEnabled: true },
-    system: `Given the provided message history, formulate a short and precise query to search a RAG database for additional context. Take special notice of the user's most recent request. ONLY output the query and nothing else. NEVER output SQL, just the query.`,
+    system: `Briefly summarise the provided message history, putting special emphasis on the users latest message and particularly any questions they may have. The summary should be in the form of a question, and should be no longer than 20 words.`,
   });
 
   console.log(`Generated query: ${generatedQuery.text}`);
@@ -72,6 +79,7 @@ export const getRelevantChunks = async (
   const result = await findRelevantContent({
     userQuery: generatedQuery.text,
     courseId,
+    limit,
   });
 
   if (!result.success) {
