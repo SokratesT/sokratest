@@ -62,7 +62,7 @@ const models = {
       },
     },
     small: {
-      id: "llama-4-scout-17b-16e-instruct",
+      id: "meta-llama-3.1-8b-instruct",
       label: "Llama 3.1 (8b)",
       description: "Model description for 3.1 8b",
       type: "small" as const,
