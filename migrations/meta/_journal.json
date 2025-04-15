@@ -12,64 +12,8 @@
     {
       "idx": 1,
       "version": "7",
-      "when": 1742480459310,
-      "tag": "0001_red_invisible_woman",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1743600702189,
-      "tag": "0002_stormy_purifiers",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1743785317722,
-      "tag": "0003_crazy_snowbird",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1743856117760,
-      "tag": "0004_round_venom",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1744203892992,
-      "tag": "0005_flaky_medusa",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1744625882942,
-      "tag": "0006_nice_nehzno",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1744632485698,
-      "tag": "0007_outstanding_kulan_gath",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1744641841561,
-      "tag": "0008_modern_nightcrawler",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1744656286292,
-      "tag": "0009_skinny_rogue",
+      "when": 1744702552447,
+      "tag": "0001_lazy_the_executioner",
       "breakpoints": true
     }
   ]

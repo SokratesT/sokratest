@@ -1,4 +1,3 @@
-CREATE TYPE "public"."embedding_status" AS ENUM('outstanding', 'processing', 'done', 'failed');--> statement-breakpoint
 CREATE TABLE "account" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" text NOT NULL,
@@ -70,10 +69,7 @@ CREATE TABLE "user" (
 	"banned" boolean,
 	"ban_reason" text,
 	"ban_expires" timestamp,
-	"username" text,
-	"display_username" text,
-	CONSTRAINT "user_email_unique" UNIQUE("email"),
-	CONSTRAINT "user_username_unique" UNIQUE("username")
+	CONSTRAINT "user_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
 CREATE TABLE "verification" (
@@ -85,32 +81,35 @@ CREATE TABLE "verification" (
 	"updated_at" timestamp
 );
 --> statement-breakpoint
-CREATE TABLE "chat_message_vote" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"message_id" text NOT NULL,
-	"sentiment" smallint NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "chat_message_vote_message_id_unique" UNIQUE("message_id")
-);
---> statement-breakpoint
 CREATE TABLE "chat_message" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"chat_id" uuid NOT NULL,
-	"role" varchar(20) NOT NULL,
-	"content" json NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
+	"role" varchar NOT NULL,
+	"parts" json NOT NULL,
+	"attachments" json NOT NULL,
+	"annotations" json NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "chat" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"title" varchar(255),
+	"title" varchar,
 	"course_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
-	"visibility" varchar DEFAULT 'private' NOT NULL
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "course_invitation" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"email" text NOT NULL,
+	"course_id" uuid NOT NULL,
+	"role" text NOT NULL,
+	"status" text NOT NULL,
+	"expires_at" timestamp NOT NULL,
+	"inviter_id" uuid NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE "course" (
@@ -119,6 +118,7 @@ CREATE TABLE "course" (
 	"organization_id" uuid NOT NULL,
 	"content" text NOT NULL,
 	"description" varchar(500) NOT NULL,
+	"config" json DEFAULT '{}'::json NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now()
 );
@@ -136,23 +136,14 @@ CREATE TABLE "document" (
 	"bucket" text NOT NULL,
 	"prefix" text NOT NULL,
 	"title" text NOT NULL,
+	"metadata" json DEFAULT '{"showReference":true,"relevance":"medium"}'::json NOT NULL,
 	"size" integer NOT NULL,
 	"file_type" text NOT NULL,
 	"course_id" uuid NOT NULL,
 	"uploaded_by" uuid NOT NULL,
-	"embeddingStatus" "embedding_status" DEFAULT 'outstanding' NOT NULL,
+	"status" text DEFAULT 'pending' NOT NULL,
 	"updated_at" timestamp DEFAULT now(),
 	"created_at" timestamp DEFAULT now()
-);
---> statement-breakpoint
-CREATE TABLE "embedding" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"file_id" uuid NOT NULL,
-	"vector" vector(1024) NOT NULL,
-	"text" text NOT NULL,
-	"node_id" text NOT NULL,
-	"metadata" json NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "post" (
@@ -170,15 +161,14 @@ ALTER TABLE "invitation" ADD CONSTRAINT "invitation_inviter_id_user_id_fk" FOREI
 ALTER TABLE "member" ADD CONSTRAINT "member_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organization"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "member" ADD CONSTRAINT "member_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "chat_message_vote" ADD CONSTRAINT "chat_message_vote_message_id_chat_message_id_fk" FOREIGN KEY ("message_id") REFERENCES "public"."chat_message"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "chat_message" ADD CONSTRAINT "chat_message_chat_id_chat_id_fk" FOREIGN KEY ("chat_id") REFERENCES "public"."chat"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "chat" ADD CONSTRAINT "chat_course_id_course_id_fk" FOREIGN KEY ("course_id") REFERENCES "public"."course"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "chat" ADD CONSTRAINT "chat_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "course_invitation" ADD CONSTRAINT "course_invitation_course_id_course_id_fk" FOREIGN KEY ("course_id") REFERENCES "public"."course"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "course_invitation" ADD CONSTRAINT "course_invitation_inviter_id_user_id_fk" FOREIGN KEY ("inviter_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "course" ADD CONSTRAINT "course_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "course_member" ADD CONSTRAINT "course_member_course_id_course_id_fk" FOREIGN KEY ("course_id") REFERENCES "public"."course"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "course_member" ADD CONSTRAINT "course_member_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "document" ADD CONSTRAINT "document_course_id_course_id_fk" FOREIGN KEY ("course_id") REFERENCES "public"."course"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "document" ADD CONSTRAINT "document_uploaded_by_user_id_fk" FOREIGN KEY ("uploaded_by") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "embedding" ADD CONSTRAINT "embedding_file_id_document_id_fk" FOREIGN KEY ("file_id") REFERENCES "public"."document"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "post" ADD CONSTRAINT "post_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "data_embedding_vector_idx" ON "embedding" USING hnsw ("vector" vector_cosine_ops) WITH (m=16,ef_construction=64);
+ALTER TABLE "post" ADD CONSTRAINT "post_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;

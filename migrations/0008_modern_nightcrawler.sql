@@ -1,1 +1,0 @@
-ALTER TABLE "course" ADD COLUMN "config" json DEFAULT '{}'::json NOT NULL;
