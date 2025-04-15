@@ -28,8 +28,10 @@ import {
 } from "@/db/zod/course";
 import { authClient } from "@/lib/auth-client";
 import { isFieldRequired, withToastPromise } from "@/lib/utils";
+import { ROUTES } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -37,6 +39,8 @@ const CourseForm = ({ course }: { course?: Course }) => {
   const { data: organizations, isPending } = authClient.useListOrganizations();
   const { data: activeOrganization, isPending: isPendingActive } =
     authClient.useActiveOrganization();
+
+  const router = useRouter();
 
   const form = useForm<CourseInsertSchemaType>({
     resolver: zodResolver(courseInsertSchema),
@@ -58,7 +62,10 @@ const CourseForm = ({ course }: { course?: Course }) => {
         withToastPromise(updateCourse({ ...values, id: course.id })),
         {
           loading: "Updating course...",
-          success: "Course updated successfully",
+          success: () => {
+            router.push(ROUTES.PRIVATE.courses.root.getPath());
+            return "Course updated successfully";
+          },
           error: (error) => ({
             message: "Failed to update course",
             description: error.message,
@@ -68,7 +75,10 @@ const CourseForm = ({ course }: { course?: Course }) => {
     } else {
       toast.promise(withToastPromise(createCourse(values)), {
         loading: "Creating course...",
-        success: "Course created successfully",
+        success: () => {
+          router.push(ROUTES.PRIVATE.courses.root.getPath());
+          return "Course created successfully";
+        },
         error: (error) => ({
           message: "Failed to create course",
           description: error.message,

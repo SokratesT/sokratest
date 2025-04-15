@@ -18,8 +18,10 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { isFieldRequired, withToastPromise } from "@/lib/utils";
 import { courseRoles } from "@/settings/roles";
+import { ROUTES } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, Building2Icon, CircleMinusIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -27,6 +29,8 @@ const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
   const { data: organizations, isPending } = authClient.useListOrganizations();
   const { data: activeOrganization, isPending: isPendingActive } =
     authClient.useActiveOrganization();
+
+  const router = useRouter();
 
   const form = useForm<CourseInvitationsInsertSchemaType>({
     resolver: zodResolver(courseInvitationsInsertSchema),
@@ -44,7 +48,10 @@ const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
   const onSubmit = (values: CourseInvitationsInsertSchemaType) => {
     toast.promise(withToastPromise(createCourseInvitations(values)), {
       loading: "Creating course invitation...",
-      success: "Course invitation created successfully",
+      success: () => {
+        router.push(ROUTES.PRIVATE.users.invites.getPath());
+        return "Course invitation created successfully";
+      },
       error: (error) => ({
         message: "Failed to create course invitation",
         description: error.message,

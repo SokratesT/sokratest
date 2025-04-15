@@ -9,13 +9,17 @@ import {
   organizationInsertSchema,
 } from "@/db/zod/organization";
 import { authClient } from "@/lib/auth-client";
+import { ROUTES } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const OrganizationForm = ({
   organization,
 }: { organization?: Organization }) => {
+  const router = useRouter();
+
   const form = useForm<OrganizationInsertSchemaType>({
     resolver: zodResolver(organizationInsertSchema),
     defaultValues: {
@@ -38,7 +42,10 @@ const OrganizationForm = ({
         }),
         {
           loading: "Updating organisation...",
-          success: "Organisation updated successfully",
+          success: () => {
+            router.push(ROUTES.PRIVATE.organizations.root.getPath());
+            return "Organisation updated successfully";
+          },
           error: (error) => ({
             message: "Failed to update organisation",
             description: error.message,
@@ -54,7 +61,10 @@ const OrganizationForm = ({
         }),
         {
           loading: "Creating organisation...",
-          success: "Organisation created successfully",
+          success: () => {
+            router.push(ROUTES.PRIVATE.organizations.root.getPath());
+            return "Organisation created successfully";
+          },
           error: (error) => ({
             message: "Failed to create organisation",
             description: error.message,

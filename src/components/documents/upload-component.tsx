@@ -17,9 +17,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { FileUploader } from "./file-uploader";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/settings/routes";
 
 const UploadComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const onUploadSuccess = () => {
     console.log("Files uploaded successfully");
@@ -50,6 +53,7 @@ const UploadComponent = () => {
       success: () => {
         form.reset();
         setIsLoading(false);
+        router.push(ROUTES.PRIVATE.documents.root.getPath());
         return "Files uploaded";
       },
       error: (err) => {
