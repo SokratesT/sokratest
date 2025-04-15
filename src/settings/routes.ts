@@ -180,6 +180,13 @@ export const ROUTES = {
           return makePath(this.pathTemplate, params);
         },
       },
+      invites: {
+        name: "User Invitations",
+        pathTemplate: "/app/users/invites",
+        getPath: function () {
+          return makePath(this.pathTemplate);
+        },
+      },
     },
     courses: {
       root: {
