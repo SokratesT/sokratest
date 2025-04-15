@@ -64,6 +64,7 @@ services:
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
       LANGFUSE_BASEURL: ${LANGFUSE_BASEURL}
+      SOKRATEST_API_KEY: ${SOKRATEST_API_KEY}
     command: [ "/bin/sh", "-c", "node server.js" ]
 
   migrations:
