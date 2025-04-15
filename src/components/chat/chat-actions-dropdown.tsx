@@ -7,13 +7,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { deleteChat, renameChat } from "@/db/actions/chat";
 import { withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import { useParams, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { Input } from "../ui/input";
 
 const ChatActionsDropdown = ({
   children,

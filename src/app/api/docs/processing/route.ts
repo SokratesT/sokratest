@@ -28,6 +28,15 @@ interface ProcessingStatusError extends ProcessingStatusBase {
 export type ProcessingStatus = ProcessingStatusSuccess | ProcessingStatusError;
 
 export const POST = async (req: NextRequest) => {
+  // Check for API key
+  const apiKey = req.headers.get("x-api-key");
+
+  if (!apiKey || apiKey !== process.env.SOKRATEST_API_KEY) {
+    return new NextResponse("Unauthorized", {
+      status: 401,
+    });
+  }
+
   const processingStatus = (await req.json()) as ProcessingStatus;
 
   if (

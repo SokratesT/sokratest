@@ -1,6 +1,7 @@
 "use client";
 
 import { NewChatButton } from "@/components/chat/new-chat-button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,7 +16,6 @@ import { format } from "date-fns";
 import { MessagesSquareIcon, MoreHorizontalIcon } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { Button } from "../ui/button";
 import { ChatActionsDropdown } from "./chat-actions-dropdown";
 
 const ChatsList = ({ chats }: { chats: Chat[] }) => {

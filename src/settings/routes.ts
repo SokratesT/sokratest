@@ -286,4 +286,52 @@ export const ROUTES = {
       },
     },
   },
+  API: {
+    docs: {
+      processing: {
+        name: "Processing Document",
+        pathTemplate: "/api/docs/processing",
+        getPath: function () {
+          return makePath(this.pathTemplate);
+        },
+      },
+      download: {
+        name: "Download Document",
+        pathTemplate: "/api/docs/download",
+        getPath: function () {
+          return makePath(this.pathTemplate);
+        },
+      },
+      upload: {
+        name: "Upload Document",
+        pathTemplate: "/api/docs/upload",
+        getPath: function () {
+          return makePath(this.pathTemplate);
+        },
+      },
+    },
+    ai: {
+      chat: {
+        name: "AI Chat",
+        pathTemplate: "/api/ai/chat",
+        getPath: function () {
+          return makePath(this.pathTemplate);
+        },
+      },
+      copilot: {
+        name: "AI Copilot",
+        pathTemplate: "/api/ai/copilot",
+        getPath: function () {
+          return makePath(this.pathTemplate);
+        },
+      },
+      command: {
+        name: "AI Command",
+        pathTemplate: "/api/ai/command",
+        getPath: function () {
+          return makePath(this.pathTemplate);
+        },
+      },
+    },
+  },
 };

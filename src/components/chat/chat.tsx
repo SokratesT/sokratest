@@ -6,6 +6,7 @@ import { ChatInput } from "@/components/ui/chat/chat-input";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { deleteTrailingMessages } from "@/db/actions/ai-actions";
 import { useStreamingText } from "@/hooks/use-streaming-text";
+import { ROUTES } from "@/settings/routes";
 import { type Message, useChat } from "@ai-sdk/react";
 import type { ApiGetScoresResponseData } from "langfuse";
 import { RefreshCcwIcon } from "lucide-react";
@@ -51,7 +52,7 @@ const Chat = ({
   } = useChat({
     id,
     body: { id },
-    api: "/api/ai/chat",
+    api: ROUTES.API.ai.chat.getPath(),
     experimental_throttle: 100,
     sendExtraMessageFields: true,
     generateId: uuidv4,

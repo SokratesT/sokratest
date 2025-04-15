@@ -1,6 +1,7 @@
 import { saveDocumentInfo } from "@/db/actions/document";
 import type { Document } from "@/db/schema/document";
 import type { BucketName } from "@/settings/buckets";
+import { ROUTES } from "@/settings/routes";
 import type { FileType } from "@/types/file";
 import type { PresignedUrlProp, ShortFileProp } from "./types";
 
@@ -10,7 +11,7 @@ import type { PresignedUrlProp, ShortFileProp } from "./types";
  * @returns
  */
 export const getPresignedUrls = async (files: ShortFileProp[]) => {
-  const response = await fetch("/api/docs/upload/", {
+  const response = await fetch(ROUTES.API.docs.upload.getPath(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -96,7 +97,7 @@ export async function getPresignedUrl(
     | { fileId: string; prefix: string; type: FileType; bucket: BucketName },
 ) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/docs/download/`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.API.docs.download.getPath()}`,
     {
       method: "POST",
       headers: {

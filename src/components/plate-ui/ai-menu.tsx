@@ -1,5 +1,6 @@
 "use client";
 
+import { ROUTES } from "@/settings/routes";
 import { useChat } from "@ai-sdk/react";
 import { type NodeEntry, isHotkey } from "@udecode/plate";
 import {
@@ -33,7 +34,7 @@ export function AIMenu() {
 
   const chat = useChat({
     id: "editor",
-    api: "/api/ai/command",
+    api: ROUTES.API.ai.command.getPath(),
   });
 
   const { input, isLoading, messages, setInput } = chat;

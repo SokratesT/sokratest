@@ -5,13 +5,14 @@ import { CopilotPlugin } from "@udecode/plate-ai/react";
 import { serializeMdNodes, stripMarkdown } from "@udecode/plate-markdown";
 
 import { GhostText } from "@/components/plate-ui/ghost-text";
+import { ROUTES } from "@/settings/routes";
 
 // TODO: Love this, but probably need to disable due to rate limits :(
 export const copilotPlugins = [
   CopilotPlugin.configure(({ api }) => ({
     options: {
       completeOptions: {
-        api: "/api/ai/copilot",
+        api: ROUTES.API.ai.copilot.getPath(),
         body: {
           system: `You are an advanced AI writing assistant, similar to VSCode Copilot but for general text. Your task is to predict and generate the next part of the text based on the given context.
   

@@ -7,6 +7,7 @@ import {
 } from "@/lib/s3/file-functions";
 import { s3Client } from "@/lib/s3/s3client";
 import { buckets } from "@/settings/buckets";
+import { ROUTES } from "@/settings/routes";
 import type { DoclingData } from "@/types/docling";
 import type { ProcessDocumentTaskPayload } from "@/types/trigger";
 import { logger, task } from "@trigger.dev/sdk/v3";
@@ -87,11 +88,12 @@ export const processDocumentTask = task({
     });
 
     const updateNextResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/docs/processing`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.API.docs.processing.getPath()}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": process.env.SOKRATEST_API_KEY || "",
         },
         body: JSON.stringify({
           documentId: payload.documentRef.id,
