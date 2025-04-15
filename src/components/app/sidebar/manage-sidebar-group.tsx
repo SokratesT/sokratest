@@ -17,20 +17,12 @@ const ManageSidebarGroup = async () => {
 
   const session = await getSession();
 
-  if (
-    !session ||
-    !session.session.activeCourseId ||
-    !session.session.activeOrganizationId
-  ) {
-    return null;
-  }
-
   const hasCourseEditPermission = await hasPermission(
-    { context: "course", id: session.session.activeCourseId, type: "course" },
+    { context: "course", id: session?.session.activeCourseId, type: "course" },
     "update",
   );
 
-  if (!hasCourseEditPermission) {
+  if (!hasCourseEditPermission && session?.user.role !== "admin") {
     return null;
   }
 
