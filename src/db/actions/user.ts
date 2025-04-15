@@ -2,6 +2,7 @@
 
 import { db } from "@/db/drizzle";
 import { courseMember } from "@/db/schema/course";
+import { auth } from "@/lib/auth";
 import {
   authActionClient,
   checkPermissionMiddleware,
@@ -9,10 +10,10 @@ import {
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, count, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { member } from "../schema/auth";
+import { member, user } from "../schema/auth";
 
 export const updateUserCourseRole = authActionClient
   .metadata({
@@ -77,3 +78,24 @@ export const updateUserOrganizationRole = authActionClient
       return { error: null };
     },
   );
+
+export const createAdmin = async ({
+  email,
+  password,
+  name,
+}: { email: string; password: string; name: string }) => {
+  const [userCount] = await db.select({ count: count() }).from(user);
+
+  if (userCount.count > 0) {
+    return;
+  }
+
+  auth.api.createUser({
+    body: {
+      email,
+      password,
+      name,
+      role: "admin",
+    },
+  });
+};
