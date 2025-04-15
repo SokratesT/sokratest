@@ -1,7 +1,7 @@
 import "server-only";
 
 import {
-  getCourseRole,
+  getActiveCourseRole,
   getOrganizationRole,
   getSession,
   isChatOwner,
@@ -85,7 +85,7 @@ export const hasCoursePermission = async (
   if (!resource.id) return false;
 
   try {
-    const result = await getCourseRole();
+    const result = await getActiveCourseRole(resource.id);
     if (!result.success || !result.data) {
       console.error("No course role found for user.");
       return false;

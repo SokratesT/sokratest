@@ -24,7 +24,7 @@ export const createCourse = authActionClient
     actionName: "createCourse",
     permission: {
       resource: { context: "organization", type: "organization" },
-      action: "create",
+      action: "update",
     },
   })
   .use(requireOrganizationMiddleware)
@@ -137,5 +137,16 @@ export const setActiveCourse = authActionClient
     await db
       .update(session)
       .set({ activeCourseId: courseId })
+      .where(eq(session.userId, userId));
+  });
+
+export const resetActiveCourse = authActionClient
+  .metadata({
+    actionName: "resetActiveCourse",
+  })
+  .action(async ({ ctx: { userId } }) => {
+    await db
+      .update(session)
+      .set({ activeCourseId: undefined })
       .where(eq(session.userId, userId));
   });

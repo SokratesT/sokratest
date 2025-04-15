@@ -77,13 +77,8 @@ export const deleteCourseInvitations = authActionClient
 export const acceptCourseInvitation = authActionClient
   .metadata({
     actionName: "acceptCourseInvitation",
-    permission: {
-      resource: { context: "course", type: "invitation" },
-      action: "update",
-    },
   })
   .schema(courseInvitationSelectSchema)
-  .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { id, courseId, role }, ctx }) => {
     const [query] = await db
       .select({ organizationId: course.organizationId })

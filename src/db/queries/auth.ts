@@ -3,7 +3,7 @@ import "server-only";
 import { db } from "@/db/drizzle";
 import { member } from "@/db/schema/auth";
 import { chat } from "@/db/schema/chat";
-import { courseMember } from "@/db/schema/course";
+import { type Course, courseMember } from "@/db/schema/course";
 import { auth } from "@/lib/auth";
 import type { CourseRole, OrganizationRole } from "@/settings/roles";
 import { and, eq } from "drizzle-orm";
@@ -39,30 +39,33 @@ export const getActiveOrganization = cache(async () => {
  * @returns The user's role in the course
  * @throws Error if session not found or user has no role
  */
-export const getCourseRole = async (): Promise<
-  AuthResult<CourseRole | undefined>
-> => {
-  return withAuthQuery(
-    async (session) => {
-      const [query] = await db
-        .select({ role: courseMember.role })
-        .from(courseMember)
-        .where(
-          and(
-            eq(courseMember.userId, session.session.userId),
-            eq(courseMember.courseId, session.session.activeCourseId),
-          ),
-        );
+export const getActiveCourseRole = async (
+  id?: Course["id"],
+): Promise<AuthResult<CourseRole | undefined>> => {
+  return withAuthQuery(async (session) => {
+    const courseId = session.session.activeCourseId || id;
 
-      if (!query) {
-        return undefined;
-      }
+    if (!courseId) {
+      throw new Error("Course ID not found");
+    }
 
-      // TODO: Make type safe by using enum in PG
-      return query.role as CourseRole;
-    },
-    { requireCourse: true },
-  );
+    const [query] = await db
+      .select({ role: courseMember.role })
+      .from(courseMember)
+      .where(
+        and(
+          eq(courseMember.userId, session.session.userId),
+          eq(courseMember.courseId, courseId),
+        ),
+      );
+
+    if (!query) {
+      return undefined;
+    }
+
+    // TODO: Make type safe by using enum in PG
+    return query.role as CourseRole;
+  }, {});
 };
 
 /**

@@ -5,8 +5,8 @@ import { redirect } from "next/navigation";
 
 const AddCoursePage = async () => {
   const permitted = await hasPermission(
-    { context: "course", id: "all", type: "course" },
-    "create",
+    { context: "organization", id: "all", type: "organization" },
+    "update",
   );
 
   if (!permitted) {

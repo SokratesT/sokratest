@@ -134,10 +134,10 @@ export const checkPermissionMiddleware = createMiddleware<{
   let ids: string[] = [];
 
   if (typeof input !== "object" || input === null) {
-    if (metadata.permission.action === "create" && "activeCourseId" in ctx) {
-      ids = [ctx.activeCourseId as string];
+  if (metadata.permission.action === "create" && "activeCourseId" in ctx) {
+    ids = [ctx.activeCourseId as string];
     } else {
-      throw new Error("Input must contain an ids array field");
+    throw new Error("Input must contain an ids array field");
     }
   } else if ("ids" in input && Array.isArray(input.ids)) {
     ids = input.ids as string[];
@@ -147,6 +147,8 @@ export const checkPermissionMiddleware = createMiddleware<{
     ids = [input.id as string];
   } else if ("courseId" in input) {
     ids = [input.courseId as string];
+  } else if ("activeOrganizationId" in ctx) {
+    ids = [ctx.activeOrganizationId as string];
   } else if ("chatId" in input) {
     ids = [input.chatId as string];
   } else {
