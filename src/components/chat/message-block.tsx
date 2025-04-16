@@ -100,7 +100,7 @@ const MessageBlock = ({
         loading: "Rating...",
         success: () => {
           setOptimisticScore(sentiment);
-          return "Rated successfully";
+          return "Thank you for your feedback!";
         },
         error: (error) => {
           setOptimisticScore(score?.value);
