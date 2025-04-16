@@ -2,7 +2,6 @@ import {
   BookMarkedIcon,
   Building2Icon,
   FolderOpenIcon,
-  SettingsIcon,
   UserIcon,
   UsersIcon,
 } from "lucide-react";
@@ -38,14 +37,9 @@ export const sidebarInstructorMenu = [
 
 export const sidebarUserMenu = [
   {
-    title: "Profile",
+    title: "Account",
     url: ROUTES.PRIVATE.app.account.getPath(),
     icon: UserIcon,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: SettingsIcon,
   },
 ];
 
