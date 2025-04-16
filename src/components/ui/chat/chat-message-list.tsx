@@ -26,15 +26,15 @@ const ChatMessageList = ({
     smooth,
     content: children,
   });
-  
+
   // Add debounced version of isAtBottom
   const [debouncedIsAtBottom, setDebouncedIsAtBottom] = useState(isAtBottom);
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedIsAtBottom(isAtBottom);
     }, debounceTime);
-    
+
     return () => clearTimeout(timer);
   }, [isAtBottom, debounceTime]);
 

@@ -6,8 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { deleteCourseInvitations } from "@/db/actions/course-invitation";
 import { withToastPromise } from "@/lib/utils";

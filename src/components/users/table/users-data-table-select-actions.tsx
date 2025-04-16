@@ -6,8 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
