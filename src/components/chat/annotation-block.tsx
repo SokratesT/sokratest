@@ -11,6 +11,7 @@ import type { DocumentMetadataType } from "@/db/schema/document";
 import type { JSONValue } from "ai";
 import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
+import { Badge } from "../ui/badge";
 
 interface BaseAnnotation extends Record<string, JSONValue> {
   type: string;
@@ -71,9 +72,15 @@ const AnnotationBlock = ({
                 <Popover key={i}>
                   <PopoverTrigger asChild>
                     <Button
-                      className="group max-w-[200px] truncate text-left text-sm"
+                      className="group max-w-[200px] truncate px-2 text-left text-sm"
                       variant="outline"
                     >
+                      <Badge
+                        variant="secondary"
+                        className="mr-1 inline-flex size-5 items-center justify-center overflow-clip rounded-full font-bold text-xs"
+                      >
+                        {i + 1}
+                      </Badge>
                       <span className="truncate">
                         {referenceAnnotation.title}
                       </span>

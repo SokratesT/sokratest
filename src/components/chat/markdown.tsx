@@ -3,6 +3,7 @@ import Link from "next/link";
 import { memo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Badge } from "../ui/badge";
 import { CodeBlock } from "./code-block";
 
 const components: Partial<Components> = {
@@ -38,6 +39,25 @@ const components: Partial<Components> = {
     );
   },
   a: ({ node, children, ...props }) => {
+    // Check if children is a string and matches cite: pattern
+    const childText =
+      Array.isArray(children) && typeof children[0] === "string"
+        ? children[0]
+        : typeof children === "string"
+          ? children
+          : null;
+    if (childText?.startsWith("cite:")) {
+      const docId = childText.replace("cite:", "");
+      return (
+        <Badge
+          variant="secondary"
+          className="mr-1 inline-flex size-4 items-center justify-center overflow-clip rounded-full font-bold text-xs"
+        >
+          {docId}
+        </Badge>
+      );
+    }
+
     return (
       // @ts-expect-error
       <Link
