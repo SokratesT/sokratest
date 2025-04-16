@@ -17,7 +17,6 @@ const ProfileForm = () => {
   const form = useForm<UserUpdateSchemaType>({
     resolver: zodResolver(userUpdateSchema),
     defaultValues: {
-      email: data?.user.email,
       name: data?.user.name,
     },
   });
@@ -25,7 +24,6 @@ const ProfileForm = () => {
   // FIXME: Pass data as props instead of this shit?
   useEffect(() => {
     form.reset({
-      email: data?.user.email,
       name: data?.user.name,
     });
 
@@ -59,19 +57,6 @@ const ProfileForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormInputField
-              field={field}
-              placeholder="your@email.com"
-              label="Email"
-              inputType="email"
-              loading={loading}
-            />
-          )}
-        />
         <FormField
           control={form.control}
           name="name"
