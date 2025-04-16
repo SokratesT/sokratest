@@ -101,7 +101,6 @@ export const organizationMemberTableColumns: ColumnDef<User>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               variant="destructive"
               onClick={() => {

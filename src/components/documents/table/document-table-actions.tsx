@@ -59,16 +59,12 @@ const DocumentTableActions = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[200px]">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-
         <DropdownMenuItem
           onClick={() => handleEnqueueDocument()}
           disabled={table.getSelectedRowModel().rows.length === 0}
         >
           Process Documents
         </DropdownMenuItem>
-
         <DropdownMenuSeparator />
         <DropdownMenuItem
           variant="destructive"

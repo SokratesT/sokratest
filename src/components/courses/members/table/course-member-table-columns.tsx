@@ -97,7 +97,6 @@ export const courseMemberTableColumns: ColumnDef<User>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               variant="destructive"
               onClick={() => {

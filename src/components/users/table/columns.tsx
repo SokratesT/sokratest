@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { User } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
+import { ROUTES } from "@/settings/routes";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -87,8 +88,7 @@ export const columns: ColumnDef<User>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/app/users/edit/${user.id}`}>
+            <Link href={ROUTES.PRIVATE.users.edit.getPath({ id: user.id })}>
               <DropdownMenuItem>Edit User</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />

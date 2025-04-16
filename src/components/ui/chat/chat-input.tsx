@@ -1,5 +1,6 @@
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { ROUTES } from "@/settings/routes";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import type { ChatRequestOptions } from "ai";
 import { useCallback, useEffect, useRef } from "react";
@@ -80,7 +81,11 @@ const ChatInput = ({
   };
 
   const submitForm = useCallback(() => {
-    window.history.replaceState({}, "", `/app/chat/${chatId}`);
+    window.history.replaceState(
+      {},
+      "",
+      ROUTES.PRIVATE.chat.view.getPath({ id: chatId }),
+    );
 
     handleSubmit(
       /* undefined, {

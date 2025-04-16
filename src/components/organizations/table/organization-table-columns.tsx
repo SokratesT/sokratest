@@ -97,11 +97,14 @@ export const organizationTableColumns: ColumnDef<Organization>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/app/orgs/view/${user.id}`}>
+            <Link
+              href={ROUTES.PRIVATE.organizations.view.getPath({ id: user.id })}
+            >
               <DropdownMenuItem>View Organisation</DropdownMenuItem>
             </Link>
-            <Link href={`/app/orgs/edit/${user.id}`}>
+            <Link
+              href={ROUTES.PRIVATE.organizations.edit.getPath({ id: user.id })}
+            >
               <DropdownMenuItem>Edit Organisation</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />

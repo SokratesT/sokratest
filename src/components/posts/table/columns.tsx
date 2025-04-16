@@ -14,6 +14,7 @@ import {
 import { deletePosts } from "@/db/actions/post";
 import type { Post } from "@/db/schema/post";
 import { withToastPromise } from "@/lib/utils";
+import { ROUTES } from "@/settings/routes";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
@@ -96,11 +97,10 @@ export const columns: ColumnDef<PostWithAuthor>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/app/posts/edit/${post.id}`}>
+            <Link href={ROUTES.PRIVATE.posts.edit.getPath({ id: post.id })}>
               <DropdownMenuItem>Edit Post</DropdownMenuItem>
             </Link>
-            <Link href={`/blog/${post.id}`}>
+            <Link href={ROUTES.PUBLIC.blog.getPath()}>
               <DropdownMenuItem>View Post</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />

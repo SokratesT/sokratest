@@ -7,13 +7,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { deleteCourses } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
 import { withToastPromise } from "@/lib/utils";
+import { ROUTES } from "@/settings/routes";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
@@ -62,7 +62,7 @@ export const columns: ColumnDef<Course>[] = [
       <DataTableColumnHeader column={column} title="Title" />
     ),
     cell: ({ row }) => (
-      <Link href={`/app/courses/view/${row.original.id}`}>
+      <Link href={ROUTES.PRIVATE.courses.view.getPath({ id: row.original.id })}>
         {row.original.title}
       </Link>
     ),
@@ -91,12 +91,10 @@ export const columns: ColumnDef<Course>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <Link href={`/app/courses/view/${course.id}`}>
+            <Link href={ROUTES.PRIVATE.courses.view.getPath({ id: course.id })}>
               <DropdownMenuItem>View Course</DropdownMenuItem>
             </Link>
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/app/courses/edit/${course.id}`}>
+            <Link href={ROUTES.PRIVATE.courses.edit.getPath({ id: course.id })}>
               <DropdownMenuItem>Edit Course</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />

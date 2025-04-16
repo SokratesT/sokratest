@@ -2,15 +2,18 @@ import { Button } from "@/components/ui/button";
 import { useAutoScroll } from "@/components/ui/chat/hooks/useAutoScroll";
 import { cn } from "@/lib/utils";
 import { ArrowDown } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface ChatMessageListProps extends React.HTMLAttributes<HTMLDivElement> {
   smooth?: boolean;
+  debounceTime?: number;
 }
 
 const ChatMessageList = ({
   className,
   children,
   smooth = false,
+  debounceTime = 300,
   ...props
 }: ChatMessageListProps) => {
   const {
@@ -23,6 +26,17 @@ const ChatMessageList = ({
     smooth,
     content: children,
   });
+  
+  // Add debounced version of isAtBottom
+  const [debouncedIsAtBottom, setDebouncedIsAtBottom] = useState(isAtBottom);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedIsAtBottom(isAtBottom);
+    }, debounceTime);
+    
+    return () => clearTimeout(timer);
+  }, [isAtBottom, debounceTime]);
 
   return (
     <div
@@ -43,9 +57,9 @@ const ChatMessageList = ({
         </div>
       </div>
 
-      {!isAtBottom && (
+      {!debouncedIsAtBottom && (
         <>
-          <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-24 bg-linear-to-t from-background to-transparent" />
+          <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-24 bg-gradient-to-t from-background to-transparent" />
           <Button
             onClick={scrollToBottom}
             size="icon"
@@ -58,20 +72,6 @@ const ChatMessageList = ({
         </>
       )}
     </div>
-
-    /* {!isAtBottom && (
-          <Button
-            onClick={() => {
-              scrollToBottom();
-            }}
-            size="icon"
-            variant="outline"
-            className="absolute bottom-2 left-1/2 transform -translate-x-1/2 inline-flex rounded-full shadow-md"
-            aria-label="Scroll to bottom"
-          >
-            <ArrowDown className="h-4 w-4" />
-          </Button>
-        )} */
   );
 };
 

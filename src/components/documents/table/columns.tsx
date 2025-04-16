@@ -131,16 +131,15 @@ export const columns: ColumnDef<Document>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link
-              href={ROUTES.PRIVATE.documents.edit.getPath({ id: document.id })}
-            >
-              <DropdownMenuItem>Edit Document</DropdownMenuItem>
-            </Link>
             <Link
               href={ROUTES.PRIVATE.documents.view.getPath({ id: document.id })}
             >
               <DropdownMenuItem>View Document</DropdownMenuItem>
+            </Link>
+            <Link
+              href={ROUTES.PRIVATE.documents.edit.getPath({ id: document.id })}
+            >
+              <DropdownMenuItem>Edit Document</DropdownMenuItem>
             </Link>
             <DropdownMenuItem
               onClick={() => handleEnqueueDocuments(document.id)}

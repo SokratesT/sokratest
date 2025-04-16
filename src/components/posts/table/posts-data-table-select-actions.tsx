@@ -45,8 +45,6 @@ const PostsDataTableSelectActions = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[200px]">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuSeparator />
         <DropdownMenuItem
           variant="destructive"
           onClick={handleDelete}
