@@ -249,7 +249,7 @@ export const ROUTES = {
       },
       view: {
         name: "View Organization",
-        pathTemplate: "/app/orgs/:id",
+        pathTemplate: "/app/orgs/view/:id",
         getPath: function (params: { id: string }) {
           return makePath(this.pathTemplate, params);
         },
