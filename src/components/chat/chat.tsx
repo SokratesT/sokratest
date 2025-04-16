@@ -60,8 +60,10 @@ const Chat = ({
     onFinish: () => {
       resetStream();
     },
-    onError: () => {
-      toast.error("An error occurred, please try again!");
+    onError: (error) => {
+      toast.error("An error occurred, please try again!", {
+        description: error.message,
+      });
     },
   });
 
