@@ -5,10 +5,12 @@ import { chat } from "@/db/schema/chat";
 import { and, desc, eq } from "drizzle-orm";
 import { withAuthQuery } from "./utils/with-auth-query";
 
-export const getUserChatsForActiveCourse = async () => {
+export const getUserChatsForActiveCourse = async (
+  { limit }: { limit?: number } = { limit: undefined },
+) => {
   return withAuthQuery(
     async (session) => {
-      const query = await db
+      const baseQuery = db
         .select()
         .from(chat)
         .where(
@@ -19,7 +21,11 @@ export const getUserChatsForActiveCourse = async () => {
         )
         .orderBy(desc(chat.updatedAt));
 
-      return { query };
+      const result = await (limit !== undefined
+        ? baseQuery.limit(limit)
+        : baseQuery);
+
+      return { query: result };
     },
     { requireCourse: true },
   );
