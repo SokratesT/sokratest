@@ -79,8 +79,7 @@ export async function POST(request: Request) {
     const relevantChunks = await getRelevantChunks({
       messages,
       courseId: activeCourseId,
-      /* limit: courseConfig.config.maxReferences ?? 5, */
-      limit: 8,
+      limit: Number(courseConfig.config.maxReferences) ?? 5,
     });
 
     const references = await getDocumentReferencesByIds(
