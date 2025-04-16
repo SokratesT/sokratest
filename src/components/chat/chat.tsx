@@ -5,7 +5,10 @@ import { SendButton, StopButton } from "@/components/ui/chat/chat-buttons";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { deleteTrailingMessages } from "@/db/actions/ai-actions";
-import { useStreamingText } from "@/hooks/use-streaming-text";
+import {
+  type DataStreamDelta,
+  useStreamingText,
+} from "@/hooks/use-streaming-text";
 import { ROUTES } from "@/settings/routes";
 import { type Message, useChat } from "@ai-sdk/react";
 import type { ApiGetScoresResponseData } from "langfuse";
@@ -13,21 +16,6 @@ import { RefreshCcwIcon } from "lucide-react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { MessageBlock } from "./message-block";
-
-type DataStreamDelta = {
-  type:
-    | "text-delta"
-    | "code-delta"
-    | "image-delta"
-    | "title"
-    | "id"
-    | "suggestion"
-    | "clear"
-    | "finish"
-    | "user-message-id"
-    | "kind";
-  content: string;
-};
 
 const Chat = ({
   id,

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-type DataStreamDelta = {
+export type DataStreamDelta = {
   type:
     | "text-delta"
     | "code-delta"
