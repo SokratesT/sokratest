@@ -108,3 +108,20 @@ export const getCourseConfig = async (id: Course["id"]) => {
     { requireOrg: true },
   );
 };
+
+export const getActiveCourse = async () => {
+  return withAuthQuery(
+    async (session) => {
+      const [query] = await db
+        .select({ ...getTableColumns(course) })
+        .from(course)
+        .where(eq(course.id, session.session.activeCourseId))
+        .limit(1);
+
+      return { query };
+    },
+    {
+      requireCourse: true,
+    },
+  );
+};

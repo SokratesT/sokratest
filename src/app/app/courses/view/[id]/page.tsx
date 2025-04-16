@@ -1,10 +1,12 @@
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { Placeholder } from "@/components/placeholders/placeholder";
+import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { getCourseById } from "@/db/queries/course";
 import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
+import { format } from "date-fns";
+import { BotIcon, CalendarIcon } from "lucide-react";
 import Link from "next/link";
 
 const ViewCoursePage = async ({
@@ -28,11 +30,13 @@ const ViewCoursePage = async ({
     "update",
   );
 
+  const course = result.data.query;
+
   return (
     <div className="flex flex-col gap-14">
       <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
         <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          {result.data.query.title}
+          {course.title}
         </h4>
         {hasCourseEditPermission && (
           <div className="flex gap-2">
@@ -47,20 +51,30 @@ const ViewCoursePage = async ({
               href={ROUTES.PRIVATE.documents.add.getPath()}
               className={buttonVariants({ variant: "default" })}
             >
-              Add Files
+              Add Resources
+            </Link>
+            <Link
+              href={ROUTES.PRIVATE.courses.edit.getPath({ id: course.id })}
+              className={buttonVariants({ variant: "default" })}
+            >
+              Edit Course
             </Link>
           </div>
         )}
       </div>
+
+      <div className="flex gap-2">
+        <Badge>
+          <BotIcon className="mr-1" /> {course.config.model}
+        </Badge>
+        <Badge>
+          <CalendarIcon className="mr-1" />{" "}
+          {format(course.createdAt ?? "", "MMM dd, yyyy")}
+        </Badge>
+      </div>
+
       <div className="flex justify-center">
-        <Card className="max-w-full lg:w-[60%]">
-          <CardContent className="p-4">
-            <PlateEditor
-              options={{ value: result.data.query.content }}
-              readOnly
-            />
-          </CardContent>
-        </Card>
+        <PlateEditor options={{ value: course.content }} readOnly />
       </div>
     </div>
   );

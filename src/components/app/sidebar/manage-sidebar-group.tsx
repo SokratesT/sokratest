@@ -1,5 +1,4 @@
 import {
-  SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -27,25 +26,23 @@ const ManageSidebarGroup = async () => {
   }
 
   return (
-    <SidebarContent>
-      <SidebarGroup>
-        <SidebarGroupLabel>Manage</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            {sidebarInstructorMenu.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                  <Link href={item.url}>
-                    <item.icon />
-                    <span>{item.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-    </SidebarContent>
+    <SidebarGroup className="p-0">
+      <SidebarGroupLabel>Manage</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {sidebarInstructorMenu.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild>
+                <Link href={item.url}>
+                  <item.icon />
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
   );
 };
 

@@ -85,8 +85,8 @@ const CourseForm = ({ course }: { course?: Course }) => {
     return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-3 gap-4">
-            <Card className="col-span-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <Card className="lg:col-span-2">
               <CardContent className="flex flex-col gap-4 p-6">
                 <FormField
                   control={form.control}

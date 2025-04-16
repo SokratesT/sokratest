@@ -6,13 +6,13 @@ const Placeholder = ({
   children,
   className,
   Icon = CircleHelpIcon,
+  size = 50,
 }: {
   children: React.ReactNode;
   className?: string;
   Icon?: LucideIcon;
+  size?: number;
 }): React.ReactNode => {
-  const size = 50;
-
   return (
     <Card className={cn(className, "flex h-full items-center justify-center")}>
       <CardHeader className="w-full">

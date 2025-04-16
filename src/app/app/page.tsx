@@ -19,8 +19,8 @@ const AppPage = async () => {
       </Suspense>
 
       <AppTourButton />
-      <div className="mt-20 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <div className="flex flex-col gap-4 lg:col-span-3">
+      <div className="mt-20 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-4">
+        <div className="flex flex-col gap-4 xl:col-span-3">
           <Suspense fallback={<Skeleton className="h-[86px] w-full" />}>
             <CoursePreview />
           </Suspense>

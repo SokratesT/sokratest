@@ -99,14 +99,16 @@ const AnnotationBlock = ({
                           </p>
                         </div>
 
-                        <div>
-                          <p className="text-muted-foreground text-xs">
-                            Citation
-                          </p>
-                          <p className="text-sm">
-                            {referenceAnnotation.metadata.citation}
-                          </p>
-                        </div>
+                        {referenceAnnotation.metadata.citation && (
+                          <div>
+                            <p className="text-muted-foreground text-xs">
+                              Citation
+                            </p>
+                            <p className="text-sm">
+                              {referenceAnnotation.metadata.citation}
+                            </p>
+                          </div>
+                        )}
 
                         {referenceAnnotation.metadata.externalUrl && (
                           <div className="pt-2">

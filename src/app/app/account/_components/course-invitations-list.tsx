@@ -1,14 +1,19 @@
+import { Placeholder } from "@/components/placeholders/placeholder";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUserCourseInvitations } from "@/db/queries/course-invitation";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
-import { BadgeCheck, BadgeX, ClipboardList } from "lucide-react";
+import { BadgeCheck, BadgeX, ClipboardList, SearchXIcon } from "lucide-react";
 import { CourseInvitationEntry } from "./course-invitation-entry";
 
 const CourseInvitationsList = async () => {
   const result = await getUserCourseInvitations();
 
   if (!result.success) {
-    return <span>You have no course invitations at this time.</span>;
+    return (
+      <Placeholder Icon={SearchXIcon} size={30}>
+        You have no course invitations at this time.
+      </Placeholder>
+    );
   }
 
   const invitations = result.data.query;
@@ -30,9 +35,9 @@ const CourseInvitationsList = async () => {
   ) => {
     if (filteredInvitations.length === 0) {
       return (
-        <div className="py-8 text-center">
-          <p className="text-muted-foreground">{emptyMessage}</p>
-        </div>
+        <Placeholder Icon={SearchXIcon} size={30}>
+          {emptyMessage}
+        </Placeholder>
       );
     }
 
