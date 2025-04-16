@@ -36,7 +36,6 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useCopyToClipboard } from "usehooks-ts";
 import { AnnotationBlock } from "./annotation-block";
 import { Markdown } from "./markdown";
 import { MessageEditor } from "./message-editor";
@@ -71,11 +70,10 @@ const MessageBlock = ({
   status: UseChatHelpers["status"];
   score?: ApiGetScoresResponseData;
 }) => {
-  const [, copy] = useCopyToClipboard();
   const [mode, setMode] = useState<"view" | "edit">("view");
 
   const handleCopy = async (text: string) => {
-    toast.promise(copy(text), {
+    toast.promise(navigator.clipboard.writeText(text), {
       loading: "Copying to clipboard...",
       success: "Copied to clipboard!",
       error: (error) => ({
