@@ -97,8 +97,8 @@ export const ROUTES = {
       },
     },
     chat: {
-      add: {
-        name: "New Chat",
+      root: {
+        name: "Chats",
         pathTemplate: "/app/chat/",
         getPath: function () {
           return makePath(this.pathTemplate);

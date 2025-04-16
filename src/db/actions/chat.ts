@@ -53,7 +53,7 @@ export const deleteChat = authActionClient
 
     await db.delete(chat).where(inArray(chat.id, ids));
 
-    revalidatePath(ROUTES.PRIVATE.chat.add.getPath());
+    revalidatePath(ROUTES.PRIVATE.chat.root.getPath());
     return { error: null };
   });
 
@@ -70,6 +70,6 @@ export const renameChat = authActionClient
   .action(async ({ parsedInput: { id, title } }) => {
     await db.update(chat).set({ title }).where(eq(chat.id, id));
 
-    revalidatePath(ROUTES.PRIVATE.chat.add.getPath());
+    revalidatePath(ROUTES.PRIVATE.chat.root.getPath());
     return { error: null };
   });
