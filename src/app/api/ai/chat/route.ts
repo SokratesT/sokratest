@@ -1,13 +1,8 @@
-import { generateTitleFromUserMessage } from "@/db/actions/ai-actions";
-import {
-  getTrailingMessageId,
-  saveChat,
-  saveMessages,
-} from "@/db/queries/ai-queries";
+import { getTrailingMessageId, saveMessages } from "@/db/queries/ai-queries";
 import { getSession } from "@/db/queries/auth";
 import { getCourseConfig } from "@/db/queries/course";
 import { getModel } from "@/lib/ai/models";
-import { getMostRecentUserMessage } from "@/lib/ai/utils";
+import { createNewChat, getMostRecentUserMessage } from "@/lib/ai/utils";
 import { createSocraticSystemPrompt } from "@/settings/prompts";
 import {
   type JSONValue,
@@ -41,7 +36,7 @@ export async function POST(request: Request) {
       return new Response("No active organization", { status: 400 });
     }
 
-    const { id, messages }: { id: string; messages: Array<Message> } =
+    const { id: chatId, messages }: { id: string; messages: Array<Message> } =
       await request.json();
 
     const result = await getCourseConfig(activeCourseId);
@@ -59,28 +54,18 @@ export async function POST(request: Request) {
     }
 
     if (!messages || messages.length === 1) {
-      const res = await generateTitleFromUserMessage({
+      createNewChat({
         message: userMessage.content,
+        chatId,
+        userId: session.user.id,
+        courseId: activeCourseId,
       });
-      const title = res?.data?.title;
-
-      if (title) {
-        await saveChat({
-          id,
-          userId: session.user.id,
-          courseId: activeCourseId,
-          title,
-        });
-      }
     }
 
-    const messageId = uuidv4();
-
-    // TODO: Save user messages
     await saveMessages({
       messages: [
         {
-          chatId: id,
+          chatId,
           id: userMessage.id,
           role: "user",
           parts: userMessage.parts,
@@ -91,18 +76,20 @@ export async function POST(request: Request) {
       ],
     });
 
+    const relevantChunks = await getRelevantChunks({
+      messages,
+      courseId: activeCourseId,
+      /* limit: courseConfig.config.maxReferences ?? 5, */
+      limit: 8,
+    });
+
+    const references = await getDocumentReferencesByIds(
+      relevantChunks.map((chunk) => chunk.documentId),
+    );
+
     return createDataStreamResponse({
       execute: async (dataStream) => {
-        const relevantChunks = await getRelevantChunks({
-          messages,
-          courseId: activeCourseId,
-          /* limit: courseConfig.config.maxReferences ?? 5, */
-          limit: 8,
-        });
-
-        const references = await getDocumentReferencesByIds(
-          relevantChunks.map((chunk) => chunk.documentId),
-        );
+        const assistantMessageId = uuidv4();
 
         references.forEach((reference) => {
           dataStream.writeMessageAnnotation(reference as unknown as JSONValue);
@@ -121,18 +108,21 @@ export async function POST(request: Request) {
           system: createSocraticSystemPrompt(
             // TODO: Handle this properly
             {
-              context: JSON.stringify(relevantChunks),
+              context: relevantChunks.map((chunk, i) => ({
+                documentId: String(i + 1),
+                text: chunk.text,
+              })),
               override: courseConfig.config.systemPrompt,
             },
           ),
           messages,
-          experimental_generateMessageId: () => messageId,
+          experimental_generateMessageId: () => assistantMessageId,
           experimental_transform: smoothStream({ chunking: "word" }),
           experimental_telemetry: {
             isEnabled: true,
             metadata: {
-              langfuseTraceId: messageId,
-              sessionId: id,
+              langfuseTraceId: assistantMessageId,
+              sessionId: chatId,
             },
             functionId: "stream-text",
           },
@@ -163,7 +153,7 @@ export async function POST(request: Request) {
                   messages: [
                     {
                       id: assistantId,
-                      chatId: id,
+                      chatId,
                       role: assistantMessage.role,
                       parts: assistantMessage.parts,
                       annotations: references ?? [],
