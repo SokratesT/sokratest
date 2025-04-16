@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/db/drizzle";
+import { member, user } from "@/db/schema/auth";
 import { courseMember } from "@/db/schema/course";
 import { auth } from "@/lib/auth";
 import {
@@ -13,7 +14,6 @@ import { ROUTES } from "@/settings/routes";
 import { and, count, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { member, user } from "../schema/auth";
 
 export const updateUserCourseRole = authActionClient
   .metadata({

@@ -1,8 +1,8 @@
 import { Placeholder } from "@/components/placeholders/placeholder";
+import { buttonVariants } from "@/components/ui/button";
 import { getUserChatsForActiveCourse } from "@/db/queries/chat";
 import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
-import { buttonVariants } from "../ui/button";
 import { ChatsList } from "./chats-list";
 
 const ChatsPreview = async () => {

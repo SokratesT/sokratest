@@ -1,9 +1,9 @@
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { memo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Badge } from "../ui/badge";
 import { CodeBlock } from "./code-block";
 
 const components: Partial<Components> = {

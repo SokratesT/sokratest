@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -11,7 +12,6 @@ import type { DocumentMetadataType } from "@/db/schema/document";
 import type { JSONValue } from "ai";
 import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
-import { Badge } from "../ui/badge";
 
 interface BaseAnnotation extends Record<string, JSONValue> {
   type: string;
