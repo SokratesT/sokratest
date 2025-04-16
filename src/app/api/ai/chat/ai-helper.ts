@@ -5,6 +5,7 @@ import { generateEmbedding } from "@/lib/ai/embedding";
 import { getModel } from "@/lib/ai/models";
 import { qdrant } from "@/qdrant/qdrant";
 import { qdrantCollections } from "@/qdrant/qdrant-constants";
+import { generateRagQueryPrompt } from "@/settings/prompts";
 import type { QdrantPoints } from "@/types/qdrant";
 import { type Message, generateText } from "ai";
 import { inArray } from "drizzle-orm";
@@ -71,7 +72,7 @@ export const getRelevantChunks = async ({
     model: getModel({ type: "small" }),
     messages,
     experimental_telemetry: { isEnabled: true },
-    system: `Briefly summarise the provided message history, putting special emphasis on the users latest message and particularly any questions they may have. The summary should be in the form of a question, and should be no longer than 20 words.`,
+    system: generateRagQueryPrompt,
   });
 
   console.log(`Generated query: ${generatedQuery.text}`);

@@ -2,9 +2,37 @@ export const createSocraticSystemPrompt = ({
   context,
   override,
 }: {
-  context: string;
+  context: {
+    documentId: string;
+    text: string;
+  }[];
   override?: string;
 }) => {
+  const contextString = context
+    .map((item) => `{"documentId": "${item.documentId}", text: "${item.text}"}`)
+    .join("\n\n");
+
+  const contextPrompt = `
+    ## Your knowledge base
+    Use the context below to base your interactions with the student on factual information that is relevant for their study course.
+    Use citations in your response, indicating which source you are referencing specifically. The context is in the following format:
+    
+    {
+      "documentId": "the ID of a document",
+      "text": "relevant text from the document"
+    }
+
+    Citations must be included by referencing the document id for parts of your response that are relevant to the corresponding text.
+    Inlcude citations like so: <cite:documentId> where documentId is the ID of the document you are referencing.
+    For example, if you are referencing a document with the ID "12345", you would include <cite:12345> in your response.
+
+    ## Context
+
+    ${contextString}
+  `;
+
+  console.log("Context Prompt: ", contextPrompt);
+
   let systemPrompt = `You are an AI-powered Socratic tutor specializing in sustainability education. Your goal is to help students develop a deep, critical understanding of sustainability concepts through a structured questioning approach that fosters higher-order thinking.
     Your role is not to simply provide answers but to challenge students' thinking, prompt critical reflection, and facilitate deep learning in a personalized way. The chatbot should guide students progressively from basic understanding to advanced analysis, evaluation, and synthesis, following a four-level questioning model that helps them to progess up Bloom's taxonomy.
 
@@ -73,8 +101,18 @@ export const createSocraticSystemPrompt = ({
     systemPrompt = override;
   }
 
-  return `${systemPrompt}
-  
-    ## Your knowledge base
-    Use the information below to base your interactions with the student on factual information that is relevant for their study course: ${context}`;
+  return `${systemPrompt} \n
+    ${contextPrompt}`;
 };
+
+export const generateChatTitlePrompt = `\n
+      - You will generate a short title based on the first message a user begins a conversation with
+      - Ensure it is not more than 100 characters long
+      - The title should be a summary of the user's message
+      - Do not use quotes, colons or line breaks
+      - Do not use markdown, just plain text
+      - Only return the title, nothing else`;
+
+export const generateRagQueryPrompt = ` \n
+  Briefly summarise the provided message history, putting special emphasis on the users latest message and particularly any questions they may have.
+  The summary should be in the form of a question, and should be no longer than 20 words.`;
