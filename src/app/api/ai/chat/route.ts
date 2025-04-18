@@ -110,7 +110,7 @@ export async function POST(request: Request) {
                 references.indexOf(
                   // biome-ignore lint/style/noNonNullAssertion: <explanation>
                   references.find((r) => r.id === chunk.documentId)!,
-                ),
+                ) + 1,
               ),
               text: chunk.text,
             })),
