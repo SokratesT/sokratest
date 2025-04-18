@@ -13,10 +13,55 @@ import type { DoclingData } from "@/types/docling";
 import type { ProcessDocumentTaskPayload } from "@/types/trigger";
 import { logger, task } from "@trigger.dev/sdk/v3";
 import nodeFetch from "node-fetch";
+import sharp from "sharp";
+
+// Define minimum resolution requirements
+const MIN_IMAGE_WIDTH = 100; // pixels
+const MIN_IMAGE_HEIGHT = 100; // pixels
+const MIN_SINGLE_DIMENSION = 50; // pixels
+
+/**
+ * Validates if an image meets minimum resolution requirements
+ * @param imageBuffer The image buffer to check
+ * @returns An object containing validation result and metadata
+ */
+async function validateImageResolution(imageBuffer: Buffer) {
+  try {
+    const metadata = await sharp(imageBuffer).metadata();
+    const width = metadata.width || 0;
+    const height = metadata.height || 0;
+
+    /* Images have to be at least 20 pixels in any dimension
+    and at least 100 pixels in either width or height
+    to be considered valid
+    MIN_SINGLE_DIMENSION ensures very narrow or flat images are not accepted */
+    const isValidResolution =
+      (width >= MIN_IMAGE_WIDTH || height >= MIN_IMAGE_HEIGHT) &&
+      width > MIN_SINGLE_DIMENSION &&
+      height > MIN_SINGLE_DIMENSION;
+
+    return {
+      isValid: isValidResolution,
+      width,
+      height,
+      metadata,
+    };
+  } catch (error) {
+    logger.error(
+      `Error validating image resolution: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    return {
+      isValid: false,
+      width: 0,
+      height: 0,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
 
 export const processDocumentTask = task({
   id: "process-document-task",
-  maxDuration: 600, // Stop executing after 600 secs (10 mins) of compute
+  maxDuration: 1200,
   run: async (payload: ProcessDocumentTaskPayload, { ctx }) => {
     const doclingApi = `${process.env.DOCLING_API}/v1alpha/convert/source`;
 
@@ -24,26 +69,50 @@ export const processDocumentTask = task({
       payload.documentRef,
     );
 
-    const doclingResponse = await logger.trace("process-document", async () =>
-      fetch(doclingApi, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": process.env.DOCLING_API_KEY || "",
-        },
-        body: JSON.stringify({
-          options: {
-            image_export_mode: "embedded",
-            do_ocr: false,
+    const doclingResponse = await logger.trace("process-document", async () => {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(
+          () => {
+            controller.abort();
           },
-          http_sources: [
-            {
-              url: presignedUrl,
+          15 * 60 * 1000,
+        ); // 15 minutes timeout
+
+        // Use the signal from the controller in the fetch call
+        const response = await nodeFetch(doclingApi, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.DOCLING_API_KEY || "",
+          },
+          body: JSON.stringify({
+            options: {
+              image_export_mode: "embedded",
+              do_ocr: false,
+              images_scale: 1.0,
+              pdf_backend: "pypdfium2",
             },
-          ],
-        }),
-      }),
-    );
+            http_sources: [
+              {
+                url: presignedUrl,
+              },
+            ],
+          }),
+          signal: controller.signal, // Connect the AbortController
+        });
+
+        // Clear the timeout to prevent memory leaks
+        clearTimeout(timeoutId);
+        return response;
+      } catch (error) {
+        logger.error(
+          `Docling API fetch error: ${error instanceof Error ? error.message : String(error)}`,
+        );
+
+        throw error;
+      }
+    });
 
     const processedDocument = (await doclingResponse.json()) as DoclingData;
 
@@ -81,10 +150,23 @@ export const processDocumentTask = task({
           continue;
         }
 
+        // Validate image resolution before uploading
+        const imageBuffer = Buffer.from(image.imageData, "base64");
+        const validationResult = await validateImageResolution(imageBuffer);
+
+        if (!validationResult.isValid) {
+          logger.warn(
+            `Image ${image.placeholder} has insufficient resolution (${validationResult.width}x${validationResult.height}). Minimum required: ${MIN_IMAGE_WIDTH}x${MIN_IMAGE_HEIGHT}px.`,
+          );
+          // You can decide whether to skip or continue with upload of small images
+          // Uncomment the following line to skip small images
+          continue;
+        }
+
         await s3Client.putObject(
           buckets.processed.name,
           `${payload.documentRef.id}/${image.placeholder}.${type}`,
-          Buffer.from(image.imageData, "base64"),
+          imageBuffer, // Using already created buffer
         );
       }
     });
