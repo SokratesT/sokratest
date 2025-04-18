@@ -67,8 +67,7 @@ const AnnotationBlock = ({
               const referenceAnnotation =
                 typedAnnotation as AnnotationReference;
               return (
-                // TODO: Add annotationId instead of this
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                // biome-ignore lint/suspicious/noArrayIndexKey:
                 <Popover key={i}>
                   <PopoverTrigger asChild>
                     <Button

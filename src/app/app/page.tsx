@@ -2,7 +2,6 @@ import { UserStats } from "@/components/app/user-stats";
 import { UserWelcome } from "@/components/app/user-welcome";
 import { ChatsPreview } from "@/components/chat/chats-preview";
 import { CoursePreview } from "@/components/courses/course-preview";
-import { AppTourButton } from "@/components/next-step/app-tour-button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -18,7 +17,7 @@ const AppPage = async () => {
         <UserWelcome />
       </Suspense>
 
-      <AppTourButton />
+      {/* <AppTourButton /> */}
       <div className="mt-20 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-4">
         <div className="flex flex-col gap-4 xl:col-span-3">
           <Suspense fallback={<Skeleton className="h-[86px] w-full" />}>

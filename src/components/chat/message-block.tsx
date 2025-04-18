@@ -29,11 +29,11 @@ import { CheckIcon, CopyIcon, PencilIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useCopyToClipboard } from "usehooks-ts";
 import { AnnotationBlock } from "./annotation-block";
 import { Markdown } from "./markdown";
 import { MessageEditor } from "./message-editor";
 import { ToolBlock } from "./tool-blocks/tool-block";
-import { useCopyToClipboard } from "usehooks-ts";
 
 interface ToolStream {
   [key: string]: {
