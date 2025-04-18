@@ -33,6 +33,7 @@ import { AnnotationBlock } from "./annotation-block";
 import { Markdown } from "./markdown";
 import { MessageEditor } from "./message-editor";
 import { ToolBlock } from "./tool-blocks/tool-block";
+import { useCopyToClipboard } from "usehooks-ts";
 
 interface ToolStream {
   [key: string]: {
@@ -64,9 +65,10 @@ const MessageBlock = ({
   score?: ApiGetScoresResponseData;
 }) => {
   const [mode, setMode] = useState<"view" | "edit">("view");
+  const [, copy] = useCopyToClipboard();
 
   const handleCopy = async (text: string) => {
-    toast.promise(navigator.clipboard.writeText(text), {
+    toast.promise(copy(text), {
       loading: "Copying to clipboard...",
       success: "Copied to clipboard!",
       error: (error) => ({
@@ -116,12 +118,26 @@ const MessageBlock = ({
   const variant = message.role === "user" ? "sent" : "received";
 
   const actionIcons = [
-    { icon: CopyIcon, type: "Copy", fn: () => handleCopy(message.content) },
+    {
+      icon: CopyIcon,
+      type: "Copy",
+      fn: () =>
+        handleCopy(
+          message.parts?.find((message) => message.type === "text")?.text ?? "",
+        ),
+    },
   ];
 
   const userActionIcons = [
     { icon: PencilIcon, type: "Edit", fn: handleModeChange },
-    { icon: CopyIcon, type: "Copy", fn: () => handleCopy(message.content) },
+    {
+      icon: CopyIcon,
+      type: "Copy",
+      fn: () =>
+        handleCopy(
+          message.parts?.find((message) => message.type === "text")?.text ?? "",
+        ),
+    },
   ];
 
   return (
