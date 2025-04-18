@@ -104,16 +104,18 @@ export async function POST(request: Request) {
           model: getModel({
             type: model.length > 0 ? model : "chat",
           }),
-          system: createSocraticSystemPrompt(
-            // TODO: Handle this properly
-            {
-              context: relevantChunks.map((chunk, i) => ({
-                documentId: String(i + 1),
-                text: chunk.text,
-              })),
-              override: courseConfig.config.systemPrompt,
-            },
-          ),
+          system: createSocraticSystemPrompt({
+            context: relevantChunks.map((chunk, i) => ({
+              documentId: String(
+                references.indexOf(
+                  // biome-ignore lint/style/noNonNullAssertion: <explanation>
+                  references.find((r) => r.id === chunk.documentId)!,
+                ),
+              ),
+              text: chunk.text,
+            })),
+            override: courseConfig.config.systemPrompt,
+          }),
           messages,
           experimental_generateMessageId: () => assistantMessageId,
           experimental_transform: smoothStream({ chunking: "word" }),
