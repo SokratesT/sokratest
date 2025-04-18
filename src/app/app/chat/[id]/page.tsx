@@ -29,7 +29,7 @@ const SingleChatPage = async (props: { params: Promise<{ id: string }> }) => {
   });
 
   return (
-    <div className="-m-2 sm:-m-6 h-[calc(100dvh-56px)]">
+    <div className="-my-6 -mx-2 sm:-mx-2 h-[calc(100dvh-56px)]">
       <Chat
         id={id}
         initialMessages={convertToUIMessages(messages)}

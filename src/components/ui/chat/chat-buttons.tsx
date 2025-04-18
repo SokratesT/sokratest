@@ -11,6 +11,7 @@ export const StopButton = ({
 }) => (
   <Button
     className="rounded-full"
+    size="icon"
     onClick={(event) => {
       event.preventDefault();
       stop();
