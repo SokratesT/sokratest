@@ -170,7 +170,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
                     render={({ field }) => (
                       <FormTextField
                         field={field}
-                        label="Syste, Prompt"
+                        label="System Prompt"
                         placeholder="Your custom system prompt..."
                         required={isFieldRequired(
                           courseInsertSchema,
@@ -189,14 +189,16 @@ const CourseForm = ({ course }: { course?: Course }) => {
                       <FormInputField
                         field={field}
                         label="Maximum References"
-                        placeholder="Your custom system prompt..."
+                        placeholder="5"
                         required={isFieldRequired(
                           courseInsertSchema,
                           field.name,
                         )}
                         inputType="number"
                         description="The maximum number of references that can be used in a
-                    response."
+                    response. Note that this is referring to the number of individual chunks received by the AI,
+                    which may stem from the same document. This therefore does not directly correlate to the
+                    number of references cited in the response."
                       />
                     )}
                   />
