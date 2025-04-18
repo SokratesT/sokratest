@@ -22,7 +22,10 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
             >
               <TooltipProvider>
                 {children}
-                <Toaster />
+                <Toaster
+                  mobilePosition="top-right"
+                  mobileOffset={{ top: "60px" }}
+                />
                 <UmamiTracker />
               </TooltipProvider>
             </ThemeProvider>

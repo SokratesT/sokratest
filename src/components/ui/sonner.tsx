@@ -1,10 +1,15 @@
 "use client";
 
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 
-const Toaster = ({ ...props }: ToasterProps) => {
+const Toaster = ({
+  mobilePosition = "bottom-right",
+  ...props
+}: { mobilePosition?: ToasterProps["position"] } & ToasterProps) => {
   const { theme = "system" } = useTheme();
+  const isMobile = useIsMobile();
 
   return (
     <Sonner
@@ -17,6 +22,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "--normal-border": "var(--border)",
         } as React.CSSProperties
       }
+      position={isMobile ? mobilePosition : props.position}
       {...props}
     />
   );
