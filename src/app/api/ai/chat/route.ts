@@ -114,6 +114,7 @@ export async function POST(request: Request) {
               ),
               text: chunk.text,
             })),
+            courseTitle: courseConfig.title,
             override: courseConfig.config.systemPrompt,
           }),
           messages,
