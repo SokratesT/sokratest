@@ -1,3 +1,4 @@
+import { ShinyText } from "@/components/chat/shiny-text";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, type buttonVariants } from "@/components/ui/button";
 import {
@@ -9,7 +10,6 @@ import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
 import type { LucideIcon } from "lucide-react";
 import { Children, cloneElement, isValidElement } from "react";
-import { MessageLoading } from "./message-loading";
 
 // ChatBubble
 const chatBubbleVariant = cva(
@@ -124,7 +124,8 @@ const ChatBubbleMessage = ({
   >
     {isLoading ? (
       <div className="flex items-center space-x-2">
-        <MessageLoading />
+        {/* <MessageLoading /> */}
+        <ShinyText>Generating response...</ShinyText>
       </div>
     ) : (
       children

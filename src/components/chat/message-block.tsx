@@ -9,7 +9,6 @@ import {
   ChatBubble,
   ChatBubbleAction,
   ChatBubbleActionWrapper,
-  ChatBubbleAvatar,
   ChatBubbleMessage,
 } from "@/components/ui/chat/chat-bubble";
 import {
@@ -26,13 +25,7 @@ import { cn } from "@/lib/utils";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import type { ChatRequestOptions, Message } from "ai";
 import type { ApiGetScoresResponseData } from "langfuse";
-import {
-  BotIcon,
-  CheckIcon,
-  CopyIcon,
-  PencilIcon,
-  UserIcon,
-} from "lucide-react";
+import { CheckIcon, CopyIcon, PencilIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -138,12 +131,12 @@ const MessageBlock = ({
         "max-w-full": variant === "received",
       })}
     >
-      {variant === "received" && (
+      {/* {variant === "received" && (
         <ChatBubbleAvatar
           className="mt-4"
           Fallback={message.role === "user" ? UserIcon : BotIcon}
         />
-      )}
+      )} */}
       <AnimatePresence>
         <motion.div
           initial={{ y: 5, opacity: 0 }}
@@ -152,7 +145,7 @@ const MessageBlock = ({
           data-role={message.role}
         >
           <ChatBubbleMessage
-            isLoading={message.parts?.length === 0}
+            isLoading={message.parts?.length === 0 && status === "streaming"}
             variant={variant}
             className={cn(
               {
@@ -173,8 +166,8 @@ const MessageBlock = ({
                     <AccordionItem value="item-1">
                       <AccordionTrigger className="py-2">
                         {message.content === ""
-                          ? "Thinking..."
-                          : "Thinking steps"}
+                          ? "Reasoning..."
+                          : "Reasoning steps"}
                       </AccordionTrigger>
                       <AccordionContent>
                         <Markdown className="font-mono text-accent-foreground text-sm">

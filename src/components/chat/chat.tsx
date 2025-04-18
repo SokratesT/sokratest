@@ -16,6 +16,7 @@ import { RefreshCcwIcon } from "lucide-react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { MessageBlock } from "./message-block";
+import { ShinyText } from "./shiny-text";
 
 const Chat = ({
   id,
@@ -83,6 +84,16 @@ const Chat = ({
             score={scores.find((s) => s.id === m.id)}
           />
         ))}
+        {status === "submitted" && (
+          <div className="sticky m-0 w-full max-w-full whitespace-pre-wrap break-words rounded-none bg-transparent p-4 text-foreground">
+            <ShinyText>Gathering information...</ShinyText>
+          </div>
+        )}
+        {status === "error" && (
+          <div className="sticky m-0 w-full max-w-full whitespace-pre-wrap break-words rounded-none bg-transparent p-4 text-foreground">
+            Something went wrong. Please try again.
+          </div>
+        )}
       </ChatMessageList>
 
       <form className="mx-auto flex w-full gap-2 bg-background px-4 pb-4 md:max-w-3xl md:pb-6">
