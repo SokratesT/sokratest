@@ -31,7 +31,7 @@ const InterceptingModal = ({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent
         className={cn(
-          "max-h-full w-full max-w-full overflow-auto lg:w-8/12",
+          "max-h-2/3 w-full max-w-full overflow-auto lg:w-8/12",
           className,
         )}
       >

@@ -128,8 +128,8 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
           <div className="space-y-2">
             <h3 className="font-semibold">Privacy Policy</h3>
             <p className="text-muted-foreground text-sm">
-              By signing up, you agree to our Privacy Policy. Please review it
-              before continuing.
+              By signing up, you agree to our Privacy Policy and Terms of Use.
+              Please review each before continuing.
             </p>
           </div>
 
@@ -140,9 +140,17 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
                 size: "sm",
               })}
               href={ROUTES.PUBLIC.privacyPolicy.getPath()}
-              target="_blank"
             >
               <FileTextIcon /> Review Privacy Policy
+            </Link>
+            <Link
+              className={buttonVariants({
+                variant: "outline",
+                size: "sm",
+              })}
+              href={ROUTES.PUBLIC.termsOfUse.getPath()}
+            >
+              <FileTextIcon /> Review Terms of Use
             </Link>
           </div>
 
@@ -152,7 +160,7 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
             render={({ field }) => (
               <FormSwitch
                 field={field}
-                description="Yes, I have read and understood the privacy policy for use of the SokratesT platform."
+                description="Yes, I have read, understood, and agree to the privacy policy and terms of use of the SokratesT platform."
               />
             )}
           />

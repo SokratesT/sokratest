@@ -64,6 +64,13 @@ export const ROUTES = {
         return makePath(this.pathTemplate);
       },
     },
+    termsOfUse: {
+      name: "Terms of Use",
+      pathTemplate: "/tou",
+      getPath: function () {
+        return makePath(this.pathTemplate);
+      },
+    },
     blog: {
       name: "Blog",
       pathTemplate: "/blog",
