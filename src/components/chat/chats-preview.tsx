@@ -22,17 +22,19 @@ const ChatsPreview = async () => {
         <h2 id="tour-history" className="font-semibold text-2xl tracking-tight">
           Your Recent Conversations
         </h2>
-        <NewChatButton id="tour-newChat" size="icon" variant="outline">
-          <PlusIcon />
-        </NewChatButton>
+        <div className="flex items-center gap-2">
+          <Link
+            href={ROUTES.PRIVATE.chat.root.getPath()}
+            className={buttonVariants({ variant: "outline" })}
+          >
+            Show all
+          </Link>
+          <NewChatButton id="tour-newChat" size="icon" variant="outline">
+            <PlusIcon />
+          </NewChatButton>
+        </div>
       </div>
       <ChatsList chats={chats} />
-      <Link
-        href={ROUTES.PRIVATE.chat.root.getPath()}
-        className={buttonVariants({ variant: "outline" })}
-      >
-        Show all
-      </Link>
     </div>
   );
 };

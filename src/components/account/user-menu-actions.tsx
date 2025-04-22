@@ -16,7 +16,7 @@ const UserMenuActions = () => {
       {sidebarUserMenu.map((item) => (
         <DropdownMenuItem key={item.url} asChild>
           <Link href={item.url} onClick={() => setOpenMobile(false)}>
-            <item.icon />
+            <item.icon className="hover:text-foreground" />
             {item.title}
           </Link>
         </DropdownMenuItem>

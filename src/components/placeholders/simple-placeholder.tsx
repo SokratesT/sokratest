@@ -3,7 +3,7 @@ import { type VariantProps, cva } from "class-variance-authority";
 import { CircleHelpIcon, type LucideIcon } from "lucide-react";
 
 const variants = cva(
-  "flex flex-col items-center gap-4 border p-4 text-center",
+  "flex flex-col items-center gap-4 rounded-sm border p-4 text-center",
   {
     variants: {
       variant: {
