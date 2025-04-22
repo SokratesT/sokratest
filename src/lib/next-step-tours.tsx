@@ -16,8 +16,8 @@ const nextStepTours: Tour[] = [
         title: "Welcome to Sokratesᵗ",
         content: (
           <>
-            Great to have you here! Let's take a quick tour through the app.
-            Click "Next" to proceed.
+            Great to have you here! Let&apos;s take a quick tour through the
+            app. Click &quot;Next&quot; to proceed.
           </>
         ),
         side: "right",
