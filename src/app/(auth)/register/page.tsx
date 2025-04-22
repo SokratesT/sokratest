@@ -11,6 +11,7 @@ import {
 import { getCourseInvitationById } from "@/db/queries/course-invitation";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
 import { ROUTES } from "@/settings/routes";
+import { CalendarXIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -48,7 +49,13 @@ const RegisterPage = async ({
       </CardHeader>
       <CardContent>
         {invitation ? (
-          <SignUpForm invitation={invitation} />
+          <div>
+            {invitation.expiresAt < new Date() ? (
+              <InvitationExpired />
+            ) : (
+              <SignUpForm invitation={invitation} />
+            )}
+          </div>
         ) : (
           <RegistrationDisabled />
         )}
@@ -70,6 +77,15 @@ const RegistrationDisabled = ({
     <SimplePlaceholder className={className} {...props}>
       Registration is currently restricted. If you have been invited, please
       check your invitation link.
+    </SimplePlaceholder>
+  );
+};
+
+const InvitationExpired = () => {
+  return (
+    <SimplePlaceholder Icon={CalendarXIcon}>
+      Your invitation has expired. Please contact the administrator for a new
+      invitation.
     </SimplePlaceholder>
   );
 };
