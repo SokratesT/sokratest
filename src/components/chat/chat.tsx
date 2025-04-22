@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { SendButton, StopButton } from "@/components/ui/chat/chat-buttons";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { deleteTrailingMessages } from "@/db/actions/ai-actions";
@@ -12,7 +10,6 @@ import {
 import { ROUTES } from "@/settings/routes";
 import { type Message, useChat } from "@ai-sdk/react";
 import type { ApiGetScoresResponseData } from "langfuse";
-import { RefreshCcwIcon } from "lucide-react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { MessageBlock } from "./message-block";
@@ -96,39 +93,17 @@ const Chat = ({
         )}
       </ChatMessageList>
 
-      <form className="mx-auto flex w-full gap-2 bg-background px-4 pb-4 md:max-w-3xl md:pb-6">
-        <div className="relative flex w-full flex-col gap-4">
-          <ChatInput
-            onChange={handleInputChange}
-            status={status}
-            handleSubmit={handleSubmit}
-            chatId={id}
-            input={input}
-            setInput={setInput}
-            placeholder="Type your message here..."
-          />
-
-          <div className="absolute bottom-0 flex w-fit flex-row justify-start p-2">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={handleReload}
-            >
-              <RefreshCcwIcon className="size-4" />
-              <span className="sr-only">Regenerate last message</span>
-            </Button>
-          </div>
-
-          <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">
-            {status === "streaming" || status === "submitted" ? (
-              <StopButton stop={stop} setMessages={setMessages} />
-            ) : (
-              <SendButton input={input} submitForm={handleSubmit} />
-            )}
-          </div>
-        </div>
-      </form>
+      <ChatInput
+        onChange={handleInputChange}
+        status={status}
+        handleSubmit={handleSubmit}
+        handleReload={handleReload}
+        setMessages={setMessages}
+        chatId={id}
+        input={input}
+        setInput={setInput}
+        placeholder="What do you want to learn?"
+      />
     </div>
   );
 };

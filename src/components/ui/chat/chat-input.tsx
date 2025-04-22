@@ -2,10 +2,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import type { UseChatHelpers } from "@ai-sdk/react";
-import type { ChatRequestOptions } from "ai";
+import type { ChatRequestOptions, Message } from "ai";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
+import { Button } from "../button";
+import { RefreshCcwIcon } from "lucide-react";
+import { SendButton, StopButton } from "./chat-buttons";
 
 interface ChatInputProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -17,6 +20,10 @@ interface ChatInputProps
     },
     chatRequestOptions?: ChatRequestOptions,
   ) => void;
+  handleReload: () => void;
+  setMessages: (
+    messages: Message[] | ((messages: Message[]) => Message[]),
+  ) => void;
   input: string;
   setInput: (value: string) => void;
 }
@@ -26,6 +33,8 @@ const ChatInput = ({
   status,
   chatId,
   handleSubmit,
+  handleReload,
+  setMessages,
   input,
   setInput,
   ...props
@@ -110,30 +119,55 @@ const ChatInput = ({
   ]);
 
   return (
-    <Textarea
-      data-slot="chat-input"
-      ref={textareaRef}
-      value={input}
-      onChange={handleInput}
-      className={cn(
-        "max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl bg-card pb-10 text-base!",
-        className,
-      )}
-      rows={props.rows ?? 2}
-      autoFocus
-      placeholder={props.placeholder}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" && !event.shiftKey) {
-          event.preventDefault();
+    <form className="mx-auto flex w-full gap-2 bg-background px-4 pb-4 md:max-w-3xl md:pb-6">
+      <div className="relative flex w-full flex-col gap-4">
+        <Textarea
+          data-slot="chat-input"
+          ref={textareaRef}
+          value={input}
+          onChange={handleInput}
+          className={cn(
+            "max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl bg-card pb-10 text-base!",
+            className,
+          )}
+          rows={props.rows ?? 2}
+          autoFocus
+          maxLength={5000}
+          placeholder={props.placeholder}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+              event.preventDefault();
 
-          if (isLoading) {
-            toast.error("Please wait for the current response to finish.");
-          } else {
-            submitForm();
-          }
-        }
-      }}
-    />
+              if (isLoading) {
+                toast.error("Please wait for the current response to finish.");
+              } else {
+                submitForm();
+              }
+            }
+          }}
+        />
+
+        <div className="absolute bottom-0 flex w-fit flex-row justify-start p-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={handleReload}
+          >
+            <RefreshCcwIcon className="size-4" />
+            <span className="sr-only">Regenerate last message</span>
+          </Button>
+        </div>
+
+        <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">
+          {status === "streaming" || status === "submitted" ? (
+            <StopButton stop={stop} setMessages={setMessages} />
+          ) : (
+            <SendButton input={input} submitForm={submitForm} />
+          )}
+        </div>
+      </div>
+    </form>
   );
 };
 
