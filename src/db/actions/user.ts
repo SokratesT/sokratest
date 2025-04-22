@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/db/drizzle";
+import { getUserPreferences } from "@/db/queries/users";
 import { member, user } from "@/db/schema/auth";
 import { courseMember } from "@/db/schema/course";
 import { auth } from "@/lib/auth";
@@ -99,3 +100,38 @@ export const createAdmin = async ({
     },
   });
 };
+
+export const completeTour = authActionClient
+  .metadata({
+    actionName: "completeTour",
+  })
+  .schema(
+    z.object({
+      tour: z.enum(["initialTour"]),
+      action: z.enum(["completed", "skipped"]),
+    }),
+  )
+  .action(async ({ parsedInput: { tour, action }, ctx: { userId } }) => {
+    const result = await getUserPreferences();
+
+    if (!result.success) {
+      return { error: "Failed to get user preferences" };
+    }
+
+    const preferences = result.data.query.preferences;
+
+    const updatedPreferences = {
+      ...preferences,
+      tours: {
+        ...preferences?.tours,
+        [tour]: action,
+      },
+    };
+
+    await db
+      .update(user)
+      .set({ preferences: updatedPreferences })
+      .where(eq(user.id, userId));
+
+    return { error: null };
+  });

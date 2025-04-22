@@ -1,5 +1,18 @@
 import type { InferSelectModel } from "drizzle-orm";
-import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  json,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
+
+export interface UserPreferencesType {
+  tours?: {
+    initialTour: "completed" | "skipped";
+  };
+}
 
 export const user = pgTable("user", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -13,6 +26,10 @@ export const user = pgTable("user", {
   banned: boolean("banned"),
   banReason: text("ban_reason"),
   banExpires: timestamp("ban_expires"),
+  preferences: json("preferences")
+    .notNull()
+    .$type<UserPreferencesType>()
+    .default({}),
 });
 
 export type User = InferSelectModel<typeof user>;

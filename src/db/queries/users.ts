@@ -15,6 +15,7 @@ import {
   not,
   or,
 } from "drizzle-orm";
+import { cache } from "react";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 // TODO: Centralise this in a shared file
@@ -250,3 +251,15 @@ export const getUserOrganizationMembershipById = async (id: User["id"]) => {
     },
   );
 };
+
+export const getUserPreferences = cache(async () => {
+  return withAuthQuery(async (session) => {
+    const [query] = await db
+      .select({ preferences: user.preferences })
+      .from(user)
+      .where(eq(user.id, session.session.userId))
+      .limit(1);
+
+    return { query };
+  }, {});
+});
