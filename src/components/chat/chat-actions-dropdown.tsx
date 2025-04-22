@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { deleteChat, renameChat } from "@/db/actions/chat";
+import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import { withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import { useParams, useRouter } from "next/navigation";
@@ -42,7 +43,10 @@ const ChatActionsDropdown = ({
     if (isConfirmed) {
       toast.promise(withToastPromise(deleteChat({ refs: [{ id: chatId }] })), {
         loading: "Deleting chat...",
-        success: "Chat deleted",
+        success: () => {
+          revalidatePathFromClient({ path: ROUTES.PRIVATE.root.getPath() });
+          return "Chat deleted";
+        },
         error: (error) => ({
           message: "Failed to delete chat",
           description: error.message,

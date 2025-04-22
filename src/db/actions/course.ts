@@ -138,6 +138,8 @@ export const setActiveCourse = authActionClient
       .update(session)
       .set({ activeCourseId: courseId })
       .where(eq(session.userId, userId));
+
+    revalidatePath(ROUTES.PRIVATE.root.getPath());
   });
 
 export const resetActiveCourse = authActionClient
@@ -149,4 +151,6 @@ export const resetActiveCourse = authActionClient
       .update(session)
       .set({ activeCourseId: undefined })
       .where(eq(session.userId, userId));
+
+    revalidatePath(ROUTES.PRIVATE.root.getPath());
   });
