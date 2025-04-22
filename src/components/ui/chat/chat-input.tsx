@@ -1,13 +1,13 @@
+import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import type { ChatRequestOptions, Message } from "ai";
+import { RefreshCcwIcon } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
-import { Button } from "../button";
-import { RefreshCcwIcon } from "lucide-react";
 import { SendButton, StopButton } from "./chat-buttons";
 
 interface ChatInputProps

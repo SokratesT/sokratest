@@ -12,6 +12,7 @@ import { type Message, useChat } from "@ai-sdk/react";
 import type { ApiGetScoresResponseData } from "langfuse";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
+import { ChatPlaceholder } from "./chat-placeholder";
 import { MessageBlock } from "./message-block";
 import { ShinyText } from "./shiny-text";
 
@@ -81,6 +82,7 @@ const Chat = ({
             score={scores.find((s) => s.id === m.id)}
           />
         ))}
+        {messages.length === 0 && <ChatPlaceholder />}
         {status === "submitted" && (
           <div className="sticky m-0 w-full max-w-full whitespace-pre-wrap break-words rounded-none bg-transparent p-4 text-foreground">
             <ShinyText>Gathering information...</ShinyText>
