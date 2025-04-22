@@ -21,7 +21,7 @@ import { ManageSidebarGroup } from "./manage-sidebar-group";
 
 const AppSidebar = async () => {
   return (
-    <Sidebar id="tour1-step1">
+    <Sidebar id="tour-sidebar">
       <SidebarHeader>
         <Link
           href={ROUTES.PRIVATE.root.getPath()}

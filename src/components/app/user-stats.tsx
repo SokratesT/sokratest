@@ -1,14 +1,20 @@
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getActiveOrganization, getSession } from "@/db/queries/auth";
 import { getActiveCourse } from "@/db/queries/course";
+import { ROUTES } from "@/settings/routes";
 import {
   BookMarkedIcon,
   Building2Icon,
   MailIcon,
+  SettingsIcon,
   UserIcon,
 } from "lucide-react";
+import Link from "next/link";
 
-const UserStats = async () => {
+const UserStats = async ({
+  showSettingsLink = false,
+}: { showSettingsLink?: boolean }) => {
   const activeOrganization = await getActiveOrganization();
   let activeCourse = null;
 
@@ -19,7 +25,19 @@ const UserStats = async () => {
   const session = await getSession();
 
   return (
-    <Card className="h-fit">
+    <Card className="relative h-fit" id="tour-account">
+      {showSettingsLink && (
+        <Link
+          href={ROUTES.PRIVATE.app.account.getPath()}
+          className={buttonVariants({
+            variant: "ghost",
+            size: "sm",
+            className: "absolute top-2 right-2 size-8 text-muted-foreground",
+          })}
+        >
+          <SettingsIcon />
+        </Link>
+      )}
       <CardContent className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <UserIcon className="text-secondary" />

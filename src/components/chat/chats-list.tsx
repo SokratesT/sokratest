@@ -11,17 +11,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { Chat } from "@/db/schema/chat";
+import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import { format } from "date-fns";
 import { MessagesSquareIcon, MoreHorizontalIcon } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
+import type { ComponentProps } from "react";
 import { ChatActionsDropdown } from "./chat-actions-dropdown";
 
-const ChatsList = ({ chats }: { chats: Chat[] }) => {
+const ChatsList = ({
+  chats,
+  ...props
+}: { chats: Chat[] } & ComponentProps<"div">) => {
   if (!chats.length) {
     return (
-      <Card className="border-dashed">
+      <Card className="border-dashed" {...props}>
         <CardHeader className="text-center">
           <CardTitle className="font-semibold text-xl">No chats yet</CardTitle>
           <CardDescription className="mt-4 flex flex-col items-center gap-4">
@@ -36,7 +41,13 @@ const ChatsList = ({ chats }: { chats: Chat[] }) => {
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div
+      className={cn(
+        "grid gap-4 sm:grid-cols-2 lg:grid-cols-3",
+        props.className,
+      )}
+      {...props}
+    >
       {chats.map((chat, i) => (
         <motion.div
           key={chat.id}

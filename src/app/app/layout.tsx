@@ -2,8 +2,10 @@ import { Header } from "@/components/app/header";
 import { AppSidebar } from "@/components/app/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { getSession } from "@/db/queries/auth";
+import { NextStepTours } from "@/lib/next-step-tours";
 import { ROUTES } from "@/settings/routes";
 import { redirect } from "next/navigation";
+import { NextStepProvider } from "nextstepjs";
 
 const AppLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getSession();
@@ -13,16 +15,21 @@ const AppLayout = async ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset className="max-h-screen">
-        <Header />
+    <NextStepProvider>
+      <SidebarProvider>
+        <AppSidebar />
 
-        <div className="z-10 mx-auto mt-14 flex w-full flex-1 flex-col px-2 py-6 md:px-6">
-          {children}
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+        <NextStepTours>
+          <SidebarInset className="max-h-screen">
+            <Header />
+
+            <div className="z-10 mx-auto mt-14 flex w-full flex-1 flex-col px-2 py-6 md:px-6">
+              {children}
+            </div>
+          </SidebarInset>
+        </NextStepTours>
+      </SidebarProvider>
+    </NextStepProvider>
   );
 };
 
