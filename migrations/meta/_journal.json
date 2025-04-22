@@ -15,6 +15,13 @@
       "when": 1744702552447,
       "tag": "0001_lazy_the_executioner",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1745329523596,
+      "tag": "0002_high_black_widow",
+      "breakpoints": true
     }
   ]
 }
