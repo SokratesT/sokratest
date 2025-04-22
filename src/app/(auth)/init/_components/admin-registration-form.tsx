@@ -97,7 +97,7 @@ export const AdminRegistrationForm = () => {
           render={({ field }) => (
             <FormPasswordField
               field={field}
-              placeholder="********"
+              placeholder="Password"
               label="Password"
               showTogglePassword
             />
@@ -110,7 +110,7 @@ export const AdminRegistrationForm = () => {
           render={({ field }) => (
             <FormPasswordField
               field={field}
-              placeholder="********"
+              placeholder="Password"
               label="Confirm Password"
               showTogglePassword
             />

@@ -66,7 +66,7 @@ const SignInForm = () => {
           render={({ field }) => (
             <FormPasswordField
               field={field}
-              placeholder="*******"
+              placeholder="Password"
               label="Password"
               showTogglePassword
             />

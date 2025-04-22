@@ -106,7 +106,7 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
           render={({ field }) => (
             <FormPasswordField
               field={field}
-              placeholder="*******"
+              placeholder="Password"
               label="Password"
               showTogglePassword
             />
@@ -118,7 +118,7 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
           render={({ field }) => (
             <FormPasswordField
               field={field}
-              placeholder="*******"
+              placeholder="Password"
               label="Confirm Password"
               showTogglePassword
             />
