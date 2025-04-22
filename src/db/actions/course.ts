@@ -53,7 +53,7 @@ export const createCourse = authActionClient
       });
 
       revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
-      return { error: null };
+      return { error: null, courseId: newCourse.id };
     },
   );
 

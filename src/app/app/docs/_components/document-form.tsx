@@ -13,7 +13,6 @@ import {
   documentUpdateSchema,
 } from "@/db/zod/document";
 import { withToastPromise } from "@/lib/utils";
-import { ROUTES } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -40,7 +39,7 @@ const DocumentForm = ({ document }: { document: Document }) => {
     toast.promise(withToastPromise(updateDocument(values)), {
       loading: "Updating document...",
       success: () => {
-        router.push(ROUTES.PRIVATE.documents.root.getPath());
+        router.back();
         return "Document updated successfully";
       },
       error: (error) => ({

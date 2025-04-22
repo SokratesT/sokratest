@@ -38,9 +38,8 @@ const CourseSwitcher = ({
       }),
     });
 
-    setOpenMobile(false);
-
     router.push(ROUTES.PRIVATE.root.getPath());
+    setOpenMobile(false);
   };
 
   return (

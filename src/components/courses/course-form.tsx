@@ -53,7 +53,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
         {
           loading: "Updating course...",
           success: () => {
-            router.push(ROUTES.PRIVATE.courses.root.getPath());
+            router.back();
             return "Course updated successfully";
           },
           error: (error) => ({
@@ -65,8 +65,10 @@ const CourseForm = ({ course }: { course?: Course }) => {
     } else {
       toast.promise(withToastPromise(createCourse(values)), {
         loading: "Creating course...",
-        success: () => {
-          router.push(ROUTES.PRIVATE.courses.root.getPath());
+        success: (result) => {
+          router.push(
+            ROUTES.PRIVATE.courses.view.getPath({ id: result.courseId }),
+          );
           return "Course created successfully";
         },
         error: (error) => ({

@@ -29,9 +29,9 @@ const OrganizationSwitcher = () => {
       })
       .then(() => {
         resetActiveCourse();
-        setOpenMobile(false);
         router.push(ROUTES.PRIVATE.root.getPath());
         toast.success(`Organization changed to ${organization?.name}`);
+        setOpenMobile(false);
       })
       .catch((error) => {
         toast.error(`Failed to change organization: ${error.message}`);
