@@ -5,6 +5,7 @@ import { memo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { CodeBlock } from "./code-block";
+import supersub from "remark-supersub";
 
 const components: Partial<Components> = {
   // @ts-expect-error
@@ -114,7 +115,7 @@ const components: Partial<Components> = {
   },
 };
 
-const remarkPlugins = [remarkGfm];
+const remarkPlugins = [remarkGfm, supersub];
 
 const NonMemoizedMarkdown = ({
   children,
