@@ -40,6 +40,7 @@ const CourseSwitcher = ({
 
     router.replace(ROUTES.PRIVATE.root.getPath());
     setOpenMobile(false);
+    router.refresh();
   };
 
   return (
