@@ -30,7 +30,7 @@ const teamList: TeamProps[] = [
     name: "Lars Lorenz",
     position: "Developer & Project Manager",
     description:
-      "Actively develops the SokratesT web application and manages the project's progress.",
+      "Actively develops the Sokratesᵗ web application and manages the project's progress.",
     socialNetworks: [
       {
         name: "Linkedin",
@@ -47,7 +47,7 @@ const teamList: TeamProps[] = [
     name: "Prof. Alexander Gerber",
     position: "Project Lead",
     description:
-      "Leads collaborative project efforts and applys SokratesT within his university courses.",
+      "Leads collaborative project efforts and applys Sokratesᵗ within his university courses.",
     socialNetworks: [
       {
         name: "Linkedin",
@@ -64,7 +64,7 @@ const teamList: TeamProps[] = [
     name: "Prof. Dr. Ulrich Pfeiffer",
     position: "Project Lead",
     description:
-      "Leads the psychological study, researching perception and impact of SokratesT.",
+      "Leads the psychological study, researching perception and impact of Sokratesᵗ.",
     socialNetworks: [
       {
         name: "Linkedin",

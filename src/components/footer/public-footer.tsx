@@ -11,7 +11,7 @@ const PublicFooter = () => {
           <div className="flex flex-col items-start gap-8">
             <div className="flex flex-col gap-2">
               <h2 className="max-w-xl text-left font-regular text-3xl tracking-tighter md:text-5xl">
-                SokratesT
+                Sokrates<sup>t</sup>
               </h2>
               <p className="max-w-lg text-left text-background/75 text-lg leading-relaxed tracking-tight">
                 Your personal tutor.

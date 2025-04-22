@@ -46,16 +46,16 @@ const BenefitsSection = () => {
       <div className="grid place-items-center lg:grid-cols-2 lg:gap-24">
         <div>
           <h2 className="mb-2 font-bold text-lg text-primary tracking-wider">
-            SokratesT
+            Sokrates<sup>t</sup>
           </h2>
 
           <h2 className="mb-4 font-bold text-3xl md:text-4xl">
             A new way to study
           </h2>
           <p className="mb-8 text-muted-foreground text-xl">
-            SokratesT leverages the latest technology to provide you with the a
-            unique learning experience, custom tailored to your university
-            courses.
+            Sokrates<sup>t</sup> leverages the latest technology to provide you
+            with the a unique learning experience, custom tailored to your
+            university courses.
           </p>
         </div>
 

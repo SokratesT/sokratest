@@ -6,7 +6,7 @@ export const nextStepTours: Tour[] = [
     steps: [
       {
         icon: <>👋</>,
-        title: "Welcome to SokratesT",
+        title: "Welcome to Sokratesᵗ",
         content: (
           <>
             This is your sidebar. You can reach all important content from here.

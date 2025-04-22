@@ -160,7 +160,7 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
             render={({ field }) => (
               <FormSwitch
                 field={field}
-                description="Yes, I have read, understood, and agree to the privacy policy and terms of use of the SokratesT platform."
+                description="Yes, I have read, understood, and agree to the privacy policy and terms of use of the Sokratesᵗ platform."
               />
             )}
           />

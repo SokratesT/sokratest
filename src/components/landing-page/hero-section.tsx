@@ -18,7 +18,9 @@ const HeroSection = () => {
             <span className="mr-2 text-primary">
               <Badge>New</Badge>
             </span>
-            <span> SokratesT is out now! </span>
+            <span>
+              Sokrates<sup>t</sup> is out now!{" "}
+            </span>
           </Badge>
 
           <div className="mx-auto max-w-screen-md text-center font-bold text-4xl md:text-6xl">
@@ -31,9 +33,9 @@ const HeroSection = () => {
           </div>
 
           <p className="mx-auto max-w-screen-sm text-muted-foreground text-xl">
-            Experience a new way of learning with SokratesT, the AI-powered
-            learning platform that helps you get more out of your learning
-            journey.
+            Experience a new way of learning with Sokrates<sup>t</sup>, the
+            AI-powered learning platform that helps you get more out of your
+            learning journey.
           </p>
 
           <div className="space-y-4 md:space-x-4 md:space-y-0">

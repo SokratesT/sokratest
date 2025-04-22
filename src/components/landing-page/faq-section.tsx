@@ -13,13 +13,13 @@ interface FAQProps {
 
 const FAQList: FAQProps[] = [
   {
-    question: "What is SokratesT?",
+    question: "What is Sokratesᵗ?",
     answer:
-      "SokratesT is an AI-powered tutor to help students study. Teachers upload upload course material, and the SokratesT Chatbot uses this information to improve its responses and help students learn.",
+      "Sokratesᵗ is an AI-powered tutor to help students study. Teachers upload upload course material, and the Sokratesᵗ Chatbot uses this information to improve its responses and help students learn.",
     value: "item-1",
   },
   {
-    question: "Can I use SokratesT now?",
+    question: "Can I use Sokratesᵗ now?",
     answer:
       "Currently the project is in development and not yet available for public use. However, you can follow the project on GitHub and social media to stay up to date with the latest developments.",
     value: "item-2",

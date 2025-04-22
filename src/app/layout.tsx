@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "SokratesT",
-  description: "Your AI Course Iutor",
+  description: "Your AI Course Tutor",
 };
 
 export default function RootLayout({
