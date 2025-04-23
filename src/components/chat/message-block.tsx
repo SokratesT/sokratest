@@ -4,28 +4,18 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import {
   ChatBubble,
   ChatBubbleAction,
   ChatBubbleActionWrapper,
   ChatBubbleMessage,
 } from "@/components/ui/chat/chat-bubble";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { voteMessage } from "@/db/actions/chat-message-vote";
 import type { Chat } from "@/db/schema/chat";
 import { cn } from "@/lib/utils";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import type { ChatRequestOptions, Message } from "ai";
 import type { ApiGetScoresResponseData } from "langfuse";
-import { CheckIcon, CopyIcon, PencilIcon } from "lucide-react";
+import { CopyIcon, PencilIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -33,6 +23,7 @@ import { useCopyToClipboard } from "usehooks-ts";
 import { AnnotationBlock } from "./annotation-block";
 import { Markdown } from "./markdown";
 import { MessageEditor } from "./message-editor";
+import { MessageRate } from "./message-rate";
 import { ToolBlock } from "./tool-blocks/tool-block";
 
 interface ToolStream {
@@ -76,35 +67,6 @@ const MessageBlock = ({
         description: error.message,
       }),
     });
-  };
-
-  const [optimisticScore, setOptimisticScore] = useState<
-    number | undefined | null
-  >(score?.value);
-
-  const handleVote = async (sentiment: number) => {
-    toast.promise(
-      voteMessage({
-        messageId: message.id,
-        sentiment,
-        chatId,
-      }),
-      {
-        loading: "Rating...",
-        success: () => {
-          setOptimisticScore(sentiment);
-          return "Thank you for your feedback!";
-        },
-        error: (error) => {
-          setOptimisticScore(score?.value);
-
-          return {
-            message: "Failed to rate",
-            description: error.message,
-          };
-        },
-      },
-    );
   };
 
   const handleModeChange = () => {
@@ -245,48 +207,11 @@ const MessageBlock = ({
                     onClick={fn}
                   />
                 ))}
-                {/** TODO: Add optimistic updates and refactor as separate component */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant={"ghost"} className="h-6 px-2 text-xs">
-                      {optimisticScore !== undefined ? (
-                        <span className="flex items-center gap-2">
-                          Rated <CheckIcon className="size-3" />
-                        </span>
-                      ) : (
-                        <span>Rate</span>
-                      )}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuLabel>Rate Response</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuCheckboxItem
-                      onClick={() => handleVote(10)}
-                      checked={optimisticScore === 10}
-                    >
-                      Excellent
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      onClick={() => handleVote(5)}
-                      checked={optimisticScore === 5}
-                    >
-                      Good
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      onClick={() => handleVote(-5)}
-                      checked={optimisticScore === -5}
-                    >
-                      Poor
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      onClick={() => handleVote(-10)}
-                      checked={optimisticScore === -10}
-                    >
-                      Terrible
-                    </DropdownMenuCheckboxItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <MessageRate
+                  chatId={chatId}
+                  messageId={message.id}
+                  score={score}
+                />
               </ChatBubbleActionWrapper>
             )}
           </ChatBubbleMessage>
