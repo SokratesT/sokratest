@@ -73,13 +73,13 @@ export const authActionClient = actionClient
     const session = await getSession();
 
     if (!session) {
-      throw new Error("Session not found!");
+      throw new ActionError("Session not found!");
     }
 
     const userId = session.session.userId;
 
     if (!userId) {
-      throw new Error("Session is not valid!");
+      throw new ActionError("Session is not valid!");
     }
 
     // Return the next middleware with `userId` value in the context
@@ -94,7 +94,7 @@ export const requireOrganizationMiddleware = createMiddleware<{
   const activeOrganizationId = session?.session.activeOrganizationId;
 
   if (!activeOrganizationId) {
-    throw new Error("No active organization");
+    throw new ActionError("No active organization");
   }
 
   return next({ ctx: { ...ctx, activeOrganizationId } });
@@ -108,7 +108,7 @@ export const requireCourseMiddleware = createMiddleware<{
   const activeCourseId = session?.session.activeCourseId;
 
   if (!activeCourseId) {
-    throw new Error("No active course");
+    throw new ActionError("No active course");
   }
 
   return next({ ctx: { ...ctx, activeCourseId } });
@@ -117,6 +117,7 @@ export const requireCourseMiddleware = createMiddleware<{
 export const checkPermissionMiddleware = createMiddleware<{
   ctx: { userId: User["id"] };
   metadata: {
+    actionName: string;
     permission?: {
       resource: Omit<CourseResource, "id"> | Omit<OrganizationResource, "id">;
       action: string;
@@ -126,7 +127,7 @@ export const checkPermissionMiddleware = createMiddleware<{
   const input = clientInput;
 
   if (!metadata.permission) {
-    throw new Error("No permission metadata provided");
+    throw new ActionError("No permission metadata provided");
   }
 
   const { resource, action } = metadata.permission;
@@ -137,7 +138,7 @@ export const checkPermissionMiddleware = createMiddleware<{
     if (metadata.permission.action === "create" && "activeCourseId" in ctx) {
       ids = [ctx.activeCourseId as string];
     } else {
-      throw new Error("Input must contain an ids array field");
+      throw new ActionError("Input must contain an ids array field");
     }
   } else if ("ids" in input && Array.isArray(input.ids)) {
     ids = input.ids as string[];
@@ -151,8 +152,17 @@ export const checkPermissionMiddleware = createMiddleware<{
     ids = [ctx.activeOrganizationId as string];
   } else if ("chatId" in input) {
     ids = [input.chatId as string];
+  } else if (
+    metadata.actionName === "updateUserPassword" &&
+    "userId" in input
+  ) {
+    if (ctx.userId === input.userId) {
+      return next({ ctx });
+    } else {
+      ids = [input.userId as string];
+    }
   } else {
-    throw new Error("Unknown input");
+    throw new ActionError("Unknown input");
   }
 
   // Check all permissions and wait for all promises to resolve
@@ -160,7 +170,7 @@ export const checkPermissionMiddleware = createMiddleware<{
   await Promise.all(
     ids.map(async (id) => {
       if (typeof id !== "string") {
-        throw new Error("ID must be a string");
+        throw new ActionError("ID must be a string");
       }
 
       const fullResource: Resource =
@@ -175,7 +185,7 @@ export const checkPermissionMiddleware = createMiddleware<{
             };
 
       if (!(await hasPermission(fullResource, action as Action))) {
-        throw new Error(`Permission denied for ID: ${id}`);
+        throw new ActionError(`Permission denied.`);
       }
     }),
   );
