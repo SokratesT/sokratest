@@ -55,8 +55,8 @@ const MessageRate = ({
   ];
 
   return (
-    <div className="flex w-full flex-col gap-0.5">
-      <span className="text-muted-foreground text-xs">
+    <div className="flex flex-col gap-0.5 rounded-sm border p-0.5">
+      <span className="w-full px-1 text-muted-foreground text-xs">
         Was this response helpful for your learning?
       </span>
       <div className="flex items-center gap-2">
@@ -80,7 +80,7 @@ const RateButton = ({
 }: { checked: boolean } & ComponentProps<"button">) => {
   return (
     <Button variant="ghost" className="h-5 px-1 text-xs" {...props}>
-      <span className="flex items-center gap-2">
+      <span className="flex items-center gap-1">
         {checked && <CheckIcon className="size-3" />}
         {props.children}
       </span>
