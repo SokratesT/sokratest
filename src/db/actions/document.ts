@@ -112,7 +112,7 @@ export const deleteDocumentInfo = authActionClient
         });
         await deletePrefixRecursively({
           bucket: buckets.processed.name,
-          prefix: `${file.prefix}/`,
+          prefix: `${file.id}/`,
         });
       }),
     );
