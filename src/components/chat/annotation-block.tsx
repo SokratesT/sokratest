@@ -94,8 +94,23 @@ const AnnotationBlock = ({
                           <p className="text-muted-foreground text-xs">Title</p>
                           <p className="font-medium text-sm">
                             {referenceAnnotation.title}
+                            {referenceAnnotation.metadata.chapterTitle &&
+                              ` | ${referenceAnnotation.metadata.chapterTitle}`}
+                            {referenceAnnotation.metadata.pageRange &&
+                              ` (${referenceAnnotation.metadata.pageRange})`}
                           </p>
                         </div>
+
+                        {referenceAnnotation.metadata.author && (
+                          <div>
+                            <p className="text-muted-foreground text-xs">
+                              Author(s)
+                            </p>
+                            <p className="text-sm">
+                              {referenceAnnotation.metadata.author}
+                            </p>
+                          </div>
+                        )}
 
                         {referenceAnnotation.metadata.citation && (
                           <div>

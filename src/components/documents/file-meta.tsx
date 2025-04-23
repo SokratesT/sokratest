@@ -9,11 +9,14 @@ import type { Document } from "@/db/schema/document";
 import { convert } from "convert";
 import { formatDistanceToNow } from "date-fns";
 import {
+  BookMarkedIcon,
   Calendar,
   Clock,
   ExternalLink,
   FileSpreadsheet,
   HardDrive,
+  MoveHorizontalIcon,
+  SignatureIcon,
   Star,
 } from "lucide-react";
 
@@ -134,6 +137,45 @@ const FileMeta = ({ document }: { document: Document }) => {
               >
                 View source
               </a>
+            </div>
+          )}
+
+          {document.metadata.chapterTitle && (
+            <div className="flex items-center gap-2">
+              <BookMarkedIcon className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Chapter:</span>
+              <span
+                className="truncate font-medium text-xs"
+                title={document.metadata.chapterTitle}
+              >
+                {document.metadata.chapterTitle}
+              </span>
+            </div>
+          )}
+
+          {document.metadata.pageRange && (
+            <div className="flex items-center gap-2">
+              <MoveHorizontalIcon className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Page Range:</span>
+              <span
+                className="truncate font-medium text-xs"
+                title={document.metadata.pageRange}
+              >
+                {document.metadata.pageRange}
+              </span>
+            </div>
+          )}
+
+          {document.metadata.author && (
+            <div className="flex items-center gap-2">
+              <SignatureIcon className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Author(s):</span>
+              <span
+                className="truncate font-medium text-xs"
+                title={document.metadata.author}
+              >
+                {document.metadata.author}
+              </span>
             </div>
           )}
         </div>

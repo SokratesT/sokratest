@@ -15,6 +15,9 @@ export interface DocumentMetadataType {
   relevance: "high" | "medium" | "low";
   citation?: string;
   externalUrl?: string;
+  pageRange?: string;
+  author?: string;
+  chapterTitle?: string;
 }
 
 export type DocumentStatus =
