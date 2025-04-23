@@ -108,6 +108,7 @@ const Chat = ({
         chatId={id}
         input={input}
         setInput={setInput}
+        stop={stop}
         placeholder="How can I help?"
         preferences={preferences}
       />

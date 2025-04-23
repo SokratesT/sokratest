@@ -1,3 +1,4 @@
+import { AppTourButton } from "@/components/next-step/app-tour-button";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -27,6 +28,7 @@ interface ChatInputProps
   ) => void;
   input: string;
   setInput: (value: string) => void;
+  stop: () => void;
   hasMessages: boolean;
   preferences: UserPreferencesType;
 }
@@ -40,6 +42,7 @@ const ChatInput = ({
   setMessages,
   input,
   setInput,
+  stop,
   hasMessages,
   preferences,
   ...props
