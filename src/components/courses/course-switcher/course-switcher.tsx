@@ -39,8 +39,12 @@ const CourseSwitcher = ({
     });
 
     router.replace(ROUTES.PRIVATE.root.getPath());
-    setOpenMobile(false);
+
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 500ms
+
     router.refresh();
+
+    setOpenMobile(false);
   };
 
   return (
