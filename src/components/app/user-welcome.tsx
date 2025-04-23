@@ -2,6 +2,8 @@ import { AppTourButton } from "@/components/next-step/app-tour-button";
 import { getSession } from "@/db/queries/auth";
 import { getUserPreferences } from "@/db/queries/users";
 import { CompassIcon } from "lucide-react";
+import { Button } from "../ui/button";
+import { AboutModal } from "./about-modal";
 
 const UserWelcome = async () => {
   const session = await getSession();
@@ -39,6 +41,11 @@ const UserWelcome = async () => {
         Welcome to your personal AI Tutoring System. Initiate a new conversation
         or continue one of your previous chats (if any).
       </p>
+      <AboutModal>
+        <Button size="sm" variant="outline">
+          About Sokratesᵗ
+        </Button>
+      </AboutModal>
     </div>
   );
 };
