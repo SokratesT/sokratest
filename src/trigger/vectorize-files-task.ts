@@ -85,7 +85,7 @@ export const vectorizeFilesTask = task({
       await delay(2000);
     }
 
-    const mergedChunks = markdown
+    /* const mergedChunks = markdown
       .map((chunk) => {
         if (chunk.type === "image") {
           const image = images.find((img) => img.name === chunk.fileReference);
@@ -102,7 +102,20 @@ export const vectorizeFilesTask = task({
         // For text chunks, return them unchanged
         return chunk;
       })
-      .filter(Boolean); // Remove any undefined values that might slip through
+      .filter(Boolean); // Remove any undefined values that might slip through */
+    markdown.map((chunk) => {
+      chunk;
+    });
+
+    const imageChunks = images.map((image) => ({
+      content: image.description,
+      depth: 0,
+      length: image.tokens,
+      title: image.name,
+      type: "image",
+    })) as MarkdownNode[];
+
+    const mergedChunks = [...markdown, ...imageChunks];
 
     const qdrantResponse = await generateEmbeddings({
       chunks: mergedChunks,
@@ -277,7 +290,7 @@ async function generateEmbeddings({
             file_type: chunk.fileType,
           }
         : {
-            source: "text" as const, // Note: changed from "text" to "markdown" to match your ChunkPayload type
+            source: "text" as const,
             file_reference: undefined,
             file_type: undefined,
           };
