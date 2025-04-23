@@ -9,9 +9,11 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { DocumentMetadataType } from "@/db/schema/document";
+import { cn } from "@/lib/utils";
 import type { JSONValue } from "ai";
 import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
+import type { ComponentProps } from "react";
 
 interface BaseAnnotation extends Record<string, JSONValue> {
   type: string;
@@ -35,13 +37,15 @@ function isBaseAnnotation(value: JSONValue): value is BaseAnnotation {
 
 const AnnotationBlock = ({
   annotations,
-}: { annotations: JSONValue[] | undefined }) => {
+  className,
+  ...props
+}: { annotations: JSONValue[] | undefined } & ComponentProps<"div">) => {
   if (!annotations || annotations.length <= 0) {
     return null;
   }
 
   return (
-    <div className="mt-4">
+    <div className={cn("mt-4", className)} {...props}>
       <p className="font-bold">References</p>
       <div className="flex flex-col gap-2">
         {annotations.map((annotation, i) => {

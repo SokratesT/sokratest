@@ -14,11 +14,13 @@ const MessageRate = ({
   messageId,
   chatId,
   score,
+  className,
+  ...props
 }: {
   messageId: ChatMessage["id"];
   chatId: Chat["id"];
   score?: ApiGetScoresResponseData;
-}) => {
+} & ComponentProps<"div">) => {
   const [optimisticScore, setOptimisticScore] = useState<
     number | undefined | null
   >(score?.value);
@@ -56,7 +58,13 @@ const MessageRate = ({
   ];
 
   return (
-    <div className="flex flex-col gap-0.5 rounded-sm border p-1.5 pt-0.5 pb-1">
+    <div
+      className={cn(
+        "flex flex-col gap-0.5 rounded-sm border p-1.5 pt-0.5 pb-1",
+        className,
+      )}
+      {...props}
+    >
       <span className="w-full px-1 text-muted-foreground text-xs">
         Was this response helpful for your learning?
       </span>
