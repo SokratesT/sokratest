@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
+import { useConfirm } from "@/components/ui/dialog/confirm-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,9 +12,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteDocumentInfo } from "@/db/actions/document";
 import { enqueueDocuments } from "@/db/actions/test-trigger";
 import type { Document } from "@/db/schema/document";
+import { handleDeleteDocuments } from "@/lib/client-actions/document";
 import { cn, withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -22,17 +23,6 @@ import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-
-const handleDelete = async (id: string) => {
-  toast.promise(withToastPromise(deleteDocumentInfo({ refs: [{ id }] })), {
-    loading: "Deleting document...",
-    success: "Document deleted",
-    error: (error) => ({
-      message: "Failed to delete document",
-      description: error.message,
-    }),
-  });
-};
 
 const handleEnqueueDocuments = async (id: string) => {
   toast.promise(withToastPromise(enqueueDocuments({ ids: [id] })), {
@@ -121,6 +111,8 @@ export const columns: ColumnDef<Document>[] = [
     cell: ({ row }) => {
       const document = row.original;
 
+      const confirm = useConfirm();
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -148,7 +140,12 @@ export const columns: ColumnDef<Document>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               variant="destructive"
-              onClick={() => handleDelete(document.id)}
+              onClick={async () =>
+                await handleDeleteDocuments({
+                  confirm,
+                  refs: [{ id: document.id }],
+                })
+              }
             >
               Delete Document
             </DropdownMenuItem>

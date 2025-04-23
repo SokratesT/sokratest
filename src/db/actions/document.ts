@@ -7,13 +7,17 @@ import {
   documentInsertSchema,
   documentUpdateSchema,
 } from "@/db/zod/document";
-import { deleteFileFromBucket } from "@/lib/s3/file-functions";
+import {
+  deleteFileFromBucket,
+  deletePrefixRecursively,
+} from "@/lib/s3/file-functions";
 import {
   authActionClient,
   checkPermissionMiddleware,
   requireCourseMiddleware,
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
+import { deleteChunksByDocumentId } from "@/qdrant/mutations";
 import { buckets } from "@/settings/buckets";
 import { ROUTES } from "@/settings/routes";
 import type { FileType } from "@/types/file";
@@ -101,6 +105,14 @@ export const deleteDocumentInfo = authActionClient
           id: file.id,
           prefix: file.prefix,
           type: file.fileType as FileType,
+        });
+        await deleteChunksByDocumentId({
+          courseId: file.courseId,
+          documentId: file.id,
+        });
+        await deletePrefixRecursively({
+          bucket: buckets.processed.name,
+          prefix: `${file.prefix}/`,
         });
       }),
     );

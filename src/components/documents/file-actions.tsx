@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 
 import { Button, buttonVariants } from "@/components/ui/button";
+import { useConfirm } from "@/components/ui/dialog/confirm-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,11 +25,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { deleteDocumentInfo } from "@/db/actions/document";
 import { enqueueDocuments, enqueueEmbeddings } from "@/db/actions/test-trigger";
 import type { Document } from "@/db/schema/document";
+import { handleDeleteDocuments } from "@/lib/client-actions/document";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
+import { useRouter } from "next/navigation";
 
 const FileActions = ({
   fileInfo,
@@ -39,6 +41,9 @@ const FileActions = ({
   filePath: string;
   className?: string;
 }) => {
+  const confirm = useConfirm();
+  const router = useRouter();
+
   const isProcessing =
     fileInfo.status === "generating-embedding" ||
     fileInfo.status === "processing-document";
@@ -144,9 +149,14 @@ const FileActions = ({
             <Button
               variant="destructive"
               size="sm"
-              onClick={() =>
-                deleteDocumentInfo({ refs: [{ id: fileInfo.id }] })
-              }
+              onClick={async () => {
+                await handleDeleteDocuments({
+                  confirm,
+                  refs: [{ id: fileInfo.id }],
+                });
+
+                router.replace(ROUTES.PRIVATE.documents.root.getPath());
+              }}
               className="flex items-center gap-1"
             >
               <Trash2 className="h-4 w-4" />

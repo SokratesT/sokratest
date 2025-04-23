@@ -78,6 +78,13 @@ export async function deletePrefixRecursively({
   bucket,
   prefix,
 }: { bucket: BucketName; prefix: string }) {
+  // Create bucket if it doesn't exist
+  const status = await createBucketIfNotExists(bucket);
+
+  if (status.status === "forbidden") {
+    throw new Error("Bucket is not allowed");
+  }
+
   // Create a promise that resolves when all objects are deleted
   return new Promise<void>((resolve, reject) => {
     const objects = s3Client.listObjects(bucket, prefix);
