@@ -27,6 +27,15 @@ export const createNewChat = async ({
     model: getModel({ type: "small" }),
     system: generateChatTitlePrompt,
     prompt: message,
+    experimental_telemetry: {
+      isEnabled: true,
+      metadata: {
+        sessionId: chatId,
+        courseId,
+        userId,
+        tags: ["system", "chat_title"],
+      },
+    },
   });
 
   await saveChat({

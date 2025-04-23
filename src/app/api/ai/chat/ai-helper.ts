@@ -1,4 +1,6 @@
 import { db } from "@/db/drizzle";
+import type { User } from "@/db/schema/auth";
+import type { Chat } from "@/db/schema/chat";
 import type { Course } from "@/db/schema/course";
 import { document } from "@/db/schema/document";
 import { generateEmbedding } from "@/lib/ai/embedding";
@@ -62,16 +64,28 @@ export const findRelevantContent = async ({
 export const getRelevantChunks = async ({
   messages,
   courseId,
+  chatId,
+  userId,
   limit,
 }: {
   messages: Message[];
   courseId: Course["id"];
+  chatId: Chat["id"];
+  userId: User["id"];
   limit: number;
 }) => {
   const generatedQuery = await generateText({
     model: getModel({ type: "small" }),
     messages,
-    experimental_telemetry: { isEnabled: true },
+    experimental_telemetry: {
+      isEnabled: true,
+      metadata: {
+        sessionId: chatId,
+        courseId,
+        userId,
+        tags: ["system", "rag_query"],
+      },
+    },
     system: generateRagQueryPrompt,
   });
 

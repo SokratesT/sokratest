@@ -79,6 +79,8 @@ export async function POST(request: Request) {
     const relevantChunks = await getRelevantChunks({
       messages,
       courseId: activeCourseId,
+      chatId,
+      userId: session.user.id,
       limit: Number(courseConfig.config.maxReferences) ?? 5,
     });
 
@@ -125,8 +127,10 @@ export async function POST(request: Request) {
             metadata: {
               langfuseTraceId: assistantMessageId,
               sessionId: chatId,
+              courseId: activeCourseId,
+              userId: session.user.id,
+              tags: ["user", "chat"],
             },
-            functionId: "stream-text",
           },
           /* maxSteps: 5,
           toolCallStreaming: true,

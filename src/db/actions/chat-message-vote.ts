@@ -19,9 +19,9 @@ export const voteMessage = authActionClient
     langfuseServer.score({
       id: messageId,
       traceId: messageId,
-      observationId: ctx.userId,
-      name: "user_feedback",
+      name: "rate_helpfulness",
       value: sentiment,
+      environment: process.env.NODE_ENV,
     });
 
     revalidatePath(`/chat/${chatId}`);
