@@ -3,6 +3,7 @@
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { deleteTrailingMessages } from "@/db/actions/ai-actions";
+import type { UserPreferencesType } from "@/db/schema/auth";
 import {
   type DataStreamDelta,
   useStreamingText,
@@ -15,7 +16,6 @@ import { v4 as uuidv4 } from "uuid";
 import { ChatPlaceholder } from "./chat-placeholder";
 import { MessageBlock } from "./message-block";
 import { ShinyText } from "./shiny-text";
-import type { UserPreferencesType } from "@/db/schema/auth";
 
 const Chat = ({
   id,

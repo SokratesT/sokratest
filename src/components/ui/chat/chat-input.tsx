@@ -1,6 +1,7 @@
 import { AppTourButton } from "@/components/next-step/app-tour-button";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import type { UserPreferencesType } from "@/db/schema/auth";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import type { UseChatHelpers } from "@ai-sdk/react";
@@ -10,7 +11,6 @@ import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
 import { SendButton, StopButton } from "./chat-buttons";
-import type { UserPreferencesType } from "@/db/schema/auth";
 
 interface ChatInputProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
