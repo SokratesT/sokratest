@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -42,6 +43,16 @@ const AboutModal = ({ children }: { children: ReactNode }) => {
               Profs. Gerber and Pfeiffer (HSRW). The Tutoring System itself has
               been developed technically by Lars Lorenz (also HSRW).
             </p>
+            <p>
+              If you have any questions or feedback, please do not hesitate to
+              reach out to us directly via{" "}
+              <Link
+                className="text-accent"
+                href="mailto:sokratest@hochschule-rhein-waal.de"
+              >
+                sokratest@hochschule-rhein-waal.de
+              </Link>
+            </p>
 
             <div className="mt-4 flex justify-center gap-4">
               <Link
@@ -52,6 +63,7 @@ const AboutModal = ({ children }: { children: ReactNode }) => {
                 target="_blank"
               >
                 About Sokratesᵗ
+                <ExternalLinkIcon className="size-3.5" />
               </Link>
               <Link
                 href="https://ki-edu-nrw.ruhr-uni-bochum.de/ueber-das-projekt/phase-2/praxis-transferprojekte/aktuelle-praxisprojekte/#sokratest"
@@ -59,6 +71,7 @@ const AboutModal = ({ children }: { children: ReactNode }) => {
                 target="_blank"
               >
                 About KI:edu.nrw
+                <ExternalLinkIcon className="size-3.5" />
               </Link>
             </div>
           </div>
