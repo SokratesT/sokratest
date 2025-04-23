@@ -123,12 +123,7 @@ export const completeTour = authActionClient
     const updatedPreferences = {
       ...preferences,
       tours: {
-        initialTour: (preferences?.tours?.initialTour ?? "skipped") as
-          | "completed"
-          | "skipped",
-        chatTour: (preferences?.tours?.chatTour ?? "skipped") as
-          | "completed"
-          | "skipped",
+        ...preferences.tours,
         [tour]: action,
       },
     };
