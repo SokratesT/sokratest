@@ -35,32 +35,34 @@ const ViewCoursePage = async ({
   return (
     <div className="flex flex-col gap-14">
       <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          {course.title}
-        </h4>
-        {hasCourseEditPermission && (
-          <div className="flex gap-2">
-            <Link
-              href={ROUTES.PRIVATE.courses.members.getPath({ id })}
-              className={buttonVariants({ variant: "default" })}
-            >
-              Manage Users
-            </Link>
+        <div className="flex w-full flex-wrap justify-between gap-4">
+          <h4 className="w-fit font-regular text-3xl tracking-tighter md:text-5xl">
+            {course.title}
+          </h4>
+          {hasCourseEditPermission && (
+            <div className="flex gap-2">
+              <Link
+                href={ROUTES.PRIVATE.courses.members.getPath({ id })}
+                className={buttonVariants({ variant: "default" })}
+              >
+                Manage Users
+              </Link>
 
-            <Link
-              href={ROUTES.PRIVATE.documents.add.getPath()}
-              className={buttonVariants({ variant: "default" })}
-            >
-              Add Resources
-            </Link>
-            <Link
-              href={ROUTES.PRIVATE.courses.edit.getPath({ id: course.id })}
-              className={buttonVariants({ variant: "default" })}
-            >
-              Edit Course
-            </Link>
-          </div>
-        )}
+              <Link
+                href={ROUTES.PRIVATE.documents.add.getPath()}
+                className={buttonVariants({ variant: "default" })}
+              >
+                Add Resources
+              </Link>
+              <Link
+                href={ROUTES.PRIVATE.courses.edit.getPath({ id: course.id })}
+                className={buttonVariants({ variant: "default" })}
+              >
+                Edit Course
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="flex gap-2">

@@ -43,7 +43,7 @@ const AnnotationBlock = ({
   return (
     <div className="mt-4">
       <p className="font-bold">References</p>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-col gap-2">
         {annotations.map((annotation, i) => {
           // FIXME: Bit awkward. Check if there's a better way to do this.
 
@@ -71,7 +71,7 @@ const AnnotationBlock = ({
                 <Popover key={i}>
                   <PopoverTrigger asChild>
                     <Button
-                      className="group max-w-[200px] truncate px-2 text-left text-sm"
+                      className="group w-fit truncate px-2 text-left text-sm"
                       variant="outline"
                     >
                       <Badge
@@ -86,7 +86,7 @@ const AnnotationBlock = ({
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent
-                    className="w-full max-w-[350px] p-4"
+                    className="w-full max-w-[400px] p-4"
                     align="start"
                   >
                     <ScrollArea className="size-full pr-2">
