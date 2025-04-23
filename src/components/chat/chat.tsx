@@ -96,6 +96,7 @@ const Chat = ({
       </ChatMessageList>
 
       <ChatInput
+        hasMessages={messages.length > 0}
         onChange={handleInputChange}
         status={status}
         handleSubmit={handleSubmit}

@@ -26,6 +26,7 @@ interface ChatInputProps
   ) => void;
   input: string;
   setInput: (value: string) => void;
+  hasMessages: boolean;
 }
 
 const ChatInput = ({
@@ -37,6 +38,7 @@ const ChatInput = ({
   setMessages,
   input,
   setInput,
+  hasMessages,
   ...props
 }: ChatInputProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -148,15 +150,17 @@ const ChatInput = ({
         />
 
         <div className="absolute bottom-0 flex w-fit flex-row justify-start p-2">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={handleReload}
-          >
-            <RefreshCcwIcon className="size-4" />
-            <span className="sr-only">Regenerate last message</span>
-          </Button>
+          {hasMessages && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={handleReload}
+            >
+              <RefreshCcwIcon className="size-4" />
+              <span className="sr-only">Regenerate last message</span>
+            </Button>
+          )}
         </div>
 
         <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">
