@@ -36,8 +36,8 @@ const UserWelcome = async () => {
         </AppTourButton>
       </div>
       <p className="text-muted-foreground">
-        Welcome to your AI learning assistant. Start a conversation or continue
-        where you left off.
+        Welcome to your personal AI Tutoring System. Initiate a new conversation
+        or continue one of your previous chats (if any).
       </p>
     </div>
   );

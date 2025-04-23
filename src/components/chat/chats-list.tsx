@@ -30,11 +30,11 @@ const ChatsList = ({
         <CardHeader className="text-center">
           <CardTitle className="font-semibold text-xl">No chats yet</CardTitle>
           <CardDescription className="mt-4 flex flex-col items-center gap-4">
-            Start a new chat to begin your learning journey
+            Let's begin our conversation by starting a "New Chat"
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex justify-center">
-          <NewChatButton variant="outline">Start Learning</NewChatButton>
+          <NewChatButton variant="outline">New Chat</NewChatButton>
         </CardFooter>
       </Card>
     );

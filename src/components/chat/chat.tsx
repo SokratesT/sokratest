@@ -105,7 +105,7 @@ const Chat = ({
         chatId={id}
         input={input}
         setInput={setInput}
-        placeholder="What do you want to learn?"
+        placeholder="How can I help?"
       />
     </div>
   );

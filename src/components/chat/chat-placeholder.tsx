@@ -1,26 +1,26 @@
+"use client";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { authClient } from "@/lib/auth-client";
 import { Bot } from "lucide-react";
-// Assuming you have a way to get the current user, e.g., a hook
-// import { useCurrentUser } from "@/hooks/use-current-user";
+import { useEffect, useState } from "react";
 
 const welcomeMessages = [
-  "I'm ready to help you learn. What topic are you interested in today?",
-  "Let's explore something new together. Ask me anything!",
-  "Your learning journey continues here. How can I assist you right now?",
-  "I'm here to support your studies. What challenge can we tackle?",
-  "Ready to dive into some knowledge? Let me know what's on your mind.",
+  "Let me support you on your learning journey. I am ready for you to initiate our conversation.",
+  "Let me support you on your learning journey. What challenge can we tackle?",
 ];
 
 const ChatPlaceholder = () => {
-  // const currentUser = useCurrentUser(); // Replace with your actual user hook/data
   const session = authClient.useSession();
 
   const userName = session.data?.user.name.split(" ")[0] ?? "user";
 
-  // Select a random message
-  const randomIndex = Math.floor(Math.random() * welcomeMessages.length);
-  const message = welcomeMessages[randomIndex];
+  const [message, setMessage] = useState<string>();
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * welcomeMessages.length);
+    setMessage(welcomeMessages[randomIndex]);
+  }, []);
 
   return (
     <div className="flex h-full flex-col items-center justify-center p-4">
