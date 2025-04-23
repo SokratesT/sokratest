@@ -30,7 +30,7 @@ type AuthQueryOptions = {
 };
 
 // Define error codes for better error handling
-export enum AuthErrorCode {
+enum AuthErrorCode {
   NOT_AUTHENTICATED = "NOT_AUTHENTICATED",
   NO_ACTIVE_ORGANIZATION = "NO_ACTIVE_ORGANIZATION",
   NO_ACTIVE_COURSE = "NO_ACTIVE_COURSE",
@@ -39,7 +39,7 @@ export enum AuthErrorCode {
 }
 
 // Define a structured error response type
-export type AuthError = {
+type AuthError = {
   code: AuthErrorCode;
   message: string;
   context?: Record<string, unknown>;
