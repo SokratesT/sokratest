@@ -39,14 +39,6 @@ export async function saveChat({
   }
 }
 
-export async function getChatById({ id }: { id: string }) {
-  return withAuthQuery(async () => {
-    const [query] = await db.select().from(chat).where(eq(chat.id, id));
-
-    return { query };
-  }, {});
-}
-
 export async function saveMessages({
   messages,
 }: { messages: Array<ChatMessage> }) {

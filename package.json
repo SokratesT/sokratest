@@ -121,7 +121,6 @@
     "langfuse-vercel": "^3.37.2",
     "llama-tokenizer-js": "^1.2.2",
     "llamaindex": "^0.10.2",
-    "llm-chunk": "^0.0.1",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.503.0",
     "minio": "^8.0.5",

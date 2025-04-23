@@ -1,5 +1,4 @@
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { toast } from "sonner";
 import { z } from "zod";
 
 export function getErrorMessage(err: unknown) {
@@ -17,9 +16,4 @@ export function getErrorMessage(err: unknown) {
   } else {
     return unknownError;
   }
-}
-
-export function showErrorToast(err: unknown) {
-  const errorMessage = getErrorMessage(err);
-  return toast.error(errorMessage);
 }

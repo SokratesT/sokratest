@@ -121,9 +121,3 @@ export function getErrorMessage(err: unknown) {
     return unknownError;
   }
 }
-
-export function showErrorToast(err: unknown) {
-  const errorMessage = getErrorMessage(err);
-
-  return toast.error(errorMessage);
-}
