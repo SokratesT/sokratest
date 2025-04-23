@@ -176,7 +176,10 @@ const MessageBlock = ({
               </div>
             ))}
 
-            <AnnotationBlock annotations={message.annotations} />
+            <AnnotationBlock
+              annotations={message.annotations}
+              id="ai-annotations"
+            />
             {message.role === "user" && (
               <ChatBubbleActionWrapper
                 variant="sent"
@@ -211,6 +214,7 @@ const MessageBlock = ({
                   chatId={chatId}
                   messageId={message.id}
                   score={score}
+                  id="ai-message-rate"
                 />
               </ChatBubbleActionWrapper>
             )}
