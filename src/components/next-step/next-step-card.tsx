@@ -32,29 +32,29 @@ const NextStepCard = ({
       </CardHeader>
 
       <CardContent>{step.content}</CardContent>
-      <CardFooter className="flex justify-end gap-2">
-        {currentStep !== 0 && (
-          <Button size="sm" onClick={prevStep}>
-            Previous
+      <CardFooter className="flex justify-between gap-2">
+        {step.showSkip && currentStep + 1 !== totalSteps && (
+          <Button size="sm" variant="ghost" onClick={skipTour}>
+            Skip
           </Button>
         )}
-        {currentStep + 1 < totalSteps && (
-          <>
+        <div className="flex w-full justify-end gap-2">
+          {currentStep !== 0 && (
+            <Button size="sm" variant="outline" onClick={prevStep}>
+              Previous
+            </Button>
+          )}
+          {currentStep + 1 < totalSteps && (
             <Button size="sm" onClick={nextStep}>
               Next
             </Button>
-            {step.showSkip && (
-              <Button size="sm" variant="outline" onClick={skipTour}>
-                Skip
-              </Button>
-            )}
-          </>
-        )}
-        {currentStep + 1 === totalSteps && (
-          <Button size="sm" onClick={skipTour}>
-            Finish
-          </Button>
-        )}
+          )}
+          {currentStep + 1 === totalSteps && (
+            <Button size="sm" onClick={skipTour}>
+              Finish
+            </Button>
+          )}
+        </div>
       </CardFooter>
     </Card>
   );

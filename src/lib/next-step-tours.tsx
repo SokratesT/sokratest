@@ -57,8 +57,8 @@ const nextStepTours: Tour[] = [
         title: "Chat history",
         content: (
           <>
-            Your past chats will appear here. To keep things organised, you can
-            delete and rename chats.
+            Your previous chats will appear here. To keep the list organised,
+            you can delete or rename chats.
           </>
         ),
         side: "top",
@@ -100,13 +100,18 @@ const nextStepTours: Tour[] = [
       },
       {
         icon: null,
-        title: "Thats it!",
+        title: "You are all set!",
         content: (
           <>
-            Now go and have fun on your learning journey! If you have any
-            feedback for us, we would love to hear it during the next course
-            session, or simply send an email to{" "}
-            <Link href="mailto:sokratest@hochschule-rhein-waal.de">
+            Enjoy the AI Tutoring System as your companion on your learning
+            journey — available 24/7. The project team is also looking forward
+            to potential feedback of yours about your experiences in using the
+            system.
+            <br />
+            <Link
+              className="text-muted-foreground text-sm"
+              href="mailto:sokratest@hochschule-rhein-waal.de"
+            >
               sokratest@hochschule-rhein-waal.de
             </Link>
           </>
