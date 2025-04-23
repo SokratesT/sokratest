@@ -17,7 +17,7 @@ import type { Document } from "@/db/schema/document";
 import { handleDeleteDocuments } from "@/lib/client-actions/document";
 import { cn, withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Row } from "@tanstack/react-table";
 import { convert } from "convert";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
@@ -108,50 +108,46 @@ export const columns: ColumnDef<Document>[] = [
   {
     id: "actions",
     size: 32,
-    cell: ({ row }) => {
-      const document = row.original;
-
-      const confirm = useConfirm();
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="size-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <Link
-              href={ROUTES.PRIVATE.documents.view.getPath({ id: document.id })}
-            >
-              <DropdownMenuItem>View Document</DropdownMenuItem>
-            </Link>
-            <Link
-              href={ROUTES.PRIVATE.documents.edit.getPath({ id: document.id })}
-            >
-              <DropdownMenuItem>Edit Document</DropdownMenuItem>
-            </Link>
-            <DropdownMenuItem
-              onClick={() => handleEnqueueDocuments(document.id)}
-            >
-              Process Document
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={async () =>
-                await handleDeleteDocuments({
-                  confirm,
-                  refs: [{ id: document.id }],
-                })
-              }
-            >
-              Delete Document
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => <ActionCell row={row} />,
   },
 ];
+
+const ActionCell = ({ row }: { row: Row<Document> }) => {
+  const document = row.original;
+
+  const confirm = useConfirm();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="size-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="size-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <Link href={ROUTES.PRIVATE.documents.view.getPath({ id: document.id })}>
+          <DropdownMenuItem>View Document</DropdownMenuItem>
+        </Link>
+        <Link href={ROUTES.PRIVATE.documents.edit.getPath({ id: document.id })}>
+          <DropdownMenuItem>Edit Document</DropdownMenuItem>
+        </Link>
+        <DropdownMenuItem onClick={() => handleEnqueueDocuments(document.id)}>
+          Process Document
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          variant="destructive"
+          onClick={async () =>
+            await handleDeleteDocuments({
+              confirm,
+              refs: [{ id: document.id }],
+            })
+          }
+        >
+          Delete Document
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
