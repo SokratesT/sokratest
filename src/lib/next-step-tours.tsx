@@ -133,8 +133,9 @@ const nextStepTours: Tour[] = [
         title: "Chat",
         content: (
           <>
-            You got your first response! Let&apos;s take a quick tour through
-            the chat interface. Click &quot;Next&quot; to proceed.
+            Now that you have received your first response, you may want to take
+            a quick tour around the chat interface. Click &quot;Next&quot; to
+            proceed.
           </>
         ),
         showControls: true,
@@ -147,9 +148,15 @@ const nextStepTours: Tour[] = [
         title: "References",
         content: (
           <>
-            The response includes references to course material the AI deemed
-            relevant. Note that not all material indicated here may be directly
-            cited by the AI, but all of it is used to guide the response.
+            A response usually includes references to course material that the
+            Tutoring System considered particularly relevant. Since these
+            references are automatically retrieved, please note that not all
+            referenced material is necessarily relevant. For technical reasons,
+            these references furthermore do not yet adhere to common citation
+            standards. The system may cite some sources in verbatim without
+            indicating so in the text. In any case, if the system references
+            material, it has definitely also used that material to generate the
+            response.
           </>
         ),
         // selector: "#ai-annotations",
@@ -165,9 +172,9 @@ const nextStepTours: Tour[] = [
         title: "Rate responses",
         content: (
           <>
-            Please rate the responses you received by using the buttons below.
-            This will help us improve the AI Tutor in the future. Note that
-            rating does not have a direct impact on the current chat.
+            Please assess each response you receive by using the buttons below.
+            This will help to improve the Tutoring System, while it will not
+            have a direct impact on your current chat.
           </>
         ),
         // selector: "#ai-message-rate",
