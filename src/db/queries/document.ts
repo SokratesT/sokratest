@@ -46,7 +46,12 @@ export const getActiveCourseDocuments = async (
       const [rowCount] = await db
         .select({ count: count() })
         .from(document)
-        .where(ilike(document.title, `%${search}%`));
+        .where(
+          and(
+            ilike(document.title, `%${search}%`),
+            eq(document.courseId, session.session.activeCourseId),
+          ),
+        );
 
       return { query, rowCount };
     },
