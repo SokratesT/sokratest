@@ -1,12 +1,6 @@
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSession } from "@/db/queries/auth";
 import { getCourseById } from "@/db/queries/course";
 import { ROUTES } from "@/settings/routes";
@@ -34,22 +28,22 @@ const CoursePreview = async () => {
 
   return (
     <Card>
-      <CardHeader>
-        <p className="text-muted-foreground text-xs">Active Course</p>
-        <CardTitle className="flex items-center gap-2">
-          <BookMarkedIcon />
-          {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>{description}</CardContent>
-      <CardFooter>
+      <CardHeader className="flex justify-between">
+        <div className="flex flex-col gap-1">
+          <p className="text-muted-foreground text-xs">Active Course</p>
+          <CardTitle className="flex items-center gap-2">
+            <BookMarkedIcon className="size-5" />
+            {title}
+          </CardTitle>
+        </div>
         <Link
           href={ROUTES.PRIVATE.courses.view.getPath({ id })}
-          className={buttonVariants({ variant: "default" })}
+          className={buttonVariants({ variant: "outline", size: "sm" })}
         >
-          More
+          About the course
         </Link>
-      </CardFooter>
+      </CardHeader>
+      <CardContent>{description}</CardContent>
     </Card>
   );
 };
