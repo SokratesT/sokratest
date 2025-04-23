@@ -10,8 +10,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { CourseInvitationsList } from "./_components/course-invitations-list";
 import { ChangePasswordForm } from "./_components/change-password-form";
+import { CourseInvitationsList } from "./_components/course-invitations-list";
 
 export const metadata: Metadata = {
   title: "Account",
@@ -27,18 +27,27 @@ const AccountPage = async () => {
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <Suspense fallback={<Skeleton className="h-[86px] w-full" />}>
+          <UserStats />
+        </Suspense>
         <Card>
           <CardHeader>
             <CardTitle>Your Profile</CardTitle>
             <CardDescription>Adjust your profile information</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex flex-col gap-4">
             <ProfileForm />
           </CardContent>
         </Card>
-        <Suspense fallback={<Skeleton className="h-[86px] w-full" />}>
-          <UserStats />
-        </Suspense>
+        <Card>
+          <CardHeader>
+            <CardTitle>Change Password</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <ChangePasswordForm />
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Course Invitations</CardTitle>
