@@ -2,10 +2,11 @@
 
 import { db } from "@/db/drizzle";
 import { getUserPreferences } from "@/db/queries/users";
-import { member, user } from "@/db/schema/auth";
+import { account, member, user } from "@/db/schema/auth";
 import { courseMember } from "@/db/schema/course";
 import { auth } from "@/lib/auth";
 import {
+  ActionError,
   authActionClient,
   checkPermissionMiddleware,
   requireCourseMiddleware,
@@ -46,6 +47,75 @@ export const updateUserCourseRole = authActionClient
     revalidatePath(ROUTES.PRIVATE.users.root.getPath());
     return { error: null };
   });
+
+export const updateUserPassword = authActionClient
+  .metadata({
+    actionName: "updateUserPassword",
+    permission: {
+      resource: { context: "organization", type: "user" },
+      action: "update",
+    },
+  })
+  .schema(
+    z.object({
+      userId: z.string(),
+      password: z.string(),
+    }),
+  )
+  .use(checkPermissionMiddleware)
+  .action(async ({ parsedInput: { userId, password } }) => {
+    const ctx = await auth.$context;
+    const hash = await ctx.password.hash(password);
+
+    await ctx.internalAdapter.updatePassword(userId, hash);
+
+    revalidatePath(ROUTES.PRIVATE.users.root.getPath());
+    return { error: null };
+  });
+
+export const updateOwnPassword = authActionClient
+  .metadata({
+    actionName: "updateOwnPassword",
+  })
+  .schema(
+    z.object({
+      currentPassword: z.string(),
+      password: z.string(),
+    }),
+  )
+  .action(
+    async ({ parsedInput: { currentPassword, password }, ctx: { userId } }) => {
+      const ctx = await auth.$context;
+
+      const [acc] = await db
+        .select({ password: account.password })
+        .from(account)
+        .where(
+          and(eq(account.userId, userId), eq(account.providerId, "credential")),
+        )
+        .limit(1);
+
+      if (!acc.password) {
+        throw new ActionError("No password found");
+      }
+
+      const passwordMatches = await ctx.password.verify({
+        password: currentPassword,
+        hash: acc.password,
+      });
+
+      if (!passwordMatches) {
+        throw new ActionError("Current password is incorrect");
+      }
+
+      const newHash = await ctx.password.hash(password);
+
+      await ctx.internalAdapter.updatePassword(userId, newHash);
+
+      revalidatePath(ROUTES.PRIVATE.root.getPath());
+      return { error: null };
+    },
+  );
 
 export const updateUserOrganizationRole = authActionClient
   .metadata({

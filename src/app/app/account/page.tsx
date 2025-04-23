@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { CourseInvitationsList } from "./_components/course-invitations-list";
+import { ChangePasswordForm } from "./_components/change-password-form";
 
 export const metadata: Metadata = {
   title: "Account",

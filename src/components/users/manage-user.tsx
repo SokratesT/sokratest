@@ -15,6 +15,7 @@ import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import {
   updateUserCourseRole,
   updateUserOrganizationRole,
+  updateUserPassword,
 } from "@/db/actions/user";
 import type { User } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
@@ -48,6 +49,20 @@ const ManageUser = ({
 
     getSessions();
   }, []);
+
+  const handleChangePassword = async ({
+    userId,
+    password,
+  }: { userId: User["id"]; password: string }) => {
+    toast.promise(updateUserPassword({ userId, password }), {
+      loading: "Changing password...",
+      success: "Password changed",
+      error: (error) => ({
+        message: "Failed to change password",
+        description: error.message,
+      }),
+    });
+  };
 
   const handleBanUser = async (userId: string) => {
     toast.promise(authClient.admin.banUser({ userId }), {
@@ -219,6 +234,28 @@ const ManageUser = ({
               </SelectContent>
             </Select>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <KeyIcon className="h-5 w-5 text-primary" />
+            Change Password
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Button
+            variant="destructive"
+            onClick={() =>
+              handleChangePassword({
+                userId: user.id,
+                password: prompt("Enter new password") || "",
+              })
+            }
+          >
+            Change Password
+          </Button>
         </CardContent>
       </Card>
 

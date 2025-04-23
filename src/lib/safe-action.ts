@@ -14,7 +14,7 @@ import {
   hasPermission,
 } from "./rbac";
 
-class ActionError extends Error {}
+export class ActionError extends Error {}
 
 const actionClient = createSafeActionClient({
   handleServerError(e) {
