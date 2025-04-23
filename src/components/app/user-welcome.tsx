@@ -1,8 +1,8 @@
 import { AppTourButton } from "@/components/next-step/app-tour-button";
+import { Button } from "@/components/ui/button";
 import { getSession } from "@/db/queries/auth";
 import { getUserPreferences } from "@/db/queries/users";
 import { CompassIcon } from "lucide-react";
-import { Button } from "../ui/button";
 import { AboutModal } from "./about-modal";
 
 const UserWelcome = async () => {

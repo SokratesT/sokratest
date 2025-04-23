@@ -1,3 +1,4 @@
+import { buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -5,11 +6,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { buttonVariants } from "../ui/button";
-import { ScrollArea } from "../ui/scroll-area";
 
 const AboutModal = ({ children }: { children: ReactNode }) => {
   return (
