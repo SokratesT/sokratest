@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { voteMessage } from "@/db/actions/chat-message-vote";
 import type { Chat } from "@/db/schema/chat";
 import type { ChatMessage } from "@/db/schema/chat-message";
+import { cn } from "@/lib/utils";
 import type { ApiGetScoresResponseData } from "langfuse";
 import { CheckIcon } from "lucide-react";
 import { type ComponentProps, useState } from "react";
@@ -55,7 +56,7 @@ const MessageRate = ({
   ];
 
   return (
-    <div className="flex flex-col gap-0.5 rounded-sm border p-0.5">
+    <div className="flex flex-col gap-0.5 rounded-sm border p-1.5 pt-0.5 pb-1">
       <span className="w-full px-1 text-muted-foreground text-xs">
         Was this response helpful for your learning?
       </span>
@@ -79,7 +80,11 @@ const RateButton = ({
   ...props
 }: { checked: boolean } & ComponentProps<"button">) => {
   return (
-    <Button variant="ghost" className="h-5 px-1 text-xs" {...props}>
+    <Button
+      variant="ghost"
+      className={cn("h-5 px-1 text-xs", checked && "bg-primary/30")}
+      {...props}
+    >
       <span className="flex items-center gap-1">
         {checked && <CheckIcon className="size-3" />}
         {props.children}
