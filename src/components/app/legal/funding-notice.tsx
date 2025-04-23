@@ -26,18 +26,15 @@ const FundingNotice = ({ className }: FundingNoticeProps) => {
           <div className="mt-4 flex justify-center gap-4">
             <Link
               href="https://www.hochschule-rhein-waal.de/de/fakultaeten/kommunikation-und-umwelt/forschungsprojekte/sokratest"
-              className={cn(
-                buttonVariants({
-                  variant: "outline",
-                  size: "sm",
-                }),
-              )}
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              target="_blank"
             >
               About Sokratesᵗ
             </Link>
             <Link
               href="https://ki-edu-nrw.ruhr-uni-bochum.de/ueber-das-projekt/phase-2/praxis-transferprojekte/aktuelle-praxisprojekte/#sokratest"
               className={buttonVariants({ variant: "outline", size: "sm" })}
+              target="_blank"
             >
               About KI:edu.nrw
             </Link>
