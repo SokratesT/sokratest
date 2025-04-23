@@ -33,8 +33,8 @@ const AboutModal = ({ children }: { children: ReactNode }) => {
               in short) and has been additionally tailored to support individual
               learning journeys in didactically valuable ways by applying the
               so-called Socratic forms of dialogue that adapt automatically to
-              the learner's present levels of understanding and their individual
-              learning needs.
+              the learner&apos;s present levels of understanding and their
+              individual learning needs.
             </p>
             <p>
               The testing of this prototypical system is part of a research
