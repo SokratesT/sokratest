@@ -1,7 +1,6 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
@@ -73,22 +72,18 @@ const AnnotationBlock = ({
               return (
                 // biome-ignore lint/suspicious/noArrayIndexKey:
                 <Popover key={i}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      className="group w-fit truncate px-2 text-left text-sm"
-                      variant="outline"
+                  <PopoverTrigger className="inline-flex w-fit gap-2 rounded-md border bg-card p-1.5 text-left font-medium text-sm shadow-xs outline-none transition-all hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:border-input dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:hover:bg-input/50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0">
+                    <Badge
+                      variant="secondary"
+                      className="mr-1 inline-flex size-5 items-center justify-center overflow-clip rounded-full font-bold text-xs"
                     >
-                      <Badge
-                        variant="secondary"
-                        className="mr-1 inline-flex size-5 items-center justify-center overflow-clip rounded-full font-bold text-xs"
-                      >
-                        {i + 1}
-                      </Badge>
-                      <span className="truncate">
-                        {referenceAnnotation.title}
-                      </span>
-                    </Button>
+                      {i + 1}
+                    </Badge>
+                    <span className="wrap-anywhere line-clamp-1">
+                      {referenceAnnotation.title}
+                    </span>
                   </PopoverTrigger>
+
                   <PopoverContent
                     className="w-full max-w-[400px] p-4"
                     align="start"
