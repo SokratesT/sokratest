@@ -64,6 +64,7 @@ const MessageRate = ({
           <RateButton
             onClick={() => handleVote(rating.value)}
             checked={optimisticScore === rating.value}
+            key={rating.value}
           >
             {rating.label}
           </RateButton>
