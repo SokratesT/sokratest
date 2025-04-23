@@ -109,7 +109,7 @@ const nextStepTours: Tour[] = [
             system.
             <br />
             <Link
-              className="text-muted-foreground text-sm"
+              className="text-accent text-sm"
               href="mailto:sokratest@hochschule-rhein-waal.de"
             >
               sokratest@hochschule-rhein-waal.de

@@ -72,7 +72,7 @@ const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
             You can add multiple course members at once by adding additional
             email fields.
           </p>
-          <div className="mt-8 flex max-w-[500px] flex-col gap-2">
+          <div className="mt-8 flex max-w-[500px] flex-col gap-4">
             <FormField
               control={form.control}
               name="courseId"
@@ -132,7 +132,7 @@ const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
             />
 
             {fields.map((field, index) => (
-              <div key={field.id}>
+              <div key={field.id} className="flex flex-col gap-2">
                 <Label htmlFor={`items.${index}.email`}>
                   User {index + 1} Email
                 </Label>

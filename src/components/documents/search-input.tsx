@@ -22,7 +22,7 @@ const SearchInput = () => {
       defaultValue={search}
       onChange={(e) => handleSearch(e.target.value)}
       placeholder="Search files..."
-      className={cn("h-8 w-full bg-background shadow-none")}
+      className={cn("h-8 max-w-[300px]")}
     />
   );
 };
