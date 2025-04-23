@@ -44,7 +44,6 @@ const ChatActionsDropdown = ({
       toast.promise(withToastPromise(deleteChat({ refs: [{ id: chatId }] })), {
         loading: "Deleting chat...",
         success: () => {
-          revalidatePathFromClient({ path: ROUTES.PRIVATE.root.getPath() });
           return "Chat deleted";
         },
         error: (error) => ({
@@ -56,6 +55,9 @@ const ChatActionsDropdown = ({
       if (params.id && params.id === chatId) {
         router.replace(ROUTES.PRIVATE.root.getPath());
       }
+      revalidatePathFromClient({
+        path: ROUTES.PRIVATE.root.getPath(),
+      });
     }
   };
 
