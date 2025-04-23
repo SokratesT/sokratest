@@ -50,7 +50,7 @@ const NextStepCard = ({
             </Button>
           )}
           {currentStep + 1 === totalSteps && (
-            <Button size="sm" onClick={skipTour}>
+            <Button size="sm" onClick={nextStep}>
               Finish
             </Button>
           )}

@@ -107,7 +107,7 @@ export const completeTour = authActionClient
   })
   .schema(
     z.object({
-      tour: z.enum(["initialTour"]),
+      tour: z.enum(["initialTour", "chatTour"]),
       action: z.enum(["completed", "skipped"]),
     }),
   )
@@ -123,7 +123,12 @@ export const completeTour = authActionClient
     const updatedPreferences = {
       ...preferences,
       tours: {
-        ...preferences?.tours,
+        initialTour: (preferences?.tours?.initialTour ?? "skipped") as
+          | "completed"
+          | "skipped",
+        chatTour: (preferences?.tours?.chatTour ?? "skipped") as
+          | "completed"
+          | "skipped",
         [tour]: action,
       },
     };

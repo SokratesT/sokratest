@@ -4,11 +4,12 @@ import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import type { ChatRequestOptions, Message } from "ai";
-import { RefreshCcwIcon } from "lucide-react";
+import { CompassIcon, RefreshCcwIcon } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
 import { SendButton, StopButton } from "./chat-buttons";
+import type { UserPreferencesType } from "@/db/schema/auth";
 
 interface ChatInputProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -27,6 +28,7 @@ interface ChatInputProps
   input: string;
   setInput: (value: string) => void;
   hasMessages: boolean;
+  preferences: UserPreferencesType;
 }
 
 const ChatInput = ({
@@ -39,6 +41,7 @@ const ChatInput = ({
   input,
   setInput,
   hasMessages,
+  preferences,
   ...props
 }: ChatInputProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -149,18 +152,33 @@ const ChatInput = ({
           }}
         />
 
-        <div className="absolute bottom-0 flex w-fit flex-row justify-start p-2">
+        <div className="absolute bottom-0 flex w-fit flex-row justify-start gap-1 p-2">
           {hasMessages && (
             <Button
               type="button"
               variant="ghost"
               size="icon"
+              className="size-7"
               onClick={handleReload}
             >
               <RefreshCcwIcon className="size-4" />
               <span className="sr-only">Regenerate last message</span>
             </Button>
           )}
+
+          <AppTourButton
+            tour="chatTour"
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="size-7 text-muted-foreground"
+            autoTrigger={
+              !preferences.tours?.chatTour && status === "ready" && hasMessages
+            }
+          >
+            <CompassIcon className="size-4" />
+            <span className="sr-only">Regenerate last message</span>
+          </AppTourButton>
         </div>
 
         <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">

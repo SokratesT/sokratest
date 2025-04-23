@@ -16,7 +16,7 @@ const AppTourButton = ({
   asChild = false,
   ...props
 }: {
-  tour: "initialTour";
+  tour: "initialTour" | "chatTour";
   autoTrigger?: boolean;
 } & React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {

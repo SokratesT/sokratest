@@ -15,15 +15,18 @@ import { v4 as uuidv4 } from "uuid";
 import { ChatPlaceholder } from "./chat-placeholder";
 import { MessageBlock } from "./message-block";
 import { ShinyText } from "./shiny-text";
+import type { UserPreferencesType } from "@/db/schema/auth";
 
 const Chat = ({
   id,
   initialMessages,
   scores,
+  preferences,
 }: {
   id: string;
   initialMessages: Message[];
   scores: ApiGetScoresResponseData[];
+  preferences: UserPreferencesType;
 }) => {
   const {
     data: dataStream,
@@ -106,6 +109,7 @@ const Chat = ({
         input={input}
         setInput={setInput}
         placeholder="How can I help?"
+        preferences={preferences}
       />
     </div>
   );

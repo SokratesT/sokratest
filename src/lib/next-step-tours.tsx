@@ -124,21 +124,58 @@ const nextStepTours: Tour[] = [
       },
     ],
   },
+  // TODO: Target relevant elements in the chat interface
   {
-    tour: "secondtour",
+    tour: "chatTour",
     steps: [
       {
         icon: null,
-        title: "Second tour, Step 1",
-        content: <>Second tour, first step!</>,
-        selector: "#nextstep-step1",
-        side: "top",
+        title: "Chat",
+        content: (
+          <>
+            You got your first response! Let&apos;s take a quick tour through
+            the chat interface. Click &quot;Next&quot; to proceed.
+          </>
+        ),
         showControls: true,
         showSkip: true,
         pointerPadding: 10,
         pointerRadius: 10,
-        nextRoute: "/foo",
-        prevRoute: "/bar",
+      },
+      {
+        icon: null,
+        title: "References",
+        content: (
+          <>
+            The response includes references to course material the AI deemed
+            relevant. Note that not all material indicated here may be directly
+            cited by the AI, but all of it is used to guide the response.
+          </>
+        ),
+        // selector: "#ai-annotations",
+        side: "bottom",
+        showControls: true,
+        showSkip: true,
+        pointerPadding: 10,
+        pointerRadius: 10,
+        viewportID: "chat-viewport",
+      },
+      {
+        icon: null,
+        title: "Rate responses",
+        content: (
+          <>
+            Please rate the responses you received by using the buttons below.
+            This will help us improve the AI Tutor in the future. Note that
+            rating does not have a direct impact on the current chat.
+          </>
+        ),
+        // selector: "#ai-message-rate",
+        side: "bottom",
+        showControls: true,
+        showSkip: true,
+        pointerPadding: 10,
+        pointerRadius: 10,
       },
     ],
   },
@@ -151,16 +188,15 @@ export const NextStepTours = ({ children }: { children: ReactNode }) => {
     onStepChange: (step: number, tourName: string | null) => {
       if (step === 1 && tourName === "initialTour") {
         setOpenMobile(true);
-        console.log("You are on step 1 of the first tour!");
       }
     },
     onComplete: async (tourName: string | null) => {
-      if (tourName === "initialTour") {
+      if (tourName === "initialTour" || tourName === "chatTour") {
         await completeTour({ tour: tourName, action: "completed" });
       }
     },
     onSkip: async (step: number, tourName: string | null) => {
-      if (tourName === "initialTour") {
+      if (tourName === "initialTour" || tourName === "chatTour") {
         await completeTour({ tour: tourName, action: "skipped" });
       }
     },

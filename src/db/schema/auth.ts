@@ -11,6 +11,7 @@ import {
 export interface UserPreferencesType {
   tours?: {
     initialTour: "completed" | "skipped";
+    chatTour: "completed" | "skipped";
   };
 }
 
