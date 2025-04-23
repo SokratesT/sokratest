@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
@@ -10,9 +11,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import type { DocumentMetadataType } from "@/db/schema/document";
 import { cn } from "@/lib/utils";
 import type { JSONValue } from "ai";
-import { ArrowUpRightIcon } from "lucide-react";
+import { ArrowUpRightIcon, CopyIcon } from "lucide-react";
 import Link from "next/link";
 import type { ComponentProps } from "react";
+import { toast } from "sonner";
+import { useCopyToClipboard } from "usehooks-ts";
 
 interface BaseAnnotation extends Record<string, JSONValue> {
   type: string;
@@ -39,6 +42,21 @@ const AnnotationBlock = ({
   className,
   ...props
 }: { annotations: JSONValue[] | undefined } & ComponentProps<"div">) => {
+  const [, copy] = useCopyToClipboard();
+
+  const handleCopy = (text: string | undefined) => {
+    if (!text) {
+      toast.error("No text to copy");
+      return;
+    }
+
+    toast.promise(copy(text), {
+      loading: "Copying...",
+      success: "Copied!",
+      error: "Failed to copy",
+    });
+  };
+
   if (!annotations || annotations.length <= 0) {
     return null;
   }
@@ -94,12 +112,21 @@ const AnnotationBlock = ({
                           <p className="text-muted-foreground text-xs">Title</p>
                           <p className="font-medium text-sm">
                             {referenceAnnotation.title}
-                            {referenceAnnotation.metadata.chapterTitle &&
-                              ` | ${referenceAnnotation.metadata.chapterTitle}`}
-                            {referenceAnnotation.metadata.pageRange &&
-                              ` (${referenceAnnotation.metadata.pageRange})`}
                           </p>
                         </div>
+
+                        {referenceAnnotation.metadata.chapterTitle && (
+                          <div>
+                            <p className="text-muted-foreground text-xs">
+                              Chapter
+                            </p>
+                            <p className="text-sm">
+                              {referenceAnnotation.metadata.chapterTitle}
+                              {referenceAnnotation.metadata.pageRange &&
+                                ` (pp. ${referenceAnnotation.metadata.pageRange})`}
+                            </p>
+                          </div>
+                        )}
 
                         {referenceAnnotation.metadata.author && (
                           <div>
@@ -114,9 +141,21 @@ const AnnotationBlock = ({
 
                         {referenceAnnotation.metadata.citation && (
                           <div>
-                            <p className="text-muted-foreground text-xs">
-                              Citation
-                            </p>
+                            <div className="flex items-center gap-2 text-muted-foreground text-xs">
+                              <p>Citation</p>
+                              <Button
+                                variant="link"
+                                className="size-4 p-0"
+                                onClick={() =>
+                                  handleCopy(
+                                    referenceAnnotation.metadata.citation,
+                                  )
+                                }
+                              >
+                                <CopyIcon className="size-2.5" />
+                              </Button>
+                            </div>
+
                             <p className="text-sm">
                               {referenceAnnotation.metadata.citation}
                             </p>
