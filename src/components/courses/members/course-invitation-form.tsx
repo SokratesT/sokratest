@@ -77,17 +77,14 @@ const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
     });
   };
 
-  const handleBulkPaste = (event: React.FormEvent) => {
-    event.preventDefault();
-    const textArea = event.target as HTMLFormElement;
-    const rawEmails = textArea.bulkEmails.value as string;
+  const handleBulkPaste = (textArea: HTMLTextAreaElement) => {
+    const rawEmails = textArea.value as string;
 
     const emails = rawEmails
       .split("\n")
       .map((email) => email.trim())
       .filter((email) => email.length > 0);
 
-    // Replace the current fields with the new list
     replace(emails.map((email) => ({ email })));
   };
 
@@ -175,7 +172,7 @@ const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="h-fit">
             <CardHeader>
               <CardTitle>Add user emails</CardTitle>
               <CardDescription>
@@ -244,19 +241,28 @@ const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
                         correctly.
                       </DialogDescription>
                     </DialogHeader>
-                    <form
-                      onSubmit={handleBulkPaste}
-                      className="flex flex-col gap-4"
-                    >
+                    <div className="flex flex-col gap-4">
                       <Textarea
                         name="bulkEmails"
+                        id="bulkEmails"
                         rows={5}
                         placeholder="Add emails here, separated by new lines"
                       />
                       <DialogClose asChild>
-                        <Button type="submit">Add Emails</Button>
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            const textArea = document.getElementById(
+                              "bulkEmails",
+                            ) as HTMLTextAreaElement;
+
+                            handleBulkPaste(textArea);
+                          }}
+                        >
+                          Add Emails
+                        </Button>
                       </DialogClose>
-                    </form>
+                    </div>
                   </DialogContent>
                 </Dialog>
               </div>
