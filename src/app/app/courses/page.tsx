@@ -9,8 +9,10 @@ import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view
 import { getUserCoursesForActiveOrganization } from "@/db/queries/course";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
+import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 
 const CoursesPage = async ({
@@ -21,6 +23,15 @@ const CoursesPage = async ({
   const { pageIndex, pageSize } =
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
+
+  const permitted = await hasPermission(
+    { context: "course", id: "all", type: "course" },
+    "update",
+  );
+
+  if (!permitted) {
+    return redirect(ROUTES.PRIVATE.root.getPath());
+  }
 
   const result = await getUserCoursesForActiveOrganization({
     sort,

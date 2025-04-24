@@ -8,8 +8,10 @@ import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view
 import { getAvailablePosts } from "@/db/queries/post";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
+import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 
 const PostsPage = async ({
@@ -20,6 +22,15 @@ const PostsPage = async ({
   const { pageIndex, pageSize } =
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
+
+  const permitted = await hasPermission(
+    { context: "organization", id: "all", type: "post" },
+    "update",
+  );
+
+  if (!permitted) {
+    return redirect(ROUTES.PRIVATE.root.getPath());
+  }
 
   const { query, rowCount } = await getAvailablePosts(
     sort,

@@ -10,8 +10,10 @@ import { getAvailableOrganizations } from "@/db/queries/organizations";
 import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
+import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 
 const UsersPage = async ({
@@ -23,6 +25,15 @@ const UsersPage = async ({
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
   const { search } = await bucketSearchParamsCache.parse(searchParams);
+
+  const permitted = await hasPermission(
+    { context: "organization", id: "all", type: "organization" },
+    "update",
+  );
+
+  if (!permitted) {
+    return redirect(ROUTES.PRIVATE.root.getPath());
+  }
 
   const result = await getAvailableOrganizations({
     sort,
