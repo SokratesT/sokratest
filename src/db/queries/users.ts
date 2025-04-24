@@ -25,39 +25,54 @@ function isValidColumnId(id: string): id is keyof User {
   return ["name", "email", "role"].includes(id);
 }
 
-export const getAvailableUsers = async (
+export const getActiveCourseUsers = async (
   sort: { id: string; desc: boolean }[],
   pageIndex: number,
   pageSize: number,
   search: string,
 ) => {
-  return withAuthQuery(async (session) => {
-    const sortOrder = sort
-      ?.filter((s) => isValidColumnId(s.id))
-      .map((s) => {
-        if (["name", "email", "role"].includes(s.id)) {
-          const column = user[s.id as keyof User];
-          return s.desc ? desc(column) : asc(column);
-        } else {
-          return asc(user.createdAt);
-        }
-      }) ?? [asc(user.createdAt)]; // Fallback default sort
+  return withAuthQuery(
+    async (session) => {
+      const sortOrder = sort
+        ?.filter((s) => isValidColumnId(s.id))
+        .map((s) => {
+          if (["name", "email", "role"].includes(s.id)) {
+            const column = user[s.id as keyof User];
+            return s.desc ? desc(column) : asc(column);
+          } else {
+            return asc(user.createdAt);
+          }
+        }) ?? [asc(user.createdAt)]; // Fallback default sort
 
-    const query = await db
-      .select({ ...getTableColumns(user) })
-      .from(user)
-      .where(ilike(user.email, `%${search}%`))
-      .limit(pageSize)
-      .orderBy(...sortOrder)
-      .offset(pageIndex * pageSize);
+      const query = await db
+        .select({ ...getTableColumns(user) })
+        .from(user)
+        .innerJoin(courseMember, eq(user.id, courseMember.userId))
+        .where(
+          and(
+            eq(courseMember.courseId, session.session.activeCourseId),
+            ilike(user.email, `%${search}%`),
+          ),
+        )
+        .limit(pageSize)
+        .orderBy(...sortOrder)
+        .offset(pageIndex * pageSize);
 
-    const [rowCount] = await db
-      .select({ count: count() })
-      .from(user)
-      .where(ilike(user.email, `%${search}%`));
+      const [rowCount] = await db
+        .select({ count: count() })
+        .from(user)
+        .innerJoin(courseMember, eq(user.id, courseMember.userId))
+        .where(
+          and(
+            eq(courseMember.courseId, session.session.activeCourseId),
+            ilike(user.email, `%${search}%`),
+          ),
+        );
 
-    return { query, rowCount };
-  }, {});
+      return { query, rowCount };
+    },
+    { requireCourse: true },
+  );
 };
 
 export const getCourseUsers = async ({

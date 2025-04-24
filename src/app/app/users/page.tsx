@@ -6,7 +6,7 @@ import { DataTablePagination } from "@/components/ui/data-table/data-table-pagin
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
 import { columns } from "@/components/users/table/columns";
 import { UsersDataTableSelectActions } from "@/components/users/table/users-data-table-select-actions";
-import { getAvailableUsers } from "@/db/queries/users";
+import { getActiveCourseUsers } from "@/db/queries/users";
 import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
@@ -45,9 +45,14 @@ const UsersPage = async ({
   return (
     <div className="flex flex-col gap-14">
       <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          Users
-        </h4>
+        <div className="flex flex-col gap-2">
+          <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
+            Users
+          </h4>
+          <span className="text-muted-foreground text-sm">
+            Showing users for the active course.
+          </span>
+        </div>
         <div className="flex gap-2">
           <Link
             href={ROUTES.PRIVATE.users.invites.getPath()}
