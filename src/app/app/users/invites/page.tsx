@@ -1,7 +1,9 @@
+import { SearchInput } from "@/components/documents/search-input";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
+import { DataTableExportButton } from "@/components/ui/data-table/data-table-export-button";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
 import { InvitesTableActions } from "@/components/users/invites/table/invites-table-actions";
@@ -59,7 +61,8 @@ const UsersPage = async ({
           <div className="flex items-center gap-2">
             <DataTableViewOptions />
             <InvitesTableActions />
-            {/* <SearchInput /> */}
+            <DataTableExportButton fileName="invitations" />
+            <SearchInput placeholder="Search by email..." />
           </div>
           <DataTableBody />
           <DataTablePagination />
