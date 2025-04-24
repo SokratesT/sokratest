@@ -92,7 +92,7 @@ export const invitesTableColumns: ColumnDef<CourseInvitation>[] = [
       <DataTableColumnHeader column={column} title="Expires At" />
     ),
     cell: ({ row }) => (
-      <span>{format(row.original.createdAt || "", "MMM dd, yyyy HH:mm")}</span>
+      <span>{format(row.original.expiresAt || "", "MMM dd, yyyy HH:mm")}</span>
     ),
   },
   {
