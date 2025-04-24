@@ -10,8 +10,10 @@ import { getAvailableUsers } from "@/db/queries/users";
 import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
+import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 
 const UsersPage = async ({
@@ -24,7 +26,16 @@ const UsersPage = async ({
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
   const { bucket, search } = await bucketSearchParamsCache.parse(searchParams);
 
-  const result = await getAvailableUsers(sort, pageIndex, pageSize, search);
+  const permitted = await hasPermission(
+    { context: "organization", id: "all", type: "user" },
+    "update",
+  );
+
+  if (!permitted) {
+    return redirect(ROUTES.PRIVATE.root.getPath());
+  }
+
+  const result = await getActiveCourseUsers(sort, pageIndex, pageSize, search);
 
   if (!result.success) {
     return <Placeholder>{result.error.message}</Placeholder>;

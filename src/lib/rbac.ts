@@ -32,7 +32,7 @@ export interface CourseResource {
 export interface OrganizationResource {
   context: "organization";
   type: OrganizationResourceType;
-  id: string;
+  id: string | undefined | null;
 }
 
 export type Resource = CourseResource | OrganizationResource;
