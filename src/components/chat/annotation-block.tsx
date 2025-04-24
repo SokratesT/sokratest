@@ -169,7 +169,7 @@ const AnnotationBlock = ({
                               className="inline-flex items-center gap-1 font-medium text-primary text-sm hover:underline"
                               target="_blank"
                             >
-                              View File
+                              Source
                               <ArrowUpRightIcon size={16} />
                             </Link>
                           </div>
