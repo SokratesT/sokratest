@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { DocumentMetadataType } from "@/db/schema/document";
+import { useUmami } from "@/hooks/use-umami";
 import { cn } from "@/lib/utils";
 import type { JSONValue } from "ai";
 import { ArrowUpRightIcon, CopyIcon } from "lucide-react";
@@ -43,6 +44,7 @@ const AnnotationBlock = ({
   ...props
 }: { annotations: JSONValue[] | undefined } & ComponentProps<"div">) => {
   const [, copy] = useCopyToClipboard();
+  const { trackEvent } = useUmami();
 
   const handleCopy = (text: string | undefined) => {
     if (!text) {
@@ -168,6 +170,13 @@ const AnnotationBlock = ({
                               href={referenceAnnotation.metadata.externalUrl}
                               className="inline-flex items-center gap-1 font-medium text-primary text-sm hover:underline"
                               target="_blank"
+                              onClick={() =>
+                                trackEvent("annotation-source-click", {
+                                  target:
+                                    referenceAnnotation.metadata.externalUrl,
+                                  reference: referenceAnnotation.id,
+                                })
+                              }
                             >
                               Source
                               <ArrowUpRightIcon size={16} />
