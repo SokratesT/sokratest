@@ -6,7 +6,12 @@ import { cn } from "@/lib/utils";
 import { useTransition } from "react";
 import { useDebounceCallback } from "usehooks-ts";
 
-const SearchInput = () => {
+const SearchInput = ({
+  type,
+  placeholder,
+  className,
+  ...props
+}: React.ComponentProps<"input">) => {
   const [, startTransition] = useTransition();
   const [{ search, page }, setQuery] = useBucketSearchParams(startTransition);
 
@@ -19,10 +24,12 @@ const SearchInput = () => {
 
   return (
     <Input
+      type={type}
       defaultValue={search}
       onChange={(e) => handleSearch(e.target.value)}
-      placeholder="Search files..."
-      className={cn("h-8 max-w-[300px]")}
+      placeholder={placeholder || "Search..."}
+      className={cn("h-8 max-w-[300px]", className)}
+      {...props}
     />
   );
 };
