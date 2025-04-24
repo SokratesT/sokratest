@@ -28,7 +28,7 @@ const CoursePreview = async () => {
 
   return (
     <Card>
-      <CardHeader className="flex justify-between">
+      <CardHeader className="flex flex-col justify-between sm:flex-row">
         <div className="flex flex-col gap-1">
           <p className="text-muted-foreground text-xs">Active Course</p>
           <CardTitle className="flex items-center gap-2">

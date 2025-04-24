@@ -22,7 +22,8 @@ const AboutModal = ({ children }: { children: ReactNode }) => {
             What is Sokrates<sup>t</sup>?
           </DialogTitle>
         </DialogHeader>
-        <ScrollArea className="max-h-[800px] w-full">
+
+        <ScrollArea className="max-h-[300px] w-full sm:max-h-[500px]">
           <div className="flex flex-col gap-4">
             <p>
               You are using a prototypical Turoring System based on generative
