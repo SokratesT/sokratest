@@ -8,7 +8,10 @@ import {
 } from "@/components/ui/sidebar";
 import { getSession } from "@/db/queries/auth";
 import { hasPermission } from "@/lib/rbac";
-import { sidebarInstructorMenu } from "@/settings/menus";
+import {
+  sidebarInstructorMenu,
+  sidebarOrganizationAdminMenu,
+} from "@/settings/menus";
 import Link from "next/link";
 
 const ManageSidebarGroup = async () => {
@@ -21,7 +24,20 @@ const ManageSidebarGroup = async () => {
     "update",
   );
 
-  if (!hasCourseEditPermission && session?.user.role !== "admin") {
+  const hasOrganizationEditPermission = await hasPermission(
+    {
+      context: "organization",
+      id: session?.session.activeOrganizationId,
+      type: "organization",
+    },
+    "update",
+  );
+
+  if (
+    !hasCourseEditPermission &&
+    !hasOrganizationEditPermission &&
+    session?.user.role !== "admin"
+  ) {
     return null;
   }
 
@@ -30,16 +46,28 @@ const ManageSidebarGroup = async () => {
       <SidebarGroupLabel>Manage</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {sidebarInstructorMenu.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild>
-                <Link href={item.url}>
-                  <item.icon />
-                  <span>{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {hasCourseEditPermission &&
+            sidebarInstructorMenu.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild>
+                  <Link href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          {hasOrganizationEditPermission &&
+            sidebarOrganizationAdminMenu.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild>
+                  <Link href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

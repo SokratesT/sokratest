@@ -23,6 +23,9 @@ export const sidebarInstructorMenu = [
     url: ROUTES.PRIVATE.documents.root.getPath(),
     icon: FolderOpenIcon,
   },
+];
+
+export const sidebarOrganizationAdminMenu = [
   {
     title: "Users",
     url: ROUTES.PRIVATE.users.root.getPath(),
