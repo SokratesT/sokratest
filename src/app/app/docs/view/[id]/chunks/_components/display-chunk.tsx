@@ -19,6 +19,8 @@ const DisplayChunk = ({ chunk }: { chunk: QdrantChunk }) => {
           {chunk.payload.chunkCount}
         </CardTitle>
         <CardDescription>
+          Score: {chunk.score}
+          <br />
           {chunk.payload.source} | {chunk.payload.title} |{" "}
           {chunk.payload.file_reference} | {chunk.payload.file_type} |{" "}
           {chunk.payload.tokens} tokens
