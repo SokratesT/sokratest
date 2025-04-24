@@ -25,6 +25,7 @@ const FormTextField = ({
   label,
   description,
   className,
+  rows = 2,
   required = false,
 }: {
   field: ControllerRenderProps<any, any>;
@@ -32,6 +33,7 @@ const FormTextField = ({
   label?: string;
   description?: string;
   className?: string;
+  rows?: number;
   required?: boolean;
 }) => (
   <FormItem className={cn(className)}>
@@ -43,6 +45,7 @@ const FormTextField = ({
     )}
     <FormControl>
       <Textarea
+        rows={rows}
         placeholder={placeholder}
         className="text-md md:text-sm" // FIXME: temporarily removed resize-none
         {...field}
