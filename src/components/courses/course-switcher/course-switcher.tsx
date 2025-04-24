@@ -66,7 +66,7 @@ const CourseSwitcher = ({
                 ) : (
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="font-semibold">Course</span>
-                    <span className="line-clamp-1 text-xs">
+                    <span className="truncate text-xs">
                       {activeCourse?.title}
                     </span>
                   </div>
