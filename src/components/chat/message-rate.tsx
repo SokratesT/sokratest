@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { voteMessage } from "@/db/actions/chat-message-vote";
 import type { Chat } from "@/db/schema/chat";
 import type { ChatMessage } from "@/db/schema/chat-message";
+import { useUmami } from "@/hooks/use-umami";
 import { cn } from "@/lib/utils";
 import type { ApiGetScoresResponseData } from "langfuse";
 import { CheckIcon } from "lucide-react";
@@ -24,6 +25,7 @@ const MessageRate = ({
   const [optimisticScore, setOptimisticScore] = useState<
     number | undefined | null
   >(score?.value);
+  const { trackEvent } = useUmami();
 
   const handleVote = async (sentiment: number) => {
     toast.promise(
@@ -36,6 +38,11 @@ const MessageRate = ({
         loading: "Rating...",
         success: () => {
           setOptimisticScore(sentiment);
+          trackEvent("message-rate", {
+            messageId,
+            sentiment,
+            chatId,
+          });
           return "Thank you for your feedback!";
         },
         error: (error) => {
