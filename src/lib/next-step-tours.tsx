@@ -61,7 +61,7 @@ const nextStepTours: Tour[] = [
             you can delete or rename chats.
           </>
         ),
-        side: "top",
+        side: "top-left",
         selector: "#tour-history",
         showControls: true,
         showSkip: true,
