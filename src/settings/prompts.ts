@@ -14,9 +14,10 @@ export const createSocraticSystemPrompt = ({
     .map((item) => `{"documentId": "${item.documentId}", text: "${item.text}"}`)
     .join("\n\n");
 
-  const contextPrompt = `
-    ## Your knowledge base
-    Use the context below to base your interactions with the student on factual information that is relevant for their study course.
+  const contextPrompt = `\n
+    ## Your Knowledge Base
+
+    Use the Context below to base your interactions with the student on factual information that is relevant for their study course.
     Use citations in your response, indicating which source you are referencing specifically. The context is in the following format:
     
     {
@@ -26,10 +27,11 @@ export const createSocraticSystemPrompt = ({
 
     Citations must be included by referencing the document id for parts of your response that are relevant to the corresponding text.
     Inlcude citations like so: <cite:documentId> where documentId is the ID of the document you are referencing.
-    For example, if you are referencing a document with the ID "12345", you would include <cite:12345> in your response.
+    For example, if you are referencing a document with the ID "2", you would include <cite:2> in your response.
+    There is no need to cite all documents, only the ones you are actually using to formulate your response. If no documents are used, then no citations are needed.
 
     ## Context
-
+    \n
     ${contextString}
   `;
 
@@ -82,6 +84,8 @@ export const createSocraticSystemPrompt = ({
     - Adapt dynamically to student responses: If they struggle, slow down; if they show confidence, push deeper.
     - Encourage self-reflection and critical thinking: Avoid giving direct answers when higher-order thinking can be stimulated.
     - Summarize insights periodically: Help students consolidate learning by reinforcing key takeaways.
+    - Always indicate which level you are operating on by including it in square brackets and **bold** at the beginning of your response.
+    - Add a single thought provoking follow-up question to the end of your response. Make sure it aligns with the current level of the user by keeping the question simple for lower levels and more complex for higher levels.
 
     ## Example of an Adaptive Interaction
     *Scenario: A Student Learning About Carbon Footprints*
@@ -95,14 +99,16 @@ export const createSocraticSystemPrompt = ({
     Student: “I think policy change is more impactful because corporations produce more emissions than individuals.”
     AI Tutor (Moves to Level 4 - Creative Synthesis): "That's an interesting perspective! If you were designing a policy to reduce agricultural emissions, what specific measures would you include?"
 
-    *(The dialogue continues, leading the student toward innovative problem-solving.)*`;
+    *(The dialogue continues, leading the student toward innovative problem-solving.)*
+    
+    `;
 
   if (override && override.length > 0) {
     systemPrompt = override;
   }
 
   return `${systemPrompt} \n
-    ${contextPrompt.length > 0 ? contextPrompt : ""}`;
+    ${context.length > 0 ? contextPrompt : ""}`;
 };
 
 export const generateChatTitlePrompt = `\n
@@ -115,4 +121,6 @@ export const generateChatTitlePrompt = `\n
 
 export const generateRagQueryPrompt = ` \n
   Briefly summarise the provided message history, putting special emphasis on the users latest message and particularly any questions they may have.
-  The summary should be in the form of a question, and should be no longer than 20 words.`;
+  The summary should be in the form of a question, and should be no longer than 20 words.
+  - Do not use quotes, colons or line breaks.
+  - Do not include any other information, just the question.`;
