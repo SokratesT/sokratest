@@ -20,6 +20,8 @@ export const courseInvitationsInsertSchema = z.object({
         ),
       }),
     )
+    .min(1, "Please add at least one email")
+    .max(200, "Max 200 emails")
     .superRefine((items, ctx) => {
       const emails = items.map((item) => item.email.toLowerCase());
       const uniqueEmails = new Set(emails);
