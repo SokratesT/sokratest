@@ -3,6 +3,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { createChat } from "@/db/actions/chat";
+import { useUmami } from "@/hooks/use-umami";
 import { cn, withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import { Slot } from "@radix-ui/react-slot";
@@ -22,11 +23,15 @@ const NewChatButton = ({
   }) => {
   const router = useRouter();
   const { setOpenMobile } = useSidebar();
+  const { trackEvent } = useUmami();
 
   const handleNewChat = async () => {
     const t = toast.promise(withToastPromise(createChat()), {
       loading: "Creating new chat...",
-      success: "New chat created",
+      success: (res) => {
+        trackEvent("chat-create", { chatId: res.chat.id });
+        return "New chat created";
+      },
       error: (error) => ({
         message: "Failed to create chat",
         description: error.message,

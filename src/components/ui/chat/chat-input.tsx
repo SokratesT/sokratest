@@ -2,6 +2,7 @@ import { AppTourButton } from "@/components/next-step/app-tour-button";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { UserPreferencesType } from "@/db/schema/auth";
+import { useUmami } from "@/hooks/use-umami";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import type { UseChatHelpers } from "@ai-sdk/react";
@@ -49,6 +50,7 @@ const ChatInput = ({
 }: ChatInputProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
+  const { trackEvent } = useUmami();
   const isLoading = status === "streaming" || status === "submitted";
 
   useEffect(() => {
@@ -103,6 +105,8 @@ const ChatInput = ({
       "",
       ROUTES.PRIVATE.chat.view.getPath({ id: chatId }),
     );
+
+    trackEvent("chat-request", { chatId });
 
     handleSubmit(
       /* undefined, {

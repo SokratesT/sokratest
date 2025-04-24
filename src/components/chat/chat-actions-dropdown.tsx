@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { deleteChat, renameChat } from "@/db/actions/chat";
 import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
+import { useUmami } from "@/hooks/use-umami";
 import { withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import { useParams, useRouter } from "next/navigation";
@@ -24,6 +25,7 @@ const ChatActionsDropdown = ({
   const params = useParams<{ id?: string }>();
   const router = useRouter();
   const confirm = useConfirm();
+  const { trackEvent } = useUmami();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -44,6 +46,9 @@ const ChatActionsDropdown = ({
       toast.promise(withToastPromise(deleteChat({ refs: [{ id: chatId }] })), {
         loading: "Deleting chat...",
         success: () => {
+          trackEvent("chat-delete", {
+            chatId,
+          });
           return "Chat deleted";
         },
         error: (error) => ({

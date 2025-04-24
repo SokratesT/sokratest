@@ -3,6 +3,7 @@
 import { NextStepCard } from "@/components/next-step/next-step-card";
 import { useSidebar } from "@/components/ui/sidebar";
 import { completeTour } from "@/db/actions/user";
+import { useUmami } from "@/hooks/use-umami";
 import Link from "next/link";
 import { NextStep, type Tour } from "nextstepjs";
 import type { ReactNode } from "react";
@@ -190,6 +191,7 @@ const nextStepTours: Tour[] = [
 
 export const NextStepTours = ({ children }: { children: ReactNode }) => {
   const { setOpenMobile } = useSidebar();
+  const { trackEvent } = useUmami();
 
   const nextStepCallbacks = {
     onStepChange: (step: number, tourName: string | null) => {
@@ -200,12 +202,18 @@ export const NextStepTours = ({ children }: { children: ReactNode }) => {
     onComplete: async (tourName: string | null) => {
       if (tourName === "initialTour" || tourName === "chatTour") {
         await completeTour({ tour: tourName, action: "completed" });
+        trackEvent("tour-completed", {
+          tour: tourName,
+        });
       }
     },
     onSkip: async (step: number, tourName: string | null) => {
       if (tourName === "initialTour" || tourName === "chatTour") {
         await completeTour({ tour: tourName, action: "skipped" });
       }
+      trackEvent("tour-skipped", {
+        tour: tourName,
+      });
     },
   };
 
