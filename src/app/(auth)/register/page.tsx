@@ -42,7 +42,7 @@ const RegisterPage = async ({
   }
 
   return (
-    <Card className="w-full max-w-xl">
+    <Card className="max-w-xl">
       <CardHeader>
         <CardTitle>Sign Up</CardTitle>
         <CardDescription>Create a new account to continue.</CardDescription>

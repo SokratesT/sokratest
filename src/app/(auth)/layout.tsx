@@ -17,7 +17,7 @@ const AuthLayout = async ({
       <ThemeSwitcher className="fixed top-4 right-4 z-20 text-foreground" />
 
       <div className="flex flex-grow items-center justify-center">
-        <div className="flex flex-col items-center justify-center gap-4 py-8">
+        <div className="flex flex-col items-center justify-center gap-4 py-8 px-2">
           <Link href={ROUTES.PUBLIC.login.getPath()} className="cursor-default">
             <LogoAnimated variant="dynamic" />
           </Link>
@@ -26,7 +26,7 @@ const AuthLayout = async ({
         </div>
       </div>
 
-      <div className="my-4 flex w-full justify-around">
+      <div className="my-4 flex w-full justify-around p-2">
         <FundingNotice />
       </div>
     </main>

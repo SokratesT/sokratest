@@ -133,7 +133,7 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
             </p>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center gap-2">
             <Link
               className={buttonVariants({
                 variant: "outline",
