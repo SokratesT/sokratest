@@ -75,10 +75,15 @@ export const invitesTableColumns: ColumnDef<CourseInvitation>[] = [
     enableHiding: false,
   },
   {
-    size: 500,
     accessorKey: "email",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
+    ),
+  },
+  {
+    accessorKey: "id",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Invitation ID" />
     ),
   },
   {
