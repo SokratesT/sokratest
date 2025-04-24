@@ -5,14 +5,17 @@ import { FormPasswordField } from "@/components/forms/fields/formPasswordField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { type LoginSchemaType, loginSchema } from "@/db/zod/login";
+import { useUmami } from "@/hooks/use-umami";
 import { authClient } from "@/lib/auth-client";
 import { ROUTES } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const SignInForm = () => {
   const router = useRouter();
+  const { trackEvent } = useUmami();
 
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
@@ -29,17 +32,15 @@ const SignInForm = () => {
         password: values.password,
       },
       {
-        onRequest: (ctx) => {
-          //show loading
-          console.log("loading");
-        },
         onSuccess: (ctx) => {
-          console.log("success");
+          trackEvent("auth-login", {
+            email: values.email,
+          });
+          toast.message("Welcome back!");
           router.replace(ROUTES.PRIVATE.root.getPath());
         },
         onError: (ctx) => {
-          console.log("error");
-          alert(ctx.error.message);
+          toast.error("An error occured.", { description: ctx.error.message });
         },
       },
     );

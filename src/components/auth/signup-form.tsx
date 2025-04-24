@@ -7,6 +7,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
 import { type SignupSchemaType, signupSchema } from "@/db/zod/signup";
+import { useUmami } from "@/hooks/use-umami";
 import { authClient } from "@/lib/auth-client";
 import { ROUTES } from "@/settings/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,9 +15,11 @@ import { FileTextIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
   const router = useRouter();
+  const { trackEvent } = useUmami();
 
   const form = useForm<SignupSchemaType>({
     resolver: zodResolver(signupSchema),
@@ -41,19 +44,20 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
         password: values.password,
       },
       {
-        onRequest: (ctx) => {
-          //show loading
-          console.log("loading");
-        },
         onSuccess: async (ctx) => {
-          console.log("success");
+          trackEvent("auth-register", {
+            email: values.email,
+            invitationId: values.invitationId,
+          });
+          toast.success("Welcome to Sokratesᵗ!");
           router.replace(
             ROUTES.PRIVATE.app.init.getPath({ inv: invitation.id }),
           );
         },
         onError: (ctx) => {
-          console.log("error");
-          alert(ctx.error.message);
+          toast.error("An error occured.", {
+            description: ctx.error.message,
+          });
         },
       },
     );
