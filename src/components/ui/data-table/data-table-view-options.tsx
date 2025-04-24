@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { Settings2 } from "lucide-react";
+import { Settings2Icon } from "lucide-react";
 import { useTable } from "./data-table-context";
 
 const DataTableViewOptions = () => {
@@ -20,7 +20,7 @@ const DataTableViewOptions = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="h-8">
-          <Settings2 />
+          <Settings2Icon />
           View
         </Button>
       </DropdownMenuTrigger>
