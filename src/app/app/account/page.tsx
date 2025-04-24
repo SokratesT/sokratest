@@ -1,5 +1,6 @@
 import { UserStats } from "@/components/app/user-stats";
 import { ProfileForm } from "@/components/forms/profile-form";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,7 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ROUTES } from "@/settings/routes";
+import { FileTextIcon } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 import { ChangePasswordForm } from "./_components/change-password-form";
 import { CourseInvitationsList } from "./_components/course-invitations-list";
@@ -57,6 +61,25 @@ const AccountPage = async () => {
             <CourseInvitationsList />
           </CardContent>
         </Card>
+      </div>
+      <div className="flex flex-col gap-2">
+        <p className="text-xl">Legal</p>
+        <div className="flex gap-2">
+          <Link
+            className={buttonVariants({ variant: "outline" })}
+            href={ROUTES.PUBLIC.privacyPolicy.getPath()}
+            target="_blank"
+          >
+            <FileTextIcon /> Privacy Policy
+          </Link>
+          <Link
+            className={buttonVariants({ variant: "outline" })}
+            href={ROUTES.PUBLIC.termsOfUse.getPath()}
+            target="_blank"
+          >
+            <FileTextIcon /> Terms of Use
+          </Link>
+        </div>
       </div>
     </div>
   );
