@@ -26,7 +26,7 @@ const paginationParsers = (
   pageIndex: pageIndexParser
     .withDefault(0)
     .withOptions({ shallow: false, startTransition }),
-  pageSize: parseAsInteger.withDefault(10).withOptions({ shallow: false }),
+  pageSize: parseAsInteger.withDefault(20).withOptions({ shallow: false }),
 });
 
 export const paginationSearchParamsCache = createSearchParamsCache(
