@@ -129,7 +129,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="h-fit">
               <CardHeader>
                 <CardTitle>Course AI Settings</CardTitle>
               </CardHeader>
@@ -172,6 +172,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
                     render={({ field }) => (
                       <FormTextField
                         field={field}
+                        rows={10}
                         label="System Prompt"
                         placeholder="Your custom system prompt..."
                         required={isFieldRequired(
