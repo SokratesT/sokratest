@@ -1,10 +1,10 @@
-import { getSession } from "@/db/queries/auth";
-import { getAllPosts } from "@/db/queries/post";
-import { format } from "date-fns";
-import Link from "next/link";
+import { ROUTES } from "@/settings/routes";
+import { redirect } from "next/navigation";
 
 const PostsPage = async () => {
-  const queryPosts = await getAllPosts();
+  return redirect(ROUTES.PUBLIC.login.getPath());
+
+  /* const queryPosts = await getAllPosts();
   const session = await getSession();
 
   return (
@@ -32,7 +32,7 @@ const PostsPage = async () => {
         ))}
       </div>
     </div>
-  );
+  ); */
 };
 
 export default PostsPage;

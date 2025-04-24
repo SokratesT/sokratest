@@ -1,12 +1,9 @@
-import { PublicFooter } from "@/components/footer/public-footer";
-import { PublicNavigation } from "@/components/navigation/public-navigation";
-
 const PublicLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  return (
+  /* return (
     <div className="flex min-h-screen flex-col justify-between gap-16">
       <div className="flex flex-col gap-4">
         <PublicNavigation />
@@ -14,7 +11,8 @@ const PublicLayout = ({
       </div>
       <PublicFooter />
     </div>
-  );
+  ); */
+  return <>{children}</>;
 };
 
 export default PublicLayout;

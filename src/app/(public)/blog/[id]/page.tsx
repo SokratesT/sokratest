@@ -1,18 +1,14 @@
-import { PlateEditor } from "@/components/editor/plate-editor";
-import { Placeholder } from "@/components/placeholders/placeholder";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { getPostById } from "@/db/queries/post";
-import { format } from "date-fns";
-import { UserIcon } from "lucide-react";
+import { ROUTES } from "@/settings/routes";
+import { redirect } from "next/navigation";
 
-const EditPostPage = async ({
+const PublicPostPage = async ({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) => {
-  const { id } = await params;
+  return redirect(ROUTES.PUBLIC.login.getPath());
+
+  /* const { id } = await params;
 
   const result = await getPostById(id);
 
@@ -59,7 +55,7 @@ const EditPostPage = async ({
         </CardContent>
       </Card>
     </div>
-  );
+  ); */
 };
 
-export default EditPostPage;
+export default PublicPostPage;
