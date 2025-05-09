@@ -6,8 +6,8 @@ export function useUmami() {
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.umami && session?.user?.id) {
-      window.umami.identify({
-        id: session.user.id,
+      window.umami.identify(session.user.id, {
+        name: session.user.name,
         email: session.user.email,
       });
     }
