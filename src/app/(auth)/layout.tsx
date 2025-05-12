@@ -2,8 +2,6 @@ import { FundingNotice } from "@/components/app/legal/funding-notice";
 import { LogoAnimated } from "@/components/app/logo-animated";
 import { ThemeSwitcher } from "@/components/app/theme-switcher";
 import { AuroraBackground } from "@/components/ui/aceternity/aurora-background";
-import { ROUTES } from "@/settings/routes";
-import Link from "next/link";
 
 const AuthLayout = async ({
   children,
@@ -18,9 +16,7 @@ const AuthLayout = async ({
 
       <div className="flex flex-grow items-center justify-center">
         <div className="flex flex-col items-center justify-center gap-4 px-2 py-8">
-          <Link href={ROUTES.PUBLIC.login.getPath()} className="cursor-default">
-            <LogoAnimated variant="dynamic" />
-          </Link>
+          <LogoAnimated variant="dynamic" />
 
           {children}
         </div>
