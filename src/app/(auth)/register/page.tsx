@@ -33,7 +33,14 @@ const RegisterPage = async ({
     if (query?.status !== "pending") {
       return (
         <Card className="w-full max-w-md">
-          <RegistrationDisabled className="border-0" />
+          <CardContent>
+            <RegistrationDisabled className="border-0" />
+          </CardContent>
+          <CardFooter className="text-muted-foreground text-sm">
+            <Link href={ROUTES.PUBLIC.login.getPath()}>
+              Already have an account?
+            </Link>
+          </CardFooter>
         </Card>
       );
     }
