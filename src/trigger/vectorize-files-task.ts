@@ -16,9 +16,9 @@ import {
 import { buckets } from "@/settings/buckets";
 import { ROUTES } from "@/settings/routes";
 import type { FileType } from "@/types/file";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { logger, task } from "@trigger.dev/sdk/v3";
 import { embedMany, generateText } from "ai";
-import { MarkdownNodeParser, Document as llamaDocument } from "llamaindex";
 import nodeFetch from "node-fetch";
 import { v4 as uuidv4 } from "uuid";
 
@@ -183,19 +183,26 @@ export const vectorizeFilesTask = task({
 
 async function processMarkdownFile(fileContent: string, fileName: string) {
   return await logger.trace(`process-markdown-${fileName}`, async () => {
-    const markdownNodeParser = new MarkdownNodeParser();
+    // const markdownNodeParser = new MarkdownNodeParser();
 
     // const chunks = splitMarkdownAtHeaders(fileContent, 100);
 
-    const document = new llamaDocument({ text: fileContent });
+    // const document = new llamaDocument({ text: fileContent });
 
-    const parsedDocuments = markdownNodeParser([document]);
+    // const parsedDocuments = markdownNodeParser([document]);
+
+    const splitter = new RecursiveCharacterTextSplitter({
+      chunkSize: 1024,
+      chunkOverlap: 128,
+    });
+
+    const parsedDocuments = await splitter.splitText(fileContent);
 
     const chunks = parsedDocuments.map((chunk) => ({
       title: "title",
-      depth: chunk.startCharIdx,
-      content: chunk.text,
-      length: chunk.text.length,
+      depth: 0,
+      content: chunk,
+      length: chunk.length,
       type: "text",
       fileName,
     })) as MarkdownNode[];
