@@ -4,8 +4,10 @@ import { Placeholder } from "@/components/placeholders/placeholder";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import type { Document } from "@/db/schema/document";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";
 import { cn } from "@/lib/utils";
+import { SmartphoneIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FileActions } from "./file-actions";
@@ -23,6 +25,8 @@ const FileViewer = ({ document }: { document: Document }) => {
     fetchUrl().then(() => setIsLoading(false));
   }, [document]);
 
+  const isMobile = useIsMobile();
+
   if (!filePath || isLoading) {
     return (
       <div className="flex size-full items-center justify-center">
@@ -32,7 +36,7 @@ const FileViewer = ({ document }: { document: Document }) => {
   }
 
   return (
-    <div className="flex h-full flex-col gap-4">
+    <div className="flex h-[calc(100dvh-110px)] flex-col gap-4">
       <div className="flex items-center justify-between">
         <h3
           className="max-w-[80%] truncate font-semibold text-lg"
@@ -41,9 +45,20 @@ const FileViewer = ({ document }: { document: Document }) => {
           {document.title}
         </h3>
       </div>
-      <div className="flex size-full flex-col gap-4 xl:grid xl:grid-cols-4">
+      <div
+        className={cn(
+          "flex size-full flex-col gap-4 xl:grid xl:grid-cols-4",
+          isMobile && "flex-col-reverse",
+        )}
+      >
         <div className="size-full xl:col-span-3">
-          <Viewport fileType={document.fileType} filePath={filePath} />
+          {isMobile ? (
+            <Placeholder Icon={SmartphoneIcon} size={30}>
+              Document preview is not available on mobile.
+            </Placeholder>
+          ) : (
+            <Viewport fileType={document.fileType} filePath={filePath} />
+          )}
         </div>
         <div className="col-span-1 flex flex-col gap-4">
           <FileMeta document={document} />
