@@ -21,7 +21,20 @@ export const upsertChunksToQdrant = async ({
     payload: chunk.payload,
   }));
 
-  return qdrant.upsert(qdrantCollections.chunks.name, { points });
+  // TODO: Uploading chunks one by one is not optimal, but batching was flaking out
+  // Specifically this:
+  // return qdrant.upsert(qdrantCollections.chunks.name, { points });
+
+  points.forEach(async (point) => {
+    console.log("Upserting chunk to Qdrant", {
+      id: point.id,
+      vector: point.vector.length,
+      payload: point.payload,
+    });
+    await qdrant.upsert(qdrantCollections.chunks.name, {
+      points: [point],
+    });
+  });
 };
 
 export const deleteChunksByDocumentId = async ({
