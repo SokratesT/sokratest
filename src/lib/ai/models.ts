@@ -71,9 +71,9 @@ const models = {
       },
     },
     vision: {
-      id: "qwen2.5-vl-72b-instruct",
-      label: "Qwen 2.5 VL (72b)",
-      description: "Model description for Qwen 2.5 VL (72b)",
+      id: "llama-4-scout-17b-16e-instruct",
+      label: "Llama 4 Scout (17b)",
+      description: "Model description for Llama 4 Scout (17b)",
       type: "vision" as const,
       getProvider: function () {
         return remoteProvider(this.id);
