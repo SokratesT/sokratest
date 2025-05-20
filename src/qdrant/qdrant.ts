@@ -1,6 +1,6 @@
 import "server-only";
 
-import { QdrantClient } from "@qdrant/js-client-rest";
+import { QdrantClient } from "@qdrant/qdrant-js";
 import { qdrantCollections } from "./qdrant-constants";
 
 let client: QdrantClient | null = null;
