@@ -3,13 +3,21 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { memo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
+import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import supersub from "remark-supersub";
+import "katex/dist/katex.min.css";
 import { CodeBlock } from "./code-block";
 
 const components: Partial<Components> = {
-  // @ts-expect-error
-  code: CodeBlock,
+  code: ({ node, className, children, ...props }) => {
+    return (
+      <CodeBlock node={node} className={className || ""} {...props}>
+        {children}
+      </CodeBlock>
+    );
+  },
   pre: ({ children }) => <>{children}</>,
   ol: ({ node, children, ...props }) => {
     return (
@@ -115,7 +123,8 @@ const components: Partial<Components> = {
   },
 };
 
-const remarkPlugins = [remarkGfm, supersub];
+const remarkPlugins = [remarkGfm, supersub, remarkMath];
+const rehypePlugins = [rehypeKatex];
 
 const NonMemoizedMarkdown = ({
   children,
@@ -125,10 +134,16 @@ const NonMemoizedMarkdown = ({
     <div
       className={cn(
         "prose dark:prose-invert w-full max-w-full whitespace-normal",
+        // Override prose styling for inline code to remove backticks
+        "[&_code]:before:content-none [&_code]:after:content-none",
         className,
       )}
     >
-      <ReactMarkdown remarkPlugins={remarkPlugins} components={components}>
+      <ReactMarkdown
+        remarkPlugins={remarkPlugins}
+        rehypePlugins={rehypePlugins}
+        components={components}
+      >
         {children}
       </ReactMarkdown>
     </div>
