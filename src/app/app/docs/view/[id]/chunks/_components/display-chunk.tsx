@@ -6,9 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { buckets } from "@/settings/buckets";
 import type { QdrantChunk } from "@/types/qdrant";
-import { DisplayChunkImage } from "./display-chunk-image";
 
 const DisplayChunk = ({ chunk }: { chunk: QdrantChunk }) => {
   return (
@@ -19,22 +17,25 @@ const DisplayChunk = ({ chunk }: { chunk: QdrantChunk }) => {
           {chunk.payload.chunkCount}
         </CardTitle>
         <CardDescription>
-          Score: {chunk.score}
-          <br />
-          {chunk.payload.source} | {chunk.payload.title} |{" "}
-          {chunk.payload.file_reference} | {chunk.payload.file_type} |{" "}
-          {chunk.payload.tokens} tokens
-          <br />
-          {chunk.payload.createdAt} | {chunk.payload.document_id} |{" "}
-          {chunk.payload.course_id} | {chunk.payload.depth}
-          <br />
-          {chunk.payload.text.length} characters |{" "}
-          {chunk.payload.text.split(" ").length} words
+          {chunk.score && <p>Score: {chunk.score}</p>}
+          <p>
+            {chunk.payload.source} | {chunk.payload.title} |{" "}
+            {chunk.payload.file_reference} | {chunk.payload.file_type} |{" "}
+            {chunk.payload.tokens} tokens
+          </p>
+          <p>
+            {chunk.payload.createdAt} | {chunk.payload.document_id} |{" "}
+            {chunk.payload.course_id} | {chunk.payload.depth}
+          </p>
+          <p>
+            {chunk.payload.text.length} characters |{" "}
+            {chunk.payload.text.split(" ").length} words
+          </p>
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Markdown>{chunk.payload.text}</Markdown>
-        {chunk.payload.source === "image" && (
+        {/* {chunk.payload.source === "image" && (
           <DisplayChunkImage
             imageRef={{
               reference: chunk.payload.file_reference,
@@ -43,7 +44,7 @@ const DisplayChunk = ({ chunk }: { chunk: QdrantChunk }) => {
               prefix: chunk.payload.document_id,
             }}
           />
-        )}
+        )} */}
       </CardContent>
     </Card>
   );
