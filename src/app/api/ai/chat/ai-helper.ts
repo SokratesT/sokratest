@@ -4,7 +4,7 @@ import type { Chat } from "@/db/schema/chat";
 import type { Course } from "@/db/schema/course";
 import { document } from "@/db/schema/document";
 import { generateEmbedding } from "@/lib/ai/embedding";
-import { getModel } from "@/lib/ai/models";
+import { getSaiaModel } from "@/lib/ai/saia-models";
 import { qdrant } from "@/qdrant/qdrant";
 import { qdrantCollections } from "@/qdrant/qdrant-constants";
 import { generateRagQueryPrompt } from "@/settings/prompts";
@@ -75,7 +75,10 @@ export const getRelevantChunks = async ({
   limit: number;
 }) => {
   const generatedQuery = await generateText({
-    model: getModel({ type: "small" }),
+    model: getSaiaModel({
+      input: ["text"],
+      model: "meta-llama-3.1-8b-instruct",
+    }).provider,
     messages,
     experimental_telemetry: {
       isEnabled: true,

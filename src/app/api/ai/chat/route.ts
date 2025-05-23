@@ -1,7 +1,11 @@
 import { getTrailingMessageId, saveMessages } from "@/db/queries/ai-queries";
 import { getSession } from "@/db/queries/auth";
 import { getCourseConfig } from "@/db/queries/course";
-import { getModel } from "@/lib/ai/models";
+import {
+  type ModelsWithText,
+  getSaiaModel,
+  saiaModels,
+} from "@/lib/ai/saia-models";
 import { createNewChat, getMostRecentUserMessage } from "@/lib/ai/utils";
 import { createSocraticSystemPrompt } from "@/settings/prompts";
 import {
@@ -96,21 +100,27 @@ export async function POST(request: Request) {
           dataStream.writeMessageAnnotation(reference as unknown as JSONValue);
         });
 
-        const model = courseConfig.config.model as
-          | "chat"
-          | "chatReasoning"
-          | "small"
-          | "vision";
+        // Validate and get the model ID from course configuration
+        const modelIdFromConfig = courseConfig.config.model;
+        const isValidModelId = saiaModels.some(
+          (m) => m.id === modelIdFromConfig,
+        );
 
-        const result = streamText({
-          model: getModel({
-            type: model.length > 0 ? model : "chat",
-          }),
+        const { provider: modelProvider } = getSaiaModel({
+          input: ["text"], // User only sends text
+          model: isValidModelId
+            ? (modelIdFromConfig as ModelsWithText)
+            : "llama-3.3-70b-instruct",
+        });
+
+        const streamOperationResult = streamText({
+          // Renamed 'result' to 'streamOperationResult'
+          model: modelProvider,
           system: createSocraticSystemPrompt({
             context: relevantChunks.map((chunk, i) => ({
               documentId: String(
                 references.indexOf(
-                  // biome-ignore lint/style/noNonNullAssertion: <explanation>
+                  // biome-ignore lint/style/noNonNullAssertion:
                   references.find((r) => r.id === chunk.documentId)!,
                 ) + 1,
               ),
@@ -176,12 +186,17 @@ export async function POST(request: Request) {
           },
         });
 
-        result.consumeStream();
+        streamOperationResult.consumeStream();
 
-        result.mergeIntoDataStream(dataStream, { sendReasoning: true });
+        streamOperationResult.mergeIntoDataStream(dataStream, {
+          sendReasoning: true,
+        });
       },
-      onError: () => {
-        return "Oops, an error occurred!";
+      onError: (error) => {
+        // Error parameter contains the thrown error
+        console.error("Error in data stream execution:", error); // Log the actual error message
+        // Return the error message to be sent to the client
+        return "Oops, an error occurred while processing your request!";
       },
     });
   } catch (error) {

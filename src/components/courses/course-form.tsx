@@ -16,6 +16,7 @@ import {
   type CourseInsertSchemaType,
   courseInsertSchema,
 } from "@/db/zod/course";
+import { saiaModels } from "@/lib/ai/saia-models";
 import { authClient } from "@/lib/auth-client";
 import { isFieldRequired, withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
@@ -141,19 +142,10 @@ const CourseForm = ({ course }: { course?: Course }) => {
                     render={({ field }) => (
                       <FormSelect
                         field={field}
-                        options={[
-                          { label: "Chat (Llama 3.3 70b)", value: "chat" },
-                          {
-                            label:
-                              "Chat-Reasoning (Deepseek R1 Distill Llama 70b)",
-                            value: "chatReasoning",
-                          },
-                          { label: "Small (Llama 3.1 8b)", value: "small" },
-                          {
-                            label: "Vision (Qwen 2.5 VL 72b)",
-                            value: "vision",
-                          },
-                        ]}
+                        options={saiaModels.map((model) => ({
+                          value: model.id,
+                          label: model.name,
+                        }))}
                         label="Model"
                         placeholder="Choose an AI Model"
                         required={isFieldRequired(

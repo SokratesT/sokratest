@@ -10,7 +10,7 @@ import {
   type UIMessage,
   generateText,
 } from "ai";
-import { getModel } from "./models";
+import { getSaiaModel } from "./saia-models";
 
 export const createNewChat = async ({
   message,
@@ -24,7 +24,10 @@ export const createNewChat = async ({
   courseId: Course["id"];
 }) => {
   const { text: title } = await generateText({
-    model: getModel({ type: "small" }),
+    model: getSaiaModel({
+      input: ["text"],
+      model: "meta-llama-3.1-8b-instruct",
+    }).provider,
     system: generateChatTitlePrompt,
     prompt: message,
     experimental_telemetry: {

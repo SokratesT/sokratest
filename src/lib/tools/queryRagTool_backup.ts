@@ -1,6 +1,6 @@
 import { findRelevantContent } from "@/app/api/ai/chat/ai-helper";
 import type { Course } from "@/db/schema/course";
-import { getModel } from "@/lib/ai/models";
+import { getSaiaModel } from "@/lib/ai/saia-models";
 import { type DataStreamWriter, streamText, tool } from "ai";
 import { z } from "zod";
 
@@ -78,7 +78,10 @@ export const queryRagTool = ({
       }));
 
       const { fullStream } = streamText({
-        model: getModel({ type: "chatReasoning" }),
+        model: getSaiaModel({
+          input: ["text"],
+          model: "deepseek-r1-distill-llama-70b",
+        }).provider,
         experimental_telemetry: { isEnabled: true },
         system: `Respond to the query using the provided context. In your response, include citations by referencing the fileId that certain information correspond to like this: <fileId:{fileId}> \n The context: ${JSON.stringify(cont)}`,
         prompt: query,

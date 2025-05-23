@@ -1,10 +1,10 @@
 import { embed } from "ai";
-import { getModel } from "./models";
+import { getSaiaEmbeddingModel } from "./saia-models";
 
 export const generateEmbedding = async (value: string): Promise<number[]> => {
   const input = value.replaceAll("\\n", " ");
   const { embedding } = await embed({
-    model: getModel({ type: "embedding" }),
+    model: getSaiaEmbeddingModel({ model: "e5-mistral-7b-instruct" }).provider,
     value: input,
   });
 

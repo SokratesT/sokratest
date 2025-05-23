@@ -271,16 +271,15 @@ async function processImageFile(
     const dataUrl = `data:${mimeType};base64,${base64Image}`;
 
     const result = await generateText({
-      model: getModel({ type: "vision" }),
-      maxTokens: 512,
+      model: getSaiaModel({
+        input: ["image"],
+        model: "gemma-3-27b-it",
+      }).provider,
+      maxTokens: 1024,
       messages: [
         {
           role: "user",
           content: [
-            {
-              type: "text",
-              text: "what's on this image?",
-            },
             {
               type: "image",
               image: dataUrl,
@@ -304,7 +303,7 @@ async function processImageFile(
   });
 }
 
-async function generateEmbeddings({
+const generateEmbeddings = async ({
   chunks,
   courseId,
   documentId,
@@ -312,11 +311,12 @@ async function generateEmbeddings({
   chunks: MarkdownNode[];
   courseId: string;
   documentId: string;
-}) {
+}) => {
   // Embed the chunks
   const embedResults = await logger.trace("embed-chunks", async () =>
     embedMany({
-      model: getModel({ type: "embedding" }),
+      model: getSaiaEmbeddingModel({ model: "e5-mistral-7b-instruct" })
+        .provider,
       values: chunks.map((chunk) => chunk.content),
     }),
   );

@@ -1,4 +1,4 @@
-import { getModel } from "@/lib/ai/models";
+import { getSaiaModel } from "@/lib/ai/saia-models";
 import { type DataStreamWriter, type Message, streamText, tool } from "ai";
 import { z } from "zod";
 
@@ -17,7 +17,10 @@ export const finalResponseTool = (
       });
 
       const { fullStream } = streamText({
-        model: getModel({ type: "chat" }),
+        model: getSaiaModel({
+          input: ["text"],
+          model: "llama-3.3-70b-instruct",
+        }).provider,
         messages,
       });
 
