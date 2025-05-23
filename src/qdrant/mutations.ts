@@ -3,17 +3,20 @@ import "server-only";
 import type { Course } from "@/db/schema/course";
 import type { Document } from "@/db/schema/document";
 import type { ChunkPayload } from "@/types/qdrant";
+import pMap from "p-map";
 import { qdrant } from "./qdrant";
 import { qdrantCollections } from "./qdrant-constants";
+
+interface Point {
+  vector: number[];
+  id: string;
+  payload: ChunkPayload;
+}
 
 export const upsertChunksToQdrant = async ({
   chunks,
 }: {
-  chunks: {
-    vector: number[];
-    id: string;
-    payload: ChunkPayload;
-  }[];
+  chunks: Point[];
 }) => {
   const points = chunks.map((chunk) => ({
     id: chunk.id,
@@ -25,16 +28,13 @@ export const upsertChunksToQdrant = async ({
   // Specifically this:
   // return qdrant.upsert(qdrantCollections.chunks.name, { points });
 
-  points.forEach(async (point) => {
-    console.log("Upserting chunk to Qdrant", {
-      id: point.id,
-      vector: point.vector.length,
-      payload: point.payload,
-    });
+  const saveChunk = async (point: Point) => {
     await qdrant.upsert(qdrantCollections.chunks.name, {
       points: [point],
     });
-  });
+  };
+
+  await pMap(points, saveChunk, { concurrency: 10 });
 };
 
 export const deleteChunksByDocumentId = async ({

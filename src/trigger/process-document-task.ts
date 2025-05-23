@@ -1,6 +1,9 @@
 import https from "https";
 import type { ProcessingStatus } from "@/app/api/docs/processing/route";
-import { extractMarkdownImages } from "@/lib/chunk/utils";
+import {
+  type SerializedDocument,
+  serializeDoclingDocument,
+} from "@/lib/ai/docling-serialize";
 import { getFileTypeFromMime } from "@/lib/files/uploadHelpers";
 import {
   createPresignedUrlToDownload,
@@ -9,27 +12,26 @@ import {
 import { s3Client } from "@/lib/s3/s3client";
 import { buckets } from "@/settings/buckets";
 import { ROUTES } from "@/settings/routes";
-import type { DoclingData } from "@/types/docling";
+import type { SaiaDoclingData } from "@/types/docling";
 import type { ProcessDocumentTaskPayload } from "@/types/trigger";
+import type { Size } from "@docling/docling-core";
 import { logger, task } from "@trigger.dev/sdk/v3";
 import nodeFetch from "node-fetch";
-import sharp from "sharp";
-
-// Define minimum resolution requirements
-const MIN_IMAGE_WIDTH = 100; // pixels
-const MIN_IMAGE_HEIGHT = 100; // pixels
-const MIN_SINGLE_DIMENSION = 50; // pixels
 
 /**
  * Validates if an image meets minimum resolution requirements
  * @param imageBuffer The image buffer to check
  * @returns An object containing validation result and metadata
  */
-async function validateImageResolution(imageBuffer: Buffer) {
+async function validateImageResolution(size: Size, upscaleFactor = 1) {
+  // Define minimum resolution requirements
+  const MIN_IMAGE_WIDTH = 100 * upscaleFactor; // pixels
+  const MIN_IMAGE_HEIGHT = 100 * upscaleFactor; // pixels
+  const MIN_SINGLE_DIMENSION = 50 * upscaleFactor; // pixels
+
   try {
-    const metadata = await sharp(imageBuffer).metadata();
-    const width = metadata.width || 0;
-    const height = metadata.height || 0;
+    const width = size.width || 0;
+    const height = size.height || 0;
 
     /* Images have to be at least 20 pixels in any dimension
     and at least 100 pixels in either width or height
@@ -42,9 +44,6 @@ async function validateImageResolution(imageBuffer: Buffer) {
 
     return {
       isValid: isValidResolution,
-      width,
-      height,
-      metadata,
     };
   } catch (error) {
     logger.error(
@@ -63,11 +62,32 @@ export const processDocumentTask = task({
   id: "process-document-task",
   maxDuration: 1200,
   run: async (payload: ProcessDocumentTaskPayload, { ctx }) => {
-    const doclingApi = `${process.env.DOCLING_API}/v1alpha/convert/source`;
+    const doclingApi = `${process.env.OPENAI_COMPATIBLE_BASE_URL}/documents/convert`;
 
     const presignedUrl = await createPresignedUrlToDownload(
       payload.documentRef,
     );
+
+    // Download the file using the presigned URL
+    const fileResponse = await logger.trace("download-file", async () => {
+      try {
+        return await nodeFetch(presignedUrl);
+      } catch (error) {
+        logger.error(
+          `Error downloading file: ${error instanceof Error ? error.message : String(error)}`,
+        );
+        throw error;
+      }
+    });
+
+    if (!fileResponse.ok) {
+      throw new Error(
+        `Failed to download file: ${fileResponse.status} ${fileResponse.statusText}`,
+      );
+    }
+
+    // Get the file content as a blob
+    const fileBlob = await fileResponse.blob();
 
     const doclingResponse = await logger.trace("process-document", async () => {
       try {
@@ -79,26 +99,22 @@ export const processDocumentTask = task({
           15 * 60 * 1000,
         ); // 15 minutes timeout
 
+        // Create FormData to properly send the file
+        const formData = new FormData();
+        formData.append("document", fileBlob);
+
+        const params = new URLSearchParams({
+          response_type: "json",
+          extract_tables_as_images: "true",
+        });
+
         // Use the signal from the controller in the fetch call
-        const response = await nodeFetch(doclingApi, {
+        const response = await nodeFetch(`${doclingApi}?${params}`, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            "x-api-key": process.env.DOCLING_API_KEY || "",
+            Authorization: `Bearer ${process.env.OPENAI_COMPATIBLE_API_KEY}`,
           },
-          body: JSON.stringify({
-            options: {
-              image_export_mode: "embedded",
-              do_ocr: false,
-              images_scale: 1.0,
-              pdf_backend: "pypdfium2",
-            },
-            http_sources: [
-              {
-                url: presignedUrl,
-              },
-            ],
-          }),
+          body: formData,
           signal: controller.signal, // Connect the AbortController
         });
 
@@ -114,11 +130,33 @@ export const processDocumentTask = task({
       }
     });
 
-    const processedDocument = (await doclingResponse.json()) as DoclingData;
+    // Check if the response is successful
+    if (!doclingResponse.ok) {
+      throw new Error(
+        `Docling API returned ${doclingResponse.status}: ${await doclingResponse.text()}`,
+      );
+    }
 
-    const { modifiedMarkdown, extractedImages } = extractMarkdownImages(
-      processedDocument.document.md_content || "",
-    );
+    // Parse the response properly
+    let processedDocument: SaiaDoclingData;
+    try {
+      const responseText = await doclingResponse.text();
+
+      processedDocument = JSON.parse(responseText) as SaiaDoclingData;
+    } catch (error) {
+      logger.error(
+        `Failed to parse Docling API response: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      throw error;
+    }
+
+    const json = processedDocument.json_data;
+
+    const serializedDocling: SerializedDocument[] | undefined =
+      serializeDoclingDocument(json, {
+        keepImageRefs: true,
+        mergePages: payload.mergePages,
+      });
 
     await logger.trace("clear-prefix", async () => {
       await deletePrefixRecursively({
@@ -127,48 +165,76 @@ export const processDocumentTask = task({
       });
     });
 
-    await logger.trace("upload-markdown", async () => {
-      await s3Client.putObject(
-        buckets.processed.name,
-        `${payload.documentRef.id}/content.md`,
-        Buffer.from(modifiedMarkdown, "utf-8"),
-      );
-    });
-
-    // Upload each extracted image
-    await logger.trace("upload-images", async () => {
-      for (let i = 0; i < extractedImages.length; i++) {
-        const image = extractedImages[i];
-        const type = getFileTypeFromMime(image.mimeType);
-
-        logger.info(
-          `Uploading image ${i + 1} of ${extractedImages.length}: ${image.placeholder} (${type})`,
-        );
-
-        if (type === "unknown") {
-          logger.error(`Unknown image type for ${image.alt}. Skipping upload.`);
-          continue;
-        }
-
-        // Validate image resolution before uploading
-        const imageBuffer = Buffer.from(image.imageData, "base64");
-        const validationResult = await validateImageResolution(imageBuffer);
-
-        if (!validationResult.isValid) {
-          logger.warn(
-            `Image ${image.placeholder} has insufficient resolution (${validationResult.width}x${validationResult.height}). Minimum required: ${MIN_IMAGE_WIDTH}x${MIN_IMAGE_HEIGHT}px.`,
-          );
-          // You can decide whether to skip or continue with upload of small images
-          // Uncomment the following line to skip small images
-          continue;
-        }
-
-        await s3Client.putObject(
-          buckets.processed.name,
-          `${payload.documentRef.id}/${image.placeholder}.${type}`,
-          imageBuffer, // Using already created buffer
-        );
+    await logger.trace("upload-pages", async () => {
+      if (!serializedDocling || serializedDocling.length === 0) {
+        logger.info("No serialized docling content to upload for markdown.");
+        return;
       }
+
+      await Promise.all(
+        serializedDocling.map(async (page) => {
+          await logger.trace(
+            `Processing page ${page.page} of ${serializedDocling.length}`,
+            async () => {
+              logger.trace(
+                `Uploading markdown from page ${page.page} of ${serializedDocling.length}`,
+                async () => {
+                  const markdown = page.markdown;
+
+                  await s3Client.putObject(
+                    buckets.processed.name,
+                    `${payload.documentRef.id}/page-${page.page}.md`,
+                    Buffer.from(markdown, "utf-8"),
+                  );
+                },
+              );
+
+              await logger.trace(
+                `Uploading Images from page ${page.page} of ${serializedDocling.length}`,
+                async () => {
+                  const images = page.images;
+
+                  await Promise.all(
+                    images.map(async (image) => {
+                      if (!image) {
+                        logger.warn(`Undefined image. Skipping upload.`);
+                        return;
+                      }
+
+                      logger.info(
+                        `Processing image ${image.label}-${image.index} (${image.mimetype})`,
+                      );
+
+                      const imageData = image.uri.includes("base64,")
+                        ? image.uri.split("base64,")[1]
+                        : image.uri;
+
+                      const imageBuffer = Buffer.from(imageData, "base64");
+                      const fileType = getFileTypeFromMime(image.mimetype);
+                      const validationResult = await validateImageResolution(
+                        image.size,
+                        2, // TODO: Use the actual upscale factor
+                      );
+                      if (!validationResult.isValid) {
+                        logger.warn(
+                          `Insufficient resolution (${validationResult.width}x${validationResult.height}).`,
+                        );
+                        return;
+                      }
+
+                      await s3Client.putObject(
+                        buckets.processed.name,
+                        `${payload.documentRef.id}/${image.label}-${image.index}.${fileType}`,
+                        imageBuffer,
+                      );
+                    }),
+                  );
+                },
+              );
+            },
+          );
+        }),
+      );
     });
 
     const updateNextResponse = await logger.trace(
@@ -178,6 +244,7 @@ export const processDocumentTask = task({
         const requestBody = {
           documentId: payload.documentRef.id,
           courseId: payload.courseId,
+          mergePages: payload.mergePages,
           step: "processing",
           status: "success",
         } as ProcessingStatus;

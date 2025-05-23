@@ -1,3 +1,5 @@
+import type { DoclingDocument } from "@docling/docling-core";
+
 export interface DoclingData {
   document: {
     filename: string;
@@ -11,4 +13,14 @@ export interface DoclingData {
   errors: [];
   processing_time: number;
   timings: object;
+}
+
+export interface SaiaDoclingData {
+  filename: string;
+  images: {
+    type: string;
+    filename: string;
+    image: string;
+  }[];
+  json_data: DoclingDocument;
 }

@@ -39,6 +39,7 @@ export const enqueueDocuments = authActionClient
         bucket: document.bucket,
         type: document.fileType,
         prefix: document.prefix,
+        metadata: document.metadata,
       })
       .from(document)
       .where(inArray(document.id, ids));
@@ -49,6 +50,7 @@ export const enqueueDocuments = authActionClient
         payload: {
           courseId: ctx.activeCourseId,
           documentRef: doc as FilePayload,
+          mergePages: doc.metadata.mergePages ?? true,
         },
         options: {
           concurrencyKey: "PROCESSING_DOCUMENT_CONCURRENCY_KEY",
@@ -82,10 +84,23 @@ export const enqueueEmbeddings = authActionClient
       .set({ status: "generating-embedding", updatedAt: new Date() })
       .where(inArray(document.id, ids));
 
+    const docs = await db
+      .select({
+        id: document.id,
+        metadata: document.metadata,
+      })
+      .from(document)
+      .where(inArray(document.id, ids));
+
     const handle = await tasks.batchTrigger<typeof vectorizeFilesTask>(
       "vectorize-files-task",
-      ids.map((id) => ({
-        payload: { prefix: id, courseId: ctx.activeCourseId, documentId: id },
+      docs.map((doc) => ({
+        payload: {
+          prefix: doc.id,
+          courseId: ctx.activeCourseId,
+          documentId: doc.id,
+          mergePages: doc.metadata.mergePages ?? true,
+        },
         options: {
           concurrencyKey: "GENERATING_EMBEDDING_CONCURRENCY_KEY",
           queue: {

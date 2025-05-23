@@ -18,6 +18,7 @@ export interface DocumentMetadataType {
   pageRange?: string;
   author?: string;
   chapterTitle?: string;
+  mergePages?: boolean;
 }
 
 export type DocumentStatus =

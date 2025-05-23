@@ -10,6 +10,7 @@ import { type NextRequest, NextResponse } from "next/server";
 interface ProcessingStatusBase {
   documentId: Document["id"];
   courseId: Course["id"];
+  mergePages: boolean;
   step: "processing" | "embedding";
 }
 
@@ -52,6 +53,7 @@ export const POST = async (req: NextRequest) => {
       prefix: processingStatus.documentId,
       courseId: processingStatus.courseId,
       documentId: processingStatus.documentId,
+      mergePages: processingStatus.mergePages,
     });
 
     // Trigger embedding task

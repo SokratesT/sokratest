@@ -35,6 +35,7 @@ const DocumentForm = ({ document }: { document: Document }) => {
         pageRange: document.metadata?.pageRange ?? undefined,
         author: document.metadata?.author ?? undefined,
         chapterTitle: document.metadata?.chapterTitle ?? undefined,
+        mergePages: document.metadata?.mergePages ?? true,
       },
     },
   });
@@ -174,6 +175,17 @@ const DocumentForm = ({ document }: { document: Document }) => {
                     field={field}
                     label="Show Reference"
                     description="Include a reference to this document in the student chat view when the AI uses it. When disabled, the AI can still use information from this document, but will not display a reference."
+                  />
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="metadata.mergePages"
+                render={({ field }) => (
+                  <FormSwitch
+                    field={field}
+                    label="Merge Pages"
+                    description="If this is disabled, the document will be split on pages, instead of the AI trying to figure out semantically coherent chunks. Highly recommended for files like Presentations or content that is logically grouped on pages."
                   />
                 )}
               />

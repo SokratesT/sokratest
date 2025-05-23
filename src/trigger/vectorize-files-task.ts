@@ -1,9 +1,7 @@
 import https from "https";
 import type { ProcessingStatus } from "@/app/api/docs/processing/route";
-import type { Document } from "@/db/schema/document";
-import { getModel } from "@/lib/ai/models";
+import { getSaiaEmbeddingModel, getSaiaModel } from "@/lib/ai/saia-models";
 import type { MarkdownNode } from "@/lib/chunk/markdown-chunker";
-import { extractFileInfoFromReference } from "@/lib/chunk/utils";
 import {
   getImageAsBase64,
   getMarkdownAsString,
@@ -14,21 +12,24 @@ import {
   upsertChunksToQdrant,
 } from "@/qdrant/mutations";
 import { buckets } from "@/settings/buckets";
+import {
+  describeImagePrompt,
+  describeTableImagePrompt,
+} from "@/settings/prompts";
 import { ROUTES } from "@/settings/routes";
 import type { FileType } from "@/types/file";
+import type { VectorizeFilesTaskPayload } from "@/types/trigger";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { logger, task } from "@trigger.dev/sdk/v3";
 import { embedMany, generateText } from "ai";
 import nodeFetch from "node-fetch";
+import pMap from "p-map";
 import { v4 as uuidv4 } from "uuid";
 
 export const vectorizeFilesTask = task({
   id: "vectorize-files-task",
-  maxDuration: 1800, // Stop executing after 600 secs (30 mins) of compute
-  run: async (
-    payload: { prefix: string; courseId: string; documentId: Document["id"] },
-    { ctx },
-  ) => {
+  maxDuration: 1800,
+  run: async (payload: VectorizeFilesTaskPayload) => {
     const files = await listAllFilesInPrefix({
       bucket: buckets.processed.name,
       prefix: `${payload.prefix}/`,
@@ -40,20 +41,31 @@ export const vectorizeFilesTask = task({
       name: string;
       type: FileType;
     }[] = [];
+
     const markdown: MarkdownNode[] = [];
 
-    // Process files sequentially instead of in parallel
-    for (const file of files) {
+    const processFile = async (file: {
+      name: string;
+      lastModified?: Date;
+      size?: number;
+    }) => {
       const fileExtension = file.name.split(".").pop()?.toLowerCase();
       if (!fileExtension) {
-        continue;
-      } else if (fileExtension === "md" || fileExtension === "markdown") {
+        return;
+      } else if (fileExtension === "md") {
         const text = (await getMarkdownAsString({
           bucket: buckets.processed.name,
           name: file.name,
         })) as string;
 
-        const processedMarkdown = await processMarkdownFile(text, file.name);
+        const processedMarkdown = await processMarkdownFile({
+          fileContent: text,
+          fileName: file.name,
+          chunkingStrategy: payload.mergePages
+            ? "RecursiveCharacterTextSplitter"
+            : "none",
+        });
+
         markdown.push(...processedMarkdown);
       } else if (["jpeg", "png"].includes(fileExtension)) {
         // TODO: Expand supported file types, centralised with upload formats
@@ -76,29 +88,9 @@ export const vectorizeFilesTask = task({
           fileName: file.name,
         });
       }
-    }
+    };
 
-    /* const mergedChunks = markdown
-      .map((chunk) => {
-        if (chunk.type === "image") {
-          const image = images.find((img) => img.name === chunk.fileReference);
-          if (image) {
-            return {
-              ...chunk,
-              content: image.description,
-              fileType: image.type,
-            };
-          }
-          // Return the original chunk if no matching image was found
-          return chunk;
-        }
-        // For text chunks, return them unchanged
-        return chunk;
-      })
-      .filter(Boolean); // Remove any undefined values that might slip through */
-    markdown.map((chunk) => {
-      chunk;
-    });
+    await pMap(files, processFile, { concurrency: 2 });
 
     const imageChunks = images.map((image) => ({
       content: image.description,
@@ -109,6 +101,8 @@ export const vectorizeFilesTask = task({
     })) as MarkdownNode[];
 
     const mergedChunks = [...markdown, ...imageChunks];
+
+    console.log("Merged chunks:", mergedChunks);
 
     const qdrantResponse = await generateEmbeddings({
       chunks: mergedChunks,
@@ -229,15 +223,27 @@ export const vectorizeFilesTask = task({
   },
 });
 
-async function processMarkdownFile(fileContent: string, fileName: string) {
+const processMarkdownFile = async ({
+  fileContent,
+  fileName,
+  chunkingStrategy,
+}: {
+  fileContent: string;
+  fileName: string;
+  chunkingStrategy: "none" | "RecursiveCharacterTextSplitter";
+}) => {
   return await logger.trace(`process-markdown-${fileName}`, async () => {
-    // const markdownNodeParser = new MarkdownNodeParser();
-
-    // const chunks = splitMarkdownAtHeaders(fileContent, 100);
-
-    // const document = new llamaDocument({ text: fileContent });
-
-    // const parsedDocuments = markdownNodeParser([document]);
+    if (chunkingStrategy === "none") {
+      return [
+        {
+          title: fileName,
+          depth: 0,
+          content: fileContent,
+          length: fileContent.length,
+          type: "text",
+        },
+      ] as MarkdownNode[];
+    }
 
     const splitter = new RecursiveCharacterTextSplitter({
       chunkSize: 1024,
@@ -252,21 +258,20 @@ async function processMarkdownFile(fileContent: string, fileName: string) {
       content: chunk,
       length: chunk.length,
       type: "text",
-      fileName,
     })) as MarkdownNode[];
 
-    // return chunks.map((chunk) => ({ ...chunk, fileName }));
     return chunks;
   });
-}
+};
 
-async function processImageFile(
+const processImageFile = async (
   base64Image: string,
   name: string,
   fileExtension: FileType,
-) {
+) => {
   return await logger.trace(`process-image-${name}`, async () => {
     const mimeType = `image/${fileExtension}`;
+    const imageType = name.startsWith("table") ? "table" : "picture";
 
     const dataUrl = `data:${mimeType};base64,${base64Image}`;
 
@@ -276,6 +281,8 @@ async function processImageFile(
         model: "gemma-3-27b-it",
       }).provider,
       maxTokens: 1024,
+      system:
+        imageType === "table" ? describeTableImagePrompt : describeImagePrompt,
       messages: [
         {
           role: "user",
@@ -290,18 +297,18 @@ async function processImageFile(
     });
 
     const step = result.steps.find((step) => step.stepType === "initial");
-    const imageRef = extractFileInfoFromReference(name)?.id;
+    /* const imageRef = extractFileInfoFromReference(name)?.id; */
 
-    if (!step || !imageRef) return;
+    if (!step) return;
 
     return {
       description: step.text,
       tokens: step.usage.completionTokens,
-      name: imageRef,
+      name,
       type: mimeType.split("/")[1] as FileType,
     };
   });
-}
+};
 
 const generateEmbeddings = async ({
   chunks,
@@ -376,4 +383,4 @@ const generateEmbeddings = async ({
   );
 
   return { success: true, type: "markdown", qdrant: qdrantResult };
-}
+};
