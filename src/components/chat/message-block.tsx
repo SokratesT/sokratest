@@ -127,7 +127,8 @@ const MessageBlock = ({
             variant={variant}
             className={cn(
               {
-                "w-full rounded-none bg-transparent": variant === "received",
+                "w-[calc(100dvw-31px)] rounded-none bg-transparent md:w-[calc(100dvw-316px)] lg:max-w-[800px]":
+                  variant === "received",
               },
               "sticky",
             )}
@@ -139,16 +140,14 @@ const MessageBlock = ({
                     type="single"
                     collapsible
                     key={part.type}
-                    className="mb-4 max-w-[500px] rounded-2xl bg-accent px-4 font-mono text-accent-foreground"
+                    className="mb-4 rounded-2xl border bg-card px-4"
                   >
                     <AccordionItem value="item-1">
                       <AccordionTrigger className="py-2">
-                        {message.content === ""
-                          ? "Reasoning..."
-                          : "Reasoning steps"}
+                        Show Reasoning
                       </AccordionTrigger>
                       <AccordionContent>
-                        <Markdown className="font-mono text-accent-foreground text-sm">
+                        <Markdown className="text-sm">
                           {part.reasoning}
                         </Markdown>
                       </AccordionContent>

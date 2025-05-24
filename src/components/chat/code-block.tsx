@@ -41,7 +41,7 @@ const CodeBlock = ({ node, className, children, ...props }: CodeBlockProps) => {
   if (isInline) {
     return (
       <code
-        className="rounded-md bg-zinc-200 px-1.5 py-0.5 font-normal text-sm dark:bg-zinc-700"
+        className="rounded-md bg-zinc-200 px-1.5 py-0.5 font-normal dark:bg-zinc-700"
         style={{
           fontFamily:
             "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",

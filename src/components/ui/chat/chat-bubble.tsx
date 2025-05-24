@@ -87,7 +87,7 @@ const chatBubbleMessageVariants = cva("p-4", {
   variants: {
     variant: {
       received: "rounded-r-lg rounded-tl-lg bg-secondary text-foreground",
-      sent: "rounded-l-lg rounded-tr-lg bg-primary text-primary-foreground",
+      sent: "rounded-l-lg rounded-tr-lg bg-primary/80 text-primary-foreground",
     },
     layout: {
       default: "",

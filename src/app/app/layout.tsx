@@ -19,7 +19,7 @@ const AppLayout = async ({ children }: { children: React.ReactNode }) => {
       <SidebarProvider>
         <AppSidebar />
 
-        <SidebarInset className="h-screen max-h-screen max-w-full">
+        <SidebarInset className="h-dvh max-h-dvh max-w-full">
           <Header />
 
           <NextStepTours>
