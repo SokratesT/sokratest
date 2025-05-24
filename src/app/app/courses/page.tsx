@@ -6,6 +6,7 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableBody } from "@/components/ui/data-table/data-table-body";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
+import { getSession } from "@/db/queries/auth";
 import { getUserCoursesForActiveOrganization } from "@/db/queries/course";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
@@ -20,6 +21,8 @@ const CoursesPage = async ({
 }: {
   searchParams: Promise<SearchParams>;
 }) => {
+  const session = await getSession();
+
   const { pageIndex, pageSize } =
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
@@ -39,6 +42,15 @@ const CoursesPage = async ({
     pageSize,
   });
 
+  const hasOrganizationEditPermission = await hasPermission(
+    {
+      context: "organization",
+      id: session?.session.activeOrganizationId,
+      type: "organization",
+    },
+    "update",
+  );
+
   if (!result.success) {
     return <Placeholder>{result.error.message}</Placeholder>;
   }
@@ -49,14 +61,16 @@ const CoursesPage = async ({
         <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
           Courses
         </h4>
-        <div className="flex gap-2">
-          <Link
-            href={ROUTES.PRIVATE.courses.add.getPath()}
-            className={buttonVariants({ variant: "default" })}
-          >
-            Add Course
-          </Link>
-        </div>
+        {hasOrganizationEditPermission && (
+          <div className="flex gap-2">
+            <Link
+              href={ROUTES.PRIVATE.courses.add.getPath()}
+              className={buttonVariants({ variant: "default" })}
+            >
+              Add Course
+            </Link>
+          </div>
+        )}
       </div>
       <div>
         <DataTable
