@@ -30,7 +30,9 @@ const MessageEditor = ({
   reload,
   status,
 }: MessageEditorProps) => {
-  const [draftContent, setDraftContent] = useState<string>(message.content);
+  const [draftContent, setDraftContent] = useState<string>(
+    message.parts?.find((part) => part.type === "text")?.text || "",
+  );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isLoading = status === "streaming" || status === "submitted";
 
@@ -98,15 +100,15 @@ const MessageEditor = ({
     <div className="flex w-full flex-col gap-2">
       <Textarea
         ref={textareaRef}
-        className="!text-base w-full resize-none overflow-hidden rounded-xl outline-none"
+        className="!text-base w-full resize-none overflow-hidden rounded-xl bg-transparent outline-none dark:bg-transparent"
         value={draftContent}
         onChange={handleInput}
       />
 
-      <div className="flex flex-row justify-end gap-2">
+      <div className="flex flex-row justify-end gap-2 text-card-foreground">
         <Button
           variant="outline"
-          className="h-fit px-3 py-2"
+          size="sm"
           onClick={() => {
             setMode("view");
           }}
@@ -115,7 +117,7 @@ const MessageEditor = ({
         </Button>
         <Button
           variant="default"
-          className="h-fit px-3 py-2"
+          size="sm"
           disabled={isLoading}
           onClick={handleEdit}
         >

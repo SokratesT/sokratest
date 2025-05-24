@@ -156,7 +156,21 @@ const MessageBlock = ({
                 )}
 
                 {part.type === "text" && variant === "sent" && (
-                  <div>{part.text}</div>
+                  <div>
+                    {mode === "edit" ? (
+                      <MessageEditor
+                        chatId={chatId}
+                        key={message.id}
+                        message={message}
+                        setMode={setMode}
+                        setMessages={setMessages}
+                        reload={reload}
+                        status={status}
+                      />
+                    ) : (
+                      part.text
+                    )}
+                  </div>
                 )}
 
                 {part.type === "text" && variant === "received" && (
@@ -218,19 +232,6 @@ const MessageBlock = ({
               </ChatBubbleActionWrapper>
             )}
           </ChatBubbleMessage>
-          {message.content && mode === "edit" && (
-            <div className="mt-10 flex flex-row items-start gap-2">
-              <MessageEditor
-                chatId={chatId}
-                key={message.id}
-                message={message}
-                setMode={setMode}
-                setMessages={setMessages}
-                reload={reload}
-                status={status}
-              />
-            </div>
-          )}
         </motion.div>
       </AnimatePresence>
     </ChatBubble>
