@@ -68,7 +68,7 @@ const ChatsList = ({
               </ChatActionsDropdown>
 
               <CardHeader className="pb-2">
-                <CardTitle className="line-clamp-1 text-base">
+                <CardTitle className="line-clamp-1 w-[calc(100%-1rem)] text-base">
                   {chat.title}
                 </CardTitle>
                 {chat.updatedAt && (
