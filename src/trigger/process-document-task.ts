@@ -61,6 +61,9 @@ async function validateImageResolution(size: Size, upscaleFactor = 1) {
 export const processDocumentTask = task({
   id: "process-document-task",
   maxDuration: 1200,
+  queue: {
+    concurrencyLimit: 2,
+  },
   run: async (payload: ProcessDocumentTaskPayload, { ctx }) => {
     const doclingApi = `${process.env.OPENAI_COMPATIBLE_BASE_URL}/documents/convert`;
 

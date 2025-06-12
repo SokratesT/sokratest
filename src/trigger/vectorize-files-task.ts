@@ -29,6 +29,9 @@ import { v4 as uuidv4 } from "uuid";
 export const vectorizeFilesTask = task({
   id: "vectorize-files-task",
   maxDuration: 1800,
+  queue: {
+    concurrencyLimit: 1,
+  },
   run: async (payload: VectorizeFilesTaskPayload) => {
     const files = await listAllFilesInPrefix({
       bucket: buckets.processed.name,

@@ -105,7 +105,7 @@ export const enqueueEmbeddings = authActionClient
           concurrencyKey: "GENERATING_EMBEDDING_CONCURRENCY_KEY",
           queue: {
             name: "processing-embeddings-queue",
-            concurrencyLimit: 1,
+            concurrencyLimit: 2,
           },
         },
       })),
