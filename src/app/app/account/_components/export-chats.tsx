@@ -1,0 +1,205 @@
+import { getSession } from "@/db/queries/auth";
+import { langfuseServer } from "@/lib/langfuse/langfuse-server";
+import type {
+  ApiGetScoresResponseData,
+  ApiTraceWithDetails,
+  ApiUtilsMetaResponse,
+} from "langfuse";
+import { ExportChatsButton } from "./export-chats-button";
+
+export type FilteredTrace = Pick<
+  ApiTraceWithDetails,
+  | "id"
+  | "input"
+  | "output"
+  | "sessionId"
+  | "timestamp"
+  | "metadata"
+  | "userId"
+  | "tags"
+  | "latency"
+  | "observations"
+> & {
+  scores: ApiGetScoresResponseData[];
+};
+
+const fetchAllTraces = async (
+  userId: string,
+): Promise<{ meta: ApiUtilsMetaResponse; data: FilteredTrace[] }> => {
+  let allData: ApiTraceWithDetails[] = [];
+  let currentPage = 1;
+  let totalPages = 1;
+
+  // Fetch first page to get total pages
+  const firstPageResponse = await langfuseServer.api.traceList({
+    userId,
+    limit: 50,
+    page: currentPage,
+  });
+
+  allData = [...firstPageResponse.data];
+  totalPages = firstPageResponse.meta.totalPages;
+
+  // Fetch remaining pages if any
+  while (currentPage < totalPages) {
+    currentPage++;
+    const pageResponse = await langfuseServer.api.traceList({
+      userId,
+      limit: 50,
+      page: currentPage,
+    });
+    allData = [...allData, ...pageResponse.data];
+  }
+
+  // Fetch scores
+  const scores = await langfuseServer.api.scoreGet({
+    userId: userId,
+  });
+
+  // Filter traces to only include input and id properties
+  const filteredData = allData
+    .map((trace) => {
+      if (!trace.tags?.includes("user")) {
+        // Skip traces without the "user" tag
+        return undefined;
+      }
+      const traceScores = scores.data.filter((score) => {
+        return score.traceId === trace.id;
+      });
+
+      return {
+        id: trace.id,
+        input: trace.input,
+        output: trace.output,
+        sessionId: trace.sessionId,
+        scores: traceScores,
+        timestamp: trace.timestamp,
+        metadata: trace.metadata,
+        userId: trace.userId,
+        tags: trace.tags,
+        latency: trace.latency,
+        observations: trace.observations,
+      };
+    })
+    .filter((trace) => trace !== undefined) as FilteredTrace[];
+
+  // Return the combined result with filtered data and final meta information
+  return {
+    data: filteredData,
+    meta: {
+      page: 1,
+      limit: filteredData.length,
+      totalItems: firstPageResponse.meta.totalItems,
+      totalPages: 1,
+    },
+  };
+};
+
+const calculateOverviewStats = (traces: FilteredTrace[]) => {
+  const totalMessages = traces.length;
+
+  // Count unique sessions (individual chats)
+  const uniqueSessions = new Set(
+    traces.map((trace) => trace.sessionId).filter(Boolean),
+  ).size;
+
+  // Calculate date range
+  const timestamps = traces
+    .map((trace) => new Date(trace.timestamp))
+    .filter((date) => !Number.isNaN(date.getTime()));
+  const earliestDate =
+    timestamps.length > 0
+      ? new Date(Math.min(...timestamps.map((d) => d.getTime())))
+      : null;
+  const latestDate =
+    timestamps.length > 0
+      ? new Date(Math.max(...timestamps.map((d) => d.getTime())))
+      : null;
+
+  // Count traces with scores
+  const tracesWithScores = traces.filter(
+    (trace) => trace.scores && trace.scores.length > 0,
+  ).length;
+
+  // Calculate average latency (excluding null/undefined values)
+  const latencies = traces
+    .map((trace) => trace.latency)
+    .filter((latency) => latency != null && latency > 0);
+  const averageLatency =
+    latencies.length > 0
+      ? latencies.reduce((sum, latency) => sum + latency, 0) / latencies.length
+      : 0;
+
+  // Count different tags
+  const allTags = traces.flatMap((trace) => trace.tags || []);
+  const uniqueTags = new Set(allTags);
+
+  return {
+    totalMessages,
+    uniqueSessions,
+    dateRange: {
+      earliest: earliestDate,
+      latest: latestDate,
+    },
+    tracesWithScores,
+    averageLatency: Math.round(averageLatency),
+    uniqueTags: Array.from(uniqueTags),
+  };
+};
+
+const ExportChats = async () => {
+  const session = await getSession();
+
+  if (!session) {
+    return <div>Please log in to export chats.</div>;
+  }
+
+  const traces = await fetchAllTraces(session.user.id);
+  const stats = calculateOverviewStats(traces.data);
+
+  console.log("All Traces fetched:", traces.meta);
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
+        <div className="space-y-1">
+          <p className="font-bold text-xl">
+            {stats.totalMessages.toLocaleString()}
+          </p>
+          <p className="text-muted-foreground">Total Messages</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-bold text-xl">
+            {stats.uniqueSessions.toLocaleString()}
+          </p>
+          <p className="text-muted-foreground">Individual Chats</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-bold text-xl">
+            {stats.averageLatency > 0 ? `${stats.averageLatency}s` : "N/A"}
+          </p>
+          <p className="text-muted-foreground">Avg Response Time</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-bold text-xl">
+            {stats.tracesWithScores.toLocaleString()}
+          </p>
+          <p className="text-muted-foreground">With Scores</p>
+        </div>
+      </div>
+
+      {stats.dateRange.earliest && stats.dateRange.latest && (
+        <div className="mt-4 border-border border-t pt-4">
+          <p className="text-muted-foreground text-sm">
+            Data from {stats.dateRange.earliest.toLocaleDateString()} to{" "}
+            {stats.dateRange.latest.toLocaleDateString()}
+          </p>
+        </div>
+      )}
+
+      <ExportChatsButton traces={traces.data} />
+    </div>
+  );
+};
+
+export { ExportChats };

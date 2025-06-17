@@ -16,6 +16,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ChangePasswordForm } from "./_components/change-password-form";
 import { CourseInvitationsList } from "./_components/course-invitations-list";
+import { ExportChats } from "./_components/export-chats";
 
 export const metadata: Metadata = {
   title: "Account",
@@ -59,6 +60,20 @@ const AccountPage = async () => {
           </CardHeader>
           <CardContent>
             <CourseInvitationsList />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Chat Usage</CardTitle>
+            <CardDescription>
+              Your chat usage statistics. This may include deleted messages and
+              chats.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Suspense fallback={<Skeleton className="h-[120px] w-full" />}>
+              <ExportChats />
+            </Suspense>
           </CardContent>
         </Card>
       </div>
