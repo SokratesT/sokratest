@@ -1,9 +1,9 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
+import { PlateElement, withHOC } from "@udecode/plate/react";
 import { useMediaState } from "@udecode/plate-media/react";
 import { ResizableProvider } from "@udecode/plate-resizable";
-import { PlateElement, withHOC } from "@udecode/plate/react";
 import { Caption, CaptionTextarea } from "./caption";
 
 export const MediaAudioElement = withHOC(

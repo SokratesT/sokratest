@@ -1,10 +1,10 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { voteInsertSchema } from "@/db/zod/vote";
 import { langfuseServer } from "@/lib/langfuse/langfuse-server";
 import { authActionClient, checkPermissionMiddleware } from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
-import { revalidatePath } from "next/cache";
 
 export const voteMessage = authActionClient
   .metadata({

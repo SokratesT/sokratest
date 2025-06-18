@@ -1,4 +1,7 @@
+import type { Size } from "@docling/docling-core";
+import { logger, task } from "@trigger.dev/sdk/v3";
 import https from "https";
+import nodeFetch from "node-fetch";
 import type { ProcessingStatus } from "@/app/api/docs/processing/route";
 import {
   type SerializedDocument,
@@ -14,9 +17,6 @@ import { buckets } from "@/settings/buckets";
 import { ROUTES } from "@/settings/routes";
 import type { SaiaDoclingData } from "@/types/docling";
 import type { ProcessDocumentTaskPayload } from "@/types/trigger";
-import type { Size } from "@docling/docling-core";
-import { logger, task } from "@trigger.dev/sdk/v3";
-import nodeFetch from "node-fetch";
 
 /**
  * Validates if an image meets minimum resolution requirements
@@ -64,7 +64,7 @@ export const processDocumentTask = task({
   queue: {
     concurrencyLimit: 2,
   },
-  run: async (payload: ProcessDocumentTaskPayload, { ctx }) => {
+  run: async (payload: ProcessDocumentTaskPayload) => {
     const doclingApi = `${process.env.OPENAI_COMPATIBLE_BASE_URL}/documents/convert`;
 
     const presignedUrl = await createPresignedUrlToDownload(
@@ -200,7 +200,7 @@ export const processDocumentTask = task({
                   await Promise.all(
                     images.map(async (image) => {
                       if (!image) {
-                        logger.warn(`Undefined image. Skipping upload.`);
+                        logger.warn("Undefined image. Skipping upload.");
                         return;
                       }
 

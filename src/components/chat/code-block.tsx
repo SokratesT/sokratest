@@ -33,7 +33,7 @@ const CodeBlock = ({ node, className, children, ...props }: CodeBlockProps) => {
       setCopied(true);
       toast.success("Code copied to clipboard!");
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to copy code");
     }
   };

@@ -1,5 +1,8 @@
 "use server";
 
+import { and, count, eq, inArray } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import { db } from "@/db/drizzle";
 import { getUserPreferences } from "@/db/queries/users";
 import { account, member, user } from "@/db/schema/auth";
@@ -13,9 +16,6 @@ import {
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
-import { and, count, eq, inArray } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
 
 export const updateUserCourseRole = authActionClient
   .metadata({
@@ -154,7 +154,11 @@ export const createAdmin = async ({
   email,
   password,
   name,
-}: { email: string; password: string; name: string }) => {
+}: {
+  email: string;
+  password: string;
+  name: string;
+}) => {
   const [userCount] = await db.select({ count: count() }).from(user);
 
   if (userCount.count > 0) {

@@ -1,10 +1,10 @@
+import { tasks } from "@trigger.dev/sdk/v3";
+import { eq } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
 import type { Course } from "@/db/schema/course";
 import { type Document, document } from "@/db/schema/document";
 import type { vectorizeFilesTask } from "@/trigger/vectorize-files-task";
-import { tasks } from "@trigger.dev/sdk/v3";
-import { eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 
 // Base type with common properties
 interface ProcessingStatusBase {
@@ -60,7 +60,8 @@ export const POST = async (req: NextRequest) => {
     return new NextResponse("Success", {
       status: 200,
     });
-  } else if (
+  }
+  if (
     processingStatus.step === "embedding" &&
     processingStatus.status === "success"
   ) {

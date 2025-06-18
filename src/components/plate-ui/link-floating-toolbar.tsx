@@ -1,10 +1,11 @@
 "use client";
 
 import { cn } from "@udecode/cn";
+import { useFormInputProps } from "@udecode/plate/react";
 import {
-  type UseVirtualFloatingOptions,
   flip,
   offset,
+  type UseVirtualFloatingOptions,
 } from "@udecode/plate-floating";
 import {
   FloatingLinkUrlInput,
@@ -15,7 +16,6 @@ import {
   useFloatingLinkInsert,
   useFloatingLinkInsertState,
 } from "@udecode/plate-link/react";
-import { useFormInputProps } from "@udecode/plate/react";
 import { ExternalLink, Link, Text, Unlink } from "lucide-react";
 import { buttonVariants } from "./button";
 import { inputVariants } from "./input";

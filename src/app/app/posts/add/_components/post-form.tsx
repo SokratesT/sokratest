@@ -1,5 +1,8 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";
@@ -9,9 +12,6 @@ import { createPost, updatePost } from "@/db/actions/post";
 import type { Post } from "@/db/schema/post";
 import { type PostInsertSchemaType, postInsertSchema } from "@/db/zod/post";
 import { withToastPromise } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 const PostForm = ({ post }: { post?: Post }) => {
   const form = useForm<PostInsertSchemaType>({

@@ -1,3 +1,4 @@
+import type { ToolInvocation } from "ai";
 import { Markdown } from "@/components/chat/markdown";
 import { Button } from "@/components/ui/button";
 import {
@@ -6,19 +7,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { ToolInvocation } from "ai";
-
-interface Annotation {
-  name: string;
-  similarity: number;
-  text: string;
-  fileId: string;
-}
 
 const ToolBlock = ({
   tool,
   toolStream,
-}: { tool: ToolInvocation; toolStream?: string }) => {
+}: {
+  tool: ToolInvocation;
+  toolStream?: string;
+}) => {
   return (
     <div key={tool.toolCallId}>
       <div>
@@ -41,7 +37,7 @@ interface RagResult {
   similarity: number;
 }
 
-const RagResult = ({ tool }: { tool: ToolInvocation }) => {
+const _RagResult = ({ tool }: { tool: ToolInvocation }) => {
   if (tool.state === "result") {
     /* const cleanToolResult = tool.result.replace(/\\/g, "");
     console.log(cleanToolResult); */

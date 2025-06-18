@@ -1,13 +1,13 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { type UserUpdateSchemaType, userUpdateSchema } from "@/db/zod/profile";
 import { authClient } from "@/lib/auth-client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 
 const ProfileForm = () => {
   const { data, isPending } = authClient.useSession();
@@ -33,20 +33,20 @@ const ProfileForm = () => {
   }, [data]);
 
   const onSubmit = async (values: UserUpdateSchemaType) => {
-    const { data, error } = await authClient.updateUser(
+    await authClient.updateUser(
       {
         name: values.name,
       },
       {
-        onRequest: (ctx) => {
+        onRequest: () => {
           setSubmitting(true);
           console.log("loading");
         },
-        onSuccess: (ctx) => {
+        onSuccess: () => {
           setSubmitting(false);
           console.log("success");
         },
-        onError: (ctx) => {
+        onError: () => {
           setSubmitting(false);
           console.log("error");
         },

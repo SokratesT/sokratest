@@ -23,7 +23,7 @@ export function Cursor({
       {selectionRects.map((position, i) => {
         return (
           <div
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            // biome-ignore lint/suspicious/noArrayIndexKey: <Needs refactor, but fine for now>
             key={i}
             className={cn(
               "pointer-events-none absolute z-10",

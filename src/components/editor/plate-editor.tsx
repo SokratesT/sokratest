@@ -1,11 +1,11 @@
 "use client";
 
-import { useCreateEditor } from "@/components/editor/use-create-editor";
-import { Editor, EditorContainer } from "@/components/plate-ui/editor";
-import { cn } from "@/lib/utils";
 import { Plate } from "@udecode/plate/react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { useCreateEditor } from "@/components/editor/use-create-editor";
+import { Editor, EditorContainer } from "@/components/plate-ui/editor";
+import { cn } from "@/lib/utils";
 import { defaultEditorText } from "./default-editor-text";
 
 const PlateEditor = ({
@@ -23,7 +23,7 @@ const PlateEditor = ({
     try {
       if (!options?.value) return defaultEditorText;
       return JSON.parse(options.value);
-    } catch (e) {
+    } catch (_e) {
       return defaultEditorText;
     }
   };

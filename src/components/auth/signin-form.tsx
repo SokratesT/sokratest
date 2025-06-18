@@ -1,5 +1,9 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormPasswordField } from "@/components/forms/fields/formPasswordField";
 import { Button } from "@/components/ui/button";
@@ -8,10 +12,6 @@ import { type LoginSchemaType, loginSchema } from "@/db/zod/login";
 import { useUmami } from "@/hooks/use-umami";
 import { authClient } from "@/lib/auth-client";
 import { ROUTES } from "@/settings/routes";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 const SignInForm = () => {
   const router = useRouter();
@@ -26,13 +26,13 @@ const SignInForm = () => {
   });
 
   const onSubmit = async (values: LoginSchemaType) => {
-    const { data, error } = await authClient.signIn.email(
+    await authClient.signIn.email(
       {
         email: values.email,
         password: values.password,
       },
       {
-        onSuccess: (ctx) => {
+        onSuccess: (_ctx) => {
           trackEvent("auth-login", {
             email: values.email,
           });

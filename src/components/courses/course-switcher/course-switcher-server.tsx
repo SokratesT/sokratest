@@ -22,7 +22,8 @@ const CourseSwitcherServer = async () => {
     return <div>{result.error.message}</div>;
   }
 
-  let activeCourse = undefined;
+  // biome-ignore lint/suspicious/noImplicitAnyLet: <Needs refactor, but fine for now>
+  let activeCourse;
 
   if (session.session.activeCourseId) {
     const result = await getCourseById(session.session.activeCourseId);

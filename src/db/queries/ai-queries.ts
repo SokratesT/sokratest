@@ -1,10 +1,10 @@
 import "server-only";
 
+import type { CoreAssistantMessage, CoreToolMessage } from "ai";
+import { and, asc, eq, gte } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { chat } from "@/db/schema/chat";
 import { type ChatMessage, chatMessage } from "@/db/schema/chat-message";
-import type { CoreAssistantMessage, CoreToolMessage } from "ai";
-import { and, asc, eq, gte } from "drizzle-orm";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 type ResponseMessageWithoutId = CoreToolMessage | CoreAssistantMessage;
@@ -41,7 +41,9 @@ export async function saveChat({
 
 export async function saveMessages({
   messages,
-}: { messages: Array<ChatMessage> }) {
+}: {
+  messages: Array<ChatMessage>;
+}) {
   try {
     await db.insert(chatMessage).values(messages).onConflictDoUpdate({
       target: chatMessage.id,

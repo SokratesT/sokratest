@@ -1,11 +1,3 @@
-import { Placeholder } from "@/components/placeholders/placeholder";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ManageUser } from "@/components/users/manage-user";
-import {
-  getUserById,
-  getUserCourseMembershipById,
-  getUserOrganizationMembershipById,
-} from "@/db/queries/users";
 import { format } from "date-fns";
 import {
   BadgeIcon,
@@ -14,10 +6,20 @@ import {
   MailIcon,
   UserIcon,
 } from "lucide-react";
+import { Placeholder } from "@/components/placeholders/placeholder";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ManageUser } from "@/components/users/manage-user";
+import {
+  getUserById,
+  getUserCourseMembershipById,
+  getUserOrganizationMembershipById,
+} from "@/db/queries/users";
 
 const EditUserPage = async ({
   params,
-}: { params: Promise<{ id: string }> }) => {
+}: {
+  params: Promise<{ id: string }>;
+}) => {
   const { id } = await params;
 
   const result = await getUserById(id);

@@ -1,10 +1,10 @@
-import { courseInvitation } from "@/db/schema/course-invitation";
 import {
   createInsertSchema,
   createSelectSchema,
   createUpdateSchema,
 } from "drizzle-zod";
 import { z } from "zod";
+import { courseInvitation } from "@/db/schema/course-invitation";
 
 const insertBaseSchema = createInsertSchema(courseInvitation);
 

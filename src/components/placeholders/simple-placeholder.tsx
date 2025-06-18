@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import { CircleHelpIcon, type LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const variants = cva(
   "flex flex-col items-center gap-4 rounded-sm border p-4 text-center",

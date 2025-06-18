@@ -1,14 +1,14 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
-import { IS_APPLE, getHandler } from "@udecode/plate";
-import type { TMentionElement } from "@udecode/plate-mention";
+import { getHandler, IS_APPLE } from "@udecode/plate";
 import {
   PlateElement,
   useFocused,
   useReadOnly,
   useSelected,
 } from "@udecode/plate/react";
+import type { TMentionElement } from "@udecode/plate-mention";
 import { useIsMounted } from "usehooks-ts";
 
 export const MentionElement = withRef<

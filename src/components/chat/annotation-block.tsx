@@ -1,5 +1,11 @@
 "use client";
 
+import type { JSONValue } from "ai";
+import { ArrowUpRightIcon, CopyIcon } from "lucide-react";
+import Link from "next/link";
+import type { ComponentProps } from "react";
+import { toast } from "sonner";
+import { useCopyToClipboard } from "usehooks-ts";
 import {
   Accordion,
   AccordionContent,
@@ -17,12 +23,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import type { DocumentMetadataType } from "@/db/schema/document";
 import { useUmami } from "@/hooks/use-umami";
 import { cn } from "@/lib/utils";
-import type { JSONValue } from "ai";
-import { ArrowUpRightIcon, CopyIcon } from "lucide-react";
-import Link from "next/link";
-import type { ComponentProps } from "react";
-import { toast } from "sonner";
-import { useCopyToClipboard } from "usehooks-ts";
 
 interface BaseAnnotation extends Record<string, JSONValue> {
   type: string;
@@ -104,7 +104,7 @@ const AnnotationBlock = ({
                   const referenceAnnotation =
                     typedAnnotation as AnnotationReference;
                   return (
-                    // biome-ignore lint/suspicious/noArrayIndexKey:
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <Needs improvement, but fine for now>
                     <Popover key={i}>
                       <PopoverTrigger className="inline-flex w-fit gap-2 rounded-md border bg-card p-1.5 text-left font-medium text-sm shadow-xs outline-none transition-all hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:border-input dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:hover:bg-input/50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0">
                         <Badge

@@ -1,20 +1,8 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
-
 import type * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import { cn, withRef } from "@udecode/cn";
-import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
-import { type TTableElement, setCellBackground } from "@udecode/plate-table";
-import {
-  TablePlugin,
-  TableProvider,
-  useTableBordersDropdownMenuContentState,
-  useTableElement,
-  useTableMergeState,
-} from "@udecode/plate-table/react";
 import {
   PlateElement,
   useEditorPlugin,
@@ -27,6 +15,15 @@ import {
   useSelected,
   withHOC,
 } from "@udecode/plate/react";
+import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
+import { setCellBackground, type TTableElement } from "@udecode/plate-table";
+import {
+  TablePlugin,
+  TableProvider,
+  useTableBordersDropdownMenuContentState,
+  useTableElement,
+  useTableMergeState,
+} from "@udecode/plate-table/react";
 import {
   ArrowDown,
   ArrowLeft,
@@ -40,6 +37,7 @@ import {
   Trash2Icon,
   XIcon,
 } from "lucide-react";
+import React, { useCallback, useState } from "react";
 
 import { DEFAULT_COLORS } from "./color-constants";
 import { ColorDropdownMenuItems } from "./color-dropdown-menu-items";

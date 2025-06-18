@@ -1,8 +1,8 @@
 "use client";
 
-import { AIMenu } from "@/components/plate-ui/ai-menu";
 import { AIChatPlugin, AIPlugin } from "@udecode/plate-ai/react";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
+import { AIMenu } from "@/components/plate-ui/ai-menu";
 import { cursorOverlayPlugin } from "./cursor-overlay-plugin";
 
 const systemCommon = `\

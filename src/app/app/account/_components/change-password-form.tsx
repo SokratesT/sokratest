@@ -1,15 +1,15 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import { FormPasswordField } from "@/components/forms/fields/formPasswordField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { updateOwnPassword } from "@/db/actions/user";
 import { sharedSchemas } from "@/db/zod/shared";
 import { withToastPromise } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 // Define the schema locally by picking fields from signupSchema
 const changePasswordSchema = z

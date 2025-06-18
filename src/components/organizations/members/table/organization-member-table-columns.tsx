@@ -1,5 +1,8 @@
 "use client";
 
+import type { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
@@ -11,9 +14,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Organization, User } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
-import type { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-import { toast } from "sonner";
 
 const handleDelete = async (
   id: string,

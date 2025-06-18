@@ -1,8 +1,8 @@
 import "server-only";
 
+import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { chat } from "@/db/schema/chat";
-import { and, desc, eq } from "drizzle-orm";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 export const getUserChatsForActiveCourse = async (

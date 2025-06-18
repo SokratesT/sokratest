@@ -1,7 +1,7 @@
 "use client";
 
-import { BlockSelection } from "@/components/plate-ui/block-selection";
 import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
+import { BlockSelection } from "@/components/plate-ui/block-selection";
 
 export const blockSelectionPlugins = [
   BlockSelectionPlugin.configure(({ editor }) => ({

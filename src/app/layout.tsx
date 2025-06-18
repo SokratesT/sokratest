@@ -1,6 +1,6 @@
-import { Providers } from "@/app/providers";
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Providers } from "@/app/providers";
 import "./globals.css";
 import { fontMono, fontSans } from "@/lib/fonts";
 import { cn } from "@/lib/utils";

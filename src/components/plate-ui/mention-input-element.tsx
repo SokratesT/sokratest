@@ -1,8 +1,8 @@
 "use client";
 
 import { withRef } from "@udecode/cn";
-import { getMentionOnSelectItem } from "@udecode/plate-mention";
 import { PlateElement } from "@udecode/plate/react";
+import { getMentionOnSelectItem } from "@udecode/plate-mention";
 import { useState } from "react";
 import {
   InlineCombobox,

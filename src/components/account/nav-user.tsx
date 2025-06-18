@@ -1,3 +1,4 @@
+import { ChevronsUpDown, LogOut } from "lucide-react";
 import { SignOutButton } from "@/components/auth/signout-button";
 import { OrganizationSwitcher } from "@/components/organizations/organization-switcher";
 import { Placeholder } from "@/components/placeholders/placeholder";
@@ -18,7 +19,6 @@ import {
 import { getSession } from "@/db/queries/auth";
 import { getOrganizationById } from "@/db/queries/organizations";
 import type { Organization } from "@/db/schema/auth";
-import { ChevronsUpDown, LogOut } from "lucide-react";
 import { UserMenuActions } from "./user-menu-actions";
 
 const userInitial = (name: string) => name[0].toUpperCase();

@@ -1,8 +1,8 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const PageTitle = () => {
   const [documentTitle, setDocumentTitle] = useState<string | undefined>(

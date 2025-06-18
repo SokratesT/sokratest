@@ -1,7 +1,7 @@
+import { eq } from "drizzle-orm";
 import { PostForm } from "@/app/app/posts/add/_components/post-form";
 import { db } from "@/db/drizzle";
 import { post } from "@/db/schema/post";
-import { eq } from "drizzle-orm";
 
 const EditPostPage = async ({
   params,

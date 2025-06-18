@@ -1,11 +1,11 @@
 "use client";
 
-import { useUmami } from "@/hooks/use-umami";
-import { authClient } from "@/lib/auth-client";
-import { ROUTES } from "@/settings/routes";
 import { Slot } from "@radix-ui/react-slot";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useUmami } from "@/hooks/use-umami";
+import { authClient } from "@/lib/auth-client";
+import { ROUTES } from "@/settings/routes";
 
 export const SignOutButton = ({
   asChild = false,
@@ -19,7 +19,7 @@ export const SignOutButton = ({
   const handleSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {
-        onSuccess: (ctx) => {
+        onSuccess: (_ctx) => {
           trackEvent("auth-signout");
           toast.message("Goodbye!");
           router.push(ROUTES.PUBLIC.root.getPath());

@@ -1,9 +1,9 @@
+import Link from "next/link";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getOrganizationById } from "@/db/queries/organizations";
 import { ROUTES } from "@/settings/routes";
-import Link from "next/link";
 
 const ViewCoursePage = async ({
   params,

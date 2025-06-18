@@ -1,5 +1,9 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormSelect } from "@/components/forms/fields/formSelect";
 import { FormSwitch } from "@/components/forms/fields/formSwitch";
@@ -14,10 +18,6 @@ import {
   documentUpdateSchema,
 } from "@/db/zod/document";
 import { withToastPromise } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 const DocumentForm = ({ document }: { document: Document }) => {
   const router = useRouter();

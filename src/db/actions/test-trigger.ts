@@ -1,5 +1,9 @@
 "use server";
 
+import { tasks } from "@trigger.dev/sdk/v3";
+import { inArray } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import { db } from "@/db/drizzle";
 import { document } from "@/db/schema/document";
 import {
@@ -11,10 +15,6 @@ import { ROUTES } from "@/settings/routes";
 import type { processDocumentTask } from "@/trigger/process-document-task";
 import type { vectorizeFilesTask } from "@/trigger/vectorize-files-task";
 import type { FilePayload } from "@/types/file";
-import { tasks } from "@trigger.dev/sdk/v3";
-import { inArray } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
 
 export const enqueueDocuments = authActionClient
   .metadata({
@@ -44,7 +44,7 @@ export const enqueueDocuments = authActionClient
       .from(document)
       .where(inArray(document.id, ids));
 
-    const handle = await tasks.batchTrigger<typeof processDocumentTask>(
+    const _handle = await tasks.batchTrigger<typeof processDocumentTask>(
       "process-document-task",
       docs.map((doc) => ({
         payload: {
@@ -92,7 +92,7 @@ export const enqueueEmbeddings = authActionClient
       .from(document)
       .where(inArray(document.id, ids));
 
-    const handle = await tasks.batchTrigger<typeof vectorizeFilesTask>(
+    const _handle = await tasks.batchTrigger<typeof vectorizeFilesTask>(
       "vectorize-files-task",
       docs.map((doc) => ({
         payload: {

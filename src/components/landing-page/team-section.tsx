@@ -1,3 +1,6 @@
+import Image from "next/image";
+import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -7,9 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Image from "next/image";
-import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
 
 interface TeamProps {
   imageUrl: string;

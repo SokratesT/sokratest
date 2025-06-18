@@ -1,10 +1,10 @@
+import { toast } from "sonner";
 import type {
   ConfirmContextValue,
   ConfirmFunction,
 } from "@/components/ui/dialog/confirm-dialog";
 import { deleteDocumentInfo } from "@/db/actions/document";
 import { withToastPromise } from "@/lib/utils";
-import { toast } from "sonner";
 
 export const handleDeleteDocuments = async ({
   confirm,

@@ -1,10 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useControllableState } from "@/hooks/use-controllable-state";
-import { cn } from "@/lib/utils";
 import { convert } from "convert";
 import { FileText, Upload, X } from "lucide-react";
 import Image from "next/image";
@@ -14,6 +9,11 @@ import Dropzone, {
   type FileRejection,
 } from "react-dropzone";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useControllableState } from "@/hooks/use-controllable-state";
+import { cn } from "@/lib/utils";
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -148,7 +148,7 @@ const FileUploader = (props: FileUploaderProps) => {
         updatedFiles.length <= maxFileCount
       ) {
         const target =
-          updatedFiles.length > 0 ? `${updatedFiles.length} files` : `file`;
+          updatedFiles.length > 0 ? `${updatedFiles.length} files` : "file";
 
         toast.promise(onUpload(updatedFiles), {
           loading: `Uploading ${target}...`,

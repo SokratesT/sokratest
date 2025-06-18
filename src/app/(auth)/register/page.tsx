@@ -1,3 +1,6 @@
+import { CalendarXIcon } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 import { SignUpForm } from "@/components/auth/signup-form";
 import { SimplePlaceholder } from "@/components/placeholders/simple-placeholder";
 import {
@@ -11,9 +14,6 @@ import {
 import { getCourseInvitationById } from "@/db/queries/course-invitation";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
 import { ROUTES } from "@/settings/routes";
-import { CalendarXIcon } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Register",

@@ -1,5 +1,9 @@
 "use client";
 
+import type { Session } from "better-auth";
+import { KeyIcon, ShieldIcon, UserCogIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,10 +26,6 @@ import { authClient } from "@/lib/auth-client";
 import { withToastPromise } from "@/lib/utils";
 import { DEFAULT_ROLES } from "@/settings/roles";
 import { ROUTES } from "@/settings/routes";
-import type { Session } from "better-auth";
-import { KeyIcon, ShieldIcon, UserCogIcon } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 const ManageUser = ({
   user,
@@ -53,7 +53,10 @@ const ManageUser = ({
   const handleChangePassword = async ({
     userId,
     password,
-  }: { userId: User["id"]; password: string }) => {
+  }: {
+    userId: User["id"];
+    password: string;
+  }) => {
     toast.promise(updateUserPassword({ userId, password }), {
       loading: "Changing password...",
       success: "Password changed",

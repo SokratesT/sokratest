@@ -1,6 +1,6 @@
-import { getSaiaModel } from "@/lib/ai/saia-models";
 import { type DataStreamWriter, type Message, streamText, tool } from "ai";
 import { z } from "zod";
+import { getSaiaModel } from "@/lib/ai/saia-models";
 
 export const finalResponseTool = (
   dataStream: DataStreamWriter,
@@ -9,6 +9,7 @@ export const finalResponseTool = (
   tool({
     description: "Use this tool to generate a final response to the user.",
     parameters: z.object({ topic: z.string() }),
+    // biome-ignore lint/correctness/noUnusedFunctionParameters: <Needs refactor, but fine for now>
     execute: async ({ topic }, { toolCallId }) => {
       let draftText = "";
       dataStream.writeData({

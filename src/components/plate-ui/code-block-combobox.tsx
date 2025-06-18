@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@udecode/cn";
-import type { TCodeBlockElement } from "@udecode/plate-code-block";
 import { useEditorRef, useElement, useReadOnly } from "@udecode/plate/react";
+import type { TCodeBlockElement } from "@udecode/plate-code-block";
 import { Check } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { Button } from "./button";

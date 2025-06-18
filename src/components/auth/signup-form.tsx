@@ -1,5 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FileTextIcon } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormPasswordField } from "@/components/forms/fields/formPasswordField";
 import { FormSwitch } from "@/components/forms/fields/formSwitch";
@@ -10,12 +16,6 @@ import { type SignupSchemaType, signupSchema } from "@/db/zod/signup";
 import { useUmami } from "@/hooks/use-umami";
 import { authClient } from "@/lib/auth-client";
 import { ROUTES } from "@/settings/routes";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FileTextIcon } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
   const router = useRouter();
@@ -37,14 +37,14 @@ const SignUpForm = ({ invitation }: { invitation: CourseInvitation }) => {
       return;
     }
 
-    const { data, error } = await authClient.signUp.email(
+    await authClient.signUp.email(
       {
         name: values.name ?? "User",
         email: values.email,
         password: values.password,
       },
       {
-        onSuccess: async (ctx) => {
+        onSuccess: async (_ctx) => {
           trackEvent("auth-register", {
             email: values.email,
             invitationId: values.invitationId,

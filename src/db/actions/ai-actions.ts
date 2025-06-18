@@ -1,11 +1,11 @@
 "use server";
 
+import { string, z } from "zod";
 import {
   deleteMessagesByChatIdAfterTimestamp,
   getMessageById,
 } from "@/db/queries/ai-queries";
 import { authActionClient, checkPermissionMiddleware } from "@/lib/safe-action";
-import { string, z } from "zod";
 
 export const deleteTrailingMessages = authActionClient
   .metadata({

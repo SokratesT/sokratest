@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { deleteTrailingMessages } from "@/db/actions/ai-actions";
-import type { Chat } from "@/db/schema/chat";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import type { ChatRequestOptions, Message } from "ai";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { deleteTrailingMessages } from "@/db/actions/ai-actions";
+import type { Chat } from "@/db/schema/chat";
 
 type MessageEditorProps = {
   chatId: Chat["id"];

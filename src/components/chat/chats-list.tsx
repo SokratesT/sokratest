@@ -1,5 +1,10 @@
 "use client";
 
+import { format } from "date-fns";
+import { MessagesSquareIcon, MoreHorizontalIcon } from "lucide-react";
+import { motion } from "motion/react";
+import Link from "next/link";
+import type { ComponentProps } from "react";
 import { NewChatButton } from "@/components/chat/new-chat-button";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,11 +18,6 @@ import {
 import type { Chat } from "@/db/schema/chat";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
-import { format } from "date-fns";
-import { MessagesSquareIcon, MoreHorizontalIcon } from "lucide-react";
-import { motion } from "motion/react";
-import Link from "next/link";
-import type { ComponentProps } from "react";
 import { ChatActionsDropdown } from "./chat-actions-dropdown";
 
 const ChatsList = ({

@@ -1,5 +1,8 @@
 "use client";
 
+import { SmartphoneIcon } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -7,9 +10,6 @@ import type { Document } from "@/db/schema/document";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";
 import { cn } from "@/lib/utils";
-import { SmartphoneIcon } from "lucide-react";
-import Image from "next/image";
-import { useEffect, useState } from "react";
 import { FileActions } from "./file-actions";
 import { FileMeta } from "./file-meta";
 

@@ -1,5 +1,7 @@
 "use server";
 
+import { eq, inArray } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { db } from "@/db/drizzle";
 import { post } from "@/db/schema/post";
 import {
@@ -9,8 +11,6 @@ import {
 } from "@/db/zod/post";
 import { authActionClient, checkPermissionMiddleware } from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
-import { eq, inArray } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 
 export const createPost = authActionClient
   .metadata({

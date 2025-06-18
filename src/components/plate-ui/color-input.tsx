@@ -1,8 +1,8 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
-import { useColorInput } from "@udecode/plate-font/react";
 import { useComposedRef } from "@udecode/plate/react";
+import { useColorInput } from "@udecode/plate-font/react";
 import { Children, cloneElement } from "react";
 
 export const ColorInput = withRef<"input">(

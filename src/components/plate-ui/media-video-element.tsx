@@ -1,18 +1,18 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
+import { PlateElement, useEditorMounted, withHOC } from "@udecode/plate/react";
 import { useDraggable } from "@udecode/plate-dnd";
 import { parseTwitterUrl, parseVideoUrl } from "@udecode/plate-media";
 import { useMediaState } from "@udecode/plate-media/react";
 import { ResizableProvider, useResizableValue } from "@udecode/plate-resizable";
-import { PlateElement, useEditorMounted, withHOC } from "@udecode/plate/react";
 import LiteYouTubeEmbed from "react-lite-youtube-embed";
 import ReactPlayer from "react-player";
 import { Caption, CaptionTextarea } from "./caption";
 import {
+  mediaResizeHandleVariants,
   Resizable,
   ResizeHandle,
-  mediaResizeHandleVariants,
 } from "./resizable";
 
 export const MediaVideoElement = withHOC(
@@ -69,7 +69,7 @@ export const MediaVideoElement = withHOC(
                 {!isUpload && isYoutube && (
                   <div ref={handleRef}>
                     <LiteYouTubeEmbed
-                      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+                      // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
                       id={embed?.id!}
                       title="youtube"
                       wrapperClass={cn(

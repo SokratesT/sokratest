@@ -1,8 +1,8 @@
+import { BadgeCheck, BadgeX, ClipboardList, SearchXIcon } from "lucide-react";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUserCourseInvitations } from "@/db/queries/course-invitation";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
-import { BadgeCheck, BadgeX, ClipboardList, SearchXIcon } from "lucide-react";
 import { CourseInvitationEntry } from "./course-invitation-entry";
 
 const CourseInvitationsList = async () => {

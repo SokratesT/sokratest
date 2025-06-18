@@ -1,12 +1,12 @@
 import "server-only";
 
+import { and, asc, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import type { Invitation } from "@/db/schema/auth";
 import {
   type CourseInvitation,
   courseInvitation,
 } from "@/db/schema/course-invitation";
-import { and, asc, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 export const getUserCourseInvitations = async () => {
@@ -59,9 +59,8 @@ export const getCourseInvitations = async (
           if (["name", "email", "role"].includes(s.id)) {
             const column = courseInvitation[s.id as keyof CourseInvitation];
             return s.desc ? desc(column) : asc(column);
-          } else {
-            return asc(courseInvitation.expiresAt);
           }
+          return asc(courseInvitation.expiresAt);
         }) ?? [asc(courseInvitation.expiresAt)]; // Fallback default sort
 
       const query = await db

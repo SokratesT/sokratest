@@ -49,7 +49,10 @@ export async function createPresignedUrlToDownload({
 export async function listFiles({
   bucket,
   prefix,
-}: { bucket: string; prefix: string }) {
+}: {
+  bucket: string;
+  prefix: string;
+}) {
   return s3Client.listObjects(bucket, prefix);
 }
 
@@ -77,7 +80,10 @@ export async function deleteFileFromBucket({
 export async function deletePrefixRecursively({
   bucket,
   prefix,
-}: { bucket: BucketName; prefix: string }) {
+}: {
+  bucket: BucketName;
+  prefix: string;
+}) {
   // Create bucket if it doesn't exist
   const status = await createBucketIfNotExists(bucket);
 
@@ -127,7 +133,10 @@ export async function deletePrefixRecursively({
 export async function listAllFilesInPrefix({
   bucket,
   prefix,
-}: { bucket: BucketName; prefix: string }) {
+}: {
+  bucket: BucketName;
+  prefix: string;
+}) {
   // Create a promise that resolves with all objects found
   return new Promise<
     Array<{ name: string; lastModified?: Date; size?: number }>
@@ -163,7 +172,10 @@ export async function listAllFilesInPrefix({
 export async function getMarkdownAsString({
   bucket,
   name,
-}: { bucket: BucketName; name: string }) {
+}: {
+  bucket: BucketName;
+  name: string;
+}) {
   const dataStream = await s3Client.getObject(bucket, name);
   const chunks: Uint8Array<ArrayBufferLike>[] = [];
 

@@ -1,7 +1,4 @@
 "use client";
-import React from "react";
-
-import type { TSuggestionText } from "@udecode/plate-suggestion";
 
 import { cn } from "@udecode/cn";
 import {
@@ -10,6 +7,8 @@ import {
   useEditorPlugin,
   usePluginOption,
 } from "@udecode/plate/react";
+import type { TSuggestionText } from "@udecode/plate-suggestion";
+import React from "react";
 
 import { suggestionPlugin } from "@/components/editor/plugins/suggestion-plugin";
 

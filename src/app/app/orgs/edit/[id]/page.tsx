@@ -4,7 +4,9 @@ import { getOrganizationById } from "@/db/queries/organizations";
 
 const EditOrganizationPage = async ({
   params,
-}: { params: Promise<{ id: string }> }) => {
+}: {
+  params: Promise<{ id: string }>;
+}) => {
   const { id } = await params;
 
   const result = await getOrganizationById(id, "update");

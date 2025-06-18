@@ -1,5 +1,9 @@
 "use client";
 
+import type { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
@@ -13,10 +17,6 @@ import {
 import type { User } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
 import { ROUTES } from "@/settings/routes";
-import type { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import { toast } from "sonner";
 
 const handleDelete = async (id: string) => {
   toast.promise(authClient.admin.removeUser({ userId: id }), {

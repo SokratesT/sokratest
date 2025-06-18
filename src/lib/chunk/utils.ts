@@ -29,7 +29,7 @@ export function extractMarkdownImages(markdown: string): {
   // Replace each image with a placeholder and store the image data
   const modifiedMarkdown = markdown.replace(
     imageRegex,
-    (match, alt, mimeType, imageData) => {
+    (_match, alt, mimeType, imageData) => {
       const imageId = uuidv4();
       const placeholder = `![${alt}](image-${imageId})`;
 
@@ -72,8 +72,7 @@ export const extractFileInfoFromReference = (
     const id = lastSegment.substring(0, dotIndex);
     const extension = lastSegment.substring(dotIndex + 1);
     return { id, extension };
-  } else {
-    // No extension present
-    return { id: lastSegment, extension: null };
   }
+  // No extension present
+  return { id: lastSegment, extension: null };
 };

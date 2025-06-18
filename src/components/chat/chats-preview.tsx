@@ -1,9 +1,9 @@
+import { PlusIcon } from "lucide-react";
+import Link from "next/link";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { getUserChatsForActiveCourse } from "@/db/queries/chat";
 import { ROUTES } from "@/settings/routes";
-import { PlusIcon } from "lucide-react";
-import Link from "next/link";
 import { ChatsList } from "./chats-list";
 import { NewChatButton } from "./new-chat-button";
 

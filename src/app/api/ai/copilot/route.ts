@@ -1,7 +1,7 @@
-import { getSaiaModel } from "@/lib/ai/saia-models";
 import { generateText } from "ai";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { getSaiaModel } from "@/lib/ai/saia-models";
 
 export async function POST(req: NextRequest) {
   const { prompt, system } = await req.json();

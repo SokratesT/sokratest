@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { CornerDownLeft, StopCircleIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const StopButton = ({
   stop,

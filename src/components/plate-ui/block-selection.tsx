@@ -1,10 +1,10 @@
 "use client";
 
 import { cn } from "@udecode/cn";
+import { usePluginOption } from "@udecode/plate/react";
 import { DndPlugin } from "@udecode/plate-dnd";
 import { useBlockSelected } from "@udecode/plate-selection/react";
-import { usePluginOption } from "@udecode/plate/react";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 
 export const blockSelectionVariants = cva(

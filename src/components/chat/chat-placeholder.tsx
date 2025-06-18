@@ -1,9 +1,9 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { authClient } from "@/lib/auth-client";
 import { Bot } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { authClient } from "@/lib/auth-client";
 
 const welcomeMessages = [
   "Let me support you on your learning journey. I am ready for you to initiate our conversation.",

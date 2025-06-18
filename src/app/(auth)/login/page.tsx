@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { SignInForm } from "@/components/auth/signin-form";
 import {
   Card,
@@ -6,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Login",

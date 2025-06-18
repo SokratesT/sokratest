@@ -1,21 +1,16 @@
 "use client";
 
-import {
-  STRUCTURAL_TYPES,
-  getBlockType,
-  setBlockType,
-} from "@/components/editor/transforms";
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
-import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
-import { HEADING_KEYS } from "@udecode/plate-heading";
-import { INDENT_LIST_KEYS, ListStyleType } from "@udecode/plate-indent-list";
-import { TogglePlugin } from "@udecode/plate-toggle/react";
 import {
   ParagraphPlugin,
   useEditorRef,
   useSelectionFragmentProp,
 } from "@udecode/plate/react";
+import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
+import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
+import { HEADING_KEYS } from "@udecode/plate-heading";
+import { INDENT_LIST_KEYS, ListStyleType } from "@udecode/plate-indent-list";
+import { TogglePlugin } from "@udecode/plate-toggle/react";
 import {
   ChevronRightIcon,
   Columns3Icon,
@@ -30,6 +25,11 @@ import {
   SquareIcon,
 } from "lucide-react";
 import { useMemo } from "react";
+import {
+  getBlockType,
+  STRUCTURAL_TYPES,
+  setBlockType,
+} from "@/components/editor/transforms";
 import {
   DropdownMenu,
   DropdownMenuContent,

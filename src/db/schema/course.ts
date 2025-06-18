@@ -52,7 +52,7 @@ export const courseMember = pgTable(
 
 export type CourseMember = InferSelectModel<typeof course>;
 
-export const coursesRelations = relations(course, ({ one, many }) => ({
+export const coursesRelations = relations(course, ({ one }) => ({
   organizationId: one(organization, {
     fields: [course.organizationId],
     references: [organization.id],

@@ -1,7 +1,6 @@
+import { cn } from "@udecode/cn";
 import type { EmojiCategoryList } from "@udecode/plate-emoji";
 import type { UseEmojiPickerType } from "@udecode/plate-emoji/react";
-
-import { cn } from "@udecode/cn";
 
 import { Button } from "./button";
 import {

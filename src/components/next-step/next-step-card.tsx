@@ -1,5 +1,6 @@
 "use client";
 
+import type { CardComponentProps } from "nextstepjs";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { CardComponentProps } from "nextstepjs";
 
 const NextStepCard = ({
   step,
@@ -18,7 +18,6 @@ const NextStepCard = ({
   nextStep,
   prevStep,
   skipTour,
-  arrow,
 }: CardComponentProps) => {
   return (
     <Card className="w-xs">

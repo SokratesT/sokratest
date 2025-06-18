@@ -1,3 +1,6 @@
+import { format } from "date-fns";
+import { BotIcon, CalendarIcon } from "lucide-react";
+import Link from "next/link";
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { Badge } from "@/components/ui/badge";
@@ -5,9 +8,6 @@ import { buttonVariants } from "@/components/ui/button";
 import { getCourseById } from "@/db/queries/course";
 import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
-import { format } from "date-fns";
-import { BotIcon, CalendarIcon } from "lucide-react";
-import Link from "next/link";
 
 const ViewCoursePage = async ({
   params,

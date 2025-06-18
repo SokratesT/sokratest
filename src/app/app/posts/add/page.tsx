@@ -1,6 +1,6 @@
+import { redirect } from "next/navigation";
 import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
-import { redirect } from "next/navigation";
 import { PostForm } from "./_components/post-form";
 
 const AddPostPage = async () => {

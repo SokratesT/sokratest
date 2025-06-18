@@ -1,3 +1,7 @@
+import { FileTextIcon } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Suspense } from "react";
 import { UserStats } from "@/components/app/user-stats";
 import { ProfileForm } from "@/components/forms/profile-form";
 import { buttonVariants } from "@/components/ui/button";
@@ -10,10 +14,6 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ROUTES } from "@/settings/routes";
-import { FileTextIcon } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { Suspense } from "react";
 import { ChangePasswordForm } from "./_components/change-password-form";
 import { CourseInvitationsList } from "./_components/course-invitations-list";
 import { ExportChats } from "./_components/export-chats";

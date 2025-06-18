@@ -1,5 +1,8 @@
 "use client";
 
+import type { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
@@ -13,9 +16,6 @@ import { removeCourseMembers } from "@/db/actions/course";
 import type { User } from "@/db/schema/auth";
 import type { Course } from "@/db/schema/course";
 import { withToastPromise } from "@/lib/utils";
-import type { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-import { toast } from "sonner";
 
 const handleDelete = async (id: string, courseId?: Course["id"]) => {
   if (!courseId) {

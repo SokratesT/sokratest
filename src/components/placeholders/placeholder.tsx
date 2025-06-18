@@ -1,6 +1,6 @@
+import { CircleHelpIcon, type LucideIcon } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { CircleHelpIcon, type LucideIcon } from "lucide-react";
 
 const Placeholder = ({
   children,

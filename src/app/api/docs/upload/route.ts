@@ -1,10 +1,10 @@
+import { type NextRequest, NextResponse } from "next/server";
+import { v4 as uuidv4 } from "uuid";
 import { getSession } from "@/db/queries/auth";
 import { withAuthQuery } from "@/db/queries/utils/with-auth-query";
 import type { PresignedUrlProp, ShortFileProp } from "@/lib/files/types";
 import { createPresignedUrlToUpload } from "@/lib/s3/file-functions";
 import { buckets } from "@/settings/buckets";
-import { type NextRequest, NextResponse } from "next/server";
-import { v4 as uuidv4 } from "uuid";
 
 export const POST = async (req: NextRequest) => {
   const filesMeta = (await req.json()) as ShortFileProp[];

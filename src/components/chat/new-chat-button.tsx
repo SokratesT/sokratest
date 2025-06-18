@@ -1,15 +1,15 @@
 "use client";
 
+import { Slot } from "@radix-ui/react-slot";
+import type { VariantProps } from "class-variance-authority";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { buttonVariants } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { createChat } from "@/db/actions/chat";
 import { useUmami } from "@/hooks/use-umami";
 import { cn, withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
-import { Slot } from "@radix-ui/react-slot";
-import type { VariantProps } from "class-variance-authority";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 const NewChatButton = ({
   className,

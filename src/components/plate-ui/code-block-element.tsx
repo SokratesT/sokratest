@@ -2,8 +2,8 @@
 
 import { cn, withRef } from "@udecode/cn";
 import { NodeApi } from "@udecode/plate";
-import { formatCodeBlock, isLangSupported } from "@udecode/plate-code-block";
 import { PlateElement } from "@udecode/plate/react";
+import { formatCodeBlock, isLangSupported } from "@udecode/plate-code-block";
 import { BracesIcon, CheckIcon, CopyIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Button } from "./button";

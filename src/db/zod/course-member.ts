@@ -1,6 +1,6 @@
-import { courseMember } from "@/db/schema/course";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
+import { courseMember } from "@/db/schema/course";
 
 export const courseMemberInsertSchema = createInsertSchema(courseMember, {
   role: (schema) => schema.optional(),

@@ -1,3 +1,5 @@
+import Link from "next/link";
+import type { SearchParams } from "nuqs/server";
 import { SearchInput } from "@/components/documents/search-input";
 import { columns } from "@/components/documents/table/columns";
 import { DocumentTableActions } from "@/components/documents/table/document-table-actions";
@@ -12,8 +14,6 @@ import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { ROUTES } from "@/settings/routes";
-import Link from "next/link";
-import type { SearchParams } from "nuqs/server";
 
 const DocumentsPage = async ({
   searchParams,

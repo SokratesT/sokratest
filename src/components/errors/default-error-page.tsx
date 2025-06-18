@@ -1,5 +1,7 @@
 "use client";
 
+import { AlertCircleIcon } from "lucide-react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,8 +9,6 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { AlertCircleIcon } from "lucide-react";
-import { useEffect } from "react";
 
 const DefaultErrorPage = ({
   error,

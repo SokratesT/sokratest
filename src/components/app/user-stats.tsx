@@ -1,8 +1,3 @@
-import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { getActiveOrganization, getSession } from "@/db/queries/auth";
-import { getActiveCourse } from "@/db/queries/course";
-import { ROUTES } from "@/settings/routes";
 import {
   BookMarkedIcon,
   Building2Icon,
@@ -11,10 +6,17 @@ import {
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { getActiveOrganization, getSession } from "@/db/queries/auth";
+import { getActiveCourse } from "@/db/queries/course";
+import { ROUTES } from "@/settings/routes";
 
 const UserStats = async ({
   showSettingsLink = false,
-}: { showSettingsLink?: boolean }) => {
+}: {
+  showSettingsLink?: boolean;
+}) => {
   const activeOrganization = await getActiveOrganization();
   let activeCourse = null;
 

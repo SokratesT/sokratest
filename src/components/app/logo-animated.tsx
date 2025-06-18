@@ -169,7 +169,7 @@ const LogoAnimated = ({
               <g>
                 {paths.map((path, i) => (
                   <AnimatePath
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <Fine for this static list>
                     key={i}
                     d={path.d}
                     color={path.color}

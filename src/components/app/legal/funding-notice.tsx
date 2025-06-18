@@ -1,9 +1,9 @@
+import Image from "next/image";
+import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
-import Link from "next/link";
 
 interface FundingNoticeProps {
   className?: string;

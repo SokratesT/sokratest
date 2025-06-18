@@ -2,6 +2,13 @@
 
 import { cn, withProps, withRef } from "@udecode/cn";
 import {
+  PlateElement,
+  useEditorPlugin,
+  useElementSelector,
+  usePluginOption,
+  useReadOnly,
+} from "@udecode/plate/react";
+import {
   BlockSelectionPlugin,
   useBlockSelected,
 } from "@udecode/plate-selection/react";
@@ -12,13 +19,6 @@ import {
   useTableCellElement,
   useTableCellElementResizable,
 } from "@udecode/plate-table/react";
-import {
-  PlateElement,
-  useEditorPlugin,
-  useElementSelector,
-  usePluginOption,
-  useReadOnly,
-} from "@udecode/plate/react";
 import { cva } from "class-variance-authority";
 import { blockSelectionVariants } from "./block-selection";
 import { ResizeHandle } from "./resizable";
@@ -64,10 +64,10 @@ export const TableCellElement = withRef<
         "before:size-full",
         selected && "before:z-10 before:bg-brand/5",
         "before:absolute before:box-border before:select-none before:content-['']",
-        borders.bottom?.size && `before:border-b before:border-b-border`,
-        borders.right?.size && `before:border-r before:border-r-border`,
-        borders.left?.size && `before:border-l before:border-l-border`,
-        borders.top?.size && `before:border-t before:border-t-border`,
+        borders.bottom?.size && "before:border-b before:border-b-border",
+        borders.right?.size && "before:border-r before:border-r-border",
+        borders.left?.size && "before:border-l before:border-l-border",
+        borders.top?.size && "before:border-t before:border-t-border",
       )}
       style={
         {

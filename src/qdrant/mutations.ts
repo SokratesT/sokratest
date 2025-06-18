@@ -1,9 +1,9 @@
 import "server-only";
 
+import pMap from "p-map";
 import type { Course } from "@/db/schema/course";
 import type { Document } from "@/db/schema/document";
 import type { ChunkPayload } from "@/types/qdrant";
-import pMap from "p-map";
 import { qdrant } from "./qdrant";
 import { qdrantCollections } from "./qdrant-constants";
 
@@ -13,11 +13,7 @@ interface Point {
   payload: ChunkPayload;
 }
 
-export const upsertChunksToQdrant = async ({
-  chunks,
-}: {
-  chunks: Point[];
-}) => {
+export const upsertChunksToQdrant = async ({ chunks }: { chunks: Point[] }) => {
   const points = chunks.map((chunk) => ({
     id: chunk.id,
     vector: chunk.vector,

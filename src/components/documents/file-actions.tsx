@@ -9,7 +9,7 @@ import {
   Trash2,
 } from "lucide-react";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useConfirm } from "@/components/ui/dialog/confirm-dialog";
 import {
@@ -30,7 +30,6 @@ import type { Document } from "@/db/schema/document";
 import { handleDeleteDocuments } from "@/lib/client-actions/document";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
-import { useRouter } from "next/navigation";
 
 const FileActions = ({
   fileInfo,

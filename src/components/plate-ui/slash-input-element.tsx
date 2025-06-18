@@ -1,10 +1,11 @@
 "use client";
 
-import {
-  insertBlock,
-  insertInlineElement,
-} from "@/components/editor/transforms";
 import { withRef } from "@udecode/cn";
+import {
+  ParagraphPlugin,
+  type PlateEditor,
+  PlateElement,
+} from "@udecode/plate/react";
 import { AIChatPlugin } from "@udecode/plate-ai/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
@@ -18,8 +19,6 @@ import {
 } from "@udecode/plate-math/react";
 import { TablePlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
-import { ParagraphPlugin, type PlateEditor } from "@udecode/plate/react";
-import { PlateElement } from "@udecode/plate/react";
 import {
   CalendarIcon,
   ChevronRightIcon,
@@ -38,6 +37,10 @@ import {
   Table,
   TableOfContentsIcon,
 } from "lucide-react";
+import {
+  insertBlock,
+  insertInlineElement,
+} from "@/components/editor/transforms";
 import {
   InlineCombobox,
   InlineComboboxContent,

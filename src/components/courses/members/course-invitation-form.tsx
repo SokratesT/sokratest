@@ -1,5 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertCircle, Building2Icon, CircleMinusIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { FormDatePicker } from "@/components/forms/fields/formDatePicker";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormSelect } from "@/components/forms/fields/formSelect";
@@ -36,11 +41,6 @@ import { authClient } from "@/lib/auth-client";
 import { isFieldRequired, withToastPromise } from "@/lib/utils";
 import { courseRoles } from "@/settings/roles";
 import { ROUTES } from "@/settings/routes";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle, Building2Icon, CircleMinusIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useFieldArray, useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
   const { data: organizations, isPending } = authClient.useListOrganizations();

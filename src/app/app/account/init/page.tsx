@@ -1,9 +1,9 @@
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { AutoAcceptInvitation } from "@/components/app/auto-accept-invitation";
 import { getCourseInvitationById } from "@/db/queries/course-invitation";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
 import { ROUTES } from "@/settings/routes";
-import { redirect } from "next/navigation";
-import { Suspense } from "react";
 
 const AppPage = async ({
   searchParams,

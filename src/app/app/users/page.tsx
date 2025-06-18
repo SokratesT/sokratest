@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import type { SearchParams } from "nuqs/server";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
@@ -12,9 +15,6 @@ import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import type { SearchParams } from "nuqs/server";
 
 const UsersPage = async ({
   searchParams,
@@ -24,7 +24,7 @@ const UsersPage = async ({
   const { pageIndex, pageSize } =
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
-  const { bucket, search } = await bucketSearchParamsCache.parse(searchParams);
+  const { search } = await bucketSearchParamsCache.parse(searchParams);
 
   const permitted = await hasPermission(
     { context: "organization", id: "all", type: "user" },

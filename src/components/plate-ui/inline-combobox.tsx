@@ -15,13 +15,13 @@ import {
 } from "@ariakit/react";
 import { cn, withCn } from "@udecode/cn";
 import type { PointRef, TElement } from "@udecode/plate";
+import { useComposedRef, useEditorRef } from "@udecode/plate/react";
 import { filterWords } from "@udecode/plate-combobox";
 import {
   type UseComboboxInputResult,
   useComboboxInput,
   useHTMLInputCursorState,
 } from "@udecode/plate-combobox/react";
-import { useComposedRef, useEditorRef } from "@udecode/plate/react";
 import { cva } from "class-variance-authority";
 import {
   createContext,
@@ -63,7 +63,7 @@ export const defaultFilter: FilterFn = (
   );
 
   return Array.from(uniqueTerms).some((keyword) =>
-    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
     filterWords(keyword!, search),
   );
 };
@@ -218,7 +218,7 @@ const InlineComboboxInput = forwardRef<
     trigger,
   } = useContext(InlineComboboxContext);
 
-  // biome-ignore lint/style/noNonNullAssertion: <explanation>
+  // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
   const store = useComboboxContext()!;
   const value = store.useState("value");
 
@@ -315,10 +315,11 @@ const InlineComboboxItem = ({
 
   const { filter, removeInput } = useContext(InlineComboboxContext);
 
-  // biome-ignore lint/style/noNonNullAssertion: <explanation>
+  // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
   const store = useComboboxContext()!;
 
   // Optimization: Do not subscribe to value if filter is false
+  // biome-ignore lint/correctness/useHookAtTopLevel: <Needs refactor, but fine for now>
   const search = filter && store.useState("value");
 
   const visible = useMemo(
@@ -346,7 +347,7 @@ const InlineComboboxEmpty = ({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) => {
   const { setHasEmpty } = useContext(InlineComboboxContext);
-  // biome-ignore lint/style/noNonNullAssertion: <explanation>
+  // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
   const store = useComboboxContext()!;
   const items = store.useState("items");
 

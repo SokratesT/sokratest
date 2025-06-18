@@ -9,6 +9,7 @@ import { emojiCategoryIcons, emojiSearchIcons } from "./emoji-icons";
 import { EmojiPicker } from "./emoji-picker";
 import { EmojiToolbarDropdown } from "./emoji-toolbar-dropdown";
 import { ToolbarButton } from "./toolbar";
+
 type EmojiDropdownMenuProps = {
   options?: EmojiDropdownMenuOptions;
 } & React.ComponentPropsWithoutRef<typeof ToolbarButton>;

@@ -1,3 +1,6 @@
+import { format } from "date-fns";
+import { BookMarkedIcon, CalendarIcon, Clock4Icon } from "lucide-react";
+import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -11,9 +14,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { getCourseById } from "@/db/queries/course";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
-import { format } from "date-fns";
-import { BookMarkedIcon, CalendarIcon, Clock4Icon } from "lucide-react";
-import { Suspense } from "react";
 import { CourseInvitationActions } from "./course-invitation-actions";
 
 interface CourseInvitationEntryProps {

@@ -1,15 +1,15 @@
 "use client";
 
+import { Clock } from "lucide-react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Clock } from "lucide-react";
-import React, { useEffect } from "react";
 import {
-  type TimePickerType,
   getArrowByType,
   getDateByType,
   setDateByType,
+  type TimePickerType,
 } from "./time-picker-utils";
 
 interface TimePickerInputProps

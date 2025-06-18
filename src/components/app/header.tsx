@@ -1,5 +1,7 @@
 "use client";
 
+import { HomeIcon } from "lucide-react";
+import Link from "next/link";
 import { PageTitle } from "@/components/app/page-title";
 import { ThemeSwitcher } from "@/components/app/theme-switcher";
 import { buttonVariants } from "@/components/ui/button";
@@ -7,8 +9,6 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
-import { HomeIcon } from "lucide-react";
-import Link from "next/link";
 
 const Header = () => {
   const { isMobile, state } = useSidebar();

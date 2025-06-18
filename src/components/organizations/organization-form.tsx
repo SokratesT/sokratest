@@ -1,5 +1,9 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
@@ -10,14 +14,12 @@ import {
 } from "@/db/zod/organization";
 import { authClient } from "@/lib/auth-client";
 import { ROUTES } from "@/settings/routes";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 const OrganizationForm = ({
   organization,
-}: { organization?: Organization }) => {
+}: {
+  organization?: Organization;
+}) => {
   const router = useRouter();
 
   const form = useForm<OrganizationInsertSchemaType>({

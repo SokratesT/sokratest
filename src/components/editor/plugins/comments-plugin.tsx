@@ -3,11 +3,11 @@
 import type { ExtendConfig, Path } from "@udecode/plate";
 
 import { isSlateString } from "@udecode/plate";
+import { toTPlatePlugin, useHotkeys } from "@udecode/plate/react";
 import {
   type BaseCommentsConfig,
   BaseCommentsPlugin,
 } from "@udecode/plate-comments";
-import { toTPlatePlugin, useHotkeys } from "@udecode/plate/react";
 
 export type CommentsConfig = ExtendConfig<
   BaseCommentsConfig,
@@ -37,7 +37,7 @@ export const commentsPlugin = toTPlatePlugin<CommentsConfig>(
 
         while (leaf.parentElement) {
           if (leaf.classList.contains(`slate-${type}`)) {
-            // biome-ignore lint/style/noNonNullAssertion: <explanation>
+            // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
             const commentsEntry = api.comment!.node();
 
             if (!commentsEntry) {
@@ -46,7 +46,7 @@ export const commentsPlugin = toTPlatePlugin<CommentsConfig>(
               break;
             }
 
-            // biome-ignore lint/style/noNonNullAssertion: <explanation>
+            // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
             const id = api.comment!.nodeId(commentsEntry[0]);
 
             setOption("activeId", id ?? null);
@@ -71,7 +71,7 @@ export const commentsPlugin = toTPlatePlugin<CommentsConfig>(
     useHooks: ({ editor, getOptions }) => {
       const { hotkey } = getOptions();
       useHotkeys(
-        // biome-ignore lint/style/noNonNullAssertion: <explanation>
+        // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
         hotkey!,
         (e) => {
           if (!editor.selection) return;

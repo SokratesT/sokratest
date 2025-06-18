@@ -1,13 +1,12 @@
 "use client";
 
-import type { PlateEditor } from "@udecode/plate/react";
-
 import {
   type NodeEntry,
   type Path,
   PathApi,
   type TElement,
 } from "@udecode/plate";
+import type { PlateEditor } from "@udecode/plate/react";
 import { insertCallout } from "@udecode/plate-callout";
 import { CalloutPlugin } from "@udecode/plate-callout/react";
 import { insertCodeBlock } from "@udecode/plate-code-block";
@@ -198,11 +197,11 @@ export const getBlockType = (block: TElement) => {
   if (block[IndentListPlugin.key]) {
     if (block[IndentListPlugin.key] === ListStyleType.Decimal) {
       return ListStyleType.Decimal;
-    } else if (block[IndentListPlugin.key] === INDENT_LIST_KEYS.todo) {
-      return INDENT_LIST_KEYS.todo;
-    } else {
-      return ListStyleType.Disc;
     }
+    if (block[IndentListPlugin.key] === INDENT_LIST_KEYS.todo) {
+      return INDENT_LIST_KEYS.todo;
+    }
+    return ListStyleType.Disc;
   }
 
   return block.type;

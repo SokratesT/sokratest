@@ -4,6 +4,15 @@
  * Not using the NPM package, as it's a bit unnecessary for a single file.
  */
 
+import type { ComponentPropsWithRef, ReactNode } from "react";
+import React, {
+  createContext,
+  memo,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,15 +25,6 @@ import {
   AlertDialogPortal,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import React, {
-  useState,
-  useCallback,
-  useMemo,
-  useContext,
-  createContext,
-  memo,
-} from "react";
-import type { ComponentPropsWithRef, ReactNode } from "react";
 
 export interface CustomActionsProps {
   confirm: () => void;

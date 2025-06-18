@@ -1,5 +1,5 @@
 import { withVariants } from "@udecode/cn";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 
 export const inputVariants = cva(
   "flex w-full rounded-md bg-transparent text-base file:border-0 file:bg-background file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",

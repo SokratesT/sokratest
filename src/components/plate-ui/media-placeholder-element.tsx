@@ -1,7 +1,12 @@
 "use client";
 
-import { useUploadFile } from "@/lib/uploadthing";
 import { cn } from "@udecode/cn";
+import {
+  PlateElement,
+  useEditorPlugin,
+  withHOC,
+  withRef,
+} from "@udecode/plate/react";
 import type { TPlaceholderElement } from "@udecode/plate-media";
 import {
   AudioPlugin,
@@ -9,19 +14,14 @@ import {
   ImagePlugin,
   PlaceholderPlugin,
   PlaceholderProvider,
-  VideoPlugin,
   updateUploadHistory,
+  VideoPlugin,
 } from "@udecode/plate-media/react";
-import {
-  PlateElement,
-  useEditorPlugin,
-  withHOC,
-  withRef,
-} from "@udecode/plate/react";
 import { AudioLines, FileUp, Film, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFilePicker } from "use-file-picker";
+import { useUploadFile } from "@/lib/uploadthing";
 import { Spinner } from "./spinner";
 
 const CONTENT: Record<
@@ -110,7 +110,7 @@ export const MediaPlaceholderElement = withHOC(
             isUpload: true,
             name: element.mediaType === FilePlugin.key ? uploadedFile.name : "",
             placeholderId: element.id as string,
-            // biome-ignore lint/style/noNonNullAssertion: <explanation>
+            // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
             type: element.mediaType!,
             url: uploadedFile.url,
           };
@@ -146,7 +146,7 @@ export const MediaPlaceholderElement = withHOC(
       return (
         <PlateElement ref={ref} className={cn(className, "my-1")} {...props}>
           {(!loading || !isImage) && (
-            // biome-ignore lint/nursery/noStaticElementInteractions: <explanation>
+            // biome-ignore lint/a11y/noStaticElementInteractions: <Needs refactor, but fine for now>
             <div
               className={cn(
                 "flex cursor-pointer select-none items-center rounded-sm bg-muted p-3 pr-9 hover:bg-primary/10",

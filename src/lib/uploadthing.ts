@@ -1,13 +1,12 @@
-import type { OurFileRouter } from "@/app/api/uploadthing/route";
+import { generateReactHelpers } from "@uploadthing/react";
+import { useState } from "react";
+import { toast } from "sonner";
 import type {
   ClientUploadedFileData,
   UploadFilesOptions,
 } from "uploadthing/types";
-
-import { generateReactHelpers } from "@uploadthing/react";
-import { useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
+import type { OurFileRouter } from "@/app/api/uploadthing/route";
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}
 
@@ -115,9 +114,9 @@ export function getErrorMessage(err: unknown) {
     });
 
     return errors.join("\n");
-  } else if (err instanceof Error) {
-    return err.message;
-  } else {
-    return unknownError;
   }
+  if (err instanceof Error) {
+    return err.message;
+  }
+  return unknownError;
 }

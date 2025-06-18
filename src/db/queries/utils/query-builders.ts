@@ -1,4 +1,4 @@
-import { type SQL, asc, desc } from "drizzle-orm";
+import { asc, desc, type SQL } from "drizzle-orm";
 
 interface PaginationOptions {
   pageIndex: number;

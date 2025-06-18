@@ -1,3 +1,6 @@
+import { ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
+import type { ReactNode } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,9 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { ExternalLinkIcon } from "lucide-react";
-import Link from "next/link";
-import type { ReactNode } from "react";
 
 const AboutModal = ({ children }: { children: ReactNode }) => {
   return (

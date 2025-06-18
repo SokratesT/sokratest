@@ -1,10 +1,10 @@
 "use client";
 
+import { useTransition } from "react";
+import { useDebounceCallback } from "usehooks-ts";
 import { Input } from "@/components/ui/input";
 import { useBucketSearchParams } from "@/lib/nuqs/search-params.bucket";
 import { cn } from "@/lib/utils";
-import { useTransition } from "react";
-import { useDebounceCallback } from "usehooks-ts";
 
 const SearchInput = ({
   type,

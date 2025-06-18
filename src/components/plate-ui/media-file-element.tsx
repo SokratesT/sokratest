@@ -1,9 +1,9 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
+import { PlateElement, useReadOnly, withHOC } from "@udecode/plate/react";
 import { useMediaState } from "@udecode/plate-media/react";
 import { ResizableProvider } from "@udecode/plate-resizable";
-import { PlateElement, useReadOnly, withHOC } from "@udecode/plate/react";
 import { FileUp } from "lucide-react";
 import { Caption, CaptionTextarea } from "./caption";
 

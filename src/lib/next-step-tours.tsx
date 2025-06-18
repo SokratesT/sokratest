@@ -1,12 +1,12 @@
 "use client";
 
+import Link from "next/link";
+import { NextStep, type Tour } from "nextstepjs";
+import type { ReactNode } from "react";
 import { NextStepCard } from "@/components/next-step/next-step-card";
 import { useSidebar } from "@/components/ui/sidebar";
 import { completeTour } from "@/db/actions/user";
 import { useUmami } from "@/hooks/use-umami";
-import Link from "next/link";
-import { NextStep, type Tour } from "nextstepjs";
-import type { ReactNode } from "react";
 
 const nextStepTours: Tour[] = [
   {
@@ -207,7 +207,7 @@ export const NextStepTours = ({ children }: { children: ReactNode }) => {
         });
       }
     },
-    onSkip: async (step: number, tourName: string | null) => {
+    onSkip: async (_step: number, tourName: string | null) => {
       if (tourName === "initialTour" || tourName === "chatTour") {
         await completeTour({ tour: tourName, action: "skipped" });
       }

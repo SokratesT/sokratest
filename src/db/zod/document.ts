@@ -1,6 +1,6 @@
-import { document } from "@/db/schema/document";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
+import { document } from "@/db/schema/document";
 
 export const fileUploadSchema = z.object({
   files: z.array(z.instanceof(File)),

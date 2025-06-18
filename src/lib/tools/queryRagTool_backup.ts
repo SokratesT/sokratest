@@ -1,13 +1,16 @@
+import { type DataStreamWriter, streamText, tool } from "ai";
+import { z } from "zod";
 import { findRelevantContent } from "@/app/api/ai/chat/ai-helper";
 import type { Course } from "@/db/schema/course";
 import { getSaiaModel } from "@/lib/ai/saia-models";
-import { type DataStreamWriter, streamText, tool } from "ai";
-import { z } from "zod";
 
 export const queryRagTool = ({
   dataStream,
   courseId,
-}: { dataStream: DataStreamWriter; courseId: Course["id"] }) =>
+}: {
+  dataStream: DataStreamWriter;
+  courseId: Course["id"];
+}) =>
   tool({
     description:
       "Use this tool to respond to questions. It will return some documents, which you should use to respond to the query.",

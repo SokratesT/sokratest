@@ -1,3 +1,9 @@
+import type { UseChatHelpers } from "@ai-sdk/react";
+import type { ChatRequestOptions, Message } from "ai";
+import { CompassIcon, RefreshCcwIcon } from "lucide-react";
+import { useCallback, useEffect, useRef } from "react";
+import { toast } from "sonner";
+import { useLocalStorage, useWindowSize } from "usehooks-ts";
 import { AppTourButton } from "@/components/next-step/app-tour-button";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -5,12 +11,6 @@ import type { UserPreferencesType } from "@/db/schema/auth";
 import { useUmami } from "@/hooks/use-umami";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
-import type { UseChatHelpers } from "@ai-sdk/react";
-import type { ChatRequestOptions, Message } from "ai";
-import { CompassIcon, RefreshCcwIcon } from "lucide-react";
-import { useCallback, useEffect, useRef } from "react";
-import { toast } from "sonner";
-import { useLocalStorage, useWindowSize } from "usehooks-ts";
 import { SendButton, StopButton } from "./chat-buttons";
 
 interface ChatInputProps

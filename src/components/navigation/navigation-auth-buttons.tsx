@@ -1,18 +1,14 @@
 "use client";
 
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
 import { ROUTES } from "@/settings/routes";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
 const NavigationAuthButtons = () => {
-  const {
-    data: session,
-    isPending, //loading state
-    error, //error object
-  } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
 
   const [isClient, setIsClient] = useState(false);
 

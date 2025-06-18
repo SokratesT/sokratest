@@ -1,9 +1,9 @@
 import "server-only";
 
+import { asc, count, desc, eq, getTableColumns } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { type User, user } from "@/db/schema/auth";
 import { type Post, post } from "@/db/schema/post";
-import { asc, count, desc, eq, getTableColumns } from "drizzle-orm";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 export const getAllPosts = async () => {
@@ -68,12 +68,12 @@ export const getAvailablePosts = async (
         if (s.id === "name") {
           const column = user[s.id as keyof User];
           return s.desc ? desc(column) : asc(column);
-        } else if (["createdAt", "title"].includes(s.id)) {
+        }
+        if (["createdAt", "title"].includes(s.id)) {
           const column = post[s.id as keyof Post];
           return s.desc ? desc(column) : asc(column);
-        } else {
-          return asc(post.createdAt);
         }
+        return asc(post.createdAt);
       }) ?? [asc(post.createdAt)]; // Fallback default sort
 
     query = await db

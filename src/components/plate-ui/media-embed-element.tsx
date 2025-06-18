@@ -1,18 +1,18 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
+import { PlateElement, withHOC } from "@udecode/plate/react";
 import { parseTwitterUrl, parseVideoUrl } from "@udecode/plate-media";
 import { MediaEmbedPlugin, useMediaState } from "@udecode/plate-media/react";
 import { ResizableProvider, useResizableValue } from "@udecode/plate-resizable";
-import { PlateElement, withHOC } from "@udecode/plate/react";
 import LiteYouTubeEmbed from "react-lite-youtube-embed";
 import { Tweet } from "react-tweet";
 import { Caption, CaptionTextarea } from "./caption";
 import { MediaPopover } from "./media-popover";
 import {
+  mediaResizeHandleVariants,
   Resizable,
   ResizeHandle,
-  mediaResizeHandleVariants,
 } from "./resizable";
 
 export const MediaEmbedElement = withHOC(
@@ -56,7 +56,7 @@ export const MediaEmbedElement = withHOC(
               {isVideo ? (
                 isYoutube ? (
                   <LiteYouTubeEmbed
-                    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+                    // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
                     id={embed?.id!}
                     title="youtube"
                     wrapperClass={cn(
@@ -109,7 +109,7 @@ export const MediaEmbedElement = withHOC(
                       "[&_.react-tweet-theme]:ring-2 [&_.react-tweet-theme]:ring-ring [&_.react-tweet-theme]:ring-offset-2",
                   )}
                 >
-                  {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+                  {/* biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now> */}
                   <Tweet id={embed?.id!} />
                 </div>
               )}

@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import type { SearchParams } from "nuqs/server";
 import { SearchInput } from "@/components/documents/search-input";
 import { organizationTableColumns } from "@/components/organizations/table/organization-table-columns";
 import { Placeholder } from "@/components/placeholders/placeholder";
@@ -12,9 +15,6 @@ import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import type { SearchParams } from "nuqs/server";
 
 const UsersPage = async ({
   searchParams,

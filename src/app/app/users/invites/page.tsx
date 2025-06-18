@@ -1,3 +1,5 @@
+import Link from "next/link";
+import type { SearchParams } from "nuqs/server";
 import { SearchInput } from "@/components/documents/search-input";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
@@ -13,8 +15,6 @@ import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { ROUTES } from "@/settings/routes";
-import Link from "next/link";
-import type { SearchParams } from "nuqs/server";
 
 const UsersPage = async ({
   searchParams,
@@ -24,7 +24,7 @@ const UsersPage = async ({
   const { pageIndex, pageSize } =
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
-  const { bucket, search } = await bucketSearchParamsCache.parse(searchParams);
+  const { search } = await bucketSearchParamsCache.parse(searchParams);
 
   const result = await getCourseInvitations(sort, pageIndex, pageSize, search);
 

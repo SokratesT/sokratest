@@ -1,5 +1,8 @@
 "use client";
 
+import { BookMarkedIcon, Check, ChevronsUpDown } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,14 +19,14 @@ import { setActiveCourse } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
 import { withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
-import { BookMarkedIcon, Check, ChevronsUpDown } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 const CourseSwitcher = ({
   availableCourses,
   activeCourse,
-}: { availableCourses: Course[]; activeCourse: Course | undefined | null }) => {
+}: {
+  availableCourses: Course[];
+  activeCourse: Course | undefined | null;
+}) => {
   const router = useRouter();
 
   const { setOpenMobile } = useSidebar();

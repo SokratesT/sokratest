@@ -1,7 +1,8 @@
-import { ROUTES } from "@/settings/routes";
 import { redirect } from "next/navigation";
+import { ROUTES } from "@/settings/routes";
 
 const PublicPostPage = async ({
+  // biome-ignore lint/correctness/noUnusedFunctionParameters: <Unused page, will be deleted later>
   params,
 }: {
   params: Promise<{ id: string }>;

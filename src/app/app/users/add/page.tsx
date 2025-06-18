@@ -1,11 +1,11 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import { CourseInvitationForm } from "@/components/courses/members/course-invitation-form";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { getUserCoursesForActiveOrganization } from "@/db/queries/course";
 import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 
 const AddUsersPage = async () => {
   const permitted = await hasPermission(

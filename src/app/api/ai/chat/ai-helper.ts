@@ -1,3 +1,5 @@
+import { generateText, type Message } from "ai";
+import { inArray } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import type { User } from "@/db/schema/auth";
 import type { Chat } from "@/db/schema/chat";
@@ -9,8 +11,6 @@ import { qdrant } from "@/qdrant/qdrant";
 import { qdrantCollections } from "@/qdrant/qdrant-constants";
 import { generateRagQueryPrompt } from "@/settings/prompts";
 import type { QdrantPoints } from "@/types/qdrant";
-import { type Message, generateText } from "ai";
-import { inArray } from "drizzle-orm";
 
 type RelevantContentResult =
   | { success: true; data: QdrantPoints; error: null }

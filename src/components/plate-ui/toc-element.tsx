@@ -1,13 +1,12 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
+import { PlateElement } from "@udecode/plate/react";
 import {
   useTocElement,
   useTocElementState,
 } from "@udecode/plate-heading/react";
 import { cva } from "class-variance-authority";
-
-import { PlateElement } from "@udecode/plate/react";
 import { Button } from "./button";
 
 const headingItemVariants = cva(

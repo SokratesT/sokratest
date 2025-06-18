@@ -16,7 +16,7 @@ export const post = pgTable("post", {
 
 export type Post = InferSelectModel<typeof post>;
 
-export const postRelations = relations(post, ({ one, many }) => ({
+export const postRelations = relations(post, ({ one }) => ({
   user: one(user, {
     fields: [post.userId],
     references: [user.id],

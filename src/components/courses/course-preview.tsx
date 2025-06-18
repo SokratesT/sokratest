@@ -1,11 +1,11 @@
+import { BookMarkedIcon } from "lucide-react";
+import Link from "next/link";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSession } from "@/db/queries/auth";
 import { getCourseById } from "@/db/queries/course";
 import { ROUTES } from "@/settings/routes";
-import { BookMarkedIcon } from "lucide-react";
-import Link from "next/link";
 
 const CoursePreview = async () => {
   const session = await getSession();

@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   acceptCourseInvitation,
@@ -8,7 +9,6 @@ import {
 import type { CourseInvitation } from "@/db/schema/course-invitation";
 import { useUmami } from "@/hooks/use-umami";
 import { withToastPromise } from "@/lib/utils";
-import { toast } from "sonner";
 
 interface CourseInvitationActionsProps {
   invitation: CourseInvitation;

@@ -1,15 +1,15 @@
 "use client";
 
+import type { ApiGetScoresResponseData } from "langfuse";
+import { CheckIcon } from "lucide-react";
+import { type ComponentProps, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { voteMessage } from "@/db/actions/chat-message-vote";
 import type { Chat } from "@/db/schema/chat";
 import type { ChatMessage } from "@/db/schema/chat-message";
 import { useUmami } from "@/hooks/use-umami";
 import { cn } from "@/lib/utils";
-import type { ApiGetScoresResponseData } from "langfuse";
-import { CheckIcon } from "lucide-react";
-import { type ComponentProps, useState } from "react";
-import { toast } from "sonner";
 
 const MessageRate = ({
   messageId,

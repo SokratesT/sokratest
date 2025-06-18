@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   BotIcon,
   DatabaseIcon,
@@ -6,6 +5,7 @@ import {
   LineChartIcon,
   type LucideIcon,
 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface BenefitsProps {
   Icon: LucideIcon;

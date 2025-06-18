@@ -1,3 +1,9 @@
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { admin, organization as organizationPlugin } from "better-auth/plugins";
+import { createTransport } from "nodemailer";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
+import { v4 as uuidv4 } from "uuid";
 import { db } from "@/db/drizzle";
 import { getUserCoursesOnLogin } from "@/db/queries/course";
 import { getUserOrganizationsOnLogin } from "@/db/queries/organizations";
@@ -10,12 +16,6 @@ import {
   user,
   verification,
 } from "@/db/schema/auth";
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin, organization as organizationPlugin } from "better-auth/plugins";
-import { createTransport } from "nodemailer";
-import type SMTPTransport from "nodemailer/lib/smtp-transport";
-import { v4 as uuidv4 } from "uuid";
 
 export const auth = betterAuth({
   trustedOrigins: ["http://localhost:3000", "http://host.docker.internal:3000"],
@@ -46,7 +46,7 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    sendResetPassword: async ({ user, url, token }, request) => {
+    sendResetPassword: async ({ user, url }, _request) => {
       await sendEmail({
         to: user.email,
         subject: "Reset your password",

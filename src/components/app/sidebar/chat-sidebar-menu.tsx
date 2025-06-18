@@ -1,3 +1,5 @@
+import { MessagesSquareIcon, MoreHorizontalIcon } from "lucide-react";
+import Link from "next/link";
 import { ChatActionsDropdown } from "@/components/chat/chat-actions-dropdown";
 import { SimplePlaceholder } from "@/components/placeholders/simple-placeholder";
 import {
@@ -8,8 +10,6 @@ import {
 } from "@/components/ui/sidebar";
 import { getUserChatsForActiveCourse } from "@/db/queries/chat";
 import { ROUTES } from "@/settings/routes";
-import { MessagesSquareIcon, MoreHorizontalIcon } from "lucide-react";
-import Link from "next/link";
 
 const ChatSidebarMenu = async () => {
   const result = await getUserChatsForActiveCourse();

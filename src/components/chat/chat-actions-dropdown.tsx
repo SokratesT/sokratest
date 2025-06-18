@@ -1,5 +1,8 @@
 "use client";
 
+import { useParams, useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { useConfirm } from "@/components/ui/dialog/confirm-dialog";
 import {
   DropdownMenu,
@@ -13,15 +16,16 @@ import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import { useUmami } from "@/hooks/use-umami";
 import { withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
-import { useParams, useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import { toast } from "sonner";
 
 const ChatActionsDropdown = ({
   children,
   chatId,
   title,
-}: { children: React.ReactElement; chatId: string; title: string | null }) => {
+}: {
+  children: React.ReactElement;
+  chatId: string;
+  title: string | null;
+}) => {
   const params = useParams<{ id?: string }>();
   const router = useRouter();
   const confirm = useConfirm();

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { NavUser } from "@/components/account/nav-user";
 import { NewChatButton } from "@/components/chat/new-chat-button";
 import { CourseSwitcherServer } from "@/components/courses/course-switcher/course-switcher-server";
@@ -12,7 +13,6 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Suspense } from "react";
 import { ChatSidebarMenu } from "./chat-sidebar-menu";
 import { ManageSidebarGroup } from "./manage-sidebar-group";
 import { SidebarLogo } from "./sidebar-logo";

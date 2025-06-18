@@ -1,3 +1,11 @@
+import type { UseChatHelpers } from "@ai-sdk/react";
+import type { ChatRequestOptions, Message } from "ai";
+import type { ApiGetScoresResponseData } from "langfuse";
+import { CopyIcon, PencilIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useCopyToClipboard } from "usehooks-ts";
 import {
   Accordion,
   AccordionContent,
@@ -12,14 +20,6 @@ import {
 } from "@/components/ui/chat/chat-bubble";
 import type { Chat } from "@/db/schema/chat";
 import { cn } from "@/lib/utils";
-import type { UseChatHelpers } from "@ai-sdk/react";
-import type { ChatRequestOptions, Message } from "ai";
-import type { ApiGetScoresResponseData } from "langfuse";
-import { CopyIcon, PencilIcon } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
-import { toast } from "sonner";
-import { useCopyToClipboard } from "usehooks-ts";
 import { AnnotationBlock } from "./annotation-block";
 import { Markdown } from "./markdown";
 import { MessageEditor } from "./message-editor";

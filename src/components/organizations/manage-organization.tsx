@@ -1,16 +1,18 @@
 "use client";
 
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { revalidatePathFromClient } from "@/db/actions/revalidate-helper";
 import type { Organization } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
 import { ROUTES } from "@/settings/routes";
-import { toast } from "sonner";
 import { OrganizationForm } from "./organization-form";
 
 const ManageOrganization = ({
   organization,
-}: { organization: Organization }) => {
+}: {
+  organization: Organization;
+}) => {
   const handleDeleteOrganization = async (organizationId: string) => {
     toast.promise(authClient.organization.delete({ organizationId }), {
       loading: "Deleting organisation...",

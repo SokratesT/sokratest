@@ -2,16 +2,16 @@
 
 import {
   type ExtendConfig,
-  type Path,
   isSlateEditor,
   isSlateElement,
   isSlateString,
+  type Path,
 } from "@udecode/plate";
+import { toTPlatePlugin } from "@udecode/plate/react";
 import {
   type BaseSuggestionConfig,
   BaseSuggestionPlugin,
 } from "@udecode/plate-suggestion";
-import { toTPlatePlugin } from "@udecode/plate/react";
 
 import { BlockSuggestion } from "@/components/plate-ui/block-suggestion";
 
@@ -47,7 +47,7 @@ export const suggestionPlugin = toTPlatePlugin<SuggestionConfig>(
           !isSlateEditor(leaf.parentElement)
         ) {
           if (leaf.classList.contains(`slate-${type}`)) {
-            // biome-ignore lint/style/noNonNullAssertion: <explanation>
+            // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
             const suggestionEntry = api.suggestion!.node({
               isText: true,
             });
@@ -58,7 +58,7 @@ export const suggestionPlugin = toTPlatePlugin<SuggestionConfig>(
               break;
             }
 
-            // biome-ignore lint/style/noNonNullAssertion: <explanation>
+            // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
             const id = api.suggestion!.nodeId(suggestionEntry[0]);
 
             setOption("activeId", id ?? null);
@@ -81,7 +81,7 @@ export const suggestionPlugin = toTPlatePlugin<SuggestionConfig>(
     },
     render: {
       belowRootNodes: ({ api, element }) => {
-        // biome-ignore lint/style/noNonNullAssertion: <explanation>
+        // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
         if (!api.suggestion!.isBlockSuggestion(element)) {
           return null;
         }

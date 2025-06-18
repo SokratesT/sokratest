@@ -1,7 +1,7 @@
 import { db } from "@/db/drizzle";
 import { getSession } from "@/db/queries/auth";
 import type { authClient } from "@/lib/auth-client";
-import { type Action, type Resource, hasPermission } from "@/lib/rbac";
+import { type Action, hasPermission, type Resource } from "@/lib/rbac";
 
 // Define the base session type
 type BaseSession = typeof authClient.$Infer.Session;
@@ -113,7 +113,7 @@ export async function withAuthQuery<T>(
           success: false,
           error: {
             code: AuthErrorCode.INSUFFICIENT_PERMISSIONS,
-            message: `Insufficient permissions for this operation`,
+            message: "Insufficient permissions for this operation",
             context: {
               action: options.access.action,
               resource: options.access.resource.id,

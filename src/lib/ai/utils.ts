@@ -1,15 +1,15 @@
+import {
+  type Attachment,
+  generateText,
+  type Message,
+  type UIMessage,
+} from "ai";
 import { saveChat } from "@/db/queries/ai-queries";
 import type { User } from "@/db/schema/auth";
 import type { Chat } from "@/db/schema/chat";
 import type { ChatMessage } from "@/db/schema/chat-message";
 import type { Course } from "@/db/schema/course";
 import { generateChatTitlePrompt } from "@/settings/prompts";
-import {
-  type Attachment,
-  type Message,
-  type UIMessage,
-  generateText,
-} from "ai";
 import { getSaiaModel } from "./saia-models";
 
 export const createNewChat = async ({

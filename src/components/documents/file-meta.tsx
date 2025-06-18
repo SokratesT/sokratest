@@ -1,11 +1,3 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import type { Document } from "@/db/schema/document";
 import { convert } from "convert";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -19,6 +11,14 @@ import {
   SignatureIcon,
   Star,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import type { Document } from "@/db/schema/document";
 
 const getFileTypeColor = (fileType: string): string => {
   const typeMap: Record<string, string> = {

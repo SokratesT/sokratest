@@ -1,13 +1,13 @@
 "use client";
 
 import { cn } from "@udecode/cn";
+import { useEditorRef } from "@udecode/plate/react";
 import {
   PreviewImage,
   useImagePreview,
   useImagePreviewValue,
   useScaleInput,
 } from "@udecode/plate-media/react";
-import { useEditorRef } from "@udecode/plate/react";
 import { cva } from "class-variance-authority";
 import { ArrowLeft, ArrowRight, Download, Minus, Plus, X } from "lucide-react";
 
@@ -46,7 +46,7 @@ export const ImagePreview = () => {
   } = useImagePreview({ scrollSpeed: SCROLL_SPEED });
 
   return (
-    // biome-ignore lint/nursery/noStaticElementInteractions: <explanation>
+    // biome-ignore lint/a11y/noStaticElementInteractions: <Needs refactor, but fine for now>
     <div
       className={cn(
         "fixed top-0 left-0 z-50 h-screen w-screen select-none",
@@ -64,7 +64,8 @@ export const ImagePreview = () => {
               "mx-auto block max-h-[calc(100vh-4rem)] w-auto object-contain transition-transform",
             )}
           />
-          {/* biome-ignore lint/nursery/noStaticElementInteractions: <explanation> */}
+
+          {/** biome-ignore lint/a11y/noStaticElementInteractions: <Needs refactor, but fine for now> */}
           <div
             className="-translate-x-1/2 absolute bottom-0 left-1/2 z-40 flex w-fit justify-center gap-4 p-2 text-center text-white"
             onClick={(e) => e.stopPropagation()}

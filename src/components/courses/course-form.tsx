@@ -1,5 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Building2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormSelect } from "@/components/forms/fields/formSelect";
@@ -20,11 +25,6 @@ import { saiaModels } from "@/lib/ai/saia-models";
 import { authClient } from "@/lib/auth-client";
 import { isFieldRequired, withToastPromise } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Building2Icon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 const CourseForm = ({ course }: { course?: Course }) => {
   const { data: organizations, isPending } = authClient.useListOrganizations();

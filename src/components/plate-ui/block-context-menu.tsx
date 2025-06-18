@@ -1,6 +1,10 @@
 "use client";
 
-import { useIsTouchDevice } from "@/hooks/use-is-touch-device";
+import {
+  ParagraphPlugin,
+  useEditorPlugin,
+  useEditorReadOnly,
+} from "@udecode/plate/react";
 import { AIChatPlugin } from "@udecode/plate-ai/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
@@ -10,12 +14,8 @@ import {
   BlockMenuPlugin,
   BlockSelectionPlugin,
 } from "@udecode/plate-selection/react";
-import {
-  ParagraphPlugin,
-  useEditorPlugin,
-  useEditorReadOnly,
-} from "@udecode/plate/react";
 import { useCallback, useState } from "react";
+import { useIsTouchDevice } from "@/hooks/use-is-touch-device";
 import {
   ContextMenu,
   ContextMenuContent,

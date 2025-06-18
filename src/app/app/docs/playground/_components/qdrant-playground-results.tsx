@@ -2,11 +2,7 @@ import { DisplayChunk } from "@/app/app/docs/view/[id]/chunks/_components/displa
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { getChunks } from "@/qdrant/queries";
 
-const QdrantPlaygroundResults = async ({
-  search,
-}: {
-  search: string;
-}) => {
+const QdrantPlaygroundResults = async ({ search }: { search: string }) => {
   const result = await getChunks({ search });
 
   if (!result.success) {

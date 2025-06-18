@@ -1,22 +1,22 @@
-import { getTrailingMessageId, saveMessages } from "@/db/queries/ai-queries";
-import { getSession } from "@/db/queries/auth";
-import { getCourseConfig } from "@/db/queries/course";
 import {
-  type ModelsWithText,
-  getSaiaModel,
-  saiaModels,
-} from "@/lib/ai/saia-models";
-import { createNewChat, getMostRecentUserMessage } from "@/lib/ai/utils";
-import { createSocraticSystemPrompt } from "@/settings/prompts";
-import {
-  type JSONValue,
-  type Message,
   appendResponseMessages,
   createDataStreamResponse,
+  type JSONValue,
+  type Message,
   smoothStream,
   streamText,
 } from "ai";
 import { v4 as uuidv4 } from "uuid";
+import { getTrailingMessageId, saveMessages } from "@/db/queries/ai-queries";
+import { getSession } from "@/db/queries/auth";
+import { getCourseConfig } from "@/db/queries/course";
+import {
+  getSaiaModel,
+  type ModelsWithText,
+  saiaModels,
+} from "@/lib/ai/saia-models";
+import { createNewChat, getMostRecentUserMessage } from "@/lib/ai/utils";
+import { createSocraticSystemPrompt } from "@/settings/prompts";
 import { getDocumentReferencesByIds, getRelevantChunks } from "./ai-helper";
 
 export const maxDuration = 200;
@@ -117,10 +117,10 @@ export async function POST(request: Request) {
           // Renamed 'result' to 'streamOperationResult'
           model: modelProvider,
           system: createSocraticSystemPrompt({
-            context: relevantChunks.map((chunk, i) => ({
+            context: relevantChunks.map((chunk) => ({
               documentId: String(
                 references.indexOf(
-                  // biome-ignore lint/style/noNonNullAssertion:
+                  // biome-ignore lint/style/noNonNullAssertion: <Previously ensured to exist>
                   references.find((r) => r.id === chunk.documentId)!,
                 ) + 1,
               ),
@@ -180,7 +180,7 @@ export async function POST(request: Request) {
                   ],
                 });
               } catch (error) {
-                console.error("Failed to save chat");
+                console.error("Error saving assistant message:", error);
               }
             }
           },
@@ -193,13 +193,12 @@ export async function POST(request: Request) {
         });
       },
       onError: (error) => {
-        // Error parameter contains the thrown error
-        console.error("Error in data stream execution:", error); // Log the actual error message
-        // Return the error message to be sent to the client
+        console.error("Error in data stream execution:", error);
         return "Oops, an error occurred while processing your request!";
       },
     });
   } catch (error) {
+    console.error("Error in POST /api/ai/chat:", error);
     return new Response("An error occurred while processing your request!", {
       status: 404,
     });

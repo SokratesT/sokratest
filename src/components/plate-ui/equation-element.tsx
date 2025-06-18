@@ -1,9 +1,9 @@
 "use client";
 
 import { cn, withRef } from "@udecode/cn";
+import { PlateElement, useElement, useSelected } from "@udecode/plate/react";
 import type { TEquationElement } from "@udecode/plate-math";
 import { useEquationElement } from "@udecode/plate-math/react";
-import { PlateElement, useElement, useSelected } from "@udecode/plate/react";
 import { RadicalIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { EquationPopoverContent } from "./equation-popover";
@@ -61,7 +61,9 @@ export const EquationElement = withRef<typeof PlateElement>(
 
           <EquationPopoverContent
             open={open}
-            placeholder={`f(x) = \\begin{cases}\n  x^2, &\\quad x > 0 \\\\\n  0, &\\quad x = 0 \\\\\n  -x^2, &\\quad x < 0\n\\end{cases}`}
+            placeholder={
+              "f(x) = \\begin{cases}\n  x^2, &\\quad x > 0 \\\\\n  0, &\\quad x = 0 \\\\\n  -x^2, &\\quad x < 0\n\\end{cases}"
+            }
             isInline={false}
             setOpen={setOpen}
           />

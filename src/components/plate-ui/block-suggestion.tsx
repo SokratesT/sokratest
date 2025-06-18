@@ -1,13 +1,5 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-
-import type {
-  TResolvedSuggestion,
-  TSuggestionElement,
-  TSuggestionText,
-} from "@udecode/plate-suggestion";
-
 import { cn } from "@udecode/cn";
 import {
   ElementApi,
@@ -17,6 +9,11 @@ import {
   type TElement,
   TextApi,
 } from "@udecode/plate";
+import {
+  ParagraphPlugin,
+  useEditorPlugin,
+  useStoreSelect,
+} from "@udecode/plate/react";
 import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CalloutPlugin } from "@udecode/plate-callout/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
@@ -34,6 +31,11 @@ import {
   MediaEmbedPlugin,
   VideoPlugin,
 } from "@udecode/plate-media/react";
+import type {
+  TResolvedSuggestion,
+  TSuggestionElement,
+  TSuggestionText,
+} from "@udecode/plate-suggestion";
 import {
   acceptSuggestion,
   getSuggestionKey,
@@ -43,23 +45,19 @@ import {
 import { SuggestionPlugin } from "@udecode/plate-suggestion/react";
 import { TablePlugin } from "@udecode/plate-table/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
-import {
-  ParagraphPlugin,
-  useEditorPlugin,
-  useStoreSelect,
-} from "@udecode/plate/react";
 import { CheckIcon, XIcon } from "lucide-react";
+import React, { useMemo, useState } from "react";
 
 import { suggestionPlugin } from "@/components/editor/plugins/suggestion-plugin";
 
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import {
-  type TDiscussion,
   discussionStore,
+  type TDiscussion,
   useFakeUserInfo,
 } from "./block-discussion";
 import { Button } from "./button";
-import { Comment, type TComment, formatCommentDate } from "./comment";
+import { Comment, formatCommentDate, type TComment } from "./comment";
 import { CommentCreateForm } from "./comment-create-form";
 
 export interface ResolvedSuggestion extends TResolvedSuggestion {
@@ -76,12 +74,12 @@ export const TYPE_TEXT_MAP: Record<string, (node?: TElement) => string> = {
   [ColumnPlugin.key]: () => "Column",
   [EquationPlugin.key]: () => "Equation",
   [FilePlugin.key]: () => "File",
-  [HEADING_KEYS.h1]: () => `Heading 1`,
-  [HEADING_KEYS.h2]: () => `Heading 2`,
-  [HEADING_KEYS.h3]: () => `Heading 3`,
-  [HEADING_KEYS.h4]: () => `Heading 4`,
-  [HEADING_KEYS.h5]: () => `Heading 5`,
-  [HEADING_KEYS.h6]: () => `Heading 6`,
+  [HEADING_KEYS.h1]: () => "Heading 1",
+  [HEADING_KEYS.h2]: () => "Heading 2",
+  [HEADING_KEYS.h3]: () => "Heading 3",
+  [HEADING_KEYS.h4]: () => "Heading 4",
+  [HEADING_KEYS.h5]: () => "Heading 5",
+  [HEADING_KEYS.h6]: () => "Heading 6",
   [HorizontalRulePlugin.key]: () => "Horizontal Rule",
   [ImagePlugin.key]: () => "Image",
   [MediaEmbedPlugin.key]: () => "Media",
@@ -136,7 +134,7 @@ export const BlockSuggestionCard = ({
   const [editingId, setEditingId] = useState<string | null>(null);
 
   return (
-    // biome-ignore lint/nursery/noStaticElementInteractions: <explanation>
+    // biome-ignore lint/a11y/noStaticElementInteractions: <Needs refactor, but fine for now>
     <div
       key={`${suggestion.suggestionId}-${idx}`}
       className="relative"
@@ -164,15 +162,15 @@ export const BlockSuggestionCard = ({
           <div className="flex flex-col gap-2">
             {suggestion.type === "remove" && (
               <>
-                {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+                {/* biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now> */}
                 {suggestionText2Array(suggestion.text!).map((text, index) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <Needs refactor, but fine for now>
                   <div key={index} className="flex items-center gap-2">
                     <span className="text-muted-foreground text-sm">
                       Delete:
                     </span>
 
-                    {/* biome-ignore lint/suspicious/noArrayIndexKey: <explanation> */}
+                    {/* biome-ignore lint/suspicious/noArrayIndexKey: <Needs refactor, but fine for now> */}
                     <span key={index} className="text-sm">
                       {text}
                     </span>
@@ -183,16 +181,16 @@ export const BlockSuggestionCard = ({
 
             {suggestion.type === "insert" && (
               <>
-                {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+                {/* biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now> */}
                 {suggestionText2Array(suggestion.newText!).map(
                   (text, index) => (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <Needs refactor, but fine for now>
                     <div key={index} className="flex items-center gap-2">
                       <span className="text-muted-foreground text-sm">
                         Add:
                       </span>
 
-                      {/* biome-ignore lint/suspicious/noArrayIndexKey: <explanation> */}
+                      {/* biome-ignore lint/suspicious/noArrayIndexKey: <Needs refactor, but fine for now> */}
                       <span key={index} className="text-sm">
                         {text || "line breaks"}
                       </span>
@@ -204,13 +202,13 @@ export const BlockSuggestionCard = ({
 
             {suggestion.type === "replace" && (
               <div className="flex flex-col gap-2">
-                {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+                {/* biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now> */}
                 {suggestionText2Array(suggestion.newText!).map(
                   (text, index) => (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <Needs refactor, but fine for now>
                     <React.Fragment key={index}>
                       <div
-                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                        // biome-ignore lint/suspicious/noArrayIndexKey: <Needs refactor, but fine for now>
                         key={index}
                         className="flex items-center text-brand/80"
                       >
@@ -221,11 +219,11 @@ export const BlockSuggestionCard = ({
                   ),
                 )}
 
-                {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+                {/* biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now> */}
                 {suggestionText2Array(suggestion.text!).map((text, index) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <Needs refactor, but fine for now>
                   <React.Fragment key={index}>
-                    {/* biome-ignore lint/suspicious/noArrayIndexKey: <explanation> */}
+                    {/* biome-ignore lint/suspicious/noArrayIndexKey: <Needs refactor, but fine for now> */}
                     <div key={index} className="flex items-center">
                       <span className="text-muted-foreground text-sm">
                         {index === 0 ? "Replace:" : "Delete:"}

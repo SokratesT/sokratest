@@ -1,9 +1,10 @@
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: <Needs refactor, but fine for now> */
 "use client";
 
 import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { cn } from "@udecode/cn";
-import { TablePlugin, useTableMergeState } from "@udecode/plate-table/react";
 import { useEditorPlugin, useEditorSelector } from "@udecode/plate/react";
+import { TablePlugin, useTableMergeState } from "@udecode/plate-table/react";
 import {
   ArrowDown,
   ArrowLeft,
@@ -220,7 +221,6 @@ export function TablePicker() {
   };
 
   return (
-    // biome-ignore lint/nursery/noStaticElementInteractions: <explanation>
     <div
       className="flex! m-0 flex-col p-0"
       onClick={() => {
@@ -232,10 +232,9 @@ export function TablePicker() {
         {tablePicker.grid.map((rows, rowIndex) =>
           rows.map((value, columIndex) => {
             return (
-              // biome-ignore lint/nursery/noStaticElementInteractions: <explanation>
               <div
                 key={`(${rowIndex},${
-                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <Needs refactor, but fine for now>
                   columIndex
                 })`}
                 className={cn(

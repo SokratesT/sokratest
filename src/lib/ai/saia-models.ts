@@ -1,6 +1,6 @@
 import { createOpenAI } from "@ai-sdk/openai";
-import { extractReasoningMiddleware, wrapLanguageModel } from "ai";
 import type { EmbeddingModel, LanguageModelV1 } from "ai";
+import { extractReasoningMiddleware, wrapLanguageModel } from "ai";
 
 interface SaiaModel {
   id: string;
@@ -230,18 +230,18 @@ const chatAiProviderFactory = createOpenAI({
   compatibility: "compatible",
 });
 
-function getSaiaModel(params: {
-  input: ["text"];
-  model: ModelsWithText;
-}): { provider: LanguageModelV1; meta: SaiaModel };
-function getSaiaModel(params: {
-  input: ["image"];
-  model: ModelsWithImage;
-}): { provider: LanguageModelV1; meta: SaiaModel };
-function getSaiaModel(params: {
-  input: ["video"];
-  model: ModelsWithVideo;
-}): { provider: LanguageModelV1; meta: SaiaModel };
+function getSaiaModel(params: { input: ["text"]; model: ModelsWithText }): {
+  provider: LanguageModelV1;
+  meta: SaiaModel;
+};
+function getSaiaModel(params: { input: ["image"]; model: ModelsWithImage }): {
+  provider: LanguageModelV1;
+  meta: SaiaModel;
+};
+function getSaiaModel(params: { input: ["video"]; model: ModelsWithVideo }): {
+  provider: LanguageModelV1;
+  meta: SaiaModel;
+};
 function getSaiaModel(params: {
   input: ["text", "image"];
   model: ModelsWithImage;
@@ -258,14 +258,14 @@ function getSaiaModel(params: {
   input: ["text", "image", "video"];
   model: MultimodalModelIds;
 }): { provider: LanguageModelV1; meta: SaiaModel };
-function getSaiaModel(params: {
-  input: InputCapability[];
-  model: string;
-}): { provider: LanguageModelV1; meta: SaiaModel };
-function getSaiaModel(params: {
-  input: InputCapability[];
-  model: string;
-}): { provider: LanguageModelV1; meta: SaiaModel } {
+function getSaiaModel(params: { input: InputCapability[]; model: string }): {
+  provider: LanguageModelV1;
+  meta: SaiaModel;
+};
+function getSaiaModel(params: { input: InputCapability[]; model: string }): {
+  provider: LanguageModelV1;
+  meta: SaiaModel;
+} {
   const foundModel = saiaModels.find((m) => m.id === params.model);
   if (!foundModel) {
     throw new Error(`Language model with id "${params.model}" not found.`);

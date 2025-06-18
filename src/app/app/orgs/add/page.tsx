@@ -1,8 +1,8 @@
+import { redirect } from "next/navigation";
 import { OrganizationForm } from "@/components/organizations/organization-form";
 import { getSession } from "@/db/queries/auth";
 import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
-import { redirect } from "next/navigation";
 
 const AddOrganizationPage = async () => {
   const session = await getSession();

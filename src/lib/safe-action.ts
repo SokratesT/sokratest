@@ -1,17 +1,17 @@
+import {
+  createMiddleware,
+  createSafeActionClient,
+  DEFAULT_SERVER_ERROR_MESSAGE,
+} from "next-safe-action";
+import { z } from "zod";
 import { getSession } from "@/db/queries/auth";
 import type { User } from "@/db/schema/auth";
 import {
-  DEFAULT_SERVER_ERROR_MESSAGE,
-  createMiddleware,
-  createSafeActionClient,
-} from "next-safe-action";
-import { z } from "zod";
-import {
   type Action,
   type CourseResource,
+  hasPermission,
   type OrganizationResource,
   type Resource,
-  hasPermission,
 } from "./rbac";
 
 export class ActionError extends Error {}
@@ -158,9 +158,8 @@ export const checkPermissionMiddleware = createMiddleware<{
   ) {
     if (ctx.userId === input.userId) {
       return next({ ctx });
-    } else {
-      ids = [input.userId as string];
     }
+    ids = [input.userId as string];
   } else {
     throw new ActionError("Unknown input");
   }
@@ -185,7 +184,7 @@ export const checkPermissionMiddleware = createMiddleware<{
             };
 
       if (!(await hasPermission(fullResource, action as Action))) {
-        throw new ActionError(`Permission denied.`);
+        throw new ActionError("Permission denied.");
       }
     }),
   );

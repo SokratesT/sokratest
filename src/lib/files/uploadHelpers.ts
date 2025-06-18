@@ -124,13 +124,15 @@ export function getFileTypeFromMime(mimeType: File["type"]): FileType {
     return "jpeg";
     /* } else if (mimeType.startsWith("video/")) {
     return "video"; */
-  } else if (mimeType.startsWith("image/png")) {
-    return "png";
-  } else if (mimeType.startsWith("text/markdown")) {
-    return "md";
-  } else if (mimeType.startsWith("application/pdf")) {
-    return "pdf";
-  } else {
-    return "unknown";
   }
+  if (mimeType.startsWith("image/png")) {
+    return "png";
+  }
+  if (mimeType.startsWith("text/markdown")) {
+    return "md";
+  }
+  if (mimeType.startsWith("application/pdf")) {
+    return "pdf";
+  }
+  return "unknown";
 }

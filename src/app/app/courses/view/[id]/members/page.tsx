@@ -1,3 +1,5 @@
+import Link from "next/link";
+import type { SearchParams } from "nuqs/server";
 import { CourseMemberTableActions } from "@/components/courses/members/table/course-member-table-actions";
 import { courseMemberTableColumns } from "@/components/courses/members/table/course-member-table-columns";
 import { Placeholder } from "@/components/placeholders/placeholder";
@@ -14,8 +16,6 @@ import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { ROUTES } from "@/settings/routes";
-import Link from "next/link";
-import type { SearchParams } from "nuqs/server";
 
 const UsersPage = async ({
   params,
@@ -37,8 +37,6 @@ const UsersPage = async ({
   if (!resultOrgUsersNotInCourse.success) {
     return <Placeholder>{resultOrgUsersNotInCourse.error.message}</Placeholder>;
   }
-
-  const organizationUsers = resultOrgUsersNotInCourse.data.query;
 
   const result = await getCourseUsers({
     sort,

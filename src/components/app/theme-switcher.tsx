@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { META_THEME_COLORS, useMetaColor } from "@/hooks/use-meta-color";
-import { cn } from "@/lib/utils";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
 import { useCallback, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { META_THEME_COLORS, useMetaColor } from "@/hooks/use-meta-color";
+import { cn } from "@/lib/utils";
 
 const ThemeSwitcher = ({ className }: { className?: string }) => {
   const { setTheme, resolvedTheme } = useTheme();

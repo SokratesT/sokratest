@@ -44,7 +44,9 @@ export const getChunks = async ({ search }: { search: string }) => {
 
 export const getChunksByDocument = async ({
   documentId,
-}: { documentId: Document["id"] }) => {
+}: {
+  documentId: Document["id"];
+}) => {
   return withAuthQuery(
     async (session) => {
       const query = (await qdrant.scroll(qdrantCollections.chunks.name, {

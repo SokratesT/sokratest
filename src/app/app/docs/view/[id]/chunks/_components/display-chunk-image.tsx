@@ -1,12 +1,12 @@
 "use client";
 
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getPresignedUrl } from "@/lib/files/uploadHelpers";
 import { cn } from "@/lib/utils";
 import type { BucketName } from "@/settings/buckets";
 import type { FileType } from "@/types/file";
-import Image from "next/image";
-import { useEffect, useState } from "react";
 
 const DisplayChunkImage = ({
   imageRef,

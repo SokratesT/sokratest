@@ -1,4 +1,10 @@
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import { logger, task } from "@trigger.dev/sdk/v3";
+import { embedMany, generateText } from "ai";
 import https from "https";
+import nodeFetch from "node-fetch";
+import pMap from "p-map";
+import { v4 as uuidv4 } from "uuid";
 import type { ProcessingStatus } from "@/app/api/docs/processing/route";
 import { getSaiaEmbeddingModel, getSaiaModel } from "@/lib/ai/saia-models";
 import type { MarkdownNode } from "@/lib/chunk/markdown-chunker";
@@ -19,12 +25,6 @@ import {
 import { ROUTES } from "@/settings/routes";
 import type { FileType } from "@/types/file";
 import type { VectorizeFilesTaskPayload } from "@/types/trigger";
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import { logger, task } from "@trigger.dev/sdk/v3";
-import { embedMany, generateText } from "ai";
-import nodeFetch from "node-fetch";
-import pMap from "p-map";
-import { v4 as uuidv4 } from "uuid";
 
 export const vectorizeFilesTask = task({
   id: "vectorize-files-task",
@@ -55,7 +55,8 @@ export const vectorizeFilesTask = task({
       const fileExtension = file.name.split(".").pop()?.toLowerCase();
       if (!fileExtension) {
         return;
-      } else if (fileExtension === "md") {
+      }
+      if (fileExtension === "md") {
         const text = (await getMarkdownAsString({
           bucket: buckets.processed.name,
           name: file.name,
@@ -169,8 +170,8 @@ export const vectorizeFilesTask = task({
 
     return { payload, results: { qdrant: qdrantResponse, next: nextResponse } };
   },
-  onFailure: async (payload, error, { ctx }) => {
-    const nextResponse = await logger.trace("update-next-api", async () => {
+  onFailure: async (payload) => {
+    await logger.trace("update-next-api", async () => {
       const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.API.docs.processing.getPath()}`;
       const requestBody = {
         documentId: payload.documentId,

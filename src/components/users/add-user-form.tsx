@@ -1,5 +1,9 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertCircle, CircleMinusIcon } from "lucide-react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormSelect } from "@/components/forms/fields/formSelect";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -9,10 +13,6 @@ import { Label } from "@/components/ui/label";
 import type { Course } from "@/db/schema/course";
 import { authClient } from "@/lib/auth-client";
 import { isFieldRequired } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle, CircleMinusIcon } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
 
 // Define Zod schema
 const schema = z.object({

@@ -1,5 +1,5 @@
-import { ROUTES } from "@/settings/routes";
 import { redirect } from "next/navigation";
+import { ROUTES } from "@/settings/routes";
 
 const PostsPage = async () => {
   return redirect(ROUTES.PUBLIC.login.getPath());

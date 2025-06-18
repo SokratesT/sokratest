@@ -1,6 +1,6 @@
-import { course } from "@/db/schema/course";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
+import { course } from "@/db/schema/course";
 
 export const courseInsertSchema = createInsertSchema(course, {
   organizationId: (schema) => schema.optional(),

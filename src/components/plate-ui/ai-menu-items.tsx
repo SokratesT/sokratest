@@ -1,13 +1,13 @@
 "use client";
 
 import { NodeApi, type SlateEditor } from "@udecode/plate";
-import { AIChatPlugin, AIPlugin } from "@udecode/plate-ai/react";
-import { useIsSelecting } from "@udecode/plate-selection/react";
 import {
   type PlateEditor,
   useEditorRef,
   usePluginOption,
 } from "@udecode/plate/react";
+import { AIChatPlugin, AIPlugin } from "@udecode/plate-ai/react";
+import { useIsSelecting } from "@udecode/plate-selection/react";
 import {
   Album,
   BadgeHelp,
@@ -256,7 +256,7 @@ export const AIMenuItems = ({
 }) => {
   const editor = useEditorRef();
   const { messages } = usePluginOption(AIChatPlugin, "chat");
-  // biome-ignore lint/style/noNonNullAssertion: <explanation>
+  // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
   const aiEditor = usePluginOption(AIChatPlugin, "aiEditor")!;
   const isSelecting = useIsSelecting();
 
@@ -283,7 +283,7 @@ export const AIMenuItems = ({
   return (
     <>
       {menuGroups.map((group, index) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+        // biome-ignore lint/suspicious/noArrayIndexKey: <Needs refactor, but fine for now>
         <CommandGroup key={index} heading={group.heading}>
           {group.items.map((menuItem) => (
             <CommandItem

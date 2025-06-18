@@ -1,9 +1,14 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-
 import { cn, withProps } from "@udecode/cn";
-import { NodeApi, type Value, nanoid } from "@udecode/plate";
+import { NodeApi, nanoid, type Value } from "@udecode/plate";
+import {
+  type CreatePlateEditorOptions,
+  Plate,
+  PlateLeaf,
+  useEditorRef,
+  useStoreSelect,
+} from "@udecode/plate/react";
 import { AIPlugin } from "@udecode/plate-ai/react";
 import {
   BasicMarksPlugin,
@@ -22,9 +27,8 @@ import {
   MentionInputPlugin,
   MentionPlugin,
 } from "@udecode/plate-mention/react";
-import { Plate, useEditorRef, useStoreSelect } from "@udecode/plate/react";
-import { type CreatePlateEditorOptions, PlateLeaf } from "@udecode/plate/react";
 import { ArrowUpIcon } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useCreateEditor } from "@/components/editor/use-create-editor";
 import {
@@ -32,17 +36,15 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/plate-ui/avatar";
-
-import type { TDiscussion } from "./block-discussion";
-import type { TComment } from "./comment";
-
 import { AILeaf } from "./ai-leaf";
+import type { TDiscussion } from "./block-discussion";
 import {
   discussionStore,
   useFakeCurrentUserId,
   useFakeUserInfo,
 } from "./block-discussion";
 import { Button } from "./button";
+import type { TComment } from "./comment";
 import { DateElement } from "./date-element";
 import { Editor, EditorContainer } from "./editor";
 import { EmojiInputElement } from "./emoji-input-element";
@@ -177,7 +179,7 @@ export function CommentCreateForm({
       comments: [
         {
           id: nanoid(),
-          // biome-ignore lint/style/noNonNullAssertion: <explanation>
+          // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
           contentRich: commentValue!,
           createdAt: new Date(),
           discussionId: _discussionId,
@@ -218,7 +220,7 @@ export function CommentCreateForm({
       comments: [
         {
           id: nanoid(),
-          // biome-ignore lint/style/noNonNullAssertion: <explanation>
+          // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
           contentRich: commentValue!,
           createdAt: new Date(),
           discussionId,

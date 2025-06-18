@@ -1,6 +1,7 @@
 "use client";
 
 import type { TElement, TText } from "@udecode/plate";
+import type { ParagraphPlugin } from "@udecode/plate/react";
 import type { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import type {
   CodeBlockPlugin,
@@ -31,7 +32,6 @@ import type {
 } from "@udecode/plate-table/react";
 import type { TToggleElement } from "@udecode/plate-toggle";
 import type { TogglePlugin } from "@udecode/plate-toggle/react";
-import type { ParagraphPlugin } from "@udecode/plate/react";
 
 /** Text */
 

@@ -1,5 +1,9 @@
 "use client";
 
+import { type Message, useChat } from "@ai-sdk/react";
+import type { ApiGetScoresResponseData } from "langfuse";
+import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { deleteTrailingMessages } from "@/db/actions/ai-actions";
@@ -9,10 +13,6 @@ import {
   useStreamingText,
 } from "@/hooks/use-streaming-text";
 import { ROUTES } from "@/settings/routes";
-import { type Message, useChat } from "@ai-sdk/react";
-import type { ApiGetScoresResponseData } from "langfuse";
-import { toast } from "sonner";
-import { v4 as uuidv4 } from "uuid";
 import { ChatPlaceholder } from "./chat-placeholder";
 import { MessageBlock } from "./message-block";
 import { ShinyText } from "./shiny-text";

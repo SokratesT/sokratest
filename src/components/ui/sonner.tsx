@@ -1,8 +1,8 @@
 "use client";
 
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Toaster = ({
   mobilePosition = "bottom-right",

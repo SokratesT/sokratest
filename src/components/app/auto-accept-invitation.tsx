@@ -1,14 +1,16 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { acceptCourseInvitation } from "@/db/actions/course-invitation";
 import type { CourseInvitation } from "@/db/schema/course-invitation";
 import { ROUTES } from "@/settings/routes";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 const AutoAcceptInvitation = ({
   invitation,
-}: { invitation: CourseInvitation }) => {
+}: {
+  invitation: CourseInvitation;
+}) => {
   const router = useRouter();
 
   useEffect(() => {

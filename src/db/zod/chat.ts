@@ -1,6 +1,6 @@
-import { chat } from "@/db/schema/chat";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
+import { chat } from "@/db/schema/chat";
 
 export const chatInsertSchema = createInsertSchema(chat, {
   userId: (schema) => schema.optional(),

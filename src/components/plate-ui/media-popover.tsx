@@ -2,12 +2,6 @@
 
 import type { WithRequiredKey } from "@udecode/plate";
 import {
-  FloatingMedia as FloatingMediaPrimitive,
-  FloatingMediaStore,
-  useFloatingMediaValue,
-  useImagePreviewValue,
-} from "@udecode/plate-media/react";
-import {
   useEditorRef,
   useEditorSelector,
   useElement,
@@ -15,6 +9,12 @@ import {
   useRemoveNodeButton,
   useSelected,
 } from "@udecode/plate/react";
+import {
+  FloatingMedia as FloatingMediaPrimitive,
+  FloatingMediaStore,
+  useFloatingMediaValue,
+  useImagePreviewValue,
+} from "@udecode/plate-media/react";
 import { Link, Trash2Icon } from "lucide-react";
 import React, { useEffect } from "react";
 import { Button, buttonVariants } from "./button";

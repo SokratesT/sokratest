@@ -1,8 +1,5 @@
 import "server-only";
 
-import { db } from "@/db/drizzle";
-import { type User, member, user } from "@/db/schema/auth";
-import { courseMember } from "@/db/schema/course";
 import {
   and,
   asc,
@@ -16,6 +13,9 @@ import {
   or,
 } from "drizzle-orm";
 import { cache } from "react";
+import { db } from "@/db/drizzle";
+import { member, type User, user } from "@/db/schema/auth";
+import { courseMember } from "@/db/schema/course";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 // TODO: Centralise this in a shared file
@@ -39,9 +39,8 @@ export const getActiveCourseUsers = async (
           if (["name", "email", "role"].includes(s.id)) {
             const column = user[s.id as keyof User];
             return s.desc ? desc(column) : asc(column);
-          } else {
-            return asc(user.createdAt);
           }
+          return asc(user.createdAt);
         }) ?? [asc(user.createdAt)]; // Fallback default sort
 
       const query = await db
@@ -93,9 +92,8 @@ export const getCourseUsers = async ({
           if (["name", "email", "role"].includes(s.id)) {
             const column = user[s.id as keyof User];
             return s.desc ? desc(column) : asc(column);
-          } else {
-            return asc(user.createdAt);
           }
+          return asc(user.createdAt);
         }) ?? [asc(user.createdAt)]; // Fallback default sort
 
       const query = await db
@@ -142,9 +140,8 @@ export const getOrganizationUsers = async ({
           if (["name", "email", "role"].includes(s.id)) {
             const column = user[s.id as keyof User];
             return s.desc ? desc(column) : asc(column);
-          } else {
-            return asc(user.createdAt);
           }
+          return asc(user.createdAt);
         }) ?? [asc(user.createdAt)]; // Fallback default sort
 
       const query = await db

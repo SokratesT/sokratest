@@ -1,8 +1,8 @@
 import "server-only";
 
+import { and, asc, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { type Document, document } from "@/db/schema/document";
-import { and, asc, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 function isValidColumnId(id: Document["id"]): id is keyof Document {
@@ -25,9 +25,8 @@ export const getActiveCourseDocuments = async (
           ) {
             const column = document[s.id as keyof Document];
             return s.desc ? desc(column) : asc(column);
-          } else {
-            return asc(document.createdAt);
           }
+          return asc(document.createdAt);
         }) ?? [asc(document.createdAt)]; // Fallback default sort
 
       const query = await db

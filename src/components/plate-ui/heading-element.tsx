@@ -26,7 +26,7 @@ export const HeadingElement = withRef<typeof HeadingElementVariants>(
     return (
       <HeadingElementVariants
         ref={ref}
-        // biome-ignore lint/style/noNonNullAssertion: <explanation>
+        // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
         as={variant!}
         variant={variant}
         {...props}

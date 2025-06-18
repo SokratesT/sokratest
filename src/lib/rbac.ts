@@ -9,10 +9,10 @@ import {
 import {
   type CourseResourceTypePermissions,
   type CourseRole,
-  type OrganizationResourceTypePermissions,
-  type OrganizationRole,
   coursePermissions,
   courseRoles,
+  type OrganizationResourceTypePermissions,
+  type OrganizationRole,
   organizationPermissions,
   organizationRoles,
 } from "@/settings/roles";
@@ -203,7 +203,7 @@ export const hasChatPermission = async (
  */
 export const hasInvitationPermission = async (
   resource: CourseResource,
-  action: Action,
+  _action: Action,
 ): Promise<boolean> => {
   if (!resource.id) return false;
 
@@ -232,9 +232,9 @@ export const hasPermission = async (
 ): Promise<boolean> => {
   if (resource.type === "chat") {
     return hasChatPermission(resource, action);
-  } else if (resource.context === "course") {
-    return hasCoursePermission(resource, action);
-  } else {
-    return hasOrganizationPermission(resource, action);
   }
+  if (resource.context === "course") {
+    return hasCoursePermission(resource, action);
+  }
+  return hasOrganizationPermission(resource, action);
 };

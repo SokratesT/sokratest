@@ -1,10 +1,10 @@
+import type { Metadata } from "next";
+import { Suspense } from "react";
 import { UserStats } from "@/components/app/user-stats";
 import { UserWelcome } from "@/components/app/user-welcome";
 import { ChatsPreview } from "@/components/chat/chats-preview";
 import { CoursePreview } from "@/components/courses/course-preview";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { Metadata } from "next";
-import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Dashboard - SokratesT",

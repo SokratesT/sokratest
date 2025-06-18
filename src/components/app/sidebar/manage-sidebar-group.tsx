@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -12,7 +13,6 @@ import {
   sidebarInstructorMenu,
   sidebarOrganizationAdminMenu,
 } from "@/settings/menus";
-import Link from "next/link";
 
 const ManageSidebarGroup = async () => {
   // TODO: Check for user roles here

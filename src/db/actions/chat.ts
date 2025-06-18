@@ -1,5 +1,7 @@
 "use server";
 
+import { eq, inArray } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { db } from "@/db/drizzle";
 import { chat } from "@/db/schema/chat";
 import { chatDeleteSchema, chatUpdateSchema } from "@/db/zod/chat";
@@ -10,8 +12,6 @@ import {
   requireOrganizationMiddleware,
 } from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
-import { eq, inArray } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 
 export const createChat = authActionClient
   .metadata({

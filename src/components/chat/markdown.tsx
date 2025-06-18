@@ -1,5 +1,3 @@
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { memo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
@@ -7,6 +5,8 @@ import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import supersub from "remark-supersub";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import "katex/dist/katex.min.css";
 import { CodeBlock } from "./code-block";
 
@@ -129,7 +129,10 @@ const rehypePlugins = [rehypeKatex];
 const NonMemoizedMarkdown = ({
   children,
   className,
-}: { children: string; className?: string }) => {
+}: {
+  children: string;
+  className?: string;
+}) => {
   return (
     <div
       className={cn(

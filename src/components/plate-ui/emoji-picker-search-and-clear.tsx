@@ -1,8 +1,7 @@
 "use client";
 
-import type { UseEmojiPickerType } from "@udecode/plate-emoji/react";
-
 import { cn } from "@udecode/cn";
+import type { UseEmojiPickerType } from "@udecode/plate-emoji/react";
 
 import { Button } from "./button";
 import { emojiSearchIcons } from "./emoji-icons";

@@ -1,14 +1,14 @@
 import "server-only";
 
+import { and, eq } from "drizzle-orm";
+import { headers } from "next/headers";
+import { cache } from "react";
 import { db } from "@/db/drizzle";
 import { member } from "@/db/schema/auth";
 import { chat } from "@/db/schema/chat";
 import { type Course, courseMember } from "@/db/schema/course";
 import { auth } from "@/lib/auth";
 import type { CourseRole, OrganizationRole } from "@/settings/roles";
-import { and, eq } from "drizzle-orm";
-import { headers } from "next/headers";
-import { cache } from "react";
 import { type AuthResult, withAuthQuery } from "./utils/with-auth-query";
 
 /**

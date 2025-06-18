@@ -1,5 +1,8 @@
 "use client";
 
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { ReplaceAllIcon } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {
@@ -9,13 +12,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Organization } from "@/db/schema/auth";
 import { authClient } from "@/lib/auth-client";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { ReplaceAllIcon } from "lucide-react";
-import { toast } from "sonner";
 
 const OrganizationMemberTableActions = ({
   organizationId,
-}: { organizationId: Organization["id"] }) => {
+}: {
+  organizationId: Organization["id"];
+}) => {
   const { table } = useTable();
 
   const handleDelete = async () => {

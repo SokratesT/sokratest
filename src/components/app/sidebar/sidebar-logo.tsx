@@ -1,9 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { Logo } from "@/components/app/logo";
 import { useSidebar } from "@/components/ui/sidebar";
 import { ROUTES } from "@/settings/routes";
-import Link from "next/link";
 
 const SidebarLogo = () => {
   const { isMobile, setOpenMobile } = useSidebar();

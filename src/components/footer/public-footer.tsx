@@ -1,5 +1,5 @@
-import { navigationItems } from "@/settings/menus";
 import Link from "next/link";
+import { navigationItems } from "@/settings/menus";
 
 // TODO: Add funding notice and logos (check formal requirements)
 

@@ -1,5 +1,8 @@
 "use client";
 
+import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   DropdownMenuGroup,
   DropdownMenuItem,
@@ -9,9 +12,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { resetActiveCourse } from "@/db/actions/course";
 import { authClient } from "@/lib/auth-client";
 import { ROUTES } from "@/settings/routes";
-import { Check } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 const OrganizationSwitcher = () => {
   const { data: organizations, isPending } = authClient.useListOrganizations();

@@ -1,3 +1,5 @@
+import Link from "next/link";
+import type { SearchParams } from "nuqs/server";
 import { OrganizationMemberTableActions } from "@/components/organizations/members/table/organization-member-table-actions";
 import { organizationMemberTableColumns } from "@/components/organizations/members/table/organization-member-table-columns";
 import { Placeholder } from "@/components/placeholders/placeholder";
@@ -10,8 +12,6 @@ import { getOrganizationUsers } from "@/db/queries/users";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { ROUTES } from "@/settings/routes";
-import Link from "next/link";
-import type { SearchParams } from "nuqs/server";
 
 const OrganizationMembersPage = async ({
   params,

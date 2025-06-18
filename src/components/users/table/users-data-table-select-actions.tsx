@@ -1,5 +1,8 @@
 "use client";
 
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { ReplaceAllIcon } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {
@@ -8,9 +11,6 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { ReplaceAllIcon } from "lucide-react";
-import { toast } from "sonner";
 
 const UsersDataTableSelectActions = () => {
   const { table } = useTable();

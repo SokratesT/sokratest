@@ -1,5 +1,7 @@
 "use server";
 
+import { eq, inArray } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { db } from "@/db/drizzle";
 import { document } from "@/db/schema/document";
 import {
@@ -21,8 +23,6 @@ import { deleteChunksByDocumentId } from "@/qdrant/mutations";
 import { buckets } from "@/settings/buckets";
 import { ROUTES } from "@/settings/routes";
 import type { FileType } from "@/types/file";
-import { eq, inArray } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 
 export const saveDocumentInfo = authActionClient
   .metadata({

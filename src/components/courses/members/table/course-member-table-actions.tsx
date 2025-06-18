@@ -1,5 +1,8 @@
 "use client";
 
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { ReplaceAllIcon } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {
@@ -10,9 +13,6 @@ import {
 import { removeCourseMembers } from "@/db/actions/course";
 import type { Course } from "@/db/schema/course";
 import { withToastPromise } from "@/lib/utils";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { ReplaceAllIcon } from "lucide-react";
-import { toast } from "sonner";
 
 const CourseMemberTableActions = ({ courseId }: { courseId: Course["id"] }) => {
   const { table } = useTable();

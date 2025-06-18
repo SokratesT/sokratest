@@ -1,8 +1,12 @@
 "use client";
 
-import { ROUTES } from "@/settings/routes";
 import { useChat } from "@ai-sdk/react";
-import { type NodeEntry, isHotkey } from "@udecode/plate";
+import { isHotkey, type NodeEntry } from "@udecode/plate";
+import {
+  useEditorPlugin,
+  useHotkeys,
+  usePluginOption,
+} from "@udecode/plate/react";
 import {
   AIChatPlugin,
   useEditorChat,
@@ -12,13 +16,9 @@ import {
   BlockSelectionPlugin,
   useIsSelecting,
 } from "@udecode/plate-selection/react";
-import {
-  useEditorPlugin,
-  useHotkeys,
-  usePluginOption,
-} from "@udecode/plate/react";
 import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
+import { ROUTES } from "@/settings/routes";
 import { AIChatEditor } from "./ai-chat-editor";
 import { AIMenuItems } from "./ai-menu-items";
 import { Command, CommandList, InputCommand } from "./command";
@@ -58,7 +58,7 @@ export function AIMenu() {
   useEditorChat({
     chat,
     onOpenBlockSelection: (blocks: NodeEntry[]) => {
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
       show(editor.api.toDOMNode(blocks.at(-1)?.[0]!)!);
     },
     onOpenChange: (open) => {
@@ -68,7 +68,7 @@ export function AIMenu() {
       }
     },
     onOpenCursor: () => {
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
       const [ancestor] = editor.api.block({ highest: true })!;
 
       if (!editor.api.isAt({ end: true }) && !editor.api.isEmpty(ancestor)) {
@@ -77,11 +77,11 @@ export function AIMenu() {
           .blockSelection.set(ancestor.id as string);
       }
 
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
       show(editor.api.toDOMNode(ancestor)!);
     },
     onOpenSelection: () => {
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
       show(editor.api.toDOMNode(editor.api.blocks().at(-1)?.[0]!)!);
     },
   });
@@ -96,7 +96,7 @@ export function AIMenu() {
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal={false}>
-      {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+      {/* biome-ignore lint/style/noNonNullAssertion: <Needs Refactor, but fine for now> */}
       <PopoverAnchor virtualRef={{ current: anchorElement! }} />
 
       <PopoverContent

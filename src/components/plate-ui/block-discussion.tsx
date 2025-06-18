@@ -1,35 +1,33 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-
-import type { TSuggestionText } from "@udecode/plate-suggestion";
-import type {
-  PlateRenderElementProps,
-  RenderNodeWrapper,
-} from "@udecode/plate/react";
-
 import {
+  createZustandStore,
   type NodeEntry,
   type Path,
   PathApi,
   type TElement,
   TextApi,
-  createZustandStore,
 } from "@udecode/plate";
-import { type TCommentText, getDraftCommentKey } from "@udecode/plate-comments";
-import { CommentsPlugin } from "@udecode/plate-comments/react";
-import { SuggestionPlugin } from "@udecode/plate-suggestion/react";
+import type {
+  PlateRenderElementProps,
+  RenderNodeWrapper,
+} from "@udecode/plate/react";
 import {
   useEditorPlugin,
   useEditorRef,
   usePluginOption,
   useStoreValue,
 } from "@udecode/plate/react";
+import { getDraftCommentKey, type TCommentText } from "@udecode/plate-comments";
+import { CommentsPlugin } from "@udecode/plate-comments/react";
+import type { TSuggestionText } from "@udecode/plate-suggestion";
+import { SuggestionPlugin } from "@udecode/plate-suggestion/react";
 import {
   MessageSquareTextIcon,
   MessagesSquareIcon,
   PencilLineIcon,
 } from "lucide-react";
+import React, { useMemo, useState } from "react";
 
 import {
   type CommentsConfig,
@@ -306,7 +304,7 @@ const BlockCommentsContent = ({
 
     if (!activeNode) return null;
 
-    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
     return editor.api.toDOMNode(activeNode[0])!;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -355,40 +353,36 @@ const BlockCommentsContent = ({
         >
           {isCommenting ? (
             <CommentCreateForm className="p-4" focusOnMount />
+          ) : noneActive ? (
+            sortedMergedData.map((item, index) =>
+              isResolvedSuggestion(item) ? (
+                <BlockSuggestionCard
+                  key={item.suggestionId}
+                  idx={index}
+                  isLast={index === sortedMergedData.length - 1}
+                  suggestion={item}
+                />
+              ) : (
+                <BlockComment
+                  key={item.id}
+                  discussion={item}
+                  isLast={index === sortedMergedData.length - 1}
+                />
+              ),
+            )
           ) : (
             <>
-              {noneActive ? (
-                sortedMergedData.map((item, index) =>
-                  isResolvedSuggestion(item) ? (
-                    <BlockSuggestionCard
-                      key={item.suggestionId}
-                      idx={index}
-                      isLast={index === sortedMergedData.length - 1}
-                      suggestion={item}
-                    />
-                  ) : (
-                    <BlockComment
-                      key={item.id}
-                      discussion={item}
-                      isLast={index === sortedMergedData.length - 1}
-                    />
-                  ),
-                )
-              ) : (
-                <>
-                  {activeSuggestion && (
-                    <BlockSuggestionCard
-                      key={activeSuggestion.suggestionId}
-                      idx={0}
-                      isLast={true}
-                      suggestion={activeSuggestion}
-                    />
-                  )}
+              {activeSuggestion && (
+                <BlockSuggestionCard
+                  key={activeSuggestion.suggestionId}
+                  idx={0}
+                  isLast={true}
+                  suggestion={activeSuggestion}
+                />
+              )}
 
-                  {activeDiscussion && (
-                    <BlockComment discussion={activeDiscussion} isLast={true} />
-                  )}
-                </>
+              {activeDiscussion && (
+                <BlockComment discussion={activeDiscussion} isLast={true} />
               )}
             </>
           )}

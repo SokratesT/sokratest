@@ -1,5 +1,8 @@
 "use client";
 
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { ReplaceAllIcon } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useTable } from "@/components/ui/data-table/data-table-context";
 import {
@@ -9,9 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { deletePosts } from "@/db/actions/post";
 import { withToastPromise } from "@/lib/utils";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { ReplaceAllIcon } from "lucide-react";
-import { toast } from "sonner";
 
 const PostsDataTableSelectActions = () => {
   const { table } = useTable();

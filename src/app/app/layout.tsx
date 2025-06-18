@@ -1,11 +1,11 @@
+import { redirect } from "next/navigation";
+import { NextStepProvider } from "nextstepjs";
 import { Header } from "@/components/app/header";
 import { AppSidebar } from "@/components/app/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { getSession } from "@/db/queries/auth";
 import { NextStepTours } from "@/lib/next-step-tours";
 import { ROUTES } from "@/settings/routes";
-import { redirect } from "next/navigation";
-import { NextStepProvider } from "nextstepjs";
 
 const AppLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getSession();

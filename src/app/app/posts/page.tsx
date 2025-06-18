@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import type { SearchParams } from "nuqs/server";
 import { columns } from "@/components/posts/table/columns";
 import { PostsDataTableSelectActions } from "@/components/posts/table/posts-data-table-select-actions";
 import { buttonVariants } from "@/components/ui/button";
@@ -10,9 +13,6 @@ import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import type { SearchParams } from "nuqs/server";
 
 const PostsPage = async ({
   searchParams,

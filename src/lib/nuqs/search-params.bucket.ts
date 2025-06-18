@@ -1,10 +1,10 @@
-import { buckets } from "@/settings/buckets";
 import { useQueryStates } from "nuqs";
 import {
   createSearchParamsCache,
   parseAsInteger,
   parseAsString,
 } from "nuqs/server";
+import { buckets } from "@/settings/buckets";
 
 // TODO: Split bucket and search, remove page
 const bucketUrlKeys = {
@@ -13,7 +13,7 @@ const bucketUrlKeys = {
   search: "s",
 };
 
-const bucketParser = (startTransition?: React.TransitionStartFunction) => ({
+const bucketParser = (_startTransition?: React.TransitionStartFunction) => ({
   page: parseAsInteger.withDefault(1).withOptions({ shallow: false }),
   bucket: parseAsString
     .withDefault(buckets.main.name)

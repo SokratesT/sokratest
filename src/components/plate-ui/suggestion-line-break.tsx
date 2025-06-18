@@ -1,11 +1,10 @@
 "use client";
-import React, { useRef } from "react";
-
-import type { TSuggestionData } from "@udecode/plate-suggestion";
 
 import { cn } from "@udecode/cn";
 import { type RenderNodeWrapper, usePluginOption } from "@udecode/plate/react";
+import type { TSuggestionData } from "@udecode/plate-suggestion";
 import { CornerDownLeftIcon } from "lucide-react";
+import React, { useRef } from "react";
 
 import {
   type SuggestionConfig,

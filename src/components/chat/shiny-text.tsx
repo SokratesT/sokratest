@@ -1,7 +1,7 @@
 // https://magicui.design/docs/components/animated-shiny-text
 
+import type { ComponentPropsWithoutRef, CSSProperties, FC } from "react";
 import { cn } from "@/lib/utils";
-import type { CSSProperties, ComponentPropsWithoutRef, FC } from "react";
 
 interface AnimatedShinyTextProps extends ComponentPropsWithoutRef<"span"> {
   shimmerWidth?: number;

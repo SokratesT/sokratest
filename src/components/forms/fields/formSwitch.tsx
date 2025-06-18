@@ -1,3 +1,4 @@
+import type { ControllerRenderProps } from "react-hook-form";
 import {
   FormControl,
   FormDescription,
@@ -7,7 +8,6 @@ import {
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import type { ControllerRenderProps } from "react-hook-form";
 
 /**
  * Renders a form switch component.

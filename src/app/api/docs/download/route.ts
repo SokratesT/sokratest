@@ -1,3 +1,5 @@
+import { and, eq } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
 import {
   type AuthResult,
@@ -6,8 +8,6 @@ import {
 import { document } from "@/db/schema/document";
 import { createPresignedUrlToDownload } from "@/lib/s3/file-functions";
 import type { FileType } from "@/types/file";
-import { and, eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
   const request = await req.json();

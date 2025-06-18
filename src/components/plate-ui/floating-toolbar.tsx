@@ -2,18 +2,18 @@
 
 import { cn, withRef } from "@udecode/cn";
 import {
+  useComposedRef,
+  useEditorId,
+  useEventEditorValue,
+  usePluginOption,
+} from "@udecode/plate/react";
+import {
   type FloatingToolbarState,
   flip,
   offset,
   useFloatingToolbar,
   useFloatingToolbarState,
 } from "@udecode/plate-floating";
-import {
-  useComposedRef,
-  useEditorId,
-  useEventEditorValue,
-  usePluginOption,
-} from "@udecode/plate/react";
 import { Toolbar } from "./toolbar";
 
 export const FloatingToolbar = withRef<

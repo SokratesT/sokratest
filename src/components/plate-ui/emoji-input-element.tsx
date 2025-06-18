@@ -1,9 +1,9 @@
 "use client";
 
 import { withRef } from "@udecode/cn";
+import { PlateElement, usePluginOption } from "@udecode/plate/react";
 import { EmojiInlineIndexSearch, insertEmoji } from "@udecode/plate-emoji";
 import { EmojiPlugin } from "@udecode/plate-emoji/react";
-import { PlateElement, usePluginOption } from "@udecode/plate/react";
 import { useMemo, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import {
@@ -18,7 +18,7 @@ import {
 export const EmojiInputElement = withRef<typeof PlateElement>(
   ({ className, ...props }, ref) => {
     const { children, editor, element } = props;
-    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
     const data = usePluginOption(EmojiPlugin, "data")!;
     const [value, setValue] = useState("");
     const [debouncedValue] = useDebounceValue(value, 100);

@@ -2,8 +2,8 @@
 
 import { cn } from "@udecode/cn";
 import type { Value } from "@udecode/plate";
-import { CommentsPlugin } from "@udecode/plate-comments/react";
 import { Plate, useEditorPlugin, useStoreValue } from "@udecode/plate/react";
+import { CommentsPlugin } from "@udecode/plate-comments/react";
 import {
   differenceInDays,
   differenceInHours,
@@ -178,7 +178,7 @@ export function Comment(props: {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    // biome-ignore lint/nursery/noStaticElementInteractions: <explanation>
+    // biome-ignore lint/a11y/noStaticElementInteractions: <Needs refactor, but fine for now>
     <div
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}

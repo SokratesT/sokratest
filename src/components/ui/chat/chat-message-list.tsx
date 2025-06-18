@@ -1,8 +1,8 @@
+import { ArrowDown } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAutoScroll } from "@/components/ui/chat/hooks/useAutoScroll";
 import { cn } from "@/lib/utils";
-import { ArrowDown } from "lucide-react";
-import { useEffect, useState } from "react";
 
 interface ChatMessageListProps extends React.HTMLAttributes<HTMLDivElement> {
   smooth?: boolean;
@@ -16,16 +16,11 @@ const ChatMessageList = ({
   debounceTime = 300,
   ...props
 }: ChatMessageListProps) => {
-  const {
-    scrollRef,
-    isAtBottom,
-    autoScrollEnabled,
-    scrollToBottom,
-    disableAutoScroll,
-  } = useAutoScroll({
-    smooth,
-    content: children,
-  });
+  const { scrollRef, isAtBottom, scrollToBottom, disableAutoScroll } =
+    useAutoScroll({
+      smooth,
+      content: children,
+    });
 
   // Add debounced version of isAtBottom
   const [debouncedIsAtBottom, setDebouncedIsAtBottom] = useState(isAtBottom);

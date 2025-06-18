@@ -1,7 +1,7 @@
+import { redirect } from "next/navigation";
 import { UploadComponent } from "@/components/documents/upload-component";
 import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
-import { redirect } from "next/navigation";
 
 const AddDocumentPage = async () => {
   const permitted = await hasPermission(
