@@ -6,6 +6,7 @@ import type {
 import { getSession } from "@/db/queries/auth";
 import { langfuseServer } from "@/lib/langfuse/langfuse-server";
 import { ExportChatsButton } from "./export-chats-button";
+import { ExportChatsCSVButton } from "./export-chats-csv-button";
 
 export type FilteredTrace = Pick<
   ApiTraceWithDetails,
@@ -197,7 +198,10 @@ const ExportChats = async () => {
         </div>
       )}
 
-      <ExportChatsButton traces={traces.data} />
+      <div className="flex flex-wrap gap-2">
+        <ExportChatsButton traces={traces.data} />
+        <ExportChatsCSVButton traces={traces.data} />
+      </div>
     </div>
   );
 };
