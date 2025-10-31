@@ -1,10 +1,8 @@
 "use client";
 
 import { SmartphoneIcon } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Placeholder } from "@/components/placeholders/placeholder";
-import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import type { Document } from "@/db/schema/document";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -12,6 +10,7 @@ import { getPresignedUrl } from "@/lib/files/uploadHelpers";
 import { cn } from "@/lib/utils";
 import { FileActions } from "./file-actions";
 import { FileMeta } from "./file-meta";
+import { FileViewport } from "./file-viewport";
 
 const FileViewer = ({ document }: { document: Document }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -57,7 +56,11 @@ const FileViewer = ({ document }: { document: Document }) => {
               Document preview is not available on mobile.
             </Placeholder>
           ) : (
-            <Viewport fileType={document.fileType} filePath={filePath} />
+            <FileViewport
+              fileType={document.fileType}
+              filePath={filePath}
+              fileTitle={document.title}
+            />
           )}
         </div>
         <div className="col-span-1 flex flex-col gap-4">
@@ -67,62 +70,6 @@ const FileViewer = ({ document }: { document: Document }) => {
       </div>
     </div>
   );
-};
-
-const Viewport = ({
-  fileType,
-  filePath,
-  className,
-}: {
-  fileType: string;
-  filePath: string;
-  className?: string;
-}) => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  switch (fileType) {
-    case "image":
-      return (
-        <>
-          {isLoading && (
-            <div className="flex size-full items-center justify-center">
-              <LoadingSpinner />
-            </div>
-          )}
-          <Card
-            className={cn(
-              className,
-              "h-fit max-h-full w-auto items-center justify-center overflow-hidden",
-              isLoading && "hidden",
-            )}
-          >
-            <Image
-              src={filePath}
-              alt="test" // FIXME: Add proper alt text
-              width={1000}
-              height={500}
-              className={cn("w-auto object-contain")}
-              loading="eager"
-              onLoad={() => setIsLoading(false)}
-            />
-          </Card>
-        </>
-      );
-    case "pdf":
-    case "video":
-      return (
-        <Card className="h-full overflow-hidden">
-          <iframe title={filePath} src={filePath} className="size-full" />
-        </Card>
-      );
-    default:
-      return (
-        <Placeholder>
-          <p>This file type cannot be displayed in the browser.</p>
-          <p>Please download it instead.</p>
-        </Placeholder>
-      );
-  }
 };
 
 export { FileViewer };
