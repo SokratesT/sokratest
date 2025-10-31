@@ -47,7 +47,7 @@ const FormTextField = ({
       <Textarea
         rows={rows}
         placeholder={placeholder}
-        className="text-md md:text-sm" // FIXME: temporarily removed resize-none
+        className="text-md md:text-sm"
         {...field}
       />
     </FormControl>

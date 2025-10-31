@@ -18,8 +18,6 @@ import { member, type User, user } from "@/db/schema/auth";
 import { courseMember } from "@/db/schema/course";
 import { withAuthQuery } from "./utils/with-auth-query";
 
-// TODO: Centralise this in a shared file
-
 // Type guard function
 function isValidColumnId(id: string): id is keyof User {
   return ["name", "email", "role"].includes(id);

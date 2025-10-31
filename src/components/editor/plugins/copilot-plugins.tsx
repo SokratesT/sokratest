@@ -7,7 +7,7 @@ import { serializeMdNodes, stripMarkdown } from "@udecode/plate-markdown";
 import { GhostText } from "@/components/plate-ui/ghost-text";
 import { ROUTES } from "@/settings/routes";
 
-// TODO: Love this, but probably need to disable due to rate limits :(
+// Consider disabling this if hitting rate limits
 export const copilotPlugins = [
   CopilotPlugin.configure(({ api }) => ({
     options: {

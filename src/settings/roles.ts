@@ -5,7 +5,6 @@ import type {
 } from "@/lib/rbac";
 
 // Define role types
-// TODO: Make enum from PG
 export type CourseRole = "instructor" | "student";
 export type OrganizationRole = "owner" | "admin" | "member";
 

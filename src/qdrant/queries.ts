@@ -27,8 +27,7 @@ export const getChunks = async ({ search }: { search: string }) => {
         limit: 20,
         with_payload: true,
         score_threshold: 0.5,
-        // FIXME: Not liking this, but qdrant types are not flexible enough
-      })) as unknown as QdrantPoints;
+      })) as QdrantPoints;
 
       return { query };
     },
@@ -73,9 +72,7 @@ export const getChunksByDocument = async ({
 
         with_payload: true,
         with_vector: false,
-
-        // FIXME: Not liking this, but qdrant types are not flexible enough
-      })) as unknown as QdrantPoints;
+      })) as QdrantPoints;
 
       return { query };
     },

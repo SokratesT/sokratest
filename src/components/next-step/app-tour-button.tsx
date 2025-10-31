@@ -34,7 +34,6 @@ const AppTourButton = ({
     }
   }, [autoTrigger]);
 
-  // TODO: Expose props for customizing the button
   const Comp = asChild ? Slot : "button";
 
   return (

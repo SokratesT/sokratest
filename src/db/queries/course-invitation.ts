@@ -38,8 +38,6 @@ export const getCourseInvitationById = async (
   }
 };
 
-// TODO: Centralise this in a shared file
-
 // Type guard function
 function isValidColumnId(id: string): id is keyof Invitation {
   return ["expiresAt", "email", "role"].includes(id);

@@ -9,9 +9,7 @@ import { buckets } from "@/settings/buckets";
 export const POST = async (req: NextRequest) => {
   const filesMeta = (await req.json()) as ShortFileProp[];
 
-  // TODO: Can probably be optimized
   const presignedUrls = [] as PresignedUrlProp[];
-
   const session = await getSession();
 
   const result = await withAuthQuery(

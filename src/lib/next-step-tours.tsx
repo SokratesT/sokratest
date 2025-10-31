@@ -125,7 +125,6 @@ const nextStepTours: Tour[] = [
       },
     ],
   },
-  // TODO: Target relevant elements in the chat interface
   {
     tour: "chatTour",
     steps: [
@@ -160,7 +159,6 @@ const nextStepTours: Tour[] = [
             response.
           </>
         ),
-        // selector: "#ai-annotations",
         side: "bottom",
         showControls: true,
         showSkip: true,
@@ -178,7 +176,6 @@ const nextStepTours: Tour[] = [
             have a direct impact on your current chat.
           </>
         ),
-        // selector: "#ai-message-rate",
         side: "bottom",
         showControls: true,
         showSkip: true,

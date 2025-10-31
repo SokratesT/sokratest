@@ -15,8 +15,6 @@ import {
 } from "@/settings/menus";
 
 const ManageSidebarGroup = async () => {
-  // TODO: Check for user roles here
-
   const session = await getSession();
 
   const hasCourseEditPermission = await hasPermission(

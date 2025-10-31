@@ -10,7 +10,6 @@ import { withAuthQuery } from "./utils/with-auth-query";
 type ResponseMessageWithoutId = CoreToolMessage | CoreAssistantMessage;
 type ResponseMessage = ResponseMessageWithoutId & { id: string };
 
-// TODO: Refactor to "update chat"
 export async function saveChat({
   id,
   userId,
