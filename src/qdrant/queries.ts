@@ -58,7 +58,7 @@ export const getChunksByDocument = async ({
               },
             },
             {
-              key: "document_id", // TODO: get type properly
+              key: qdrantCollections.chunks.keys.documentId,
               match: {
                 value: documentId,
               },

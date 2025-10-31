@@ -9,5 +9,8 @@ export const qdrantCollections = {
       courseId: "course_id",
       chunkIndex: "chunkIndex",
     },
+    keys: {
+      documentId: "document_id",
+    },
   },
 };

@@ -50,7 +50,7 @@ export const deleteChunksByDocumentId = async ({
           },
         },
         {
-          key: "document_id",
+          key: qdrantCollections.chunks.keys.documentId,
           match: {
             value: documentId,
           },
