@@ -53,7 +53,7 @@ const fetchAllTraces = async (
   }
 
   // Fetch scores
-  const scores = await langfuseServer.api.scoreGet({
+  const scores = await langfuseServer.api.scoreV2Get({
     userId: userId,
   });
 

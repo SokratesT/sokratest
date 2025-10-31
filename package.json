@@ -124,6 +124,7 @@
     "html2canvas": "^1.4.1",
     "https": "^1.0.0",
     "katex": "^0.16.22",
+    "langfuse": "^3.38.6",
     "langfuse-vercel": "^3.37.2",
     "llama-tokenizer-js": "^1.2.2",
     "lowlight": "^3.3.0",

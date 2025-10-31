@@ -19,7 +19,7 @@ const SingleChatPage = async (props: { params: Promise<{ id: string }> }) => {
 
   const messages = result.data.query;
 
-  const scores = await langfuseServer.api.scoreGet({
+  const scores = await langfuseServer.api.scoreV2Get({
     scoreIds: messages
       .map((message) => {
         if (message.role !== "user") {
