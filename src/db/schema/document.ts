@@ -7,6 +7,7 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+import type { FileType } from "@/types/file";
 import { user } from "./auth";
 import { course } from "./course";
 
@@ -38,8 +39,7 @@ export const document = pgTable("document", {
     .$type<DocumentMetadataType>()
     .default({ showReference: true, relevance: "medium" }),
   size: integer("size").notNull(),
-  // TODO: Should probably be an enum
-  fileType: text("file_type").notNull(),
+  fileType: text("file_type").$type<FileType>().notNull(),
   // TODO: Check what should be done if user deletes account
   courseId: uuid("course_id")
     .notNull()

@@ -7,6 +7,7 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+import type { OrganizationRole } from "@/settings/roles";
 
 export interface UserPreferencesType {
   tours?: {
@@ -103,7 +104,7 @@ export const member = pgTable("member", {
   userId: uuid("user_id")
     .notNull()
     .references(() => user.id),
-  role: text("role").notNull(),
+  role: text("role").$type<OrganizationRole>().notNull(),
   createdAt: timestamp("created_at").notNull(),
 });
 
@@ -115,8 +116,7 @@ export const invitation = pgTable("invitation", {
     .notNull()
     .references(() => organization.id),
   email: text("email").notNull(),
-  role: text("role"),
-  // TODO: Add course ID
+  role: text("role").$type<OrganizationRole>(),
   status: text("status").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   inviterId: uuid("inviter_id")

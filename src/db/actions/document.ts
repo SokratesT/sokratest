@@ -49,7 +49,7 @@ export const saveDocumentInfo = authActionClient
         title,
         metadata,
         size,
-        fileType,
+        fileType: fileType as FileType,
         uploadedBy: userId,
       });
 

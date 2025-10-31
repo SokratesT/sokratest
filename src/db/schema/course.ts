@@ -8,6 +8,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import type { CourseRole } from "@/settings/roles";
 import { organization, user } from "./auth";
 
 export interface CourseConfigType {
@@ -40,7 +41,7 @@ export const courseMember = pgTable(
     userId: uuid("user_id")
       .notNull()
       .references(() => user.id),
-    role: text("role").notNull(),
+    role: text("role").$type<CourseRole>().notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => [

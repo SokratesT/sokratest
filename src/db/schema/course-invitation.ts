@@ -1,5 +1,6 @@
 import type { InferSelectModel } from "drizzle-orm";
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import type { CourseRole } from "@/settings/roles";
 import { user } from "./auth";
 import { course } from "./course";
 
@@ -9,7 +10,7 @@ export const courseInvitation = pgTable("course_invitation", {
   courseId: uuid("course_id")
     .notNull()
     .references(() => course.id, { onDelete: "cascade" }),
-  role: text("role").notNull(),
+  role: text("role").$type<CourseRole>().notNull(),
   status: text("status").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   inviterId: uuid("inviter_id")

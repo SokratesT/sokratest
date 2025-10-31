@@ -18,7 +18,7 @@ import {
   checkPermissionMiddleware,
   requireCourseMiddleware,
 } from "@/lib/safe-action";
-import { DEFAULT_ROLES } from "@/settings/roles";
+import { type CourseRole, DEFAULT_ROLES } from "@/settings/roles";
 import { ROUTES } from "@/settings/routes";
 import { setActiveCourse } from "./course";
 
@@ -41,7 +41,7 @@ export const createCourseInvitations = authActionClient
       const invitations = items.map((item) => ({
         email: item.email,
         courseId,
-        role,
+        role: role as CourseRole,
         status: "pending",
         expiresAt,
         inviterId: userId,
@@ -108,7 +108,7 @@ export const acceptCourseInvitation = authActionClient
       .values({
         courseId,
         userId: ctx.userId,
-        role,
+        role: role as CourseRole,
         createdAt: new Date(),
       })
       .onConflictDoNothing();

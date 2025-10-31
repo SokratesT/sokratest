@@ -63,8 +63,7 @@ export const getActiveCourseRole = async (
       return undefined;
     }
 
-    // TODO: Make type safe by using enum in PG
-    return query.role as CourseRole;
+    return query.role;
   }, {});
 };
 
@@ -97,8 +96,7 @@ export const getOrganizationRole = async (
     return undefined;
   }
 
-  // TODO: Make type safe by using enum in PG
-  return query.role as OrganizationRole;
+  return query.role;
 };
 
 /**

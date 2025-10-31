@@ -49,7 +49,7 @@ export const createCourse = authActionClient
       await db.insert(courseMember).values({
         courseId: newCourse.id,
         userId,
-        role: "instructor", // TODO: Make enum
+        role: "instructor",
       });
 
       revalidatePath(ROUTES.PRIVATE.courses.root.getPath());
