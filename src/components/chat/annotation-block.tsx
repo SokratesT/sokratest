@@ -44,6 +44,26 @@ function isBaseAnnotation(value: JSONValue): value is BaseAnnotation {
   );
 }
 
+function parseAnnotation(annotation: JSONValue): BaseAnnotation | null {
+  if (isBaseAnnotation(annotation)) {
+    return annotation;
+  }
+
+  if (typeof annotation === "string") {
+    try {
+      const parsed = JSON.parse(annotation) as JSONValue;
+      if (isBaseAnnotation(parsed)) {
+        return parsed;
+      }
+    } catch (error) {
+      console.error("Error parsing annotation:", error);
+      return null;
+    }
+  }
+
+  return null;
+}
+
 const AnnotationBlock = ({
   annotations,
   className,
@@ -82,21 +102,9 @@ const AnnotationBlock = ({
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-2">
             {annotations.map((annotation, i) => {
-              // FIXME: Bit awkward. Check if there's a better way to do this.
-
-              let typedAnnotation = annotation;
-
-              if (!isBaseAnnotation(typedAnnotation)) {
-                try {
-                  typedAnnotation = JSON.parse(annotation as string);
-                } catch (error) {
-                  console.error("Error parsing annotation:", error);
-                  return;
-                }
-              }
-
-              if (!isBaseAnnotation(typedAnnotation)) {
-                return; // Skip annotations that don't match the expected structure
+              const typedAnnotation = parseAnnotation(annotation);
+              if (!typedAnnotation) {
+                return null;
               }
 
               switch (typedAnnotation.type) {
@@ -104,8 +112,7 @@ const AnnotationBlock = ({
                   const referenceAnnotation =
                     typedAnnotation as AnnotationReference;
                   return (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <Needs improvement, but fine for now>
-                    <Popover key={i}>
+                    <Popover key={`${typedAnnotation.id}-${i}`}>
                       <PopoverTrigger className="inline-flex w-fit gap-2 rounded-md border bg-card p-1.5 text-left font-medium text-sm shadow-xs outline-none transition-all hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:border-input dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:hover:bg-input/50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0">
                         <Badge
                           variant="secondary"
