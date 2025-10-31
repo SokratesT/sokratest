@@ -38,7 +38,7 @@ const actionClient = createSafeActionClient({
             }),
             z.object({
               context: z.literal("organization"),
-              type: z.enum(["organization", "post", "user"]),
+              type: z.enum(["organization", "user"]),
               orgId: z.string().optional(),
             }),
           ]),

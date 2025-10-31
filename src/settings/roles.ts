@@ -43,17 +43,14 @@ export const coursePermissions: CourseRolePermissions = {
 export const organizationPermissions: OrganizationRolePermissions = {
   owner: {
     organization: ["read", "update", "delete", "create"],
-    post: ["read", "update", "delete", "create"],
     user: ["read", "update", "delete", "create"],
   },
   admin: {
     organization: ["read", "update"],
-    post: ["read", "update", "delete", "create"],
     user: ["read", "update", "delete", "create"],
   },
   member: {
     organization: ["read"],
-    post: ["read"],
     user: [],
   },
 };

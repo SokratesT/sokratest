@@ -8,14 +8,12 @@ import type * as Chat from "./schema/chat";
 import type * as ChatMessage from "./schema/chat-message";
 import type * as Course from "./schema/course";
 import type * as Document from "./schema/document";
-import type * as Post from "./schema/post";
 
 type Schema = typeof Auth &
   typeof ChatMessage &
   typeof Chat &
   typeof Course &
-  typeof Document &
-  typeof Post;
+  typeof Document;
 type TSchema = ExtractTablesWithRelations<Schema>;
 
 export type IncludeRelation<TableName extends keyof TSchema> = DBQueryConfig<

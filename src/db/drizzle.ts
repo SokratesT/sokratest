@@ -6,7 +6,6 @@ import * as chat from "./schema/chat";
 import * as chatMessage from "./schema/chat-message";
 import * as course from "./schema/course";
 import * as document from "./schema/document";
-import * as post from "./schema/post";
 
 const pool = new Pool({
   connectionString: `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT ?? 5432}/${process.env.POSTGRES_DB}`,
@@ -19,6 +18,5 @@ export const db = drizzle(pool, {
     chat,
     course,
     document,
-    post,
   },
 });

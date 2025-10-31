@@ -19,7 +19,7 @@ import {
 
 // Define resource type literals
 export type CourseResourceType = "course" | "document" | "chat" | "invitation";
-export type OrganizationResourceType = "organization" | "post" | "user";
+export type OrganizationResourceType = "organization" | "user";
 
 // Define resource object structure with context
 export interface CourseResource {

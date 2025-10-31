@@ -269,36 +269,6 @@ export const ROUTES = {
         },
       },
     },
-    posts: {
-      root: {
-        name: "Posts",
-        pathTemplate: "/app/posts",
-        getPath: function () {
-          return makePath(this.pathTemplate);
-        },
-      },
-      add: {
-        name: "Add Post",
-        pathTemplate: "/app/posts/add",
-        getPath: function () {
-          return makePath(this.pathTemplate);
-        },
-      },
-      edit: {
-        name: "Edit Post",
-        pathTemplate: "/app/posts/edit/:id",
-        getPath: function (params: { id: string }) {
-          return makePath(this.pathTemplate, params);
-        },
-      },
-      view: {
-        name: "View Post",
-        pathTemplate: "/app/posts/:id",
-        getPath: function (params: { id: string }) {
-          return makePath(this.pathTemplate, params);
-        },
-      },
-    },
   },
   API: {
     docs: {
