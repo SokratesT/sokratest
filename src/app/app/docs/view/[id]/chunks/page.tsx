@@ -3,7 +3,7 @@ import type { Document } from "@/db/schema/document";
 import { getChunksByDocument } from "@/qdrant/queries";
 import { DisplayChunk } from "./_components/display-chunk";
 
-const EditPostPage = async ({
+const ViewDocumentChunksPage = async ({
   params,
 }: {
   params: Promise<{ id: Document["id"] }>;
@@ -27,4 +27,4 @@ const EditPostPage = async ({
   );
 };
 
-export default EditPostPage;
+export default ViewDocumentChunksPage;
