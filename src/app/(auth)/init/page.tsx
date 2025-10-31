@@ -1,6 +1,7 @@
 import { count } from "drizzle-orm";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { AdminRegistrationForm } from "@/components/auth/admin-registration-form";
 import {
   Card,
   CardContent,
@@ -12,7 +13,6 @@ import {
 import { db } from "@/db/drizzle";
 import { user } from "@/db/schema/auth";
 import { ROUTES } from "@/settings/routes";
-import { AdminRegistrationForm } from "./_components/admin-registration-form";
 
 export const metadata: Metadata = {
   title: "Admin Setup",

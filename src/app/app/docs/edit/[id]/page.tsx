@@ -1,7 +1,7 @@
+import { DocumentForm } from "@/components/documents/document-form";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { getDocumentById } from "@/db/queries/document";
 import type { Document } from "@/db/schema/document";
-import { DocumentForm } from "../../_components/document-form";
 
 const ViewDocumentPage = async ({
   params,

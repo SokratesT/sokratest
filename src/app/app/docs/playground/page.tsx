@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
+import { QdrantPlaygroundForm } from "@/components/documents/chunks/qdrant-playground-form";
+import QdrantPlaygroundResults from "@/components/documents/chunks/qdrant-playground-results";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { querySearchParamsCache } from "@/lib/nuqs/search-params.search";
 import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
-import { QdrantPlaygroundForm } from "./_components/qdrant-playground-form";
-import QdrantPlaygroundResults from "./_components/qdrant-playground-results";
 
 const QdrantPlaygroundPage = async ({
   searchParams,

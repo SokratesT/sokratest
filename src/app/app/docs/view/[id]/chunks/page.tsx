@@ -1,7 +1,7 @@
+import { DisplayChunk } from "@/components/documents/chunks/display-chunk";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import type { Document } from "@/db/schema/document";
 import { getChunksByDocument } from "@/qdrant/queries";
-import { DisplayChunk } from "./_components/display-chunk";
 
 const ViewDocumentChunksPage = async ({
   params,

@@ -1,4 +1,4 @@
-import { DisplayChunk } from "@/app/app/docs/view/[id]/chunks/_components/display-chunk";
+import { DisplayChunk } from "@/components/documents/chunks/display-chunk";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { getChunks } from "@/qdrant/queries";
 
