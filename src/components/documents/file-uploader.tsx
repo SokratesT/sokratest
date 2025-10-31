@@ -1,19 +1,18 @@
 "use client";
 
 import { convert } from "convert";
-import { FileText, Upload, X } from "lucide-react";
-import Image from "next/image";
+import { Upload } from "lucide-react";
 import { useCallback, useEffect } from "react";
 import Dropzone, {
   type DropzoneProps,
   type FileRejection,
 } from "react-dropzone";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useControllableState } from "@/hooks/use-controllable-state";
+import { isFileWithPreview } from "@/lib/guards";
 import { cn } from "@/lib/utils";
+import { FileCard } from "./file-card";
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -181,7 +180,6 @@ const FileUploader = (props: FileUploaderProps) => {
         }
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const isDisabled = disabled || (files?.length ?? 0) >= maxFileCount;
@@ -265,70 +263,3 @@ const FileUploader = (props: FileUploaderProps) => {
 };
 
 export { FileUploader };
-
-// TODO: Split these components into separate files
-interface FileCardProps {
-  file: File;
-  onRemove: () => void;
-  progress?: number;
-}
-
-function FileCard({ file, progress, onRemove }: FileCardProps) {
-  return (
-    <div className="relative flex items-center gap-2.5">
-      <div className="flex flex-1 gap-2.5">
-        {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
-        <div className="flex w-full flex-col gap-2">
-          <div className="flex flex-col gap-px">
-            <p className="line-clamp-1 font-medium text-foreground/80 text-sm">
-              {file.name}
-            </p>
-            <p className="text-muted-foreground text-xs">
-              {`${convert(file.size, "bytes").to("MiB").toLocaleString()} MB`}
-            </p>
-          </div>
-          {progress ? <Progress value={progress} /> : null}
-        </div>
-      </div>
-      <div className="flex items-center gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          className="size-7"
-          onClick={onRemove}
-        >
-          <X className="size-4" aria-hidden="true" />
-          <span className="sr-only">Remove file</span>
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-function isFileWithPreview(file: File): file is File & { preview: string } {
-  return "preview" in file && typeof file.preview === "string";
-}
-
-interface FilePreviewProps {
-  file: File & { preview: string };
-}
-
-function FilePreview({ file }: FilePreviewProps) {
-  if (file.type.startsWith("image/")) {
-    return (
-      <Image
-        src={file.preview}
-        alt={file.name}
-        width={48}
-        height={48}
-        loading="lazy"
-        className="aspect-square shrink-0 rounded-md object-cover"
-      />
-    );
-  }
-
-  return (
-    <FileText className="size-10 text-muted-foreground" aria-hidden="true" />
-  );
-}
