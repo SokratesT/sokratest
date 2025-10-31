@@ -109,12 +109,6 @@ const MessageBlock = ({
         "max-w-full": variant === "received",
       })}
     >
-      {/* {variant === "received" && (
-        <ChatBubbleAvatar
-          className="mt-4"
-          Fallback={message.role === "user" ? UserIcon : BotIcon}
-        />
-      )} */}
       <AnimatePresence>
         <motion.div
           initial={{ y: 5, opacity: 0 }}
