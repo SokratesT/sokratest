@@ -42,13 +42,6 @@ const ViewCoursePage = async ({
           {hasCourseEditPermission && (
             <div className="flex gap-2">
               <Link
-                href={ROUTES.PRIVATE.courses.members.getPath({ id })}
-                className={buttonVariants({ variant: "default" })}
-              >
-                Manage Users
-              </Link>
-
-              <Link
                 href={ROUTES.PRIVATE.documents.add.getPath()}
                 className={buttonVariants({ variant: "default" })}
               >

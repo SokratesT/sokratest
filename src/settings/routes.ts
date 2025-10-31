@@ -224,13 +224,6 @@ export const ROUTES = {
           return makePath(this.pathTemplate, params);
         },
       },
-      members: {
-        name: "Course Members",
-        pathTemplate: "/app/courses/view/:id/members",
-        getPath: function (params: { id: string }) {
-          return makePath(this.pathTemplate, params);
-        },
-      },
     },
     organizations: {
       root: {

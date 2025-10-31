@@ -72,55 +72,6 @@ export const getActiveCourseUsers = async (
   );
 };
 
-export const getCourseUsers = async ({
-  sort,
-  pageIndex,
-  pageSize,
-}: {
-  sort: { id: string; desc: boolean }[];
-  pageIndex: number;
-  pageSize: number;
-  // search?: string;
-}) => {
-  return withAuthQuery(
-    async (session) => {
-      const sortOrder = sort
-        ?.filter((s) => isValidColumnId(s.id))
-        .map((s) => {
-          if (["name", "email", "role"].includes(s.id)) {
-            const column = user[s.id as keyof User];
-            return s.desc ? desc(column) : asc(column);
-          }
-          return asc(user.createdAt);
-        }) ?? [asc(user.createdAt)]; // Fallback default sort
-
-      const query = await db
-        .select({ ...getTableColumns(user) })
-        .from(user)
-        .innerJoin(courseMember, eq(user.id, courseMember.userId))
-        .where(eq(courseMember.courseId, session.session.activeCourseId))
-        .limit(pageSize)
-        .orderBy(...sortOrder)
-        .offset(pageIndex * pageSize);
-
-      const [rowCount] = await db
-        .select({ count: count() })
-        .from(user)
-        .innerJoin(courseMember, eq(user.id, courseMember.userId))
-        .where(eq(courseMember.courseId, session.session.activeCourseId));
-
-      return { query, rowCount };
-    },
-    {
-      requireCourse: true,
-      access: {
-        resource: { context: "organization", type: "user", id: "all" },
-        action: "read",
-      },
-    },
-  );
-};
-
 export const getOrganizationUsers = async ({
   sort,
   pageIndex,
