@@ -27,20 +27,18 @@ const EditUserPage = async ({
   const organizationMembershipResult =
     await getUserOrganizationMembershipById(id);
 
-  if (
-    !result.success ||
-    !courseMembershipResult.success ||
-    !organizationMembershipResult.success
-  ) {
-    // FIXME: Ugly, needs improvement
-    const errorMessage = !result.success
-      ? result.error.message
-      : !courseMembershipResult.success
-        ? courseMembershipResult.error.message
-        : !organizationMembershipResult.success
-          ? organizationMembershipResult.error.message
-          : "Unknown error occurred";
-    return <Placeholder>{errorMessage}</Placeholder>;
+  if (!result.success) {
+    return <Placeholder>{result.error.message}</Placeholder>;
+  }
+
+  if (!courseMembershipResult.success) {
+    return <Placeholder>{courseMembershipResult.error.message}</Placeholder>;
+  }
+
+  if (!organizationMembershipResult.success) {
+    return (
+      <Placeholder>{organizationMembershipResult.error.message}</Placeholder>
+    );
   }
 
   const user = result.data.query;
