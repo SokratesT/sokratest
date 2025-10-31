@@ -1,8 +1,8 @@
 import convert from "convert";
 import { XIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { isFileWithPreview } from "@/lib/guards";
-import { Button } from "../ui/button";
-import { Progress } from "../ui/progress";
 import { FilePreview } from "./file-preview";
 
 const FileCard = ({
