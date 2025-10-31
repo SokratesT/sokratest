@@ -73,7 +73,7 @@ const UsersPage = async ({
         >
           <div className="flex items-center gap-2">
             <DataTableViewOptions />
-            <SearchInput />
+            <SearchInput placeholder="Search name..." />
           </div>
           <DataTableBody />
           <DataTablePagination />

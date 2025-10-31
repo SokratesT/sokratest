@@ -76,10 +76,12 @@ export const getOrganizationUsers = async ({
   sort,
   pageIndex,
   pageSize,
+  search,
 }: {
   sort: { id: string; desc: boolean }[];
   pageIndex: number;
   pageSize: number;
+  search: string;
 }) => {
   return withAuthQuery(
     async (session) => {
@@ -97,7 +99,12 @@ export const getOrganizationUsers = async ({
         .select({ ...getTableColumns(user) })
         .from(user)
         .innerJoin(member, eq(user.id, member.userId))
-        .where(eq(member.organizationId, session.session.activeOrganizationId))
+        .where(
+          and(
+            eq(member.organizationId, session.session.activeOrganizationId),
+            ilike(user.email, `%${search}%`),
+          ),
+        )
         .limit(pageSize)
         .orderBy(...sortOrder)
         .offset(pageIndex * pageSize);
@@ -106,7 +113,12 @@ export const getOrganizationUsers = async ({
         .select({ count: count() })
         .from(user)
         .innerJoin(member, eq(user.id, member.userId))
-        .where(eq(member.organizationId, session.session.activeOrganizationId));
+        .where(
+          and(
+            eq(member.organizationId, session.session.activeOrganizationId),
+            ilike(user.email, `%${search}%`),
+          ),
+        );
 
       return { query, rowCount };
     },

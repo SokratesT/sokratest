@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
+import { SearchInput } from "@/components/documents/search-input";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
@@ -81,7 +82,7 @@ const UsersPage = async ({
           <div className="flex items-center gap-2">
             <DataTableViewOptions />
             <UsersDataTableSelectActions />
-            {/* <SearchInput /> */}
+            <SearchInput placeholder="Search email..." />
           </div>
           <DataTableBody />
           <DataTablePagination />

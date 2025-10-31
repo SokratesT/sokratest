@@ -62,7 +62,7 @@ const UsersPage = async ({
             <DataTableViewOptions />
             <InvitesTableActions />
             <DataTableExportButton fileName="invitations" />
-            <SearchInput placeholder="Search by email..." />
+            <SearchInput placeholder="Search email..." />
           </div>
           <DataTableBody />
           <DataTablePagination />
