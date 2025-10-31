@@ -12,8 +12,8 @@ import {
   getCourseUsers,
   getOrganizationUsersNotInCourse,
 } from "@/db/queries/users";
-import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
+import { querySearchParamsCache } from "@/lib/nuqs/search-params.search";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { ROUTES } from "@/settings/routes";
 
@@ -29,7 +29,7 @@ const UsersPage = async ({
   const { pageIndex, pageSize } =
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
-  const { search } = await bucketSearchParamsCache.parse(searchParams);
+  const { search } = await querySearchParamsCache.parse(searchParams);
 
   const resultOrgUsersNotInCourse =
     await getOrganizationUsersNotInCourse(search);

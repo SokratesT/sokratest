@@ -10,8 +10,8 @@ import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view
 import { columns } from "@/components/users/table/columns";
 import { UsersDataTableSelectActions } from "@/components/users/table/users-data-table-select-actions";
 import { getActiveCourseUsers } from "@/db/queries/users";
-import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
+import { querySearchParamsCache } from "@/lib/nuqs/search-params.search";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
@@ -24,7 +24,7 @@ const UsersPage = async ({
   const { pageIndex, pageSize } =
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
-  const { search } = await bucketSearchParamsCache.parse(searchParams);
+  const { search } = await querySearchParamsCache.parse(searchParams);
 
   const permitted = await hasPermission(
     { context: "organization", id: "all", type: "user" },

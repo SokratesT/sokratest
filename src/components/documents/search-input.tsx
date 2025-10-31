@@ -3,7 +3,8 @@
 import { useTransition } from "react";
 import { useDebounceCallback } from "usehooks-ts";
 import { Input } from "@/components/ui/input";
-import { useBucketSearchParams } from "@/lib/nuqs/search-params.bucket";
+import { usePaginationSearchParams } from "@/lib/nuqs/search-params.pagination";
+import { useQuerySearchParams } from "@/lib/nuqs/search-params.search";
 import { cn } from "@/lib/utils";
 
 const SearchInput = ({
@@ -13,12 +14,14 @@ const SearchInput = ({
   ...props
 }: React.ComponentProps<"input">) => {
   const [, startTransition] = useTransition();
-  const [{ search, page }, setQuery] = useBucketSearchParams(startTransition);
+  const [{ search }, setQuery] = useQuerySearchParams(startTransition);
+  const [{ pageIndex }, setPageIndexQuery] =
+    usePaginationSearchParams(startTransition);
 
   const handleSearch = useDebounceCallback((search: string) => {
     setQuery({ search });
-    if (page !== 1) {
-      setQuery({ page: 1 });
+    if (pageIndex !== 0) {
+      setPageIndexQuery({ pageIndex: 0 });
     }
   }, 500);
 

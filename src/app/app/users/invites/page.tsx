@@ -11,8 +11,8 @@ import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view
 import { InvitesTableActions } from "@/components/users/invites/table/invites-table-actions";
 import { invitesTableColumns } from "@/components/users/invites/table/invites-table-columns";
 import { getCourseInvitations } from "@/db/queries/course-invitation";
-import { bucketSearchParamsCache } from "@/lib/nuqs/search-params.bucket";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
+import { querySearchParamsCache } from "@/lib/nuqs/search-params.search";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { ROUTES } from "@/settings/routes";
 
@@ -24,7 +24,7 @@ const UsersPage = async ({
   const { pageIndex, pageSize } =
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
-  const { search } = await bucketSearchParamsCache.parse(searchParams);
+  const { search } = await querySearchParamsCache.parse(searchParams);
 
   const result = await getCourseInvitations(sort, pageIndex, pageSize, search);
 

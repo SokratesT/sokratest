@@ -11,7 +11,9 @@ const searchUrlKeys = {
 };
 
 const queryParsers = (startTransition?: React.TransitionStartFunction) => ({
-  search: searchParser.withOptions({ shallow: false, startTransition }),
+  search: searchParser
+    .withDefault("")
+    .withOptions({ shallow: false, startTransition }),
 });
 
 export const querySearchParamsCache = createSearchParamsCache(queryParsers(), {
