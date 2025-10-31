@@ -85,7 +85,6 @@ export const editorPlugins = [
   autoformatPlugin,
   cursorOverlayPlugin,
   ...blockMenuPlugins,
-  /* ...dndPlugins, */
   EmojiPlugin.configure({ options: { data: emojiMartData as any } }),
   exitBreakPlugin,
   resetBlockTypePlugin,
