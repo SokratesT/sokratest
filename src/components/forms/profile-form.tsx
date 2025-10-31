@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { Button } from "@/components/ui/button";
@@ -11,26 +11,12 @@ import { authClient } from "@/lib/auth-client";
 
 const ProfileForm = () => {
   const { data, isPending } = authClient.useSession();
-  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<UserUpdateSchemaType>({
     resolver: zodResolver(userUpdateSchema),
-    defaultValues: {
-      name: data?.user.name,
-    },
+    values: data?.user ? { name: data.user.name } : undefined,
   });
-
-  // FIXME: Pass data as props instead of this shit?
-  useEffect(() => {
-    form.reset({
-      name: data?.user.name,
-    });
-
-    if (!isPending && data) {
-      setLoading(false);
-    }
-  }, [data]);
 
   const onSubmit = async (values: UserUpdateSchemaType) => {
     await authClient.updateUser(
@@ -66,11 +52,11 @@ const ProfileForm = () => {
               placeholder="Your name"
               label="Name"
               inputType="text"
-              loading={loading}
+              loading={isPending}
             />
           )}
         />
-        <Button type="submit" disabled={loading || submitting}>
+        <Button type="submit" disabled={isPending || submitting}>
           Save Profile
         </Button>
       </form>
