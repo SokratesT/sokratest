@@ -85,18 +85,6 @@ export function EmojiPickerNavigation({
                 </TooltipContent>
               </Tooltip>
             ))}
-
-          {/* This is the animated indicator - Opt In if needed */}
-          {/* <div
-            className={cn(
-              'absolute -bottom-1.5 left-0 h-0.5 w-full rounded-t-lg bg-accent opacity-100 transition-transform duration-200'
-            )}
-            style={{
-              transform: `translateX(${position}%)`,
-              visibility: `${focusedCategory ? 'visible' : 'hidden'}`,
-              width: `${width}%`,
-            }}
-          /> */}
         </div>
       </nav>
     </TooltipProvider>

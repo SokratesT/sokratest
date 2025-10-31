@@ -67,7 +67,6 @@ const NavUser = async () => {
                 <span className="truncate font-semibold">
                   {session.user.name}
                 </span>
-                {/* <span className="truncate text-xs">{data.user.email}</span> */}
                 {activeOrganization && (
                   <span className="truncate text-xs">
                     {activeOrganization.name}

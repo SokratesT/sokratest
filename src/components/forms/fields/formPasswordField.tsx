@@ -68,7 +68,6 @@ const FormPasswordField = ({
                 tabIndex={-1}
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {/* Render the eye or eye off icon based on the state */}
                 {showPassword ? <EyeOffIcon /> : <EyeIcon />}
               </Button>
             </div>

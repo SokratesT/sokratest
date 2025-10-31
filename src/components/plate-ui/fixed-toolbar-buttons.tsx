@@ -169,10 +169,6 @@ export function FixedToolbarButtons() {
         </MarkToolbarButton>
         <CommentToolbarButton />
       </ToolbarGroup>
-
-      {/* <ToolbarGroup>
-        <ModeDropdownMenu />
-      </ToolbarGroup> */}
     </div>
   );
 }

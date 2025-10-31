@@ -22,9 +22,6 @@ const LoginPage = async () => {
       <CardContent>
         <SignInForm />
       </CardContent>
-      {/* <CardFooter className="text-muted-foreground text-sm">
-        <Link href={ROUTES.PUBLIC.signup.getPath()}>Create a new account?</Link>
-      </CardFooter> */}
     </Card>
   );
 };

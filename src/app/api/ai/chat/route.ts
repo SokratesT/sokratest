@@ -142,6 +142,7 @@ export async function POST(request: Request) {
               tags: ["user", "chat"],
             },
           },
+          // Tools are not working with some SAIA models
           /* maxSteps: 5,
           toolCallStreaming: true,
           tools: {

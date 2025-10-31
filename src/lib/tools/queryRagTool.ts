@@ -26,21 +26,6 @@ export const queryRagTool = ({
         content: toolCallId,
       });
 
-      /* dataStream.writeData({
-        type: "title",
-        content: query,
-      });
-
-      dataStream.writeData({
-        type: "kind",
-        content: "text",
-      });
-
-      dataStream.writeData({
-        type: "clear",
-        content: "",
-      }); */
-
       const result = await findRelevantContent({
         userQuery: query,
         courseId,

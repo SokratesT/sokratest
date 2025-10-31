@@ -301,7 +301,6 @@ const processImageFile = async (
     });
 
     const step = result.steps.find((step) => step.stepType === "initial");
-    /* const imageRef = extractFileInfoFromReference(name)?.id; */
 
     if (!step) return;
 
