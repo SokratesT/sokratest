@@ -158,7 +158,7 @@ export const BlockSuggestionCard = ({
           </div>
         </div>
 
-        <div className="relative mt-1 mb-4 pl-[32px]">
+        <div className="relative mt-1 mb-4 pl-8">
           <div className="flex flex-col gap-2">
             {suggestion.type === "remove" && (
               <>
@@ -464,7 +464,7 @@ export const useResolveSuggestion = (
       const keyId = getSuggestionKey(id);
 
       if (nodeData.type === "update") {
-        return res.push({
+        res.push({
           comments,
           createdAt,
           keyId,
@@ -475,9 +475,10 @@ export const useResolveSuggestion = (
           type: "update",
           userId: nodeData.userId,
         });
+        continue;
       }
       if (newText.length > 0 && text.length > 0) {
-        return res.push({
+        res.push({
           comments,
           createdAt,
           keyId,
@@ -487,9 +488,10 @@ export const useResolveSuggestion = (
           type: "replace",
           userId: nodeData.userId,
         });
+        continue;
       }
       if (newText.length > 0) {
-        return res.push({
+        res.push({
           comments,
           createdAt,
           keyId,
@@ -498,9 +500,10 @@ export const useResolveSuggestion = (
           type: "insert",
           userId: nodeData.userId,
         });
+        continue;
       }
       if (text.length > 0) {
-        return res.push({
+        res.push({
           comments,
           createdAt,
           keyId,
@@ -509,6 +512,7 @@ export const useResolveSuggestion = (
           type: "remove",
           userId: nodeData.userId,
         });
+        continue;
       }
     }
 
