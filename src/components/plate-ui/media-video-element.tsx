@@ -70,6 +70,7 @@ export const MediaVideoElement = withHOC(
                   <div ref={handleRef}>
                     <LiteYouTubeEmbed
                       // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
+                      // biome-ignore lint/suspicious/noNonNullAssertedOptionalChain: <Needs refactor, but fine for now>
                       id={embed?.id!}
                       title="youtube"
                       wrapperClass={cn(

@@ -309,11 +309,11 @@ export const useResolveSuggestion = (
   const { api, editor, getOption, setOption } =
     useEditorPlugin(suggestionPlugin);
 
-  suggestionNodes.forEach(([node]) => {
+  for (const [node] of suggestionNodes) {
     const id = api.suggestion.nodeId(node);
     const map = getOption("uniquePathMap");
 
-    if (!id) return;
+    if (!id) continue;
 
     const previousPath = map.get(id);
 
@@ -328,13 +328,14 @@ export const useResolveSuggestion = (
       }
 
       if (!nodes && lineBreakId !== id) {
-        return setOption("uniquePathMap", new Map(map).set(id, blockPath));
+        setOption("uniquePathMap", new Map(map).set(id, blockPath));
+        continue;
       }
 
-      return;
+      continue;
     }
     setOption("uniquePathMap", new Map(map).set(id, blockPath));
-  });
+  }
 
   const resolvedSuggestion: ResolvedSuggestion[] = useMemo(() => {
     const map = getOption("uniquePathMap");
@@ -359,19 +360,20 @@ export const useResolveSuggestion = (
           if (ElementApi.isElement(node)) {
             return api.suggestion.nodeId(node);
           }
+          return undefined;
         })
         .filter(Boolean),
     );
 
     const res: ResolvedSuggestion[] = [];
 
-    suggestionIds.forEach((id) => {
-      if (!id) return;
+    for (const id of suggestionIds) {
+      if (!id) continue;
 
       const path = map.get(id);
 
-      if (!path || !PathApi.isPath(path)) return;
-      if (!PathApi.equals(path, blockPath)) return;
+      if (!path || !PathApi.isPath(path)) continue;
+      if (!PathApi.equals(path, blockPath)) continue;
 
       const entries = [
         ...editor.api.nodes<TElement | TSuggestionText>({
@@ -394,12 +396,12 @@ export const useResolveSuggestion = (
       let newProperties: any = {};
 
       // overlapping suggestion
-      entries.forEach(([node]) => {
+      for (const [node] of entries) {
         if (TextApi.isText(node)) {
           const dataList = api.suggestion.dataList(node);
 
-          dataList.forEach((data) => {
-            if (data.id !== id) return;
+          for (const data of dataList) {
+            if (data.id !== id) continue;
 
             switch (data.type) {
               case "insert": {
@@ -429,13 +431,13 @@ export const useResolveSuggestion = (
               }
               // No default
             }
-          });
+          }
         } else {
           const lineBreakData = api.suggestion.isBlockSuggestion(node)
             ? node.suggestion
             : undefined;
 
-          if (lineBreakData?.id !== keyId2SuggestionId(id)) return;
+          if (lineBreakData?.id !== keyId2SuggestionId(id)) continue;
           if (lineBreakData.type === "insert") {
             newText += lineBreakData.isLineBreak
               ? BLOCK_SUGGESTION
@@ -446,13 +448,13 @@ export const useResolveSuggestion = (
               : BLOCK_SUGGESTION + TYPE_TEXT_MAP[node.type](node);
           }
         }
-      });
+      }
 
-      if (entries.length === 0) return;
+      if (entries.length === 0) continue;
 
       const nodeData = api.suggestion.suggestionData(entries[0][0]);
 
-      if (!nodeData) return;
+      if (!nodeData) continue;
 
       // const comments = data?.discussions.find((d) => d.id === id)?.comments;
       const comments =
@@ -508,7 +510,7 @@ export const useResolveSuggestion = (
           userId: nodeData.userId,
         });
       }
-    });
+    }
 
     return res;
   }, [

@@ -51,9 +51,7 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        // biome-ignore lint/nursery/noNestedComponentDefinitions: <Needs refactor, but fine for now>
         IconLeft: () => <ChevronLeft className="size-4" />,
-        // biome-ignore lint/nursery/noNestedComponentDefinitions: <Needs refactor, but fine for now>
         IconRight: () => <ChevronRight className="size-4" />,
       }}
       showOutsideDays={showOutsideDays}

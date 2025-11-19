@@ -21,11 +21,8 @@ const SingleChatPage = async (props: { params: Promise<{ id: string }> }) => {
 
   const scores = await langfuseServer.api.scoreV2Get({
     scoreIds: messages
-      .map((message) => {
-        if (message.role !== "user") {
-          return message.id;
-        }
-      })
+      .filter((message) => message.role !== "user")
+      .map((message) => message.id)
       .join(","),
   });
 

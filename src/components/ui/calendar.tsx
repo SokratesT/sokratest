@@ -58,11 +58,9 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        // biome-ignore lint/nursery/noNestedComponentDefinitions: <Fine to do this for now>
         IconLeft: ({ className, ...props }) => (
           <ChevronLeft className={cn("size-4", className)} {...props} />
         ),
-        // biome-ignore lint/nursery/noNestedComponentDefinitions: <Fine to do this for now>
         IconRight: ({ className, ...props }) => (
           <ChevronRight className={cn("size-4", className)} {...props} />
         ),

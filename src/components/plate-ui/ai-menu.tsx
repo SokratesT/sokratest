@@ -59,6 +59,7 @@ export function AIMenu() {
     chat,
     onOpenBlockSelection: (blocks: NodeEntry[]) => {
       // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
+      // biome-ignore lint/suspicious/noNonNullAssertedOptionalChain: <Needs refactor, but fine for now>
       show(editor.api.toDOMNode(blocks.at(-1)?.[0]!)!);
     },
     onOpenChange: (open) => {
@@ -82,6 +83,7 @@ export function AIMenu() {
     },
     onOpenSelection: () => {
       // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
+      // biome-ignore lint/suspicious/noNonNullAssertedOptionalChain: <Needs refactor, but fine for now>
       show(editor.api.toDOMNode(editor.api.blocks().at(-1)?.[0]!)!);
     },
   });

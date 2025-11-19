@@ -44,7 +44,11 @@ export function ImportToolbarButton({ children, ...props }: DropdownMenuProps) {
   const { openFilePicker } = useFilePicker({
     accept,
     multiple: false,
-    onFilesSelected: async ({ plainFiles }) => {
+    onFilesSuccessfullySelected: async ({
+      plainFiles,
+    }: {
+      plainFiles: File[];
+    }) => {
       const text = await plainFiles[0].text();
 
       const nodes = getFileNodes(text, type);

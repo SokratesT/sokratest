@@ -57,6 +57,7 @@ export const MediaEmbedElement = withHOC(
                 isYoutube ? (
                   <LiteYouTubeEmbed
                     // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
+                    // biome-ignore lint/suspicious/noNonNullAssertedOptionalChain: <Needs refactor, but fine for now>
                     id={embed?.id!}
                     title="youtube"
                     wrapperClass={cn(
@@ -110,6 +111,7 @@ export const MediaEmbedElement = withHOC(
                   )}
                 >
                   {/* biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now> */}
+                  {/** biome-ignore lint/suspicious/noNonNullAssertedOptionalChain: <Needs refactor, but fine for now> */}
                   <Tweet id={embed?.id!} />
                 </div>
               )}

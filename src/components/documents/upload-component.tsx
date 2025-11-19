@@ -64,51 +64,49 @@ const UploadComponent = () => {
   }
 
   return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex w-full flex-col gap-6"
-        >
-          <FormField
-            control={form.control}
-            name="files"
-            render={({ field }) => (
-              <div className="space-y-6">
-                <FormItem className="w-full">
-                  <FormLabel>Files</FormLabel>
-                  <FormControl>
-                    <FileUploader
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      maxFileCount={100}
-                      maxSize={32 * 1024 * 1024}
-                      multiple
-                      accept={{
-                        "image/*": [],
-                        "video/*": [],
-                        "audio/*": [],
-                        "application/pdf": [],
-                        "text/*": [],
-                      }}
-                      // progresses={progresses}
-                      // pass the onUpload function here for direct upload
-                      // onUpload={uploadFiles}
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </div>
-            )}
-          />
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex w-full flex-col gap-6"
+      >
+        <FormField
+          control={form.control}
+          name="files"
+          render={({ field }) => (
+            <div className="space-y-6">
+              <FormItem className="w-full">
+                <FormLabel>Files</FormLabel>
+                <FormControl>
+                  <FileUploader
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    maxFileCount={100}
+                    maxSize={32 * 1024 * 1024}
+                    multiple
+                    accept={{
+                      "image/*": [],
+                      "video/*": [],
+                      "audio/*": [],
+                      "application/pdf": [],
+                      "text/*": [],
+                    }}
+                    // progresses={progresses}
+                    // pass the onUpload function here for direct upload
+                    // onUpload={uploadFiles}
+                    disabled={isLoading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            </div>
+          )}
+        />
 
-          <Button className="w-fit" disabled={isLoading}>
-            Save
-          </Button>
-        </form>
-      </Form>
-    </>
+        <Button className="w-fit" disabled={isLoading}>
+          Save
+        </Button>
+      </form>
+    </Form>
   );
 };
 

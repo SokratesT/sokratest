@@ -143,6 +143,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
         ref={insertRef}
         className={cn(popoverVariants(), "w-auto p-1")}
         {...insertProps}
+        style={insertProps.style as React.CSSProperties}
       >
         {input}
       </div>
@@ -151,6 +152,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
         ref={editRef}
         className={cn(popoverVariants(), "w-auto p-1")}
         {...editProps}
+        style={editProps.style as React.CSSProperties}
       >
         {editContent}
       </div>
