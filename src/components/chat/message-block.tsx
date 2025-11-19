@@ -1,29 +1,19 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
 import type { ChatRequestOptions, Message } from "ai";
 import type { ApiGetScoresResponseData } from "langfuse";
-import { CopyIcon, PencilIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { toast } from "sonner";
-import { useCopyToClipboard } from "usehooks-ts";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+
 import {
   ChatBubble,
-  ChatBubbleAction,
-  ChatBubbleActionWrapper,
   ChatBubbleMessage,
 } from "@/components/ui/chat/chat-bubble";
 import type { Chat } from "@/db/schema/chat";
 import { cn } from "@/lib/utils";
 import { AnnotationBlock } from "./annotation-block";
-import { Markdown } from "./markdown";
-import { MessageEditor } from "./message-editor";
-import { MessageRate } from "./message-rate";
+import { MessageActions } from "./message-parts/message-actions";
+import { ReasoningPart } from "./message-parts/reasoning-part";
+import { TextPart } from "./message-parts/text-part";
 import { ToolBlock } from "./tool-blocks/tool-block";
 
 interface ToolStream {
@@ -31,8 +21,6 @@ interface ToolStream {
     content: string | undefined;
   };
 }
-
-// TODO: This is a mess. Refactor into composable components
 
 const MessageBlock = ({
   message,
@@ -56,18 +44,6 @@ const MessageBlock = ({
   score?: ApiGetScoresResponseData;
 }) => {
   const [mode, setMode] = useState<"view" | "edit">("view");
-  const [, copy] = useCopyToClipboard();
-
-  const handleCopy = async (text: string) => {
-    toast.promise(copy(text), {
-      loading: "Copying to clipboard...",
-      success: "Copied to clipboard!",
-      error: (error) => ({
-        message: "Failed to copy to clipboard",
-        description: error.message,
-      }),
-    });
-  };
 
   const handleModeChange = () => {
     if (mode === "view") {
@@ -78,29 +54,6 @@ const MessageBlock = ({
   };
 
   const variant = message.role === "user" ? "sent" : "received";
-
-  const actionIcons = [
-    {
-      icon: CopyIcon,
-      type: "Copy",
-      fn: () =>
-        handleCopy(
-          message.parts?.find((message) => message.type === "text")?.text ?? "",
-        ),
-    },
-  ];
-
-  const userActionIcons = [
-    { icon: PencilIcon, type: "Edit", fn: handleModeChange },
-    {
-      icon: CopyIcon,
-      type: "Copy",
-      fn: () =>
-        handleCopy(
-          message.parts?.find((message) => message.type === "text")?.text ?? "",
-        ),
-    },
-  ];
 
   return (
     <ChatBubble
@@ -130,45 +83,21 @@ const MessageBlock = ({
             {message.parts?.map((part) => (
               <div key={part.type + message.id}>
                 {part.type === "reasoning" && (
-                  <Accordion
-                    type="single"
-                    collapsible
-                    key={part.type}
-                    className="mb-4 rounded-2xl border bg-card px-4"
-                  >
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger className="py-2">
-                        Show Reasoning
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <Markdown className="text-sm">
-                          {part.reasoning}
-                        </Markdown>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
+                  <ReasoningPart reasoning={part.reasoning} />
                 )}
 
-                {part.type === "text" && variant === "sent" && (
-                  <div>
-                    {mode === "edit" ? (
-                      <MessageEditor
-                        chatId={chatId}
-                        key={message.id}
-                        message={message}
-                        setMode={setMode}
-                        setMessages={setMessages}
-                        reload={reload}
-                        status={status}
-                      />
-                    ) : (
-                      part.text
-                    )}
-                  </div>
-                )}
-
-                {part.type === "text" && variant === "received" && (
-                  <Markdown className="text-foreground">{part.text}</Markdown>
+                {part.type === "text" && (
+                  <TextPart
+                    part={part}
+                    variant={variant}
+                    mode={mode}
+                    setMode={setMode}
+                    message={message}
+                    chatId={chatId}
+                    setMessages={setMessages}
+                    reload={reload}
+                    status={status}
+                  />
                 )}
 
                 {part.type === "tool-invocation" && (
@@ -184,43 +113,12 @@ const MessageBlock = ({
             ))}
 
             <AnnotationBlock annotations={message.annotations} />
-            {message.role === "user" && (
-              <ChatBubbleActionWrapper
-                variant="sent"
-                className="w-full gap-2 pt-2"
-              >
-                {userActionIcons.map(({ icon: Icon, type, fn }) => (
-                  <ChatBubbleAction
-                    className="size-6 text-primary"
-                    actionLabel={type}
-                    key={type}
-                    icon={<Icon className="size-3" />}
-                    onClick={fn}
-                  />
-                ))}
-              </ChatBubbleActionWrapper>
-            )}
-            {message.role === "assistant" && (
-              <ChatBubbleActionWrapper
-                variant="received"
-                className="gap-2 pt-2"
-              >
-                {actionIcons.map(({ icon: Icon, type, fn }) => (
-                  <ChatBubbleAction
-                    className="size-6"
-                    actionLabel={type}
-                    key={type}
-                    icon={<Icon className="size-3" />}
-                    onClick={fn}
-                  />
-                ))}
-                <MessageRate
-                  chatId={chatId}
-                  messageId={message.id}
-                  score={score}
-                />
-              </ChatBubbleActionWrapper>
-            )}
+            <MessageActions
+              message={message}
+              chatId={chatId}
+              score={score}
+              handleModeChange={handleModeChange}
+            />
           </ChatBubbleMessage>
         </motion.div>
       </AnimatePresence>
