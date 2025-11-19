@@ -92,8 +92,6 @@ export const getRelevantChunks = async ({
     system: generateRagQueryPrompt,
   });
 
-  console.log(`Generated query: ${generatedQuery.text}`);
-
   const result = await findRelevantContent({
     userQuery: generatedQuery.text,
     courseId,

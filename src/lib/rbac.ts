@@ -185,7 +185,6 @@ export const hasChatPermission = async (
 
   try {
     if (result.data) {
-      console.log("User is chat owner");
       return true;
     }
     return false;
@@ -209,7 +208,6 @@ export const hasInvitationPermission = async (
 
   try {
     if (await isChatOwner(resource.id)) {
-      console.log("User is chat owner");
       return true;
     }
     return false;

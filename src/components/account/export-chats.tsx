@@ -158,8 +158,6 @@ const ExportChats = async () => {
   const traces = await fetchAllTraces(session.user.id);
   const stats = calculateOverviewStats(traces.data);
 
-  console.log("All Traces fetched:", traces.meta);
-
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">

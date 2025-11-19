@@ -106,8 +106,6 @@ export const vectorizeFilesTask = task({
 
     const mergedChunks = [...markdown, ...imageChunks];
 
-    console.log("Merged chunks:", mergedChunks);
-
     const qdrantResponse = await generateEmbeddings({
       chunks: mergedChunks,
       courseId: payload.courseId,
