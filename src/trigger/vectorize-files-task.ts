@@ -1,5 +1,5 @@
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import { logger, task } from "@trigger.dev/sdk/v3";
+import { logger, task } from "@trigger.dev/sdk";
 import { embedMany, generateText } from "ai";
 import https from "https";
 import nodeFetch from "node-fetch";
@@ -31,6 +31,7 @@ export const vectorizeFilesTask = task({
   maxDuration: 1800,
   queue: {
     concurrencyLimit: 1,
+    name: "processing-embeddings-queue",
   },
   run: async (payload: VectorizeFilesTaskPayload) => {
     const files = await listAllFilesInPrefix({
@@ -168,7 +169,7 @@ export const vectorizeFilesTask = task({
 
     return { payload, results: { qdrant: qdrantResponse, next: nextResponse } };
   },
-  onFailure: async (payload) => {
+  onFailure: async ({ payload }) => {
     await logger.trace("update-next-api", async () => {
       const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.API.docs.processing.getPath()}`;
       const requestBody = {

@@ -1,6 +1,6 @@
 "use server";
 
-import { tasks } from "@trigger.dev/sdk/v3";
+import { tasks } from "@trigger.dev/sdk";
 import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -52,13 +52,6 @@ export const enqueueDocuments = authActionClient
           documentRef: doc as FilePayload,
           mergePages: doc.metadata.mergePages ?? true,
         },
-        options: {
-          concurrencyKey: "PROCESSING_DOCUMENT_CONCURRENCY_KEY",
-          queue: {
-            name: "processing-documents-queue",
-            concurrencyLimit: 1,
-          },
-        },
       })),
     );
 
@@ -100,13 +93,6 @@ export const enqueueEmbeddings = authActionClient
           courseId: ctx.activeCourseId,
           documentId: doc.id,
           mergePages: doc.metadata.mergePages ?? true,
-        },
-        options: {
-          concurrencyKey: "GENERATING_EMBEDDING_CONCURRENCY_KEY",
-          queue: {
-            name: "processing-embeddings-queue",
-            concurrencyLimit: 2,
-          },
         },
       })),
     );

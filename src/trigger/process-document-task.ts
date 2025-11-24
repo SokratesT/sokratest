@@ -1,5 +1,5 @@
 import type { Size } from "@docling/docling-core";
-import { logger, task } from "@trigger.dev/sdk/v3";
+import { logger, task } from "@trigger.dev/sdk";
 import https from "https";
 import nodeFetch from "node-fetch";
 import type { ProcessingStatus } from "@/app/api/docs/processing/route";
@@ -62,6 +62,7 @@ export const processDocumentTask = task({
   id: "process-document-task",
   maxDuration: 1200,
   queue: {
+    name: "processing-documents-queue",
     concurrencyLimit: 2,
   },
   run: async (payload: ProcessDocumentTaskPayload) => {
