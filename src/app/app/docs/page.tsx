@@ -1,5 +1,7 @@
+import { RefreshCwIcon } from "lucide-react";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
+import { RefreshButton } from "@/components/app/refresh-button";
 import { SearchInput } from "@/components/documents/search-input";
 import { columns } from "@/components/documents/table/columns";
 import { DocumentTableActions } from "@/components/documents/table/document-table-actions";
@@ -73,6 +75,10 @@ const DocumentsPage = async ({
             <DataTableViewOptions />
             <DocumentTableActions />
             <SearchInput placeholder="Search title..." />
+            <RefreshButton variant="ghost" size="sm">
+              <RefreshCwIcon />
+              Update Status
+            </RefreshButton>
           </div>
           <DataTableBody />
           <DataTablePagination />
