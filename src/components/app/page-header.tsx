@@ -1,11 +1,10 @@
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-interface PageHeaderProps {
+interface PageHeaderProps extends Omit<ComponentProps<"div">, "title"> {
   title: ReactNode;
   description?: ReactNode;
   actions?: ReactNode;
-  className?: string;
 }
 
 const PageHeader = ({
@@ -13,23 +12,25 @@ const PageHeader = ({
   description,
   actions,
   className,
+  ...props
 }: PageHeaderProps) => {
   return (
     <div
       className={cn(
-        "flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between",
+        "flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8",
         className,
       )}
+      {...props}
     >
-      <div className="flex flex-col gap-2">
-        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
+      <div className={cn("flex flex-col", description ? "gap-1" : "gap-0")}>
+        <h1 className="font-medium text-2xl tracking-tighter md:text-5xl">
           {title}
-        </h4>
+        </h1>
         {description && (
-          <span className="text-muted-foreground text-sm">{description}</span>
+          <p className="text-muted-foreground text-sm">{description}</p>
         )}
       </div>
-      {actions && <div className="flex gap-2">{actions}</div>}
+      {actions && <div className="flex shrink-0 gap-2">{actions}</div>}
     </div>
   );
 };
