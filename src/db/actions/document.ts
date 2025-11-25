@@ -98,7 +98,7 @@ export const deleteDocumentInfo = authActionClient
       .from(document)
       .where(inArray(document.id, ids));
 
-    Promise.all(
+    await Promise.all(
       filesToDelete.map(async (file) => {
         await deleteFileFromBucket({
           bucket: file.bucket,
