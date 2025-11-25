@@ -47,10 +47,7 @@ export const getActiveCourseDocuments = async ({
           .limit(pageSize)
           .orderBy(...sortOrder)
           .offset(pageIndex * pageSize),
-        db
-          .select({ count: count() })
-          .from(document)
-          .where(whereClause),
+        db.select({ count: count() }).from(document).where(whereClause),
       ]);
 
       return { query, rowCount };

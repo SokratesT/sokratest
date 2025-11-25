@@ -79,10 +79,7 @@ export const getCourseInvitations = async ({
           .limit(pageSize)
           .orderBy(...sortOrder)
           .offset(pageIndex * pageSize),
-        db
-          .select({ count: count() })
-          .from(courseInvitation)
-          .where(whereClause),
+        db.select({ count: count() }).from(courseInvitation).where(whereClause),
       ]);
 
       return { query, rowCount };

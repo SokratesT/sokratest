@@ -36,7 +36,12 @@ const UsersPage = async ({
     return redirect(ROUTES.PRIVATE.root.getPath());
   }
 
-  const result = await getActiveCourseUsers({ sort, pageIndex, pageSize, search });
+  const result = await getActiveCourseUsers({
+    sort,
+    pageIndex,
+    pageSize,
+    search,
+  });
 
   if (!result.success) {
     return <Placeholder>{result.error.message}</Placeholder>;

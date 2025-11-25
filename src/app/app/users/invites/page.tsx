@@ -26,7 +26,12 @@ const UsersPage = async ({
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
   const { search } = await querySearchParamsCache.parse(searchParams);
 
-  const result = await getCourseInvitations({ sort, pageIndex, pageSize, search });
+  const result = await getCourseInvitations({
+    sort,
+    pageIndex,
+    pageSize,
+    search,
+  });
 
   if (!result.success) {
     return <Placeholder>{result.error.message}</Placeholder>;
