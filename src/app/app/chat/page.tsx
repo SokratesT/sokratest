@@ -1,4 +1,5 @@
 import type { SearchParams } from "nuqs/server";
+import { PageHeader } from "@/components/app/page-header";
 import { ChatsList } from "@/components/chat/chats-list";
 import { NewChatButton } from "@/components/chat/new-chat-button";
 import { SearchInput } from "@/components/documents/search-input";
@@ -21,15 +22,15 @@ const ChatsPage = async ({
 
   return (
     <div className="flex flex-col gap-14">
-      <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          Chats
-        </h4>
-        <div className="flex gap-2">
-          <SearchInput placeholder="Search chats..." />
-          <NewChatButton size="sm">New Chat</NewChatButton>
-        </div>
-      </div>
+      <PageHeader
+        title="Chats"
+        actions={
+          <>
+            <SearchInput placeholder="Search chats..." />
+            <NewChatButton size="sm">New Chat</NewChatButton>
+          </>
+        }
+      />
 
       <ChatsList chats={result.data.query} />
     </div>

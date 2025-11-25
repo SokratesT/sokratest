@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
+import { PageHeader } from "@/components/app/page-header";
 import { columns } from "@/components/courses/table/columns";
 import { CoursesDataTableSelectActions } from "@/components/courses/table/courses-data-table-select-actions";
 import { SearchInput } from "@/components/documents/search-input";
@@ -61,21 +62,19 @@ const CoursesPage = async ({
 
   return (
     <div className="flex flex-col gap-14">
-      <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          Courses
-        </h4>
-        {hasOrganizationEditPermission && (
-          <div className="flex gap-2">
+      <PageHeader
+        title="Courses"
+        actions={
+          hasOrganizationEditPermission && (
             <Link
               href={ROUTES.PRIVATE.courses.add.getPath()}
               className={buttonVariants({ variant: "default" })}
             >
               Add Course
             </Link>
-          </div>
-        )}
-      </div>
+          )
+        }
+      />
       <div>
         <DataTable
           data={result.data.query}

@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { ChangePasswordForm } from "@/components/account/change-password-form";
 import { CourseInvitationsList } from "@/components/account/course-invitations-list";
 import { ExportChats } from "@/components/account/export-chats";
+import { PageHeader } from "@/components/app/page-header";
 import { UserStats } from "@/components/app/user-stats";
 import { ProfileForm } from "@/components/forms/profile-form";
 import { buttonVariants } from "@/components/ui/button";
@@ -25,11 +26,7 @@ export const metadata: Metadata = {
 const AccountPage = async () => {
   return (
     <div className="flex flex-col gap-14">
-      <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          Account
-        </h4>
-      </div>
+      <PageHeader title="Account" />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Suspense fallback={<Skeleton className="h-[86px] w-full" />}>

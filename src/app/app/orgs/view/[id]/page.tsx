@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PageHeader } from "@/components/app/page-header";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,19 +24,17 @@ const ViewCoursePage = async ({
 
   return (
     <div className="flex flex-col gap-14">
-      <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          {result.data.query.name}
-        </h4>
-        <div className="flex gap-2">
+      <PageHeader
+        title={result.data.query.name}
+        actions={
           <Link
             href={ROUTES.PRIVATE.organizations.members.getPath({ id })}
             className={buttonVariants({ variant: "default" })}
           >
             Manage Users
           </Link>
-        </div>
-      </div>
+        }
+      />
       <div className="flex justify-center">
         <Card className="max-w-full lg:w-[60%]">
           <CardContent className="p-4">

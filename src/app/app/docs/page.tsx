@@ -1,6 +1,7 @@
 import { RefreshCwIcon } from "lucide-react";
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
+import { PageHeader } from "@/components/app/page-header";
 import { RefreshButton } from "@/components/app/refresh-button";
 import { SearchInput } from "@/components/documents/search-input";
 import { columns } from "@/components/documents/table/columns";
@@ -41,26 +42,25 @@ const DocumentsPage = async ({
 
   return (
     <div className="flex flex-col gap-14">
-      <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          Documents
-        </h4>
-        <div className="flex gap-2">
-          <Link
-            href={ROUTES.PRIVATE.documents.playground.getPath()}
-            className={buttonVariants({ variant: "outline" })}
-          >
-            Playground
-          </Link>
-
-          <Link
-            href={ROUTES.PRIVATE.documents.add.getPath()}
-            className={buttonVariants({ variant: "default" })}
-          >
-            Add Document
-          </Link>
-        </div>
-      </div>
+      <PageHeader
+        title="Documents"
+        actions={
+          <>
+            <Link
+              href={ROUTES.PRIVATE.documents.playground.getPath()}
+              className={buttonVariants({ variant: "outline" })}
+            >
+              Playground
+            </Link>
+            <Link
+              href={ROUTES.PRIVATE.documents.add.getPath()}
+              className={buttonVariants({ variant: "default" })}
+            >
+              Add Document
+            </Link>
+          </>
+        }
+      />
       <div>
         <DataTable
           data={query}

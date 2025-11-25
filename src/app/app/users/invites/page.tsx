@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
+import { PageHeader } from "@/components/app/page-header";
 import { SearchInput } from "@/components/documents/search-input";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
@@ -40,19 +41,17 @@ const UsersPage = async ({
 
   return (
     <div className="flex flex-col gap-14">
-      <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <h4 className="max-w-xl font-regular text-3xl tracking-tighter md:text-5xl">
-          Course Invitations
-        </h4>
-        <div className="flex gap-2">
+      <PageHeader
+        title="Course Invitations"
+        actions={
           <Link
             href={ROUTES.PRIVATE.users.add.getPath()}
             className={buttonVariants({ variant: "default" })}
           >
             Invite Users
           </Link>
-        </div>
-      </div>
+        }
+      />
       <div>
         <DataTable
           data={query}

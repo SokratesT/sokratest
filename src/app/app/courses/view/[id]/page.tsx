@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import { BotIcon, CalendarIcon } from "lucide-react";
 import Link from "next/link";
+import { PageHeader } from "@/components/app/page-header";
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { Badge } from "@/components/ui/badge";
@@ -34,13 +35,11 @@ const ViewCoursePage = async ({
 
   return (
     <div className="flex flex-col gap-14">
-      <div className="flex w-full flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex w-full flex-wrap justify-between gap-4">
-          <h4 className="w-fit font-regular text-3xl tracking-tighter md:text-5xl">
-            {course.title}
-          </h4>
-          {hasCourseEditPermission && (
-            <div className="flex gap-2">
+      <PageHeader
+        title={course.title}
+        actions={
+          hasCourseEditPermission && (
+            <>
               <Link
                 href={ROUTES.PRIVATE.documents.add.getPath()}
                 className={buttonVariants({ variant: "default" })}
@@ -53,10 +52,10 @@ const ViewCoursePage = async ({
               >
                 Edit Course
               </Link>
-            </div>
-          )}
-        </div>
-      </div>
+            </>
+          )
+        }
+      />
 
       <div className="flex gap-2">
         <Badge>
