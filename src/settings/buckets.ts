@@ -2,15 +2,12 @@ export type BucketName = (typeof buckets)[keyof typeof buckets]["name"];
 
 export const buckets = {
   main: {
-    name:
-      process.env.NEXT_PUBLIC_LOCAL_DEV === "true"
-        ? "sokratest-dev"
-        : "sokratest",
+    name: process.env.NODE_ENV === "production" ? "sokratest" : "sokratest-dev",
   },
   processed: {
     name:
-      process.env.NEXT_PUBLIC_LOCAL_DEV === "true"
-        ? "processed-files-dev"
-        : "processed-files",
+      process.env.NODE_ENV === "production"
+        ? "processed-files"
+        : "processed-files-dev",
   },
 };
