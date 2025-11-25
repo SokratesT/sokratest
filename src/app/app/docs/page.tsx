@@ -27,12 +27,12 @@ const DocumentsPage = async ({
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
   const { search } = await querySearchParamsCache.parse(searchParams);
 
-  const result = await getActiveCourseDocuments(
+  const result = await getActiveCourseDocuments({
     sort,
     pageIndex,
     pageSize,
     search,
-  );
+  });
   if (!result.success) {
     return <Placeholder>{result.error.message}</Placeholder>;
   }

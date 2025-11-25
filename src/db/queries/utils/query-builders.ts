@@ -10,6 +10,13 @@ interface SortOptions {
   desc: boolean;
 }
 
+export interface PaginatedQueryOptions {
+  sort: SortOptions[];
+  pageIndex: number;
+  pageSize: number;
+  search?: string;
+}
+
 export function buildPagination(options: PaginationOptions) {
   const { pageIndex, pageSize } = options;
   return {

@@ -16,6 +16,7 @@ import { cache } from "react";
 import { db } from "@/db/drizzle";
 import { member, type User, user } from "@/db/schema/auth";
 import { courseMember } from "@/db/schema/course";
+import type { PaginatedQueryOptions } from "./utils/query-builders";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 // Type guard function
@@ -23,12 +24,12 @@ function isValidColumnId(id: string): id is keyof User {
   return ["name", "email", "role"].includes(id);
 }
 
-export const getActiveCourseUsers = async (
-  sort: { id: string; desc: boolean }[],
-  pageIndex: number,
-  pageSize: number,
-  search: string,
-) => {
+export const getActiveCourseUsers = async ({
+  sort,
+  pageIndex,
+  pageSize,
+  search,
+}: PaginatedQueryOptions) => {
   return withAuthQuery(
     async (session) => {
       const sortOrder = sort
@@ -41,30 +42,30 @@ export const getActiveCourseUsers = async (
           return asc(user.createdAt);
         }) ?? [asc(user.createdAt)]; // Fallback default sort
 
-      const query = await db
-        .select({ ...getTableColumns(user) })
-        .from(user)
-        .innerJoin(courseMember, eq(user.id, courseMember.userId))
-        .where(
-          and(
-            eq(courseMember.courseId, session.session.activeCourseId),
-            ilike(user.email, `%${search}%`),
-          ),
-        )
-        .limit(pageSize)
-        .orderBy(...sortOrder)
-        .offset(pageIndex * pageSize);
+      // Build conditions array dynamically
+      const conditions = [
+        eq(courseMember.courseId, session.session.activeCourseId),
+      ];
+      if (search) {
+        conditions.push(ilike(user.email, `%${search}%`));
+      }
+      const whereClause = and(...conditions);
 
-      const [rowCount] = await db
-        .select({ count: count() })
-        .from(user)
-        .innerJoin(courseMember, eq(user.id, courseMember.userId))
-        .where(
-          and(
-            eq(courseMember.courseId, session.session.activeCourseId),
-            ilike(user.email, `%${search}%`),
-          ),
-        );
+      const [query, [rowCount]] = await Promise.all([
+        db
+          .select({ ...getTableColumns(user) })
+          .from(user)
+          .innerJoin(courseMember, eq(user.id, courseMember.userId))
+          .where(whereClause)
+          .limit(pageSize)
+          .orderBy(...sortOrder)
+          .offset(pageIndex * pageSize),
+        db
+          .select({ count: count() })
+          .from(user)
+          .innerJoin(courseMember, eq(user.id, courseMember.userId))
+          .where(whereClause),
+      ]);
 
       return { query, rowCount };
     },
@@ -77,12 +78,7 @@ export const getOrganizationUsers = async ({
   pageIndex,
   pageSize,
   search,
-}: {
-  sort: { id: string; desc: boolean }[];
-  pageIndex: number;
-  pageSize: number;
-  search: string;
-}) => {
+}: PaginatedQueryOptions) => {
   return withAuthQuery(
     async (session) => {
       const sortOrder = sort
@@ -95,30 +91,30 @@ export const getOrganizationUsers = async ({
           return asc(user.createdAt);
         }) ?? [asc(user.createdAt)]; // Fallback default sort
 
-      const query = await db
-        .select({ ...getTableColumns(user) })
-        .from(user)
-        .innerJoin(member, eq(user.id, member.userId))
-        .where(
-          and(
-            eq(member.organizationId, session.session.activeOrganizationId),
-            ilike(user.email, `%${search}%`),
-          ),
-        )
-        .limit(pageSize)
-        .orderBy(...sortOrder)
-        .offset(pageIndex * pageSize);
+      // Build conditions array dynamically
+      const conditions = [
+        eq(member.organizationId, session.session.activeOrganizationId),
+      ];
+      if (search) {
+        conditions.push(ilike(user.email, `%${search}%`));
+      }
+      const whereClause = and(...conditions);
 
-      const [rowCount] = await db
-        .select({ count: count() })
-        .from(user)
-        .innerJoin(member, eq(user.id, member.userId))
-        .where(
-          and(
-            eq(member.organizationId, session.session.activeOrganizationId),
-            ilike(user.email, `%${search}%`),
-          ),
-        );
+      const [query, [rowCount]] = await Promise.all([
+        db
+          .select({ ...getTableColumns(user) })
+          .from(user)
+          .innerJoin(member, eq(user.id, member.userId))
+          .where(whereClause)
+          .limit(pageSize)
+          .orderBy(...sortOrder)
+          .offset(pageIndex * pageSize),
+        db
+          .select({ count: count() })
+          .from(user)
+          .innerJoin(member, eq(user.id, member.userId))
+          .where(whereClause),
+      ]);
 
       return { query, rowCount };
     },
@@ -129,21 +125,24 @@ export const getOrganizationUsers = async ({
 export const getOrganizationUsersNotInCourse = async (search: string) => {
   return withAuthQuery(
     async (session) => {
+      // Build conditions array dynamically
+      const conditions = [
+        eq(member.organizationId, session.session.activeOrganizationId),
+        or(
+          isNull(courseMember.courseId),
+          not(eq(courseMember.courseId, session.session.activeCourseId)),
+        ),
+      ];
+      if (search) {
+        conditions.push(ilike(user.email, `%${search}%`));
+      }
+
       const query = await db
         .select({ ...getTableColumns(user) })
         .from(user)
         .leftJoin(courseMember, eq(user.id, courseMember.userId))
         .innerJoin(member, eq(user.id, member.userId))
-        .where(
-          and(
-            ilike(user.email, `%${search}%`),
-            eq(member.organizationId, session.session.activeOrganizationId),
-            or(
-              isNull(courseMember.courseId),
-              not(eq(courseMember.courseId, session.session.activeCourseId)),
-            ),
-          ),
-        )
+        .where(and(...conditions))
         .limit(10)
         .orderBy(asc(user.email));
 

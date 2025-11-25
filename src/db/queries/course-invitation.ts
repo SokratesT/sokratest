@@ -7,6 +7,7 @@ import {
   type CourseInvitation,
   courseInvitation,
 } from "@/db/schema/course-invitation";
+import type { PaginatedQueryOptions } from "./utils/query-builders";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 export const getUserCourseInvitations = async () => {
@@ -43,12 +44,12 @@ function isValidColumnId(id: string): id is keyof Invitation {
   return ["expiresAt", "email", "role"].includes(id);
 }
 
-export const getCourseInvitations = async (
-  sort: { id: string; desc: boolean }[],
-  pageIndex: number,
-  pageSize: number,
-  search: string,
-) => {
+export const getCourseInvitations = async ({
+  sort,
+  pageIndex,
+  pageSize,
+  search,
+}: PaginatedQueryOptions) => {
   return withAuthQuery(
     async (session) => {
       const sortOrder = sort
@@ -61,28 +62,28 @@ export const getCourseInvitations = async (
           return asc(courseInvitation.expiresAt);
         }) ?? [asc(courseInvitation.expiresAt)]; // Fallback default sort
 
-      const query = await db
-        .select({ ...getTableColumns(courseInvitation) })
-        .from(courseInvitation)
-        .where(
-          and(
-            ilike(courseInvitation.email, `%${search}%`),
-            eq(courseInvitation.courseId, session.session.activeCourseId),
-          ),
-        )
-        .limit(pageSize)
-        .orderBy(...sortOrder)
-        .offset(pageIndex * pageSize);
+      // Build conditions array dynamically
+      const conditions = [
+        eq(courseInvitation.courseId, session.session.activeCourseId),
+      ];
+      if (search) {
+        conditions.push(ilike(courseInvitation.email, `%${search}%`));
+      }
+      const whereClause = and(...conditions);
 
-      const [rowCount] = await db
-        .select({ count: count() })
-        .from(courseInvitation)
-        .where(
-          and(
-            ilike(courseInvitation.email, `%${search}%`),
-            eq(courseInvitation.courseId, session.session.activeCourseId),
-          ),
-        );
+      const [query, [rowCount]] = await Promise.all([
+        db
+          .select({ ...getTableColumns(courseInvitation) })
+          .from(courseInvitation)
+          .where(whereClause)
+          .limit(pageSize)
+          .orderBy(...sortOrder)
+          .offset(pageIndex * pageSize),
+        db
+          .select({ count: count() })
+          .from(courseInvitation)
+          .where(whereClause),
+      ]);
 
       return { query, rowCount };
     },

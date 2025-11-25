@@ -3,18 +3,19 @@ import "server-only";
 import { and, asc, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { type Document, document } from "@/db/schema/document";
+import type { PaginatedQueryOptions } from "./utils/query-builders";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 function isValidColumnId(id: Document["id"]): id is keyof Document {
   return ["title", "createdAt", "size", "embeddingStatus"].includes(id);
 }
 
-export const getActiveCourseDocuments = async (
-  sort: { id: string; desc: boolean }[],
-  pageIndex: number,
-  pageSize: number,
-  search: string,
-) => {
+export const getActiveCourseDocuments = async ({
+  sort,
+  pageIndex,
+  pageSize,
+  search,
+}: PaginatedQueryOptions) => {
   return withAuthQuery(
     async (session) => {
       const sortOrder = sort
@@ -29,28 +30,28 @@ export const getActiveCourseDocuments = async (
           return asc(document.createdAt);
         }) ?? [asc(document.createdAt)]; // Fallback default sort
 
-      const query = await db
-        .select({ ...getTableColumns(document) })
-        .from(document)
-        .where(
-          and(
-            ilike(document.title, `%${search}%`),
-            eq(document.courseId, session.session.activeCourseId),
-          ),
-        )
-        .limit(pageSize)
-        .orderBy(...sortOrder)
-        .offset(pageIndex * pageSize);
+      // Build conditions array dynamically
+      const conditions = [
+        eq(document.courseId, session.session.activeCourseId),
+      ];
+      if (search) {
+        conditions.push(ilike(document.title, `%${search}%`));
+      }
+      const whereClause = and(...conditions);
 
-      const [rowCount] = await db
-        .select({ count: count() })
-        .from(document)
-        .where(
-          and(
-            ilike(document.title, `%${search}%`),
-            eq(document.courseId, session.session.activeCourseId),
-          ),
-        );
+      const [query, [rowCount]] = await Promise.all([
+        db
+          .select({ ...getTableColumns(document) })
+          .from(document)
+          .where(whereClause)
+          .limit(pageSize)
+          .orderBy(...sortOrder)
+          .offset(pageIndex * pageSize),
+        db
+          .select({ count: count() })
+          .from(document)
+          .where(whereClause),
+      ]);
 
       return { query, rowCount };
     },

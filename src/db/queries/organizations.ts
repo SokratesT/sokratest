@@ -5,7 +5,11 @@ import { count, eq, getTableColumns, ilike } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { member, type Organization, organization } from "@/db/schema/auth";
 import type { Action } from "@/lib/rbac";
-import { buildPagination, buildSortOrder } from "./utils/query-builders";
+import {
+  buildPagination,
+  buildSortOrder,
+  type PaginatedQueryOptions,
+} from "./utils/query-builders";
 import { withAuthQuery } from "./utils/with-auth-query";
 
 export const getUserOrganizationsOnLogin = async (session: Session) => {
@@ -24,14 +28,11 @@ const VALID_ORGANIZATION_SORT_COLUMNS = [
   "slug",
 ] as (keyof Organization)[];
 
-export const getAvailableOrganizations = async (options: {
-  sort: { id: string; desc: boolean }[];
-  pageIndex: number;
-  pageSize: number;
-  search: string;
-}) => {
+export const getAvailableOrganizations = async (
+  options: PaginatedQueryOptions,
+) => {
   return withAuthQuery(async (session) => {
-    const { sort, pageIndex, pageSize } = options;
+    const { sort, pageIndex, pageSize, search } = options;
     const { limit, offset } = buildPagination({ pageIndex, pageSize });
 
     const sortOrder = buildSortOrder(
@@ -41,20 +42,26 @@ export const getAvailableOrganizations = async (options: {
       "createdAt",
     );
 
-    const query = await db
-      .selectDistinct({ ...getTableColumns(organization) })
-      .from(organization)
-      .innerJoin(member, eq(member.userId, session.session.userId))
-      .where(ilike(organization.name, `%${options.search}%`))
-      .limit(limit)
-      .offset(offset)
-      .orderBy(...sortOrder);
+    // Build where clause conditionally
+    const whereClause = search
+      ? ilike(organization.name, `%${search}%`)
+      : undefined;
 
-    const [rowCount] = await db
-      .select({ count: count() })
-      .from(organization)
-      .innerJoin(member, eq(member.userId, session.session.userId))
-      .where(ilike(organization.name, `%${options.search}%`));
+    const [query, [rowCount]] = await Promise.all([
+      db
+        .selectDistinct({ ...getTableColumns(organization) })
+        .from(organization)
+        .innerJoin(member, eq(member.userId, session.session.userId))
+        .where(whereClause)
+        .limit(limit)
+        .offset(offset)
+        .orderBy(...sortOrder),
+      db
+        .select({ count: count() })
+        .from(organization)
+        .innerJoin(member, eq(member.userId, session.session.userId))
+        .where(whereClause),
+    ]);
 
     return { query, rowCount };
   }, {});
