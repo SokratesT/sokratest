@@ -1,4 +1,4 @@
-import convert from "convert";
+import { convert } from "convert";
 import { XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
