@@ -552,6 +552,12 @@ For issues and questions:
 
 ---
 
+## License
+
+Sokrates<sup>t</sup> is licensed under the [GNU Affero General Public License v3.0](LICENSE). You may use, modify, and distribute the project, including through network-based services, provided that your modifications and source remain available under the same license.
+
+---
+
 ## Funding
 
 Sokrates<sup>t</sup> is an Applied Project of [KI:edu.nrw](https://ki-edu-nrw.ruhr-uni-bochum.de/) and currently in closed access at [Rhine-Waal University of Applied Sciences](https://www.hochschule-rhein-waal.de/). The project received funding by the Ministry of Culture and Science of the State of North Rhine-Westphalia and has been recommended as a cooperation endeavour by Digitale Hochschule NRW.
