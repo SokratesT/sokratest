@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { enqueueDocuments } from "@/db/actions/test-trigger";
+import { enqueueDocuments } from "@/db/actions/trigger-actions";
 import { handleDeleteDocuments } from "@/lib/client-actions/document";
 import { withToastPromise } from "@/lib/utils";
 

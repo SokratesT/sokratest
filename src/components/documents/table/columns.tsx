@@ -18,7 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { enqueueDocuments } from "@/db/actions/test-trigger";
+import { enqueueDocuments } from "@/db/actions/trigger-actions";
 import type { Document } from "@/db/schema/document";
 import { handleDeleteDocuments } from "@/lib/client-actions/document";
 import { cn, withToastPromise } from "@/lib/utils";

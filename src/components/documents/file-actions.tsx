@@ -25,7 +25,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { enqueueDocuments, enqueueEmbeddings } from "@/db/actions/test-trigger";
+import { enqueueDocuments, enqueueEmbeddings } from "@/db/actions/trigger-actions";
 import type { Document } from "@/db/schema/document";
 import { handleDeleteDocuments } from "@/lib/client-actions/document";
 import { cn } from "@/lib/utils";
