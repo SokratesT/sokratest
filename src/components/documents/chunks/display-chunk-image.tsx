@@ -41,7 +41,7 @@ const DisplayChunkImage = ({
       {isLoading && <Skeleton className="h-[100px] w-full" />}
       <Image
         src={filePath}
-        alt="test"
+        alt={`thumbnail-${imageRef.reference}`}
         width={100}
         height={100}
         className={cn("w-auto object-contain")}
