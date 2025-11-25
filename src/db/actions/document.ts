@@ -100,20 +100,22 @@ export const deleteDocumentInfo = authActionClient
 
     await Promise.all(
       filesToDelete.map(async (file) => {
-        await deleteFileFromBucket({
-          bucket: file.bucket,
-          id: file.id,
-          prefix: file.prefix,
-          type: file.fileType as FileType,
-        });
-        await deleteChunksByDocumentId({
-          courseId: file.courseId,
-          documentId: file.id,
-        });
-        await deletePrefixRecursively({
-          bucket: buckets.processed.name,
-          prefix: `${file.id}/`,
-        });
+        await Promise.all([
+          deleteFileFromBucket({
+            bucket: file.bucket,
+            id: file.id,
+            prefix: file.prefix,
+            type: file.fileType as FileType,
+          }),
+          deleteChunksByDocumentId({
+            courseId: file.courseId,
+            documentId: file.id,
+          }),
+          deletePrefixRecursively({
+            bucket: buckets.processed.name,
+            prefix: `${file.id}/`,
+          }),
+        ]);
       }),
     );
 

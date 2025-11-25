@@ -77,8 +77,10 @@ export const auth = betterAuth({
 
           // TODO: Separate org and course handling to avoid mutual failure
           try {
-            const orgs = await getUserOrganizationsOnLogin(session);
-            const courses = await getUserCoursesOnLogin(session);
+            const [orgs, courses] = await Promise.all([
+              getUserOrganizationsOnLogin(session),
+              getUserCoursesOnLogin(session),
+            ]);
 
             if (orgs.length === 0) {
               throw new Error("User is not a member of any organizations");

@@ -6,8 +6,10 @@ import { getUserPreferences } from "@/db/queries/users";
 import { AboutModal } from "./about-modal";
 
 const UserWelcome = async () => {
-  const session = await getSession();
-  const result = await getUserPreferences();
+  const [session, result] = await Promise.all([
+    getSession(),
+    getUserPreferences(),
+  ]);
 
   const getTimeBasedGreeting = () => {
     const hour = new Date().getHours();
