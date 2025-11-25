@@ -110,8 +110,8 @@ The following services are included in the `docker-compose.yml` and **do not** r
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/SokratesT/sokratest-next.git
-cd sokratest-next
+git clone https://github.com/SokratesT/sokratest.git
+cd sokratest
 ```
 
 ### 2. Configure Environment Variables
@@ -135,7 +135,7 @@ NEXT_PUBLIC_BASE_URL=https://your-domain.com
 ```env
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
-POSTGRES_DB=sokratest-next
+POSTGRES_DB=sokratest
 POSTGRES_HOST=postgres
 POSTGRES_PORT=5432
 ```
@@ -267,7 +267,7 @@ bun run dev
 ## Project Structure
 
 ```
-sokratest-next/
+sokratest/
 ├── src/
 │   ├── app/              # Next.js App Router pages
 │   │   ├── (auth)/       # Authentication routes
@@ -547,7 +547,7 @@ If you have issues connecting to MinIO, ensure:
 ## Support
 
 For issues and questions:
-- [GitHub Issues](https://github.com/SokratesT/sokratest-next/issues)
+- [GitHub Issues](https://github.com/SokratesT/sokratest/issues)
 - [SAIA Documentation](https://docs.hpc.gwdg.de/services/saia/index.html)
 
 ---
