@@ -16,7 +16,7 @@ const Header = () => {
   return (
     <header
       className={cn(
-        "fixed z-50 flex h-14 w-full items-center justify-between gap-2 border-b bg-background p-4",
+        "fixed z-50 flex h-14 w-full items-center justify-between gap-2 border-b bg-sidebar p-4",
         "transition-[width] duration-200 ease-linear", // Replace transition-all with specific width transition
         {
           "w-full": isMobile,
@@ -26,8 +26,8 @@ const Header = () => {
       )}
     >
       <div className="flex shrink-0 items-center gap-2">
-        <SidebarTrigger className="-ml-1" />
-        <Separator orientation="vertical" className="mr-2 h-4" />
+        <SidebarTrigger className="-ml-1 size-8" />
+        <Separator orientation="vertical" className="mr-2 h-4 border" />
         <PageTitle />
       </div>
       <div className="flex gap-2">
@@ -35,7 +35,7 @@ const Header = () => {
           href={ROUTES.PRIVATE.root.getPath()}
           className={cn(
             buttonVariants({
-              variant: "outline",
+              variant: "ghost",
               size: "icon",
               className: "size-8",
             }),
