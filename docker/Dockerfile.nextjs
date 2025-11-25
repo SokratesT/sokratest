@@ -4,6 +4,9 @@
 FROM oven/bun:1-alpine AS deps
 WORKDIR /app
 
+# Install build dependencies for native modules (better-sqlite3 from @better-auth/cli)
+RUN apk add --no-cache python3 make g++ linux-headers
+
 # Install dependencies
 COPY package.json bun.lock* bunfig.toml* ./
 RUN bun install --frozen-lockfile
