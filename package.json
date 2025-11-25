@@ -10,7 +10,7 @@
     "lint:fix": "next lint --fix && biome lint --write",
     "biome:check:unsafe": "biome check . --write --unsafe",
     "format": "biome format --write",
-    "better-auth:generate": "npx @better-auth/cli generate --output src/db/schema/auth_generated.ts",
+    "better-auth:generate": "bunx @better-auth/cli generate --output src/db/schema/auth_generated.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
@@ -18,8 +18,8 @@
     "db:pull": "drizzle-kit pull",
     "db:check": "drizzle-kit check",
     "db:up": "drizzle-kit up",
-    "trigger:dev": "dotenv -- sh -c 'npx trigger.dev@latest dev -a ${TRIGGER_API_URL}'",
-    "trigger:deploy": "dotenv -- sh -c 'npx trigger.dev deploy -a ${TRIGGER_API_URL} -p ${TRIGGER_PROJECT:?TRIGGER_PROJECT not set}'"
+    "trigger:dev": "dotenv -- sh -c 'bunx trigger.dev@latest dev -a ${TRIGGER_API_URL}'",
+    "trigger:deploy": "dotenv -- sh -c 'bunx trigger.dev deploy -a ${TRIGGER_API_URL} -p ${TRIGGER_PROJECT:?TRIGGER_PROJECT not set}'"
   },
   "dependencies": {
     "@ai-sdk/openai": "1.3.24",
