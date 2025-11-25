@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
 import { PageHeader } from "@/components/app/page-header";
 import { RefreshButton } from "@/components/app/refresh-button";
-import { SearchInput } from "@/components/documents/search-input";
+import { SearchInput } from "@/components/app/search-input";
 import { columns } from "@/components/documents/table/columns";
 import { DocumentTableActions } from "@/components/documents/table/document-table-actions";
 import { Placeholder } from "@/components/placeholders/placeholder";

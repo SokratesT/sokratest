@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 import { PageHeader } from "@/components/app/page-header";
-import { SearchInput } from "@/components/documents/search-input";
+import { SearchInput } from "@/components/app/search-input";
 import { organizationTableColumns } from "@/components/organizations/table/organization-table-columns";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";

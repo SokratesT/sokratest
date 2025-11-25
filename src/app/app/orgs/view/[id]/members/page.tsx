@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { SearchParams } from "nuqs/server";
 import { PageHeader } from "@/components/app/page-header";
-import { SearchInput } from "@/components/documents/search-input";
+import { SearchInput } from "@/components/app/search-input";
 import { OrganizationMemberTableActions } from "@/components/organizations/members/table/organization-member-table-actions";
 import { organizationMemberTableColumns } from "@/components/organizations/members/table/organization-member-table-columns";
 import { Placeholder } from "@/components/placeholders/placeholder";

@@ -1,8 +1,8 @@
 import type { SearchParams } from "nuqs/server";
 import { PageHeader } from "@/components/app/page-header";
+import { SearchInput } from "@/components/app/search-input";
 import { ChatsList } from "@/components/chat/chats-list";
 import { NewChatButton } from "@/components/chat/new-chat-button";
-import { SearchInput } from "@/components/documents/search-input";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { getUserChatsForActiveCourse } from "@/db/queries/chat";
 import { querySearchParamsCache } from "@/lib/nuqs/search-params.search";
