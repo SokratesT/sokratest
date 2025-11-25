@@ -1,13 +1,12 @@
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { logger, task } from "@trigger.dev/sdk";
 import { embedMany, generateText } from "ai";
-import https from "https";
-import nodeFetch from "node-fetch";
 import pMap from "p-map";
 import { v4 as uuidv4 } from "uuid";
-import type { ProcessingStatus } from "@/app/api/docs/processing/route";
+
 import { getSaiaEmbeddingModel, getSaiaModel } from "@/lib/ai/saia-models";
 import type { MarkdownNode } from "@/lib/chunk/markdown-chunker";
+import { getErrorMessage } from "@/lib/handle-error";
 import {
   getImageAsBase64,
   getMarkdownAsString,
@@ -22,219 +21,28 @@ import {
   describeImagePrompt,
   describeTableImagePrompt,
 } from "@/settings/prompts";
-import { ROUTES } from "@/settings/routes";
 import type { FileType } from "@/types/file";
-import type { VectorizeFilesTaskPayload } from "@/types/trigger";
+import type {
+  ProcessedFile,
+  ProcessedImage,
+  VectorizeFilesTaskPayload,
+} from "@/types/trigger";
+import {
+  logError,
+  reportProcessingError,
+  reportProcessingSuccess,
+} from "./utils";
 
-export const vectorizeFilesTask = task({
-  id: "vectorize-files-task",
-  maxDuration: 1800,
-  queue: {
-    concurrencyLimit: 1,
-    name: "processing-embeddings-queue",
-  },
-  run: async (payload: VectorizeFilesTaskPayload) => {
-    const files = await listAllFilesInPrefix({
-      bucket: buckets.processed.name,
-      prefix: `${payload.prefix}/`,
-    });
-
-    const images: {
-      description: string;
-      tokens: number;
-      name: string;
-      type: FileType;
-    }[] = [];
-
-    const markdown: MarkdownNode[] = [];
-
-    const processFile = async (file: {
-      name: string;
-      lastModified?: Date;
-      size?: number;
-    }) => {
-      const fileExtension = file.name.split(".").pop()?.toLowerCase();
-      if (!fileExtension) {
-        return;
-      }
-      if (fileExtension === "md") {
-        const text = (await getMarkdownAsString({
-          bucket: buckets.processed.name,
-          name: file.name,
-        })) as string;
-
-        const processedMarkdown = await processMarkdownFile({
-          fileContent: text,
-          fileName: file.name,
-          chunkingStrategy: payload.mergePages
-            ? "RecursiveCharacterTextSplitter"
-            : "none",
-        });
-
-        markdown.push(...processedMarkdown);
-      } else if (["jpeg", "png"].includes(fileExtension)) {
-        // TODO: Expand supported file types, centralised with upload formats
-        const image = await getImageAsBase64({
-          bucket: buckets.processed.name,
-          name: file.name,
-        });
-
-        const processedImage = await processImageFile(
-          image,
-          file.name,
-          fileExtension as FileType,
-        );
-
-        if (processedImage) {
-          images.push(processedImage);
-        }
-      } else {
-        logger.info(`Skipping unsupported file type: ${fileExtension}`, {
-          fileName: file.name,
-        });
-      }
-    };
-
-    await pMap(files, processFile, { concurrency: 2 });
-
-    const imageChunks = images.map((image) => ({
-      content: image.description,
-      depth: 0,
-      length: image.tokens,
-      title: image.name,
-      type: "image",
-    })) as MarkdownNode[];
-
-    const mergedChunks = [...markdown, ...imageChunks];
-
-    const qdrantResponse = await generateEmbeddings({
-      chunks: mergedChunks,
-      courseId: payload.courseId,
-      documentId: payload.prefix,
-    });
-
-    const nextResponse = await logger.trace("update-next-api", async () => {
-      const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.API.docs.processing.getPath()}`;
-      const requestBody = {
-        documentId: payload.documentId,
-        courseId: payload.courseId,
-        step: "embedding",
-        status: "success",
-      } as ProcessingStatus;
-
-      logger.info(`Sending processing status update to: ${apiUrl}`);
-      logger.info(`Request body: ${JSON.stringify(requestBody)}`);
-
-      try {
-        // Create an https agent that ignores SSL errors
-        const httpsAgent = new https.Agent({
-          rejectUnauthorized: false,
-        });
-
-        const response = await nodeFetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": process.env.SOKRATEST_API_KEY || "",
-          },
-          body: JSON.stringify(requestBody),
-          // Use the agent that ignores SSL errors
-          agent: apiUrl.startsWith("https") ? httpsAgent : undefined,
-        });
-
-        const responseText = await response.text();
-        logger.info(`Response status: ${response.status}`);
-        logger.info(`Response body: ${responseText}`);
-
-        if (!response.ok) {
-          logger.error(
-            `Failed API request with status ${response.status}: ${responseText}`,
-          );
-          throw new Error(
-            `Failed to send processing status: ${response.status} - ${responseText}`,
-          );
-        }
-
-        return response;
-      } catch (error) {
-        logger.error(
-          `Error during API request: ${error instanceof Error ? error.message : String(error)}`,
-        );
-        logger.error(
-          `Stack trace: ${error instanceof Error ? error.stack : "No stack trace"}`,
-        );
-        throw error;
-      }
-    });
-
-    return { payload, results: { qdrant: qdrantResponse, next: nextResponse } };
-  },
-  onFailure: async ({ payload }) => {
-    await logger.trace("update-next-api", async () => {
-      const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.API.docs.processing.getPath()}`;
-      const requestBody = {
-        documentId: payload.documentId,
-        courseId: payload.courseId,
-        step: "embedding",
-        status: "error",
-      } as ProcessingStatus;
-
-      logger.info(`Sending processing status update to: ${apiUrl}`);
-      logger.info(`Request body: ${JSON.stringify(requestBody)}`);
-
-      try {
-        // Create an https agent that ignores SSL errors
-        const httpsAgent = new https.Agent({
-          rejectUnauthorized: false,
-        });
-
-        const response = await nodeFetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": process.env.SOKRATEST_API_KEY || "",
-          },
-          body: JSON.stringify(requestBody),
-          // Use the agent that ignores SSL errors
-          agent: apiUrl.startsWith("https") ? httpsAgent : undefined,
-        });
-
-        const responseText = await response.text();
-        logger.info(`Response status: ${response.status}`);
-        logger.info(`Response body: ${responseText}`);
-
-        if (!response.ok) {
-          logger.error(
-            `Failed API request with status ${response.status}: ${responseText}`,
-          );
-          throw new Error(
-            `Failed to send processing status: ${response.status} - ${responseText}`,
-          );
-        }
-
-        return response;
-      } catch (error) {
-        logger.error(
-          `Error during API request: ${error instanceof Error ? error.message : String(error)}`,
-        );
-        logger.error(
-          `Stack trace: ${error instanceof Error ? error.stack : "No stack trace"}`,
-        );
-        throw error;
-      }
-    });
-  },
-});
-
-const processMarkdownFile = async ({
-  fileContent,
-  fileName,
-  chunkingStrategy,
-}: {
+/**
+ * Processes a markdown file and splits it into chunks if needed.
+ */
+async function processMarkdownFile(params: {
   fileContent: string;
   fileName: string;
   chunkingStrategy: "none" | "RecursiveCharacterTextSplitter";
-}) => {
+}): Promise<MarkdownNode[]> {
+  const { fileContent, fileName, chunkingStrategy } = params;
+
   return await logger.trace(`process-markdown-${fileName}`, async () => {
     if (chunkingStrategy === "none") {
       return [
@@ -255,27 +63,27 @@ const processMarkdownFile = async ({
 
     const parsedDocuments = await splitter.splitText(fileContent);
 
-    const chunks = parsedDocuments.map((chunk) => ({
-      title: "title",
+    return parsedDocuments.map((chunk) => ({
+      title: fileName,
       depth: 0,
       content: chunk,
       length: chunk.length,
       type: "text",
     })) as MarkdownNode[];
-
-    return chunks;
   });
-};
+}
 
-const processImageFile = async (
+/**
+ * Generates a text description of an image using vision AI.
+ */
+async function processImageFile(
   base64Image: string,
   name: string,
   fileExtension: FileType,
-) => {
+): Promise<ProcessedImage | undefined> {
   return await logger.trace(`process-image-${name}`, async () => {
     const mimeType = `image/${fileExtension}`;
     const imageType = name.startsWith("table") ? "table" : "picture";
-
     const dataUrl = `data:${mimeType};base64,${base64Image}`;
 
     const result = await generateText({
@@ -289,19 +97,13 @@ const processImageFile = async (
       messages: [
         {
           role: "user",
-          content: [
-            {
-              type: "image",
-              image: dataUrl,
-            },
-          ],
+          content: [{ type: "image", image: dataUrl }],
         },
       ],
     });
 
     const step = result.steps.find((step) => step.stepType === "initial");
-
-    if (!step) return;
+    if (!step) return undefined;
 
     return {
       description: step.text,
@@ -310,18 +112,19 @@ const processImageFile = async (
       type: mimeType.split("/")[1] as FileType,
     };
   });
-};
+}
 
-const generateEmbeddings = async ({
-  chunks,
-  courseId,
-  documentId,
-}: {
+/**
+ * Generates embeddings for chunks and stores them in Qdrant.
+ */
+async function generateAndStoreEmbeddings(params: {
   chunks: MarkdownNode[];
   courseId: string;
   documentId: string;
-}) => {
-  // Embed the chunks
+}): Promise<{ success: boolean; type: string; qdrant: unknown }> {
+  const { chunks, courseId, documentId } = params;
+
+  // Generate embeddings
   const embedResults = await logger.trace("embed-chunks", async () =>
     embedMany({
       model: getSaiaEmbeddingModel({ model: "e5-mistral-7b-instruct" })
@@ -332,7 +135,6 @@ const generateEmbeddings = async ({
 
   // Create metadata for each chunk
   const metaDataChunks = chunks.map((chunk, index) => {
-    // Create the base payload properties common to both types
     const basePayload = {
       course_id: courseId,
       document_id: documentId,
@@ -345,7 +147,6 @@ const generateEmbeddings = async ({
       createdAt: new Date().toISOString(),
     };
 
-    // Create the discriminated union part based on the chunk type
     const specificPayload =
       chunk.type === "image"
         ? {
@@ -359,17 +160,14 @@ const generateEmbeddings = async ({
             file_type: undefined,
           };
 
-    // Combine them and return the complete chunk
     return {
       id: uuidv4(),
       vector: embedResults.embeddings[index],
-      payload: {
-        ...basePayload,
-        ...specificPayload,
-      },
+      payload: { ...basePayload, ...specificPayload },
     };
   });
 
+  // Delete existing embeddings
   await logger.trace(
     "delete-existing-embeddings",
     async () => await deleteChunksByDocumentId({ courseId, documentId }),
@@ -378,11 +176,146 @@ const generateEmbeddings = async ({
   // Save to Qdrant
   const qdrantResult = await logger.trace(
     "save-embeddings",
-    async () =>
-      await upsertChunksToQdrant({
-        chunks: metaDataChunks,
-      }),
+    async () => await upsertChunksToQdrant({ chunks: metaDataChunks }),
   );
 
   return { success: true, type: "markdown", qdrant: qdrantResult };
-};
+}
+
+const SUPPORTED_IMAGE_EXTENSIONS = ["jpeg", "png"]; // TODO: Expand and centralize
+
+/**
+ * Processes all files in a prefix and categorizes them by type.
+ */
+async function processAllFiles(
+  files: ProcessedFile[],
+  mergePages: boolean,
+): Promise<{ markdown: MarkdownNode[]; images: ProcessedImage[] }> {
+  const markdown: MarkdownNode[] = [];
+  const images: ProcessedImage[] = [];
+
+  const processFile = async (file: ProcessedFile) => {
+    const fileExtension = file.name.split(".").pop()?.toLowerCase();
+    if (!fileExtension) return;
+
+    if (fileExtension === "md") {
+      const text = (await getMarkdownAsString({
+        bucket: buckets.processed.name,
+        name: file.name,
+      })) as string;
+
+      const processedMarkdown = await processMarkdownFile({
+        fileContent: text,
+        fileName: file.name,
+        chunkingStrategy: mergePages
+          ? "RecursiveCharacterTextSplitter"
+          : "none",
+      });
+
+      markdown.push(...processedMarkdown);
+    } else if (SUPPORTED_IMAGE_EXTENSIONS.includes(fileExtension)) {
+      const image = await getImageAsBase64({
+        bucket: buckets.processed.name,
+        name: file.name,
+      });
+
+      const processedImage = await processImageFile(
+        image,
+        file.name,
+        fileExtension as FileType,
+      );
+
+      if (processedImage) {
+        images.push(processedImage);
+      }
+    } else {
+      logger.info(`Skipping unsupported file type: ${fileExtension}`, {
+        fileName: file.name,
+      });
+    }
+  };
+
+  await pMap(files, processFile, { concurrency: 2 });
+
+  return { markdown, images };
+}
+
+/**
+ * Converts processed images into MarkdownNode format for embedding.
+ */
+function convertImagesToChunks(images: ProcessedImage[]): MarkdownNode[] {
+  return images.map((image) => ({
+    content: image.description,
+    depth: 0,
+    length: image.tokens,
+    title: image.name,
+    type: "image",
+  })) as MarkdownNode[];
+}
+
+/**
+ * Main Task
+ */
+
+export const vectorizeFilesTask = task({
+  id: "vectorize-files-task",
+  maxDuration: 1800, // 30 minutes
+  queue: {
+    name: "processing-embeddings-queue",
+    concurrencyLimit: 1,
+  },
+
+  run: async (payload: VectorizeFilesTaskPayload) => {
+    // Step 1: List all files in the prefix
+    const files = await listAllFilesInPrefix({
+      bucket: buckets.processed.name,
+      prefix: `${payload.prefix}/`,
+    });
+
+    // Step 2: Process all files (markdown and images)
+    const { markdown, images } = await processAllFiles(
+      files,
+      payload.mergePages,
+    );
+
+    // Step 3: Convert images to chunks and merge with markdown
+    const imageChunks = convertImagesToChunks(images);
+    const allChunks = [...markdown, ...imageChunks];
+
+    // Step 4: Generate embeddings and store in Qdrant
+    const qdrantResponse = await generateAndStoreEmbeddings({
+      chunks: allChunks,
+      courseId: payload.courseId,
+      documentId: payload.prefix,
+    });
+
+    return {
+      success: true,
+      stats: {
+        markdownChunks: markdown.length,
+        imageChunks: imageChunks.length,
+        totalChunks: allChunks.length,
+      },
+      qdrant: qdrantResponse,
+    };
+  },
+
+  onSuccess: async ({ payload }) => {
+    await reportProcessingSuccess({
+      documentId: payload.documentId,
+      courseId: payload.courseId,
+      step: "embedding",
+    });
+  },
+
+  onFailure: async ({ payload, error }) => {
+    logError("Vectorize files task failed", error);
+
+    await reportProcessingError({
+      documentId: payload.documentId,
+      courseId: payload.courseId,
+      step: "embedding",
+      error: getErrorMessage(error),
+    });
+  },
+});
