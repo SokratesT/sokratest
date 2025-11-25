@@ -1,11 +1,9 @@
 "use client";
 
 import type { JSONValue } from "ai";
-import { ArrowUpRightIcon, CopyIcon } from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 import type { ComponentProps } from "react";
-import { toast } from "sonner";
-import { useCopyToClipboard } from "usehooks-ts";
 import {
   Accordion,
   AccordionContent,
@@ -13,7 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { CopyButton } from "@/components/ui/copy-button";
 import {
   Popover,
   PopoverContent,
@@ -69,21 +67,7 @@ const AnnotationBlock = ({
   className,
   ...props
 }: { annotations: JSONValue[] | undefined } & ComponentProps<"div">) => {
-  const [, copy] = useCopyToClipboard();
   const { trackEvent } = useUmami();
-
-  const handleCopy = (text: string | undefined) => {
-    if (!text) {
-      toast.error("No text to copy");
-      return;
-    }
-
-    toast.promise(copy(text), {
-      loading: "Copying...",
-      success: "Copied!",
-      error: "Failed to copy",
-    });
-  };
 
   if (!annotations || annotations.length <= 0) {
     return null;
@@ -168,17 +152,14 @@ const AnnotationBlock = ({
                               <div>
                                 <div className="flex items-center gap-2 text-muted-foreground text-xs">
                                   <p>Citation</p>
-                                  <Button
+                                  <CopyButton
                                     variant="link"
                                     className="size-4 p-0"
-                                    onClick={() =>
-                                      handleCopy(
-                                        referenceAnnotation.metadata.citation,
-                                      )
+                                    value={
+                                      referenceAnnotation.metadata.citation
                                     }
-                                  >
-                                    <CopyIcon className="size-2.5" />
-                                  </Button>
+                                    tooltipText="Copy citation"
+                                  />
                                 </div>
 
                                 <p className="text-sm">

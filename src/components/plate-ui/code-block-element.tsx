@@ -4,8 +4,9 @@ import { cn, withRef } from "@udecode/cn";
 import { NodeApi } from "@udecode/plate";
 import { PlateElement } from "@udecode/plate/react";
 import { formatCodeBlock, isLangSupported } from "@udecode/plate-code-block";
-import { BracesIcon, CheckIcon, CopyIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { BracesIcon } from "lucide-react";
+import React from "react";
+import { CopyButton } from "@/components/ui/copy-button";
 import { Button } from "./button";
 import { CodeBlockCombobox } from "./code-block-combobox";
 
@@ -60,6 +61,8 @@ export const CodeBlockElement = withRef<typeof PlateElement>(
               variant="ghost"
               className="size-6 gap-1 text-muted-foreground text-xs"
               value={() => NodeApi.string(element)}
+              tooltipText="Copy code"
+              showToast={false}
             />
           </div>
         </div>
@@ -67,39 +70,3 @@ export const CodeBlockElement = withRef<typeof PlateElement>(
     );
   },
 );
-
-function CopyButton({
-  showLabel = false,
-  value,
-  ...props
-}: { value: (() => string) | string; showLabel?: boolean } & Omit<
-  React.ComponentProps<typeof Button>,
-  "value"
->) {
-  const [hasCopied, setHasCopied] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setHasCopied(false);
-    }, 2000);
-  }, [hasCopied]);
-
-  return (
-    <Button
-      onClick={() => {
-        void navigator.clipboard.writeText(
-          typeof value === "function" ? value() : value,
-        );
-        setHasCopied(true);
-      }}
-      {...props}
-    >
-      <span className="sr-only">Copy</span>
-      {hasCopied ? (
-        <CheckIcon className="!size-3" />
-      ) : (
-        <CopyIcon className="!size-3" />
-      )}
-    </Button>
-  );
-}
