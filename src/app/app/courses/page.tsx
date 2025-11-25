@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 import { columns } from "@/components/courses/table/columns";
 import { CoursesDataTableSelectActions } from "@/components/courses/table/courses-data-table-select-actions";
+import { SearchInput } from "@/components/documents/search-input";
 import { Placeholder } from "@/components/placeholders/placeholder";
 import { buttonVariants } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
@@ -12,6 +13,7 @@ import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view
 import { getSession } from "@/db/queries/auth";
 import { getUserCoursesForActiveOrganization } from "@/db/queries/course";
 import { paginationSearchParamsCache } from "@/lib/nuqs/search-params.pagination";
+import { querySearchParamsCache } from "@/lib/nuqs/search-params.search";
 import { sortingSearchParamsCache } from "@/lib/nuqs/search-params.sorting";
 import { hasPermission } from "@/lib/rbac";
 import { ROUTES } from "@/settings/routes";
@@ -26,6 +28,7 @@ const CoursesPage = async ({
   const { pageIndex, pageSize } =
     await paginationSearchParamsCache.parse(searchParams);
   const { sort } = await sortingSearchParamsCache.parse(searchParams);
+  const { search } = await querySearchParamsCache.parse(searchParams);
 
   const permitted = await hasPermission(
     { context: "course", id: "all", type: "course" },
@@ -40,6 +43,7 @@ const CoursesPage = async ({
     sort,
     pageIndex,
     pageSize,
+    search,
   });
 
   const hasOrganizationEditPermission = await hasPermission(
@@ -85,6 +89,7 @@ const CoursesPage = async ({
           <div className="flex items-center gap-2">
             <DataTableViewOptions />
             <CoursesDataTableSelectActions />
+            <SearchInput placeholder="Search title..." />
           </div>
           <DataTableBody />
           <DataTablePagination />

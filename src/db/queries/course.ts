@@ -1,7 +1,7 @@
 import "server-only";
 
 import type { Session as AuthSession } from "better-auth";
-import { and, count, eq, getTableColumns } from "drizzle-orm";
+import { and, count, eq, getTableColumns, ilike } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { type Course, course, courseMember } from "@/db/schema/course";
 import type { Action } from "@/lib/rbac";
@@ -25,10 +25,11 @@ export const getUserCoursesForActiveOrganization = async (options: {
   sort: { id: string; desc: boolean }[];
   pageIndex: number;
   pageSize: number;
+  search: string;
 }) => {
   return withAuthQuery(
     async (session) => {
-      const { sort, pageIndex, pageSize } = options;
+      const { sort, pageIndex, pageSize, search } = options;
       const { limit, offset } = buildPagination({ pageIndex, pageSize });
 
       const sortOrder = buildSortOrder(
@@ -47,6 +48,7 @@ export const getUserCoursesForActiveOrganization = async (options: {
         .innerJoin(
           courseMember,
           and(
+            ilike(course.title, `%${search}%`),
             eq(course.id, courseMember.courseId),
             eq(courseMember.userId, session.session.userId),
           ),
@@ -62,6 +64,7 @@ export const getUserCoursesForActiveOrganization = async (options: {
         .innerJoin(
           courseMember,
           and(
+            ilike(course.title, `%${search}%`),
             eq(course.id, courseMember.courseId),
             eq(courseMember.userId, session.session.userId),
           ),
