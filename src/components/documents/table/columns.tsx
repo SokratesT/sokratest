@@ -78,7 +78,7 @@ export const columns: ColumnDef<Document>[] = [
   {
     accessorKey: "embeddingStatus",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Embedding" />
+      <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
       return (
