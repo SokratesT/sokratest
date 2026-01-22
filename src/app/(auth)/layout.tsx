@@ -10,7 +10,7 @@ const AuthLayout = async ({
 }>) => {
   return (
     <main className="flex min-h-screen flex-col">
-      <AuroraBackground className="-z-10 fixed inset-0 h-full w-full" />
+      <AuroraBackground className="fixed inset-0 -z-10 h-full w-full" />
 
       <ThemeSwitcher className="fixed top-4 right-4 z-20 text-foreground" />
 

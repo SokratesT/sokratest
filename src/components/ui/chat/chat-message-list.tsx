@@ -59,7 +59,7 @@ const ChatMessageList = ({
             onClick={scrollToBottom}
             size="icon"
             variant="outline"
-            className="-translate-x-1/2 absolute bottom-4 left-1/2 z-10 inline-flex h-10 w-10 transform rounded-full shadow-md"
+            className="absolute bottom-4 left-1/2 z-10 inline-flex h-10 w-10 -translate-x-1/2 transform rounded-full shadow-md"
             aria-label="Scroll to bottom"
           >
             <ArrowDown className="h-4 w-4" />

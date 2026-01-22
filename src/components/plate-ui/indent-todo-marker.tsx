@@ -21,7 +21,7 @@ export const TodoMarker = ({
     <div contentEditable={false}>
       <Checkbox
         className={cn(
-          "-left-6 absolute top-1",
+          "absolute top-1 -left-6",
           readOnly && "pointer-events-none",
         )}
         {...checkboxProps}

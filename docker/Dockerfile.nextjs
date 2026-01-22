@@ -31,10 +31,9 @@ ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Don't run production as root
+# Create nextjs user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-USER nextjs
 
 COPY --from=builder /app/public ./public
 
@@ -43,11 +42,27 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Prepare migrations
-# COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
+# Fix for: "Cannot find module 'undici'"
+# Some libs (e.g. AI SDK) may require('undici') dynamically at runtime.
+# Next.js output file tracing can miss dynamic requires, so undici may not be present
+# in the pruned standalone node_modules.
+#
+# Avoid npm here: npm tries to resolve the *entire* app dependency tree and can fail
+# on peer-dependency conflicts (e.g. React 19 vs packages expecting React 18).
+#
+# Instead: copy Bun into the runtime image and install just undici.
+COPY --from=deps /usr/local/bin/bun /usr/local/bin/bun
+
+# Install undici into the standalone app directory.
+# NOTE: This will create/update a node_modules entry in the runtime image without modifying the build output.
+RUN bun add --no-save undici
+
+# Don't run production as root
+USER nextjs
 
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
 # ENV HOSTNAME="0.0.0.0"
+# Command is executed within docker-compose.yml
 # CMD ["node", "server.js"]
