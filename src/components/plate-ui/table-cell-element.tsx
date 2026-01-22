@@ -107,7 +107,7 @@ export const TableCellElement = withRef<
               {!hiddenLeft && (
                 <ResizeHandle
                   {...leftProps}
-                  className="-left-1 top-0 w-2"
+                  className="top-0 -left-1 w-2"
                   data-resizer-left={colIndex === 0 ? "true" : undefined}
                 />
               )}

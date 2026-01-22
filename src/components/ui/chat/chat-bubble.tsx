@@ -118,7 +118,7 @@ const ChatBubbleMessage = ({
     data-slot="chat-bubble-message"
     className={cn(
       chatBubbleMessageVariants({ variant, layout, className }),
-      "max-w-full whitespace-pre-wrap break-words",
+      "wrap-break-word max-w-full whitespace-pre-wrap",
     )}
     {...props}
   >
@@ -202,7 +202,7 @@ const ChatBubbleActionWrapper = ({
     data-slot="chat-bubble-action-wrapper"
     className={cn(
       "flex transition-opacity duration-200",
-      { "-right-1 absolute top-full flex-row-reverse": variant === "sent" },
+      { "absolute top-full -right-1 flex-row-reverse": variant === "sent" },
       className,
     )}
     {...props}

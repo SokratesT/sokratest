@@ -128,8 +128,12 @@
     }
   },
   "css": {
-    "formatter": { "enabled": false },
-    "linter": { "enabled": false },
+    "formatter": {
+      "enabled": false
+    },
+    "linter": {
+      "enabled": false
+    },
     "parser": {
       "tailwindDirectives": true
     }
