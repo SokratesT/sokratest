@@ -109,7 +109,7 @@
     "@uploadthing/react": "7.1.0",
     "@vercel/otel": "1.14.0",
     "ai": "4.3.19",
-    "better-auth": "1.4.6",
+    "better-auth": "1.4.9",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "cmdk": "1.1.1",
