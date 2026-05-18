@@ -7,7 +7,7 @@ import type { Course } from "@/db/schema/course";
 import { document } from "@/db/schema/document";
 import { generateEmbedding } from "@/lib/ai/embedding";
 import { getSaiaModel } from "@/lib/ai/saia-models";
-import { qdrant } from "@/qdrant/qdrant";
+import { getQdrant } from "@/qdrant/qdrant";
 import { qdrantCollections } from "@/qdrant/qdrant-constants";
 import { generateRagQueryPrompt } from "@/settings/prompts";
 import type { QdrantPoints } from "@/types/qdrant";
@@ -36,6 +36,7 @@ export const findRelevantContent = async ({
   }
 
   try {
+    const qdrant = await getQdrant();
     const response = (await qdrant.query(qdrantCollections.chunks.name, {
       query: userQueryEmbedded,
       filter: {

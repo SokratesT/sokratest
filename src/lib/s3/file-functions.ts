@@ -1,6 +1,6 @@
 import type { BucketName } from "@/settings/buckets";
 import type { FilePayload } from "@/types/file";
-import { s3Client } from "./s3client";
+import { getS3Client } from "./s3client";
 import { createBucketIfNotExists } from "./utils";
 
 /**
@@ -15,6 +15,7 @@ export async function createPresignedUrlToUpload({
   expiry = 60 * 60, // 1 hour
 }: FilePayload) {
   const filePath = `${prefix}/${id}.${type}`;
+  const s3Client = getS3Client();
 
   // Create bucket if it doesn't exist
   const status = await createBucketIfNotExists(bucket);
@@ -38,6 +39,7 @@ export async function createPresignedUrlToDownload({
   expiry = 60 * 60, // 1 hour
 }: FilePayload) {
   const filePath = `${prefix}/${id}.${type}`;
+  const s3Client = getS3Client();
 
   return await s3Client.presignedGetObject(bucket, filePath, expiry);
 }
@@ -53,7 +55,7 @@ export async function listFiles({
   bucket: string;
   prefix: string;
 }) {
-  return s3Client.listObjects(bucket, prefix);
+  return getS3Client().listObjects(bucket, prefix);
 }
 
 /**
@@ -67,6 +69,7 @@ export async function deleteFileFromBucket({
   type,
 }: Omit<FilePayload, "expiry">) {
   const filePath = `${prefix}/${id}.${type}`;
+  const s3Client = getS3Client();
 
   try {
     await s3Client.removeObject(bucket, filePath);
@@ -90,6 +93,8 @@ export async function deletePrefixRecursively({
   if (status.status === "forbidden") {
     throw new Error("Bucket is not allowed");
   }
+
+  const s3Client = getS3Client();
 
   // Create a promise that resolves when all objects are deleted
   return new Promise<void>((resolve, reject) => {
@@ -137,6 +142,8 @@ export async function listAllFilesInPrefix({
   bucket: BucketName;
   prefix: string;
 }) {
+  const s3Client = getS3Client();
+
   // Create a promise that resolves with all objects found
   return new Promise<
     Array<{ name: string; lastModified?: Date; size?: number }>
@@ -176,6 +183,7 @@ export async function getMarkdownAsString({
   bucket: BucketName;
   name: string;
 }) {
+  const s3Client = getS3Client();
   const dataStream = await s3Client.getObject(bucket, name);
   const chunks: Uint8Array<ArrayBufferLike>[] = [];
 
@@ -197,6 +205,7 @@ export async function getImageAsBase64({
   bucket: BucketName;
   name: string;
 }) {
+  const s3Client = getS3Client();
   const dataStream = await s3Client.getObject(bucket, name);
   const chunks: Uint8Array[] = [];
 

@@ -1,7 +1,8 @@
 import { buckets } from "@/settings/buckets";
-import { s3Client } from "./s3client";
+import { getS3Client } from "./s3client";
 
 export async function createBucketIfNotExists(bucketName: string) {
+  const s3Client = getS3Client();
   const bucketExists = await s3Client.bucketExists(bucketName);
   const allowedBuckets = Object.keys(buckets).map(
     (bucket) => buckets[bucket as keyof typeof buckets].name,

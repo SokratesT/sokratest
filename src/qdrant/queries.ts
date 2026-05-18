@@ -4,12 +4,13 @@ import { withAuthQuery } from "@/db/queries/utils/with-auth-query";
 import type { Document } from "@/db/schema/document";
 import { generateEmbedding } from "@/lib/ai/embedding";
 import type { QdrantPoints } from "@/types/qdrant";
-import { qdrant } from "./qdrant";
+import { getQdrant } from "./qdrant";
 import { qdrantCollections } from "./qdrant-constants";
 
 export const getChunks = async ({ search }: { search: string }) => {
   return withAuthQuery(
     async (session) => {
+      const qdrant = await getQdrant();
       const embeddedSearch = await generateEmbedding(search);
 
       const query = (await qdrant.query(qdrantCollections.chunks.name, {
@@ -48,6 +49,7 @@ export const getChunksByDocument = async ({
 }) => {
   return withAuthQuery(
     async (session) => {
+      const qdrant = await getQdrant();
       const query = (await qdrant.scroll(qdrantCollections.chunks.name, {
         filter: {
           must: [

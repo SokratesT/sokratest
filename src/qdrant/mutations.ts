@@ -4,7 +4,7 @@ import pMap from "p-map";
 import type { Course } from "@/db/schema/course";
 import type { Document } from "@/db/schema/document";
 import type { ChunkPayload } from "@/types/qdrant";
-import { qdrant } from "./qdrant";
+import { getQdrant } from "./qdrant";
 import { qdrantCollections } from "./qdrant-constants";
 
 interface Point {
@@ -14,6 +14,7 @@ interface Point {
 }
 
 export const upsertChunksToQdrant = async ({ chunks }: { chunks: Point[] }) => {
+  const qdrant = await getQdrant();
   const points = chunks.map((chunk) => ({
     id: chunk.id,
     vector: chunk.vector,
@@ -40,6 +41,7 @@ export const deleteChunksByDocumentId = async ({
   documentId: Document["id"];
   courseId: Course["id"];
 }) => {
+  const qdrant = await getQdrant();
   return qdrant.delete(qdrantCollections.chunks.name, {
     filter: {
       must: [
