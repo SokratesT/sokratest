@@ -47,7 +47,7 @@ const initCollectionIfNeeded = async (qdrant: QdrantClient) => {
   }
 };
 
-const getQdrantClient = async (): Promise<QdrantClient> => {
+export const getQdrant = async (): Promise<QdrantClient> => {
   if (client) return client;
 
   client = new QdrantClient({
@@ -61,5 +61,3 @@ const getQdrantClient = async (): Promise<QdrantClient> => {
 
   return client;
 };
-
-export const qdrant = await getQdrantClient();

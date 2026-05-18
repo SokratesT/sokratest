@@ -12,7 +12,7 @@ import {
   createPresignedUrlToDownload,
   deletePrefixRecursively,
 } from "@/lib/s3/file-functions";
-import { s3Client } from "@/lib/s3/s3client";
+import { getS3Client } from "@/lib/s3/s3client";
 import { buckets } from "@/settings/buckets";
 import type { SaiaDoclingData } from "@/types/docling";
 import type { ProcessDocumentTaskPayload } from "@/types/trigger";
@@ -102,6 +102,7 @@ async function uploadMarkdownPage(
   pageNumber: number,
   markdown: string,
 ): Promise<void> {
+  const s3Client = getS3Client();
   await s3Client.putObject(
     buckets.processed.name,
     `${documentId}/page-${pageNumber}.md`,
@@ -134,6 +135,7 @@ async function uploadImage(
 
   const imageBuffer = Buffer.from(imageData, "base64");
   const fileType = getFileTypeFromMime(image.mimetype);
+  const s3Client = getS3Client();
 
   await s3Client.putObject(
     buckets.processed.name,
