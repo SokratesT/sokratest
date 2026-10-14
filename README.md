@@ -6,6 +6,10 @@
   <strong>AI-powered learning platform with RAG capabilities and course management</strong>
 </p>
 
+> **Note**
+>
+> Sokrates<sup>t</sup> is no longer maintained, and this is its final release. Development continues in its successor, [OrcAI](https://github.com/LarsLrn/orcai).
+
 <p align="center">
   <a href="#features">Features</a> •
   <a href="#technology-stack">Tech Stack</a> •
