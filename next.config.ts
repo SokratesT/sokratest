@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
       { protocol: "http", hostname: "localhost", port: "9000" },
       { protocol: "https", hostname: "minio.sokratest.ai" },
     ],
+    // The loopback patterns above are for a local S3 during development only
+    dangerouslyAllowLocalIP: process.env.NODE_ENV === "development",
   },
   skipTrailingSlashRedirect: true,
   async redirects() {

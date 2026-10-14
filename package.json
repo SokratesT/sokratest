@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint && biome lint",
-    "lint:fix": "next lint --fix && biome lint --write",
+    "lint": "eslint . && biome lint",
+    "lint:fix": "eslint . --fix && biome lint --write",
     "biome:check:unsafe": "biome check . --write --unsafe",
     "format": "biome format --write",
     "better-auth:generate": "bunx @better-auth/cli generate --output src/db/schema/auth_generated.ts",
@@ -118,7 +118,7 @@
     "lucide-react": "1.57.0",
     "minio": "8.0.7",
     "motion": "14.2.0",
-    "next": "15.5.28",
+    "next": "16.4.1",
     "next-safe-action": "8.7.3",
     "next-themes": "0.4.6",
     "nextstepjs": "2.3.0",
@@ -161,7 +161,7 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
-    "@babel/core": "7.29.7",
+    "@babel/core": "8.0.7",
     "@biomejs/biome": "2.5.15",
     "@tailwindcss/postcss": "4.3.3",
     "@tailwindcss/typography": "0.5.20",
@@ -174,18 +174,17 @@
     "@types/react-dom": "19.3.0",
     "dotenv-cli": "11.0.0",
     "drizzle-kit": "0.31.11",
-    "eslint": "9.39.5",
-    "eslint-config-next": "15.5.28",
-    "eslint-config-prettier": "10.1.8",
+    "eslint": "10.12.0",
+    "eslint-config-next": "16.4.1",
     "eslint-import-resolver-typescript": "4.4.5",
-    "eslint-plugin-tailwindcss": "3.18.3",
-    "knip": "5.88.1",
+    "eslint-plugin-import-x": "4.17.1",
+    "eslint-plugin-tailwindcss": "4.4.0",
+    "knip": "6.41.0",
     "postcss": "8.5.30",
     "tailwindcss": "4.3.3",
     "typescript": "5.9.3"
   },
   "overrides": {
-    "postcss": "8.5.30",
     "ws": "8.22.0",
     "@qdrant/js-client-rest": {
       "undici": "7.30.0"

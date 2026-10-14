@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const AppPage = async () => {
   return (
     <div className="space-y-8">
-      <Suspense fallback={<Skeleton className="h-[68px] w-full" />}>
+      <Suspense fallback={<Skeleton className="h-17 w-full" />}>
         <UserWelcome />
       </Suspense>
 

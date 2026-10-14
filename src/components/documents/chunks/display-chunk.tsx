@@ -37,21 +37,21 @@ const DisplayChunk = ({ chunk }: { chunk: QdrantChunk }) => {
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="flex items-center gap-2 text-base">
-            <LayersIcon className="h-4 w-4 text-muted-foreground" />
+            <LayersIcon className="size-4 text-muted-foreground" />
             Chunk {chunk.payload.chunkIndex + 1} of {chunk.payload.chunkCount}
           </CardTitle>
           <div className="flex items-center gap-2">
             <Badge variant={isImage ? "secondary" : "outline"}>
               {isImage ? (
-                <ImageIcon className="mr-1 h-3 w-3" />
+                <ImageIcon className="mr-1 size-3" />
               ) : (
-                <FileTextIcon className="mr-1 h-3 w-3" />
+                <FileTextIcon className="mr-1 size-3" />
               )}
               {chunk.payload.source}
             </Badge>
             {chunk.score !== undefined && chunk.score !== null && (
               <Badge className={`${getScoreColor(chunk.score)} font-medium`}>
-                <SparklesIcon className="mr-1 h-3 w-3" />
+                <SparklesIcon className="mr-1 size-3" />
                 {(chunk.score * 100).toFixed(1)}%
               </Badge>
             )}
@@ -67,17 +67,17 @@ const DisplayChunk = ({ chunk }: { chunk: QdrantChunk }) => {
       <CardContent>
         <div className="mb-4 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
           <div className="flex items-center gap-2">
-            <HashIcon className="h-3.5 w-3.5 text-muted-foreground" />
+            <HashIcon className="size-3.5 text-muted-foreground" />
             <span className="text-muted-foreground">Tokens:</span>
             <span className="font-medium">{chunk.payload.tokens}</span>
           </div>
           <div className="flex items-center gap-2">
-            <TypeIcon className="h-3.5 w-3.5 text-muted-foreground" />
+            <TypeIcon className="size-3.5 text-muted-foreground" />
             <span className="text-muted-foreground">Words:</span>
             <span className="font-medium">{wordCount}</span>
           </div>
           <div className="col-span-2 flex items-center gap-2">
-            <CalendarIcon className="h-3.5 w-3.5 text-muted-foreground" />
+            <CalendarIcon className="size-3.5 text-muted-foreground" />
             <span className="text-muted-foreground">Created:</span>
             <span className="truncate font-medium">
               {new Date(chunk.payload.createdAt).toLocaleDateString()}

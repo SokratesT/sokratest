@@ -67,7 +67,7 @@ const FileActions = ({
               onClick={() => window.open(filePath, "_blank")}
               className="flex items-center gap-1"
             >
-              <Download className="h-4 w-4" />
+              <Download className="size-4" />
               <span className="hidden sm:inline">Download</span>
             </Button>
           </TooltipTrigger>
@@ -86,7 +86,7 @@ const FileActions = ({
                 size="sm"
                 className="flex items-center gap-1"
               >
-                <FileSearch className="h-4 w-4" />
+                <FileSearch className="size-4" />
                 <span className="hidden sm:inline">View Chunks</span>
               </Button>
             </Link>
@@ -104,7 +104,7 @@ const FileActions = ({
               size="sm"
               className="flex items-center gap-1"
             >
-              <Database className="h-4 w-4" />
+              <Database className="size-4" />
               <span className="hidden sm:inline">Process</span>
             </Button>
           </DropdownMenuTrigger>
@@ -117,9 +117,9 @@ const FileActions = ({
               className="flex items-center gap-2"
             >
               {isProcessing ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
               ) : (
-                <FileSearch className="h-4 w-4" />
+                <FileSearch className="size-4" />
               )}
               Process Document
             </DropdownMenuItem>
@@ -129,9 +129,9 @@ const FileActions = ({
               className="flex items-center gap-2"
             >
               {isProcessing ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
               ) : (
-                <Database className="h-4 w-4" />
+                <Database className="size-4" />
               )}
               Generate Embedding
             </DropdownMenuItem>
@@ -142,7 +142,7 @@ const FileActions = ({
           className={buttonVariants({ size: "sm", variant: "outline" })}
           href={ROUTES.PRIVATE.documents.edit.getPath({ id: fileInfo.id })}
         >
-          <PencilIcon className="h-4 w-4" />
+          <PencilIcon className="size-4" />
           <span className="hidden sm:inline">Edit</span>
         </Link>
 
@@ -161,7 +161,7 @@ const FileActions = ({
               }}
               className="flex items-center gap-1"
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="size-4" />
               <span className="hidden sm:inline">Delete</span>
             </Button>
           </TooltipTrigger>

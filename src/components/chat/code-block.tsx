@@ -66,12 +66,12 @@ const CodeBlock = ({ node, className, children, ...props }: CodeBlockProps) => {
         >
           {copied ? (
             <>
-              <Check className="h-3 w-3" />
+              <Check className="size-3" />
               Copied
             </>
           ) : (
             <>
-              <Copy className="h-3 w-3" />
+              <Copy className="size-3" />
               Copy
             </>
           )}

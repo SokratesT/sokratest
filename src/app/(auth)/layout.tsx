@@ -10,11 +10,11 @@ const AuthLayout = async ({
 }>) => {
   return (
     <main className="flex min-h-screen flex-col">
-      <AuroraBackground className="fixed inset-0 -z-10 h-full w-full" />
+      <AuroraBackground className="fixed inset-0 -z-10 size-full" />
 
       <ThemeSwitcher className="fixed top-4 right-4 z-20 text-foreground" />
 
-      <div className="flex flex-grow items-center justify-center">
+      <div className="flex grow items-center justify-center">
         <div className="flex flex-col items-center justify-center gap-4 px-2 py-8">
           <LogoAnimated variant="dynamic" />
 

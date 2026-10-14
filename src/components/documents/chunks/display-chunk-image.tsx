@@ -37,8 +37,8 @@ const DisplayChunkImage = ({
   if (!filePath) return null;
 
   return (
-    <div className="max-h-[100px] w-full">
-      {isLoading && <Skeleton className="h-[100px] w-full" />}
+    <div className="max-h-25 w-full">
+      {isLoading && <Skeleton className="h-25 w-full" />}
       <Image
         src={filePath}
         alt={`thumbnail-${imageRef.reference}`}

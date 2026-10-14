@@ -41,7 +41,7 @@ const DocumentTableActions = () => {
           Actions
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[200px]">
+      <DropdownMenuContent align="end" className="w-50">
         <DropdownMenuItem
           onClick={() => handleEnqueueDocument()}
           disabled={table.getSelectedRowModel().rows.length === 0}

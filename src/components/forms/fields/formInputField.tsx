@@ -93,12 +93,11 @@ const FormInputField = ({
   };
 
   /**
-   * Clears the field by setting its value to undefined and calling the onChange function with undefined as the argument.
+   * Clears the field by calling the onChange function with undefined as the argument.
    *
    * @return {void} This function does not return anything.
    */
   const clearField = () => {
-    field.value = undefined;
     field.onChange(undefined);
   };
 

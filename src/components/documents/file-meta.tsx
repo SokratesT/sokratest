@@ -79,7 +79,7 @@ const FileMeta = ({ document }: { document: Document }) => {
       <CardContent>
         <div className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
           <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Calendar className="size-4 text-muted-foreground" />
             <span className="text-muted-foreground">Created:</span>
             <span className="font-medium">
               {formatDate(document.createdAt)}
@@ -87,7 +87,7 @@ const FileMeta = ({ document }: { document: Document }) => {
           </div>
 
           <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <Clock className="size-4 text-muted-foreground" />
             <span className="text-muted-foreground">Updated:</span>
             <span className="font-medium">
               {formatDate(document.updatedAt)}
@@ -95,7 +95,7 @@ const FileMeta = ({ document }: { document: Document }) => {
           </div>
 
           <div className="flex items-center gap-2">
-            <HardDrive className="h-4 w-4 text-muted-foreground" />
+            <HardDrive className="size-4 text-muted-foreground" />
             <span className="text-muted-foreground">Size:</span>
             <span className="font-medium">
               {convert(document.size, "bytes").to("best").toString()}
@@ -103,7 +103,7 @@ const FileMeta = ({ document }: { document: Document }) => {
           </div>
 
           <div className="flex items-center gap-2">
-            <Star className="h-4 w-4 text-muted-foreground" />
+            <Star className="size-4 text-muted-foreground" />
             <span className="text-muted-foreground">Relevance:</span>
             <Badge className={`${relevanceBadgeColor} font-normal text-xs`}>
               {document.metadata.relevance.charAt(0).toUpperCase() +
@@ -113,7 +113,7 @@ const FileMeta = ({ document }: { document: Document }) => {
 
           {document.metadata.citation && (
             <div className="flex items-center gap-2">
-              <FileSpreadsheet className="h-4 w-4 text-muted-foreground" />
+              <FileSpreadsheet className="size-4 text-muted-foreground" />
               <span className="text-muted-foreground">Citation:</span>
               <span
                 className="truncate font-medium text-xs"
@@ -126,7 +126,7 @@ const FileMeta = ({ document }: { document: Document }) => {
 
           {document.metadata.externalUrl && (
             <div className="flex items-center gap-2">
-              <ExternalLink className="h-4 w-4 text-muted-foreground" />
+              <ExternalLink className="size-4 text-muted-foreground" />
               <span className="text-muted-foreground">External:</span>
               <a
                 href={document.metadata.externalUrl}
@@ -142,7 +142,7 @@ const FileMeta = ({ document }: { document: Document }) => {
 
           {document.metadata.chapterTitle && (
             <div className="flex items-center gap-2">
-              <BookMarkedIcon className="h-4 w-4 text-muted-foreground" />
+              <BookMarkedIcon className="size-4 text-muted-foreground" />
               <span className="text-muted-foreground">Chapter:</span>
               <span
                 className="truncate font-medium text-xs"
@@ -155,7 +155,7 @@ const FileMeta = ({ document }: { document: Document }) => {
 
           {document.metadata.pageRange && (
             <div className="flex items-center gap-2">
-              <MoveHorizontalIcon className="h-4 w-4 text-muted-foreground" />
+              <MoveHorizontalIcon className="size-4 text-muted-foreground" />
               <span className="text-muted-foreground">Page Range:</span>
               <span
                 className="truncate font-medium text-xs"
@@ -168,7 +168,7 @@ const FileMeta = ({ document }: { document: Document }) => {
 
           {document.metadata.author && (
             <div className="flex items-center gap-2">
-              <SignatureIcon className="h-4 w-4 text-muted-foreground" />
+              <SignatureIcon className="size-4 text-muted-foreground" />
               <span className="text-muted-foreground">Author(s):</span>
               <span
                 className="truncate font-medium text-xs"

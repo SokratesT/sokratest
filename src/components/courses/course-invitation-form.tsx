@@ -213,7 +213,7 @@ const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
               ))}
               {form.formState.errors.items?.root && (
                 <Alert variant="destructive" className="my-4">
-                  <AlertCircle className="h-4 w-4" />
+                  <AlertCircle className="size-4" />
                   <AlertTitle>Error</AlertTitle>
                   <AlertDescription>
                     {form.formState.errors.items.root.message}
@@ -232,7 +232,7 @@ const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
                   <DialogTrigger asChild>
                     <Button variant="outline">Bulk Add Emails</Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-[600px]">
+                  <DialogContent className="max-w-150">
                     <DialogHeader>
                       <DialogTitle>Bulk Add Emails</DialogTitle>
                       <DialogDescription>

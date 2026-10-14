@@ -58,10 +58,7 @@ const AnnotationBlock = ({
                   </span>
                 </PopoverTrigger>
 
-                <PopoverContent
-                  className="w-full max-w-[400px] p-4"
-                  align="start"
-                >
+                <PopoverContent className="w-full max-w-100 p-4" align="start">
                   <ScrollArea className="size-full pr-2">
                     <div className="space-y-3">
                       <div>

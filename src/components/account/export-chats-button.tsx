@@ -33,7 +33,7 @@ const ExportChatsButton = ({ traces }: { traces: FilteredTrace[] }) => {
 
   return (
     <Button onClick={handleExport} className="gap-2">
-      <Download className="h-4 w-4" />
+      <Download className="size-4" />
       Export Chats (JSON)
     </Button>
   );

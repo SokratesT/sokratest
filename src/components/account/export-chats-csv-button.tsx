@@ -380,7 +380,7 @@ const ExportChatsCSVButton = ({ traces }: { traces: FilteredTrace[] }) => {
   return (
     <div className="flex items-center gap-2">
       <Button onClick={handleExport} className="gap-2">
-        <Download className="h-4 w-4" />
+        <Download className="size-4" />
         Export Chats (CSV)
       </Button>
 
@@ -389,9 +389,9 @@ const ExportChatsCSVButton = ({ traces }: { traces: FilteredTrace[] }) => {
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+            className="size-8 p-0 text-muted-foreground hover:text-foreground"
           >
-            <Info className="h-4 w-4" />
+            <Info className="size-4" />
             <span className="sr-only">CSV format information</span>
           </Button>
         </PopoverTrigger>

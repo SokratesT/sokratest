@@ -46,7 +46,7 @@ const InvitesTableActions = () => {
           Actions
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[200px]">
+      <DropdownMenuContent align="end" className="w-50">
         <DropdownMenuItem
           variant="destructive"
           onClick={handleDelete}

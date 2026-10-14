@@ -55,7 +55,7 @@ const EditUserPage = async ({
         <CardContent className="flex flex-col gap-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="flex items-center gap-2">
-              <UserIcon className="h-4 w-4 text-primary" />
+              <UserIcon className="size-4 text-primary" />
               <div className="space-y-0.5">
                 <p className="font-medium text-sm">Name</p>
                 <p className="text-muted-foreground text-sm">{user.name}</p>
@@ -63,7 +63,7 @@ const EditUserPage = async ({
             </div>
 
             <div className="flex items-center gap-2">
-              <MailIcon className="h-4 w-4 text-primary" />
+              <MailIcon className="size-4 text-primary" />
               <div className="space-y-0.5">
                 <p className="font-medium text-sm">Email</p>
                 <p className="text-muted-foreground text-sm">{user.email}</p>
@@ -71,12 +71,12 @@ const EditUserPage = async ({
             </div>
 
             <div className="flex items-center gap-2">
-              <BadgeIcon className="h-4 w-4 text-primary" />
+              <BadgeIcon className="size-4 text-primary" />
               <div className="space-y-0.5">
                 <p className="font-medium text-sm">Status</p>
                 <div className="flex items-center gap-2">
                   <span
-                    className={`h-2 w-2 rounded-full ${user.banned ? "bg-destructive" : "bg-green-500"}`}
+                    className={`size-2 rounded-full ${user.banned ? "bg-destructive" : "bg-green-500"}`}
                   />
                   <p className="text-muted-foreground text-sm">
                     {user.banned ? "Banned" : "Active"}
@@ -87,7 +87,7 @@ const EditUserPage = async ({
 
             {typeof user.emailVerified === "string" && (
               <div className="flex items-center gap-2">
-                <ClockIcon className="h-4 w-4 text-primary" />
+                <ClockIcon className="size-4 text-primary" />
                 <div className="space-y-0.5">
                   <p className="font-medium text-sm">Email Verification</p>
                   <p className="text-muted-foreground text-sm">
@@ -98,7 +98,7 @@ const EditUserPage = async ({
             )}
 
             <div className="flex items-center gap-2">
-              <CalendarIcon className="h-4 w-4 text-primary" />
+              <CalendarIcon className="size-4 text-primary" />
               <div className="space-y-0.5">
                 <p className="font-medium text-sm">Created At</p>
                 <p className="text-muted-foreground text-sm">
@@ -108,7 +108,7 @@ const EditUserPage = async ({
             </div>
 
             <div className="flex items-center gap-2">
-              <CalendarIcon className="h-4 w-4 text-primary" />
+              <CalendarIcon className="size-4 text-primary" />
               <div className="space-y-0.5">
                 <p className="font-medium text-sm">Updated At</p>
                 <p className="text-muted-foreground text-sm">

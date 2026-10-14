@@ -32,7 +32,7 @@ async function CourseInvitationContent({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <BookMarkedIcon className="h-4 w-4 text-primary" />
+            <BookMarkedIcon className="size-4 text-primary" />
             <CardTitle className="text-lg">
               {course?.title || "Unknown Course"}
             </CardTitle>
@@ -57,14 +57,14 @@ async function CourseInvitationContent({
       <CardContent className="py-2">
         <div className="flex flex-col text-sm">
           <div className="flex items-center gap-2 text-muted-foreground">
-            <CalendarIcon className="h-3.5 w-3.5" />
+            <CalendarIcon className="size-3.5" />
             <span>
               Invited on {format(invitation.createdAt || "", "MMM d, yyyy")}
             </span>
           </div>
           {isPending && (
             <div className="mt-1 flex items-center gap-2 text-muted-foreground">
-              <Clock4Icon className="h-3.5 w-3.5" />
+              <Clock4Icon className="size-3.5" />
               <span>
                 Expires on {format(invitation.expiresAt, "MMM d, yyyy")}
               </span>

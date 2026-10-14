@@ -17,6 +17,11 @@ type MessageEditorProps = {
   status: UseChatHelpers<ChatUIMessage>["status"];
 };
 
+const adjustHeight = (textarea: HTMLTextAreaElement) => {
+  textarea.style.height = "auto";
+  textarea.style.height = `${textarea.scrollHeight + 2}px`;
+};
+
 const MessageEditor = ({
   chatId,
   message,
@@ -32,20 +37,13 @@ const MessageEditor = ({
 
   useEffect(() => {
     if (textareaRef.current) {
-      adjustHeight();
+      adjustHeight(textareaRef.current);
     }
   }, []);
 
-  const adjustHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 2}px`;
-    }
-  };
-
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDraftContent(event.target.value);
-    adjustHeight();
+    adjustHeight(event.target);
   };
 
   const handleEdit = async () => {
@@ -70,7 +68,7 @@ const MessageEditor = ({
     <div className="flex w-full flex-col gap-2">
       <Textarea
         ref={textareaRef}
-        className="!text-base w-full resize-none overflow-hidden rounded-xl bg-transparent outline-none dark:bg-transparent"
+        className="w-full resize-none overflow-hidden rounded-xl bg-transparent text-base! outline-none dark:bg-transparent"
         value={draftContent}
         onChange={handleInput}
       />

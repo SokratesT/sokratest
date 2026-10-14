@@ -60,9 +60,9 @@ const ChatsList = ({
               <ChatActionsDropdown chatId={chat.id} title={chat.title}>
                 <Button
                   variant="ghost"
-                  className="absolute top-2 right-2 h-8 w-8 p-0 data-[state=open]:bg-muted"
+                  className="absolute top-2 right-2 size-8 p-0 data-[state=open]:bg-muted"
                 >
-                  <MoreHorizontalIcon className="h-4 w-4" />
+                  <MoreHorizontalIcon className="size-4" />
                   <span className="sr-only">Open menu</span>
                 </Button>
               </ChatActionsDropdown>
@@ -79,7 +79,7 @@ const ChatsList = ({
               </CardHeader>
               <CardContent className="pt-0">
                 <div className="flex items-center text-muted-foreground text-sm">
-                  <MessagesSquareIcon className="mr-2 h-4 w-4" />
+                  <MessagesSquareIcon className="mr-2 size-4" />
                   Continue chat
                 </div>
               </CardContent>

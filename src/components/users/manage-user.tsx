@@ -158,7 +158,7 @@ const ManageUser = ({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <UserCogIcon className="h-5 w-5 text-primary" />
+            <UserCogIcon className="size-5 text-primary" />
             User Management
           </CardTitle>
         </CardHeader>
@@ -191,7 +191,7 @@ const ManageUser = ({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <ShieldIcon className="h-5 w-5 text-primary" />
+            <ShieldIcon className="size-5 text-primary" />
             User Roles
           </CardTitle>
         </CardHeader>
@@ -243,7 +243,7 @@ const ManageUser = ({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <KeyIcon className="h-5 w-5 text-primary" />
+            <KeyIcon className="size-5 text-primary" />
             Change Password
           </CardTitle>
         </CardHeader>
@@ -265,7 +265,7 @@ const ManageUser = ({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <KeyIcon className="h-5 w-5 text-primary" />
+            <KeyIcon className="size-5 text-primary" />
             Active Sessions
           </CardTitle>
         </CardHeader>

@@ -1,7 +1,8 @@
 "use client";
 
 import { Bot } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useIsClient } from "usehooks-ts";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { authClient } from "@/lib/auth-client";
 
@@ -15,12 +16,11 @@ const ChatPlaceholder = () => {
 
   const userName = session.data?.user.name.split(" ")[0] ?? "user";
 
-  const [message, setMessage] = useState<string>();
-
-  useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * welcomeMessages.length);
-    setMessage(welcomeMessages[randomIndex]);
-  }, []);
+  // Picked on the client only, so the server render cannot mismatch it
+  const isClient = useIsClient();
+  const [message] = useState(
+    () => welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)],
+  );
 
   return (
     <div className="flex h-full flex-col items-center justify-center p-4">
@@ -32,7 +32,7 @@ const ChatPlaceholder = () => {
           </div>
         </CardHeader>
         <CardContent className="text-center text-muted-foreground">
-          <p>{message}</p>
+          <p>{isClient && message}</p>
         </CardContent>
       </Card>
     </div>

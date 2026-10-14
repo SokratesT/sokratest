@@ -24,11 +24,11 @@ const DefaultErrorPage = ({
   }, [error]);
 
   return (
-    <div className="flex min-h-[400px] items-center justify-center p-4">
+    <div className="flex min-h-100 items-center justify-center p-4">
       <Card className="max-w-md">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <AlertCircleIcon className="h-5 w-5 text-destructive" />
+            <AlertCircleIcon className="size-5 text-destructive" />
             <h2 className="font-semibold text-lg">Something went wrong</h2>
           </div>
         </CardHeader>

@@ -67,12 +67,12 @@ const Chat = ({
         ))}
         {messages.length === 0 && <ChatPlaceholder />}
         {status === "submitted" && (
-          <div className="sticky m-0 w-full max-w-full whitespace-pre-wrap break-words rounded-none bg-transparent p-4 text-foreground">
+          <div className="wrap-break-word sticky m-0 w-full max-w-full whitespace-pre-wrap rounded-none bg-transparent p-4 text-foreground">
             <ShinyText>Gathering information...</ShinyText>
           </div>
         )}
         {status === "error" && (
-          <div className="sticky m-0 w-full max-w-full whitespace-pre-wrap break-words rounded-none bg-transparent p-4 text-foreground">
+          <div className="wrap-break-word sticky m-0 w-full max-w-full whitespace-pre-wrap rounded-none bg-transparent p-4 text-foreground">
             Something went wrong. Please try again.
           </div>
         )}
