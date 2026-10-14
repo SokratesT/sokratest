@@ -1,5 +1,5 @@
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { user } from "@/db/schema/auth";
 
 export const userInsertSchema = createInsertSchema(user);

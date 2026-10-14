@@ -1,6 +1,6 @@
 "use server";
 
-import { string, z } from "zod/v4";
+import { z } from "zod";
 import {
   deleteMessagesByChatIdAfterTimestamp,
   getMessageById,
@@ -15,7 +15,7 @@ export const deleteTrailingMessages = authActionClient
       action: "update",
     },
   })
-  .schema(z.object({ chatId: string(), messageId: string() }))
+  .schema(z.object({ chatId: z.string(), messageId: z.string() }))
   .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { messageId } }) => {
     const [message] = await getMessageById({ id: messageId });

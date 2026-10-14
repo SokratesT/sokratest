@@ -3,7 +3,7 @@ import {
   createSelectSchema,
   createUpdateSchema,
 } from "drizzle-zod";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { courseInvitation } from "@/db/schema/course-invitation";
 
 const insertBaseSchema = createInsertSchema(courseInvitation);

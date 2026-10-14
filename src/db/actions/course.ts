@@ -2,7 +2,7 @@
 
 import { and, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { db } from "@/db/drizzle";
 import { session } from "@/db/schema/auth";
 import { course, courseMember } from "@/db/schema/course";

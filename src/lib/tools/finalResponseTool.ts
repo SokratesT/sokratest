@@ -4,7 +4,7 @@ import {
   tool,
   type UIMessageStreamWriter,
 } from "ai";
-import { z } from "zod/v4";
+import { z } from "zod";
 import type { ChatUIMessage } from "@/lib/ai/chat-message";
 import { getSaiaModel } from "@/lib/ai/saia-models";
 

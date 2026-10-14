@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 import { sharedSchemas } from "./shared";
 
 export const loginSchema = z.object({

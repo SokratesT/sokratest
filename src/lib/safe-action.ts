@@ -3,7 +3,7 @@ import {
   createSafeActionClient,
   DEFAULT_SERVER_ERROR_MESSAGE,
 } from "next-safe-action";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { getSession } from "@/db/queries/auth";
 import type { User } from "@/db/schema/auth";
 import {

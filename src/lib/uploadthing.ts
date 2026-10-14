@@ -5,7 +5,7 @@ import type {
   ClientUploadedFileData,
   UploadFilesOptions,
 } from "uploadthing/types";
-import { z } from "zod/v4";
+import { z } from "zod";
 import type { OurFileRouter } from "@/app/api/uploadthing/route";
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}

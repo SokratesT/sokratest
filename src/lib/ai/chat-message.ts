@@ -1,5 +1,5 @@
 import type { UIMessage } from "ai";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 // Document metadata snapshot of a reference. Legacy references (persisted as
 // message annotations) can lack fields or contain nulls, so all are nullish.

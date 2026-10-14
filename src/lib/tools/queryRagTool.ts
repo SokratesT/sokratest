@@ -1,5 +1,5 @@
 import { tool, type UIMessageStreamWriter } from "ai";
-import { z } from "zod/v4";
+import { z } from "zod";
 import {
   findRelevantContent,
   getDocumentReferencesByIds,

@@ -1,6 +1,6 @@
 import { useQueryStates } from "nuqs";
 import { createSearchParamsCache, parseAsJson } from "nuqs/server";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 const sortingSchema = z.array(
   z.object({
@@ -14,7 +14,7 @@ const sortingUrlKeys = {
 };
 
 const sortingParsers = (startTransition?: React.TransitionStartFunction) => ({
-  sort: parseAsJson(sortingSchema.parse)
+  sort: parseAsJson(sortingSchema)
     .withDefault([{ desc: false, id: "createdAt" }])
     .withOptions({ shallow: false, startTransition }),
 });
