@@ -110,7 +110,7 @@ const FormDatePicker = ({
               field.onChange(selectedDate);
             }}
             disabled={(date) => date > maxDate || date < minDate}
-            initialFocus
+            autoFocus
           />
           {showTimePicker && (
             <div className="border-border border-t p-3">

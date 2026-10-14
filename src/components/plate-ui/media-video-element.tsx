@@ -94,12 +94,11 @@ export const MediaVideoElement = withHOC(
                   </div>
                 )}
 
-                {/* TODO: Lazy load */}
                 {isUpload && isEditorMounted && (
                   <div ref={handleRef}>
                     <ReactPlayer
                       height="100%"
-                      url={unsafeUrl}
+                      src={unsafeUrl}
                       width="100%"
                       controls
                     />

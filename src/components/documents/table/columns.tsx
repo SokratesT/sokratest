@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
+import type { DataTableFeatures } from "@/components/ui/data-table/data-table-features";
 import { useConfirm } from "@/components/ui/dialog/confirm-dialog";
 import {
   DropdownMenu,
@@ -35,7 +36,7 @@ const handleEnqueueDocuments = async (id: string) => {
   });
 };
 
-export const columns: ColumnDef<Document>[] = [
+export const columns: ColumnDef<DataTableFeatures, Document>[] = [
   {
     id: "select",
     size: 32,
@@ -112,7 +113,7 @@ export const columns: ColumnDef<Document>[] = [
   },
 ];
 
-const ActionCell = ({ row }: { row: Row<Document> }) => {
+const ActionCell = ({ row }: { row: Row<DataTableFeatures, Document> }) => {
   const document = row.original;
 
   const confirm = useConfirm();

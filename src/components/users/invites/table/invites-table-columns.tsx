@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
+import type { DataTableFeatures } from "@/components/ui/data-table/data-table-features";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,7 +51,10 @@ const handleCopy = async (id: CourseInvitation["id"]) => {
   });
 };
 
-export const invitesTableColumns: ColumnDef<CourseInvitation>[] = [
+export const invitesTableColumns: ColumnDef<
+  DataTableFeatures,
+  CourseInvitation
+>[] = [
   {
     id: "select",
     size: 32,

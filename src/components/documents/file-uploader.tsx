@@ -5,6 +5,7 @@ import { Upload } from "lucide-react";
 import { useCallback, useEffect } from "react";
 import Dropzone, {
   type DropzoneProps,
+  ErrorCode,
   type FileRejection,
 } from "react-dropzone";
 import { toast } from "sonner";
@@ -115,13 +116,21 @@ const FileUploader = (props: FileUploaderProps) => {
 
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
-      if (!multiple && maxFileCount === 1 && acceptedFiles.length > 1) {
-        toast.error("Cannot upload more than 1 file at a time");
-        return;
-      }
+      // react-dropzone accepts the first `maxFiles` files of an over-limit
+      // drop and rejects the rest, so reject the whole drop instead
+      const exceedsDropLimit = rejectedFiles.some(({ errors }) =>
+        errors.some(({ code }) => code === ErrorCode.TooManyFiles),
+      );
 
-      if ((files?.length ?? 0) + acceptedFiles.length > maxFileCount) {
-        toast.error(`Cannot upload more than ${maxFileCount} files`);
+      if (
+        exceedsDropLimit ||
+        (files?.length ?? 0) + acceptedFiles.length > maxFileCount
+      ) {
+        toast.error(
+          maxFileCount === 1
+            ? "Cannot upload more than 1 file at a time"
+            : `Cannot upload more than ${maxFileCount} files`,
+        );
         return;
       }
 
@@ -160,7 +169,7 @@ const FileUploader = (props: FileUploaderProps) => {
       }
     },
 
-    [files, maxFileCount, multiple, onUpload, setFiles],
+    [files, maxFileCount, onUpload, setFiles],
   );
 
   function onRemove(index: number) {

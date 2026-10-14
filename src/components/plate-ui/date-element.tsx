@@ -77,7 +77,7 @@ export const DateElement = withRef<typeof PlateElement>(
                 );
               }}
               mode="single"
-              initialFocus
+              autoFocus
             />
           </PopoverContent>
         </Popover>
