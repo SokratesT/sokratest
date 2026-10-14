@@ -1,18 +1,31 @@
-import { OpenTelemetry } from "@ai-sdk/otel";
+import { LangfuseSpanProcessor } from "@langfuse/otel";
+import { LangfuseVercelAiSdkIntegration } from "@langfuse/vercel-ai-sdk";
 import { registerOTel } from "@vercel/otel";
 import { registerTelemetry } from "ai";
-import { LangfuseExporter } from "langfuse-vercel";
+import { langfuseEnvironment } from "@/lib/langfuse/environment";
+
+declare global {
+  // Next.js bundles this file and the route handlers that import it as
+  // separate modules, so the processor is kept once per process here
+  var sokratestLangfuseSpanProcessor: LangfuseSpanProcessor | undefined;
+}
+
+/**
+ * Exports spans to Langfuse. Reads `LANGFUSE_PUBLIC_KEY`,
+ * `LANGFUSE_SECRET_KEY` and `LANGFUSE_BASE_URL`. Route handlers that trace
+ * flush it with `after(() => langfuseSpanProcessor.forceFlush())`.
+ */
+globalThis.sokratestLangfuseSpanProcessor ??= new LangfuseSpanProcessor({
+  environment: langfuseEnvironment,
+});
+
+export const langfuseSpanProcessor = globalThis.sokratestLangfuseSpanProcessor;
 
 export function register() {
-  registerTelemetry(new OpenTelemetry({ runtimeContext: true }));
-
   registerOTel({
     serviceName: "langfuse-sokratest-next-remote",
-    traceExporter: new LangfuseExporter({
-      secretKey: process.env.LANGFUSE_SECRET_KEY,
-      publicKey: process.env.LANGFUSE_PUBLIC_KEY,
-      baseUrl: process.env.LANGFUSE_BASEURL,
-      environment: process.env.NODE_ENV,
-    }),
+    spanProcessors: [langfuseSpanProcessor],
   });
+
+  registerTelemetry(new LangfuseVercelAiSdkIntegration());
 }

@@ -1,6 +1,6 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
+import type { GetScoresResponseData } from "@langfuse/core";
 import { isToolUIPart } from "ai";
-import type { ApiGetScoresResponseData } from "langfuse";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
@@ -28,7 +28,7 @@ const MessageBlock = ({
   chatId: Chat["id"];
   sendMessage: UseChatHelpers<ChatUIMessage>["sendMessage"];
   status: UseChatHelpers<ChatUIMessage>["status"];
-  score?: ApiGetScoresResponseData;
+  score?: GetScoresResponseData.Numeric;
 }) => {
   const [mode, setMode] = useState<"view" | "edit">("view");
 

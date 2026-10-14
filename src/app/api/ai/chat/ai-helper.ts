@@ -1,13 +1,10 @@
 import { generateText, type ModelMessage } from "ai";
 import { inArray } from "drizzle-orm";
 import { db } from "@/db/drizzle";
-import type { User } from "@/db/schema/auth";
-import type { Chat } from "@/db/schema/chat";
 import type { Course } from "@/db/schema/course";
 import { document } from "@/db/schema/document";
 import { generateEmbedding } from "@/lib/ai/embedding";
 import { getSaiaModel } from "@/lib/ai/saia-models";
-import { withTelemetryMetadata } from "@/lib/ai/telemetry";
 import { getQdrant } from "@/qdrant/qdrant";
 import { qdrantCollections } from "@/qdrant/qdrant-constants";
 import { generateRagQueryPrompt } from "@/settings/prompts";
@@ -66,14 +63,10 @@ export const findRelevantContent = async ({
 export const getRelevantChunks = async ({
   messages,
   courseId,
-  chatId,
-  userId,
   limit,
 }: {
   messages: ModelMessage[];
   courseId: Course["id"];
-  chatId: Chat["id"];
-  userId: User["id"];
   limit: number;
 }) => {
   const generatedQuery = await generateText({
@@ -83,12 +76,7 @@ export const getRelevantChunks = async ({
     }).provider,
     messages,
     instructions: generateRagQueryPrompt,
-    ...withTelemetryMetadata({
-      sessionId: chatId,
-      courseId,
-      userId,
-      tags: ["system", "rag_query"],
-    }),
+    telemetry: { functionId: "rag-query" },
   });
 
   const result = await findRelevantContent({

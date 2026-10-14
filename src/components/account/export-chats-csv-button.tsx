@@ -8,21 +8,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { getMessageText } from "@/lib/ai/chat-message";
 import type { FilteredTrace } from "./export-chats";
 
-interface ChatMessage {
-  id: string;
-  createdAt?: string;
-  role: string;
-  content: string;
-  parts?: any[];
-  annotations?: any[];
-  revisionId?: string;
-  isOutput?: boolean;
-  traceId: string; // Track which trace this came from
-}
-
-interface CSVRow {
+type CSVRow = {
   session_id: string;
   trace_id: string;
   trace_timestamp: string;
@@ -30,8 +19,6 @@ interface CSVRow {
   tags: string;
   latency: string;
   metadata_course_id: string;
-  metadata_ai_prompt_format: string;
-  system_prompt: string;
   message_sequence: string;
   message_id: string;
   message_created_at: string;
@@ -39,7 +26,6 @@ interface CSVRow {
   message_content: string;
   message_parts_text: string;
   message_parts_raw: string;
-  message_annotations: string;
   is_output_message: string;
   score_id: string;
   score_name: string;
@@ -47,304 +33,126 @@ interface CSVRow {
   score_timestamp: string;
   score_comment: string;
   observations: string;
-}
+};
 
-const ExportChatsCSVButton = ({ traces }: { traces: FilteredTrace[] }) => {
-  const sanitizeForCSV = (value: any): string => {
-    if (value === null || value === undefined) return "";
+type Score = FilteredTrace["scores"][number];
 
-    const str = String(value);
-    return str
-      .replace(/\r\n/g, " ")
-      .replace(/\n/g, " ")
-      .replace(/\r/g, " ")
-      .replace(/\t/g, " ")
-      .replace(/"/g, '""')
-      .trim();
-  };
+const sanitizeForCSV = (value: unknown): string => {
+  if (value === null || value === undefined) return "";
 
-  const escapeCSVField = (value: string): string => {
-    const needsQuotes =
-      /[",\n\r\t]/.test(value) || value !== value.replace(/\s+/g, " ");
-    return needsQuotes ? `"${value}"` : value;
-  };
+  const str = typeof value === "string" ? value : String(value);
+  return str
+    .replace(/\r\n/g, " ")
+    .replace(/\n/g, " ")
+    .replace(/\r/g, " ")
+    .replace(/\t/g, " ")
+    .replace(/"/g, '""')
+    .trim();
+};
 
-  const extractTextFromParts = (parts: any[]): string => {
-    if (!Array.isArray(parts)) return "";
+const escapeCSVField = (value: string): string => {
+  const needsQuotes =
+    /[",\n\r\t]/.test(value) || value !== value.replace(/\s+/g, " ");
+  return needsQuotes ? `"${value}"` : value;
+};
 
-    return parts
-      .filter((part) => part?.type === "text" && part?.text)
-      .map((part) => sanitizeForCSV(part.text))
-      .join(" ")
-      .trim();
-  };
+const getScoreValue = (score: Score) =>
+  "stringValue" in score ? score.stringValue : score.value;
 
-  const deduplicateAndBuildConversations = (traces: FilteredTrace[]) => {
-    // Group traces by session
-    const sessionGroups = new Map<string, FilteredTrace[]>();
-    traces.forEach((trace) => {
-      const sessionId = trace.sessionId || "no-session";
-      if (!sessionGroups.has(sessionId)) {
-        sessionGroups.set(sessionId, []);
-      }
-      sessionGroups.get(sessionId)?.push(trace);
-    });
+const emptyScore = {
+  score_id: "",
+  score_name: "",
+  score_value: "",
+  score_timestamp: "",
+  score_comment: "",
+};
 
-    const conversationData: {
-      sessionId: string;
-      messages: ChatMessage[];
-      traces: FilteredTrace[];
-      systemPrompt: string;
-      metadata: any;
-      scoresByTraceId: Map<string, any[]>;
-    }[] = [];
+/**
+ * One user and one assistant row per chat turn (trace), grouped by chat and
+ * ordered by time. The text comes from the trace input/output; ids and parts
+ * come from the stored messages. Assistant rows repeat once per score.
+ */
+const convertToCSV = (traces: FilteredTrace[]): string => {
+  const sessions = Map.groupBy(
+    traces.toSorted(
+      (a, b) =>
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+    ),
+    (trace) => trace.sessionId ?? "no-session",
+  );
 
-    sessionGroups.forEach((sessionTraces, sessionId) => {
-      // Sort traces by timestamp to process in chronological order
-      const sortedTraces = sessionTraces.sort(
-        (a, b) =>
-          new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
-      );
+  const csvRows: CSVRow[] = [];
 
-      const uniqueMessages = new Map<string, ChatMessage>();
-      const scoresByTraceId = new Map<string, any[]>();
-      let systemPrompt = "";
-      let metadata = {};
+  for (const [sessionId, sessionTraces] of sessions) {
+    let messageSequence = 0;
 
-      sortedTraces.forEach((trace) => {
-        // Extract system prompt and metadata from any trace (they should be consistent)
-        if (trace.input?.system) {
-          systemPrompt = trace.input.system;
-        }
-        if (trace.metadata) {
-          metadata = { ...metadata, ...trace.metadata };
-        }
-
-        // Store scores by trace ID (scores are associated with the trace's output)
-        if (trace.scores && trace.scores.length > 0) {
-          scoresByTraceId.set(trace.id, trace.scores);
-        }
-
-        // Add messages from input.messages (deduplicated by ID)
-        if (trace.input?.messages) {
-          trace.input.messages.forEach(
-            (msg: {
-              id: string;
-              content: any;
-              parts: any[];
-              createdAt: any;
-              role: any;
-              annotations: any;
-              revisionId: any;
-            }) => {
-              if (msg.id && !uniqueMessages.has(msg.id)) {
-                let content = sanitizeForCSV(msg.content);
-
-                if (!content && msg.parts) {
-                  content = extractTextFromParts(msg.parts);
-                }
-
-                uniqueMessages.set(msg.id, {
-                  id: msg.id,
-                  createdAt: msg.createdAt,
-                  role: msg.role,
-                  content,
-                  parts: msg.parts,
-                  annotations: msg.annotations,
-                  revisionId: msg.revisionId,
-                  isOutput: false,
-                  traceId: trace.id,
-                });
-              }
-            },
-          );
-        }
-
-        // Add the output as a unique message (using trace ID as message ID)
-        if (trace.output) {
-          const outputId = `${trace.id}-output`;
-          if (!uniqueMessages.has(outputId)) {
-            uniqueMessages.set(outputId, {
-              id: outputId,
-              createdAt: trace.timestamp,
-              role: "assistant",
-              content: sanitizeForCSV(trace.output),
-              isOutput: true,
-              traceId: trace.id,
-            });
-          }
-        }
-      });
-
-      // Sort messages by creation time
-      const sortedMessages = Array.from(uniqueMessages.values()).sort(
-        (a, b) => {
-          const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-          const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-          return timeA - timeB;
-        },
-      );
-
-      conversationData.push({
-        sessionId,
-        messages: sortedMessages,
-        traces: sortedTraces,
-        systemPrompt: sanitizeForCSV(systemPrompt),
-        metadata,
-        scoresByTraceId,
-      });
-    });
-
-    return conversationData;
-  };
-
-  const convertToCSV = (data: FilteredTrace[]): string => {
-    const csvRows: CSVRow[] = [];
-    const conversations = deduplicateAndBuildConversations(data);
-
-    conversations.forEach((conversation) => {
-      const { sessionId, messages, traces, scoresByTraceId } = conversation;
-
-      // Get representative trace data (use the latest trace for session-level info)
-      const latestTrace = traces[traces.length - 1];
-
-      const baseRow = {
+    for (const trace of sessionTraces) {
+      const traceColumns = {
         session_id: sanitizeForCSV(sessionId),
-        user_id: sanitizeForCSV(latestTrace.userId),
-        tags: sanitizeForCSV((latestTrace.tags || []).join(";")),
-        metadata_course_id: sanitizeForCSV(conversation.metadata?.courseId),
-        metadata_ai_prompt_format: sanitizeForCSV(
-          conversation.metadata?.["ai.prompt.format"],
-        ),
-        system_prompt: conversation.systemPrompt,
+        trace_id: sanitizeForCSV(trace.id),
+        trace_timestamp: sanitizeForCSV(trace.timestamp),
+        user_id: sanitizeForCSV(trace.userId),
+        tags: sanitizeForCSV(trace.tags.join(";")),
+        latency: sanitizeForCSV(trace.latency),
+        metadata_course_id: sanitizeForCSV(trace.metadata?.courseId),
       };
 
-      // If no messages, create one row with base data
-      if (messages.length === 0) {
-        csvRows.push({
-          ...baseRow,
-          trace_id: sanitizeForCSV(latestTrace.id),
-          trace_timestamp: sanitizeForCSV(latestTrace.timestamp),
-          latency: sanitizeForCSV(latestTrace.latency?.toString()),
-          observations: sanitizeForCSV(
-            (latestTrace.observations || []).join(";"),
+      for (const role of ["user", "assistant"] as const) {
+        const message = trace.messages.find((m) => m.role === role);
+        const traceText = role === "user" ? trace.input : trace.output;
+        const partsText = message ? getMessageText(message) : "";
+        const isOutput = role === "assistant";
+
+        messageSequence++;
+
+        const messageColumns = {
+          message_sequence: messageSequence.toString(),
+          message_id: sanitizeForCSV(message?.id),
+          message_created_at: sanitizeForCSV(message?.createdAt.toISOString()),
+          message_role: role,
+          message_content: sanitizeForCSV(
+            typeof traceText === "string" ? traceText : partsText,
           ),
-          message_sequence: "",
-          message_id: "",
-          message_created_at: "",
-          message_role: "",
-          message_content: "",
-          message_parts_text: "",
-          message_parts_raw: "",
-          message_annotations: "",
-          is_output_message: "",
-          score_id: "",
-          score_name: "",
-          score_value: "",
-          score_timestamp: "",
-          score_comment: "",
-        });
-        return;
-      }
+          message_parts_text: sanitizeForCSV(partsText),
+          message_parts_raw: sanitizeForCSV(
+            message ? JSON.stringify(message.parts) : "",
+          ),
+          is_output_message: isOutput ? "true" : "false",
+        };
 
-      // Process each message
-      messages.forEach((message, messageIndex) => {
-        // Find the trace that contains this message for trace-specific data
-        const messageTrace =
-          traces.find((t) => t.id === message.traceId) || latestTrace;
+        const scoreColumns = (isOutput ? trace.scores : []).map((score) => ({
+          score_id: sanitizeForCSV(score.id),
+          score_name: sanitizeForCSV(score.name),
+          score_value: sanitizeForCSV(getScoreValue(score)),
+          score_timestamp: sanitizeForCSV(score.timestamp),
+          score_comment: sanitizeForCSV(score.comment),
+        }));
 
-        let partsText = "";
-        if (message?.parts) {
-          partsText = extractTextFromParts(message.parts);
-        }
-
-        // Get scores only for assistant messages (role === 'assistant' or isOutput === true)
-        const messageScores =
-          message.role === "assistant" || message.isOutput
-            ? scoresByTraceId.get(message.traceId) || []
-            : [];
-
-        // If this is an assistant message with scores, create rows for each score
-        if (messageScores.length > 0) {
-          messageScores.forEach((score) => {
-            csvRows.push({
-              ...baseRow,
-              trace_id: sanitizeForCSV(messageTrace.id),
-              trace_timestamp: sanitizeForCSV(messageTrace.timestamp),
-              latency: sanitizeForCSV(messageTrace.latency?.toString()),
-              observations: sanitizeForCSV(
-                (messageTrace.observations || []).join(";"),
-              ),
-              message_sequence: (messageIndex + 1).toString(),
-              message_id: sanitizeForCSV(message.id),
-              message_created_at: sanitizeForCSV(message.createdAt),
-              message_role: sanitizeForCSV(message.role),
-              message_content: sanitizeForCSV(message.content),
-              message_parts_text: partsText,
-              message_parts_raw: sanitizeForCSV(
-                message.parts ? JSON.stringify(message.parts) : "",
-              ),
-              message_annotations: sanitizeForCSV(
-                message.annotations ? JSON.stringify(message.annotations) : "",
-              ),
-              is_output_message: message.isOutput ? "true" : "false",
-              score_id: sanitizeForCSV(score.id),
-              score_name: sanitizeForCSV(score.name),
-              score_value: sanitizeForCSV(score.value?.toString()),
-              score_timestamp: sanitizeForCSV(score.timestamp),
-              score_comment: sanitizeForCSV(score.comment),
-            });
-          });
-        } else {
-          // Create a single row for the message (with or without scores)
+        for (const score of scoreColumns.length > 0
+          ? scoreColumns
+          : [emptyScore]) {
           csvRows.push({
-            ...baseRow,
-            trace_id: sanitizeForCSV(messageTrace.id),
-            trace_timestamp: sanitizeForCSV(messageTrace.timestamp),
-            latency: sanitizeForCSV(messageTrace.latency?.toString()),
-            observations: sanitizeForCSV(
-              (messageTrace.observations || []).join(";"),
-            ),
-            message_sequence: (messageIndex + 1).toString(),
-            message_id: sanitizeForCSV(message.id),
-            message_created_at: sanitizeForCSV(message.createdAt),
-            message_role: sanitizeForCSV(message.role),
-            message_content: sanitizeForCSV(message.content),
-            message_parts_text: partsText,
-            message_parts_raw: sanitizeForCSV(
-              message.parts ? JSON.stringify(message.parts) : "",
-            ),
-            message_annotations: sanitizeForCSV(
-              message.annotations ? JSON.stringify(message.annotations) : "",
-            ),
-            is_output_message: message.isOutput ? "true" : "false",
-            score_id: "",
-            score_name: "",
-            score_value: "",
-            score_timestamp: "",
-            score_comment: "",
+            ...traceColumns,
+            ...messageColumns,
+            ...score,
+            observations: sanitizeForCSV((trace.observations ?? []).join(";")),
           });
         }
-      });
-    });
+      }
+    }
+  }
 
-    // Convert to CSV format with proper escaping
-    const headers = Object.keys(csvRows[0] || {});
-    const csvContent = [
-      headers.join(","),
-      ...csvRows.map((row) =>
-        headers
-          .map((header) => {
-            const value = row[header as keyof CSVRow] || "";
-            return escapeCSVField(value);
-          })
-          .join(","),
-      ),
-    ].join("\n");
+  // Convert to CSV format with proper escaping
+  const headers = Object.keys(csvRows[0] || {}) as (keyof CSVRow)[];
+  return [
+    headers.join(","),
+    ...csvRows.map((row) =>
+      headers.map((header) => escapeCSVField(row[header])).join(","),
+    ),
+  ].join("\n");
+};
 
-    return csvContent;
-  };
-
+const ExportChatsCSVButton = ({ traces }: { traces: FilteredTrace[] }) => {
   const handleExport = () => {
     try {
       // Convert traces to CSV
@@ -418,7 +226,8 @@ const ExportChatsCSVButton = ({ traces }: { traces: FilteredTrace[] }) => {
                   • <strong>Grouping:</strong> Messages grouped by session
                 </li>
                 <li>
-                  • <strong>Deduplication:</strong> Duplicate messages removed
+                  • <strong>Rows:</strong> One user and one assistant row per
+                  message exchange
                 </li>
               </ul>
             </div>

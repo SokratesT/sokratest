@@ -1,4 +1,4 @@
-import type { ApiGetScoresResponseData } from "langfuse";
+import type { GetScoresResponseData } from "@langfuse/core";
 import { CopyIcon, PencilIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
@@ -17,7 +17,7 @@ export const MessageActions = ({
 }: {
   message: ChatUIMessage;
   chatId: string;
-  score?: ApiGetScoresResponseData;
+  score?: GetScoresResponseData.Numeric;
   handleModeChange: () => void;
 }) => {
   const [, copy] = useCopyToClipboard();

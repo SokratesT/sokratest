@@ -1,6 +1,6 @@
 "use client";
 
-import type { ApiGetScoresResponseData } from "langfuse";
+import type { GetScoresResponseData } from "@langfuse/core";
 import { CheckIcon } from "lucide-react";
 import { type ComponentProps, useState } from "react";
 import { toast } from "sonner";
@@ -20,7 +20,7 @@ const MessageRate = ({
 }: {
   messageId: ChatMessage["id"];
   chatId: Chat["id"];
-  score?: ApiGetScoresResponseData;
+  score?: GetScoresResponseData.Numeric;
 } & ComponentProps<"div">) => {
   const [optimisticScore, setOptimisticScore] = useState<
     number | undefined | null

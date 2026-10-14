@@ -21,6 +21,8 @@ export default defineConfig([
       },
     },
     rules: {
+      // Bun built-ins (`bun:test`) are not resolvable by the import resolvers
+      "import-x/no-unresolved": ["error", { ignore: ["^bun:"] }],
       // Biome's useSortedClasses owns class ordering and sorts differently
       "tailwindcss/classnames-order": "off",
       "tailwindcss/no-custom-classname": "off",

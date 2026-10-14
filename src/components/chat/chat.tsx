@@ -1,8 +1,8 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
+import type { GetScoresResponseData } from "@langfuse/core";
 import { DefaultChatTransport } from "ai";
-import type { ApiGetScoresResponseData } from "langfuse";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { ChatInput } from "@/components/ui/chat/chat-input";
@@ -23,7 +23,7 @@ const Chat = ({
 }: {
   id: string;
   initialMessages: ChatUIMessage[];
-  scores: ApiGetScoresResponseData[];
+  scores: GetScoresResponseData.Numeric[];
   preferences: UserPreferencesType;
 }) => {
   const { messages, sendMessage, status, setMessages, stop, regenerate } =

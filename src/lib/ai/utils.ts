@@ -4,10 +4,10 @@ import type { User } from "@/db/schema/auth";
 import type { Chat } from "@/db/schema/chat";
 import type { ChatMessage } from "@/db/schema/chat-message";
 import type { Course } from "@/db/schema/course";
+import { startTrace } from "@/lib/langfuse/trace";
 import { generateChatTitlePrompt } from "@/settings/prompts";
 import type { ChatUIMessage } from "./chat-message";
 import { getSaiaModel } from "./saia-models";
-import { withTelemetryMetadata } from "./telemetry";
 
 export const createNewChat = async ({
   message,
@@ -20,20 +20,31 @@ export const createNewChat = async ({
   userId: User["id"];
   courseId: Course["id"];
 }) => {
-  const { text: title } = await generateText({
-    model: getSaiaModel({
-      input: ["text"],
-      model: "meta-llama-3.1-8b-instruct",
-    }).provider,
-    instructions: generateChatTitlePrompt,
-    prompt: message,
-    ...withTelemetryMetadata({
-      sessionId: chatId,
-      courseId,
+  const title = await startTrace(
+    {
+      name: "chat-title",
       userId,
+      sessionId: chatId,
       tags: ["system", "chat_title"],
-    }),
-  });
+      metadata: { courseId },
+      input: message,
+    },
+    async (trace) => {
+      const { text } = await generateText({
+        model: getSaiaModel({
+          input: ["text"],
+          model: "meta-llama-3.1-8b-instruct",
+        }).provider,
+        instructions: generateChatTitlePrompt,
+        prompt: message,
+        telemetry: { functionId: "chat-title" },
+      });
+
+      trace.end({ output: text });
+
+      return text;
+    },
+  );
 
   await saveChat({
     id: chatId,

@@ -3,7 +3,7 @@ import { Placeholder } from "@/components/placeholders/placeholder";
 import { getMessagesByChatId } from "@/db/queries/ai-queries";
 import { getUserPreferences } from "@/db/queries/users";
 import { convertToUIMessages } from "@/lib/ai/utils";
-import { langfuseServer } from "@/lib/langfuse/langfuse-server";
+import { langfuse } from "@/lib/langfuse/client";
 
 const SingleChatPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;
@@ -19,11 +19,13 @@ const SingleChatPage = async (props: { params: Promise<{ id: string }> }) => {
 
   const messages = result.data.query;
 
-  const scores = await langfuseServer.api.scoreV2Get({
+  // Votes use the assistant message id as score id
+  const scores = await langfuse.api.scores.getMany({
     scoreIds: messages
       .filter((message) => message.role !== "user")
       .map((message) => message.id)
       .join(","),
+    name: "rate_helpfulness",
   });
 
   const preferencesResult = await getUserPreferences();
@@ -37,7 +39,7 @@ const SingleChatPage = async (props: { params: Promise<{ id: string }> }) => {
       <Chat
         id={id}
         initialMessages={convertToUIMessages(messages)}
-        scores={scores.data}
+        scores={scores.data.filter((score) => score.dataType === "NUMERIC")}
         preferences={preferences}
       />
     </div>

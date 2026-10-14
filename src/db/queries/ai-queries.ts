@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, eq, gte } from "drizzle-orm";
+import { and, asc, eq, getTableColumns, gte, inArray } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { chat } from "@/db/schema/chat";
 import { type ChatMessage, chatMessage } from "@/db/schema/chat-message";
@@ -72,6 +72,31 @@ export async function getMessagesByChatId({ id }: { id: string }) {
       },
     },
   );
+}
+
+/** Messages of the given chats that belong to the user, oldest first. */
+export async function getMessagesByUserChatIds({
+  userId,
+  chatIds,
+}: {
+  userId: string;
+  chatIds: string[];
+}) {
+  if (chatIds.length === 0) {
+    return [];
+  }
+
+  try {
+    return await db
+      .select(getTableColumns(chatMessage))
+      .from(chatMessage)
+      .innerJoin(chat, eq(chat.id, chatMessage.chatId))
+      .where(and(eq(chat.userId, userId), inArray(chatMessage.chatId, chatIds)))
+      .orderBy(asc(chatMessage.createdAt));
+  } catch (error) {
+    console.error("Failed to get messages by user chat ids from database");
+    throw error;
+  }
 }
 
 export async function getMessageById({ id }: { id: string }) {
