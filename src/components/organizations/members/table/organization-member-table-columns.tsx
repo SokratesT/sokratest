@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
+import type { DataTableFeatures } from "@/components/ui/data-table/data-table-features";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,7 +43,10 @@ const handleDelete = async (
   );
 };
 
-export const organizationMemberTableColumns: ColumnDef<User>[] = [
+export const organizationMemberTableColumns: ColumnDef<
+  DataTableFeatures,
+  User
+>[] = [
   {
     id: "select",
     size: 32,

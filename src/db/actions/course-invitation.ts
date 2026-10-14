@@ -144,7 +144,7 @@ export const rejectCourseInvitation = authActionClient
       action: "update",
     },
   })
-  .schema(z.object({ id: z.string().uuid() }))
+  .schema(z.object({ id: z.uuid() }))
   .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { id } }) => {
     await db

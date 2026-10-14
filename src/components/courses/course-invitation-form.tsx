@@ -9,7 +9,6 @@ import { FormDatePicker } from "@/components/forms/fields/formDatePicker";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormSelect } from "@/components/forms/fields/formSelect";
 import { Placeholder } from "@/components/placeholders/placeholder";
-import { DialogTrigger } from "@/components/plate-ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +25,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form, FormField } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
@@ -213,7 +213,7 @@ const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
               ))}
               {form.formState.errors.items?.root && (
                 <Alert variant="destructive" className="my-4">
-                  <AlertCircle className="h-4 w-4" />
+                  <AlertCircle className="size-4" />
                   <AlertTitle>Error</AlertTitle>
                   <AlertDescription>
                     {form.formState.errors.items.root.message}
@@ -232,7 +232,7 @@ const CourseInvitationForm = ({ courses }: { courses: Course[] }) => {
                   <DialogTrigger asChild>
                     <Button variant="outline">Bulk Add Emails</Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-[600px]">
+                  <DialogContent className="max-w-150">
                     <DialogHeader>
                       <DialogTitle>Bulk Add Emails</DialogTitle>
                       <DialogDescription>

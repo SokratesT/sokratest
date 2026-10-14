@@ -1,17 +1,15 @@
 "use client";
 
-import { type Message, useChat } from "@ai-sdk/react";
-import type { ApiGetScoresResponseData } from "langfuse";
+import { useChat } from "@ai-sdk/react";
+import type { GetScoresResponseData } from "@langfuse/core";
+import { DefaultChatTransport } from "ai";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { deleteTrailingMessages } from "@/db/actions/ai-actions";
 import type { UserPreferencesType } from "@/db/schema/auth";
-import {
-  type DataStreamDelta,
-  useStreamingText,
-} from "@/hooks/use-streaming-text";
+import { type ChatUIMessage, chatDataPartSchemas } from "@/lib/ai/chat-message";
 import { ROUTES } from "@/settings/routes";
 import { ChatPlaceholder } from "./chat-placeholder";
 import { MessageBlock } from "./message-block";
@@ -24,75 +22,57 @@ const Chat = ({
   preferences,
 }: {
   id: string;
-  initialMessages: Message[];
-  scores: ApiGetScoresResponseData[];
+  initialMessages: ChatUIMessage[];
+  scores: GetScoresResponseData.Numeric[];
   preferences: UserPreferencesType;
 }) => {
-  const {
-    data: dataStream,
-    messages,
-    input,
-    handleInputChange,
-    handleSubmit,
-    status,
-    setMessages,
-    setInput,
-    stop,
-    reload,
-  } = useChat({
-    id,
-    body: { id },
-    api: ROUTES.API.ai.chat.getPath(),
-    experimental_throttle: 100,
-    sendExtraMessageFields: true,
-    generateId: uuidv4,
-    initialMessages,
-    onFinish: () => {
-      resetStream();
-    },
-    onError: (error) => {
-      toast.error("An error occurred, please try again!", {
-        description: error.message,
-      });
-    },
-  });
-
-  const { toolStream, reset: resetStream } = useStreamingText(
-    dataStream as DataStreamDelta[],
-  );
+  const { messages, sendMessage, status, setMessages, stop, regenerate } =
+    useChat<ChatUIMessage>({
+      id,
+      messages: initialMessages,
+      transport: new DefaultChatTransport({
+        api: ROUTES.API.ai.chat.getPath(),
+      }),
+      dataPartSchemas: chatDataPartSchemas,
+      throttle: 100,
+      generateId: uuidv4,
+      onError: (error) => {
+        toast.error("An error occurred, please try again!", {
+          description: error.message,
+        });
+      },
+    });
 
   const handleReload = () => {
     deleteTrailingMessages({
       chatId: id,
       messageId: messages[messages.length - 1].id,
     }).then(() => {
-      reload();
+      regenerate();
     });
   };
 
   return (
     <div className="flex size-full min-h-0 min-w-0 flex-col gap-4 bg-background">
       <ChatMessageList>
-        {messages.map((m: Message) => (
+        {messages.map((m) => (
           <MessageBlock
             key={m.id}
             message={m}
             chatId={id}
-            toolStream={toolStream}
-            setMessages={setMessages}
-            reload={reload}
+            sendMessage={sendMessage}
             status={status}
             score={scores.find((s) => s.id === m.id)}
           />
         ))}
         {messages.length === 0 && <ChatPlaceholder />}
         {status === "submitted" && (
-          <div className="sticky m-0 w-full max-w-full whitespace-pre-wrap break-words rounded-none bg-transparent p-4 text-foreground">
+          <div className="wrap-break-word sticky m-0 w-full max-w-full whitespace-pre-wrap rounded-none bg-transparent p-4 text-foreground">
             <ShinyText>Gathering information...</ShinyText>
           </div>
         )}
         {status === "error" && (
-          <div className="sticky m-0 w-full max-w-full whitespace-pre-wrap break-words rounded-none bg-transparent p-4 text-foreground">
+          <div className="wrap-break-word sticky m-0 w-full max-w-full whitespace-pre-wrap rounded-none bg-transparent p-4 text-foreground">
             Something went wrong. Please try again.
           </div>
         )}
@@ -100,14 +80,11 @@ const Chat = ({
 
       <ChatInput
         hasMessages={messages.length > 0}
-        onChange={handleInputChange}
         status={status}
-        handleSubmit={handleSubmit}
+        sendMessage={sendMessage}
         handleReload={handleReload}
         setMessages={setMessages}
         chatId={id}
-        input={input}
-        setInput={setInput}
         stop={stop}
         placeholder="How can I help?"
         preferences={preferences}

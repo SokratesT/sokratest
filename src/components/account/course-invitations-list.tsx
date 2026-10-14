@@ -54,7 +54,7 @@ const CourseInvitationsList = async () => {
     <Tabs defaultValue="pending" className="w-full">
       <TabsList className="mb-6 grid w-full grid-cols-3">
         <TabsTrigger value="pending" className="flex items-center gap-2">
-          <ClipboardList className="h-4 w-4" />
+          <ClipboardList className="size-4" />
           <span className="hidden sm:inline">Pending</span>
           {pendingInvitations.length > 0 && (
             <span className="ml-1 rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary text-xs">
@@ -63,7 +63,7 @@ const CourseInvitationsList = async () => {
           )}
         </TabsTrigger>
         <TabsTrigger value="accepted" className="flex items-center gap-2">
-          <BadgeCheck className="h-4 w-4" />
+          <BadgeCheck className="size-4" />
           <span className="hidden sm:inline">Accepted</span>
           {acceptedInvitations.length > 0 && (
             <span className="ml-1 rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary text-xs">
@@ -72,7 +72,7 @@ const CourseInvitationsList = async () => {
           )}
         </TabsTrigger>
         <TabsTrigger value="rejected" className="flex items-center gap-2">
-          <BadgeX className="h-4 w-4" />
+          <BadgeX className="size-4" />
           <span className="hidden sm:inline">Rejected</span>
           {rejectedInvitations.length > 0 && (
             <span className="ml-1 rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary text-xs">

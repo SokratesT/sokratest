@@ -1,15 +1,18 @@
-import type {
-  ApiGetScoresResponseData,
-  ApiTraceWithDetails,
-  ApiUtilsMetaResponse,
-} from "langfuse";
+import type { GetScoresResponseData, TraceWithDetails } from "@langfuse/core";
+import { createTraceId } from "@langfuse/tracing";
+import { getMessagesByUserChatIds } from "@/db/queries/ai-queries";
 import { getSession } from "@/db/queries/auth";
-import { langfuseServer } from "@/lib/langfuse/langfuse-server";
+import type { ChatMessage } from "@/db/schema/chat-message";
+import { langfuse } from "@/lib/langfuse/client";
 import { ExportChatsButton } from "./export-chats-button";
 import { ExportChatsCSVButton } from "./export-chats-csv-button";
 
+/**
+ * One chat turn. `input` is the user message text and `output` the assistant
+ * message text, as recorded on the trace.
+ */
 export type FilteredTrace = Pick<
-  ApiTraceWithDetails,
+  TraceWithDetails,
   | "id"
   | "input"
   | "output"
@@ -21,79 +24,103 @@ export type FilteredTrace = Pick<
   | "latency"
   | "observations"
 > & {
-  scores: ApiGetScoresResponseData[];
+  scores: GetScoresResponseData[];
+  /** The stored user and assistant message of the turn, if the chat exists */
+  messages: Pick<ChatMessage, "id" | "role" | "parts" | "createdAt">[];
 };
 
-const fetchAllTraces = async (
-  userId: string,
-): Promise<{ meta: ApiUtilsMetaResponse; data: FilteredTrace[] }> => {
-  let allData: ApiTraceWithDetails[] = [];
-  let currentPage = 1;
-  let totalPages = 1;
+const PAGE_SIZE = 50;
 
-  // Fetch first page to get total pages
-  const firstPageResponse = await langfuseServer.api.traceList({
-    userId,
-    limit: 50,
-    page: currentPage,
-  });
+const fetchAllTraces = async (userId: string) => {
+  const traces: TraceWithDetails[] = [];
 
-  allData = [...firstPageResponse.data];
-  totalPages = firstPageResponse.meta.totalPages;
-
-  // Fetch remaining pages if any
-  while (currentPage < totalPages) {
-    currentPage++;
-    const pageResponse = await langfuseServer.api.traceList({
+  for (let page = 1, totalPages = 1; page <= totalPages; page++) {
+    const response = await langfuse.api.trace.list({
       userId,
-      limit: 50,
-      page: currentPage,
+      tags: "user",
+      limit: PAGE_SIZE,
+      page,
     });
-    allData = [...allData, ...pageResponse.data];
+    traces.push(...response.data);
+    totalPages = response.meta.totalPages;
   }
 
-  // Fetch scores
-  const scores = await langfuseServer.api.scoreV2Get({
-    userId: userId,
-  });
+  return traces;
+};
 
-  // Filter traces to only include input and id properties
-  const filteredData = allData
-    .map((trace) => {
-      if (!trace.tags?.includes("user")) {
-        // Skip traces without the "user" tag
-        return undefined;
-      }
-      const traceScores = scores.data.filter((score) => {
-        return score.traceId === trace.id;
-      });
+const fetchAllScores = async (userId: string) => {
+  const scores: GetScoresResponseData[] = [];
 
-      return {
-        id: trace.id,
-        input: trace.input,
-        output: trace.output,
-        sessionId: trace.sessionId,
-        scores: traceScores,
-        timestamp: trace.timestamp,
-        metadata: trace.metadata,
-        userId: trace.userId,
-        tags: trace.tags,
-        latency: trace.latency,
-        observations: trace.observations,
-      };
-    })
-    .filter((trace) => trace !== undefined) as FilteredTrace[];
+  for (let page = 1, totalPages = 1; page <= totalPages; page++) {
+    const response = await langfuse.api.scores.getMany({
+      userId,
+      limit: PAGE_SIZE,
+      page,
+    });
+    scores.push(...response.data);
+    totalPages = response.meta.totalPages;
+  }
 
-  // Return the combined result with filtered data and final meta information
-  return {
-    data: filteredData,
-    meta: {
-      page: 1,
-      limit: filteredData.length,
-      totalItems: firstPageResponse.meta.totalItems,
-      totalPages: 1,
-    },
-  };
+  return scores;
+};
+
+/**
+ * Maps trace ids to the stored user and assistant message of the turn. The
+ * chat trace id is derived from the assistant message id; traces recorded
+ * before the Langfuse SDK v5 migration used the message id itself.
+ */
+const getTurnMessagesByTraceId = async (
+  messages: Awaited<ReturnType<typeof getMessagesByUserChatIds>>,
+) => {
+  const turnMessages = new Map<string, FilteredTrace["messages"]>();
+
+  for (const [index, message] of messages.entries()) {
+    if (message.role !== "assistant") {
+      continue;
+    }
+
+    const previous = messages[index - 1];
+    const turn = [
+      ...(previous?.chatId === message.chatId && previous.role === "user"
+        ? [previous]
+        : []),
+      message,
+    ].map(({ id, role, parts, createdAt }) => ({ id, role, parts, createdAt }));
+
+    turnMessages.set(await createTraceId(message.id), turn);
+    turnMessages.set(message.id, turn);
+  }
+
+  return turnMessages;
+};
+
+const fetchChatTurns = async (userId: string): Promise<FilteredTrace[]> => {
+  const [traces, scores] = await Promise.all([
+    fetchAllTraces(userId),
+    fetchAllScores(userId),
+  ]);
+
+  const chatIds = [
+    ...new Set(traces.flatMap((trace) => trace.sessionId ?? [])),
+  ];
+  const turnMessages = await getTurnMessagesByTraceId(
+    await getMessagesByUserChatIds({ userId, chatIds }),
+  );
+
+  return traces.map((trace) => ({
+    id: trace.id,
+    input: trace.input,
+    output: trace.output,
+    sessionId: trace.sessionId,
+    timestamp: trace.timestamp,
+    metadata: trace.metadata,
+    userId: trace.userId,
+    tags: trace.tags,
+    latency: trace.latency,
+    observations: trace.observations,
+    scores: scores.filter((score) => score.traceId === trace.id),
+    messages: turnMessages.get(trace.id) ?? [],
+  }));
 };
 
 const calculateOverviewStats = (traces: FilteredTrace[]) => {
@@ -124,8 +151,8 @@ const calculateOverviewStats = (traces: FilteredTrace[]) => {
 
   // Calculate average latency (excluding null/undefined values)
   const latencies = traces
-    .map((trace) => trace.latency)
-    .filter((latency) => latency != null && latency > 0);
+    .flatMap((trace) => trace.latency ?? [])
+    .filter((latency) => latency > 0);
   const averageLatency =
     latencies.length > 0
       ? latencies.reduce((sum, latency) => sum + latency, 0) / latencies.length
@@ -155,8 +182,8 @@ const ExportChats = async () => {
     return <div>Please log in to export chats.</div>;
   }
 
-  const traces = await fetchAllTraces(session.user.id);
-  const stats = calculateOverviewStats(traces.data);
+  const traces = await fetchChatTurns(session.user.id);
+  const stats = calculateOverviewStats(traces);
 
   return (
     <div className="space-y-6">
@@ -197,8 +224,8 @@ const ExportChats = async () => {
       )}
 
       <div className="flex flex-wrap gap-2">
-        <ExportChatsButton traces={traces.data} />
-        <ExportChatsCSVButton traces={traces.data} />
+        <ExportChatsButton traces={traces} />
+        <ExportChatsCSVButton traces={traces} />
       </div>
     </div>
   );

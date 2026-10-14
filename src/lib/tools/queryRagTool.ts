@@ -1,60 +1,56 @@
-import { type DataStreamWriter, tool } from "ai";
+import { tool, type UIMessageStreamWriter } from "ai";
 import { z } from "zod";
-import { findRelevantContent } from "@/app/api/ai/chat/ai-helper";
+import {
+  findRelevantContent,
+  getDocumentReferencesByIds,
+} from "@/app/api/ai/chat/ai-helper";
 import type { Course } from "@/db/schema/course";
+import type { ChatUIMessage } from "@/lib/ai/chat-message";
 
 export const queryRagTool = ({
-  dataStream,
+  writer,
   courseId,
 }: {
-  dataStream: DataStreamWriter;
+  writer: UIMessageStreamWriter<ChatUIMessage>;
   courseId: Course["id"];
 }) =>
   tool({
     description:
       "Use this tool to respond to questions. It will return some documents, which you should use to respond to the query.",
-    parameters: z.object({
+    inputSchema: z.object({
       query: z
         .string()
         .describe(
           "A detailed query to retrieve information about the user's latest question that takes the context of the current conversation into account.",
         ),
     }),
-    execute: async ({ query }, { toolCallId }) => {
-      dataStream.writeData({
-        type: "id",
-        content: toolCallId,
-      });
-
+    execute: async ({ query }) => {
       const result = await findRelevantContent({
         userQuery: query,
         courseId,
       });
 
       if (!result.success) {
-        dataStream.writeData({
-          type: "text-delta",
-          content: `Error: ${result.error}`,
-        });
-        return;
+        return `Error: ${result.error}`;
       }
 
       if (!result.data.points || result.data.points.length === 0) {
-        dataStream.writeData({
-          type: "text-delta",
-          content: "No relevant content found.",
-        });
-        return;
+        return "No relevant content found.";
       }
 
       const points = result.data.points;
 
-      points.forEach((point) => {
-        dataStream.writeMessageAnnotation({
-          text: point.payload.text,
-          type: "reference",
+      const references = await getDocumentReferencesByIds(
+        points.map((point) => point.payload.document_id),
+      );
+
+      for (const reference of references) {
+        writer.write({
+          type: "data-reference",
+          id: reference.id,
+          data: reference,
         });
-      });
+      }
 
       const cont = points.map((point) => ({
         fileId: point.payload.document_id,
@@ -62,7 +58,6 @@ export const queryRagTool = ({
         similarity: point.score,
       }));
 
-      /* return JSON.stringify(cont); */
       return JSON.stringify(cont);
     },
   });

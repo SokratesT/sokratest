@@ -6,7 +6,7 @@ export const courseInsertSchema = createInsertSchema(course, {
   organizationId: (schema) => schema.optional(),
   description: (schema) =>
     schema.min(20, {
-      message: "Description must be at least 20 characters long",
+      error: "Description must be at least 20 characters long",
     }),
   config: (schema) => schema.optional(),
 });

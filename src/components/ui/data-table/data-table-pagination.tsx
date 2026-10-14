@@ -24,20 +24,20 @@ const DataTablePagination = () => {
   return (
     <div className="flex flex-col items-center justify-between px-2 sm:flex-row">
       <div className="flex-1 text-muted-foreground text-sm">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+        {table.getSelectedRowModel().rows.length} of{" "}
+        {table.getCoreRowModel().rows.length} row(s) selected.
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
           <p className="font-medium text-sm">Rows per page</p>
           <Select
-            value={`${table.getState().pagination.pageSize}`}
+            value={`${table.state.pagination.pageSize}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value));
             }}
           >
             <SelectTrigger className="h-8 w-[80px]">
-              <SelectValue placeholder={table.getState().pagination.pageSize} />
+              <SelectValue placeholder={table.state.pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
               {[20, 30, 50, 100, 200].map((pageSize) => (
@@ -49,8 +49,7 @@ const DataTablePagination = () => {
           </Select>
         </div>
         <div className="flex w-[100px] items-center justify-center font-medium text-sm">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
+          Page {table.state.pagination.pageIndex + 1} of {table.getPageCount()}
         </div>
         <div className="flex items-center space-x-2">
           <Button

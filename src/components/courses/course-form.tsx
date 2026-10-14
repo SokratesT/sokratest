@@ -125,7 +125,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
                   <PlateEditor
                     options={{ value: form.getValues("content") }}
                     onChange={(value) => form.setValue("content", value)}
-                    className="h-[600px]"
+                    className="h-150"
                   />
                 </div>
               </CardContent>

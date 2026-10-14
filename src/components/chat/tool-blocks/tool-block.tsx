@@ -1,24 +1,29 @@
-import type { ToolInvocation } from "ai";
+import { type DynamicToolUIPart, getToolName, type ToolUIPart } from "ai";
 import { Markdown } from "@/components/chat/markdown";
 
 const ToolBlock = ({
   tool,
   toolStream,
 }: {
-  tool: ToolInvocation;
+  tool: ToolUIPart | DynamicToolUIPart;
   toolStream?: string;
 }) => {
+  const output =
+    tool.state === "output-available"
+      ? typeof tool.output === "string"
+        ? tool.output
+        : JSON.stringify(tool.output)
+      : (toolStream ?? "");
+
   return (
     <div key={tool.toolCallId}>
       <div>
         <p>
-          {tool.toolName} | {tool.toolCallId}
+          {getToolName(tool)} | {tool.toolCallId}
         </p>
       </div>
       <div className="flex flex-col justify-between">
-        <Markdown>
-          {tool.state === "result" ? tool.result : (toolStream ?? "")}
-        </Markdown>
+        <Markdown>{output}</Markdown>
       </div>
     </div>
   );

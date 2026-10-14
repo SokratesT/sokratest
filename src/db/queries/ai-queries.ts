@@ -1,14 +1,10 @@
 import "server-only";
 
-import type { CoreAssistantMessage, CoreToolMessage } from "ai";
-import { and, asc, eq, gte } from "drizzle-orm";
+import { and, asc, eq, getTableColumns, gte, inArray } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { chat } from "@/db/schema/chat";
 import { type ChatMessage, chatMessage } from "@/db/schema/chat-message";
 import { withAuthQuery } from "./utils/with-auth-query";
-
-type ResponseMessageWithoutId = CoreToolMessage | CoreAssistantMessage;
-type ResponseMessage = ResponseMessageWithoutId & { id: string };
 
 export async function saveChat({
   id,
@@ -78,6 +74,31 @@ export async function getMessagesByChatId({ id }: { id: string }) {
   );
 }
 
+/** Messages of the given chats that belong to the user, oldest first. */
+export async function getMessagesByUserChatIds({
+  userId,
+  chatIds,
+}: {
+  userId: string;
+  chatIds: string[];
+}) {
+  if (chatIds.length === 0) {
+    return [];
+  }
+
+  try {
+    return await db
+      .select(getTableColumns(chatMessage))
+      .from(chatMessage)
+      .innerJoin(chat, eq(chat.id, chatMessage.chatId))
+      .where(and(eq(chat.userId, userId), inArray(chatMessage.chatId, chatIds)))
+      .orderBy(asc(chatMessage.createdAt));
+  } catch (error) {
+    console.error("Failed to get messages by user chat ids from database");
+    throw error;
+  }
+}
+
 export async function getMessageById({ id }: { id: string }) {
   try {
     return await db.select().from(chatMessage).where(eq(chatMessage.id, id));
@@ -109,16 +130,4 @@ export async function deleteMessagesByChatIdAfterTimestamp({
     );
     throw error;
   }
-}
-
-export function getTrailingMessageId({
-  messages,
-}: {
-  messages: Array<ResponseMessage>;
-}): string | null {
-  const trailingMessage = messages.at(-1);
-
-  if (!trailingMessage) return null;
-
-  return trailingMessage.id;
 }

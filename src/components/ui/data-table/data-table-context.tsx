@@ -1,9 +1,12 @@
 "use client";
 
-import type { Table } from "@tanstack/react-table";
+import type { ReactTable } from "@tanstack/react-table";
 import { createContext, useContext } from "react";
+import type { DataTableFeatures } from "./data-table-features";
 
-const TableContext = createContext<{ table: Table<any> } | null>(null);
+const TableContext = createContext<{
+  table: ReactTable<DataTableFeatures, any>;
+} | null>(null);
 
 export const useTable = () => {
   const context = useContext(TableContext);
@@ -15,7 +18,7 @@ export const useTable = () => {
 
 const TableProvider: React.FC<{
   children: React.ReactNode;
-  table: Table<any>;
+  table: ReactTable<DataTableFeatures, any>;
 }> = ({ table, children }) => (
   <TableContext.Provider value={{ table }}>{children}</TableContext.Provider>
 );

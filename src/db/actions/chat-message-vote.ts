@@ -1,8 +1,10 @@
 "use server";
 
+import { createTraceId } from "@langfuse/tracing";
 import { revalidatePath } from "next/cache";
 import { voteInsertSchema } from "@/db/zod/vote";
-import { langfuseServer } from "@/lib/langfuse/langfuse-server";
+import { langfuse } from "@/lib/langfuse/client";
+import { langfuseEnvironment } from "@/lib/langfuse/environment";
 import { authActionClient, checkPermissionMiddleware } from "@/lib/safe-action";
 import { ROUTES } from "@/settings/routes";
 
@@ -17,13 +19,16 @@ export const voteMessage = authActionClient
   .schema(voteInsertSchema)
   .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { messageId, sentiment, chatId } }) => {
-    langfuseServer.score({
+    // The chat trace id is derived from the assistant message id, and the
+    // score id is the message id so the chat page can match votes to messages
+    langfuse.score.create({
       id: messageId,
-      traceId: messageId,
+      traceId: await createTraceId(messageId),
       name: "rate_helpfulness",
       value: sentiment,
-      environment: process.env.NODE_ENV,
+      environment: langfuseEnvironment,
     });
+    await langfuse.score.flush();
 
     revalidatePath(ROUTES.PRIVATE.chat.view.getPath({ id: chatId }));
 

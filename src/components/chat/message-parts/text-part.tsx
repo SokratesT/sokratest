@@ -1,23 +1,19 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
-import type { ChatRequestOptions, Message } from "ai";
+import type { TextUIPart } from "ai";
 import type { Dispatch, SetStateAction } from "react";
 import { Markdown } from "@/components/chat/markdown";
 import { MessageEditor } from "@/components/chat/message-editor";
+import type { ChatUIMessage } from "@/lib/ai/chat-message";
 
 interface TextPartProps {
-  part: { type: "text"; text: string };
+  part: TextUIPart;
   variant: "sent" | "received";
   mode: "view" | "edit";
   setMode: Dispatch<SetStateAction<"view" | "edit">>;
-  message: Message;
+  message: ChatUIMessage;
   chatId: string;
-  setMessages: (
-    messages: Message[] | ((messages: Message[]) => Message[]),
-  ) => void;
-  reload: (
-    chatRequestOptions?: ChatRequestOptions,
-  ) => Promise<string | null | undefined>;
-  status: UseChatHelpers["status"];
+  sendMessage: UseChatHelpers<ChatUIMessage>["sendMessage"];
+  status: UseChatHelpers<ChatUIMessage>["status"];
 }
 
 export const TextPart = ({
@@ -27,8 +23,7 @@ export const TextPart = ({
   setMode,
   message,
   chatId,
-  setMessages,
-  reload,
+  sendMessage,
   status,
 }: TextPartProps) => {
   if (variant === "sent") {
@@ -40,8 +35,7 @@ export const TextPart = ({
             key={message.id}
             message={message}
             setMode={setMode}
-            setMessages={setMessages}
-            reload={reload}
+            sendMessage={sendMessage}
             status={status}
           />
         ) : (

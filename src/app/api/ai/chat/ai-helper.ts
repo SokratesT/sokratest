@@ -1,8 +1,6 @@
-import { generateText, type Message } from "ai";
+import { generateText, type ModelMessage } from "ai";
 import { inArray } from "drizzle-orm";
 import { db } from "@/db/drizzle";
-import type { User } from "@/db/schema/auth";
-import type { Chat } from "@/db/schema/chat";
 import type { Course } from "@/db/schema/course";
 import { document } from "@/db/schema/document";
 import { generateEmbedding } from "@/lib/ai/embedding";
@@ -65,14 +63,10 @@ export const findRelevantContent = async ({
 export const getRelevantChunks = async ({
   messages,
   courseId,
-  chatId,
-  userId,
   limit,
 }: {
-  messages: Message[];
+  messages: ModelMessage[];
   courseId: Course["id"];
-  chatId: Chat["id"];
-  userId: User["id"];
   limit: number;
 }) => {
   const generatedQuery = await generateText({
@@ -81,16 +75,8 @@ export const getRelevantChunks = async ({
       model: "meta-llama-3.1-8b-instruct",
     }).provider,
     messages,
-    experimental_telemetry: {
-      isEnabled: true,
-      metadata: {
-        sessionId: chatId,
-        courseId,
-        userId,
-        tags: ["system", "rag_query"],
-      },
-    },
-    system: generateRagQueryPrompt,
+    instructions: generateRagQueryPrompt,
+    telemetry: { functionId: "rag-query" },
   });
 
   const result = await findRelevantContent({
@@ -141,12 +127,5 @@ export const getDocumentReferencesByIds = async (documentIds: string[]) => {
     .from(document)
     .where(inArray(document.id, documentIds));
 
-  const filteredQuery = query.filter(
-    (doc) => doc.metadata.showReference === true,
-  );
-
-  return filteredQuery.map((doc) => ({
-    ...doc,
-    type: "reference",
-  }));
+  return query.filter((doc) => doc.metadata.showReference === true);
 };

@@ -80,10 +80,10 @@ const FormDatePicker = ({
               ) : (
                 <span>{placeholder}</span>
               )}
-              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+              <CalendarIcon className="ml-auto size-4 opacity-50" />
               {showClearButton && field.value && (
                 <XIcon
-                  className="ml-2 h-4 w-4 cursor-pointer opacity-50"
+                  className="ml-2 size-4 cursor-pointer opacity-50"
                   onClick={(e) => {
                     e.stopPropagation();
                     field.onChange(null);
@@ -110,7 +110,7 @@ const FormDatePicker = ({
               field.onChange(selectedDate);
             }}
             disabled={(date) => date > maxDate || date < minDate}
-            initialFocus
+            autoFocus
           />
           {showTimePicker && (
             <div className="border-border border-t p-3">

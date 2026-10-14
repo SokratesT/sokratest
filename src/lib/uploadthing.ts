@@ -12,8 +12,8 @@ export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}
 
 interface UseUploadFileProps
   extends Pick<
-    UploadFilesOptions<OurFileRouter, keyof OurFileRouter>,
-    "headers" | "onUploadBegin" | "onUploadProgress" | "skipPolling"
+    UploadFilesOptions<OurFileRouter["editorUploader"]>,
+    "headers" | "onUploadBegin" | "onUploadProgress"
   > {
   onUploadComplete?: (file: UploadedFile) => void;
   onUploadError?: (error: unknown) => void;
@@ -63,11 +63,10 @@ export function useUploadFile({
       // toast.info('User not logged in. Mocking upload process.');
       const mockUploadedFile = {
         key: "mock-key-0",
-        appUrl: `https://mock-app-url.com/${file.name}`,
         name: file.name,
         size: file.size,
         type: file.type,
-        url: URL.createObjectURL(file),
+        ufsUrl: URL.createObjectURL(file),
       } as UploadedFile;
 
       // Simulate upload progress

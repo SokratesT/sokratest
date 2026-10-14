@@ -68,7 +68,7 @@ const AccountPage = async () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Suspense fallback={<Skeleton className="h-[120px] w-full" />}>
+            <Suspense fallback={<Skeleton className="h-30 w-full" />}>
               <ExportChats />
             </Suspense>
           </CardContent>

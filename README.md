@@ -6,6 +6,10 @@
   <strong>AI-powered learning platform with RAG capabilities and course management</strong>
 </p>
 
+> **Note**
+>
+> Sokrates<sup>t</sup> is no longer maintained, and this is its final release. Development continues in its successor, [OrcAI](https://github.com/LarsLrn/orcai).
+
 <p align="center">
   <a href="#features">Features</a> •
   <a href="#technology-stack">Tech Stack</a> •
@@ -88,6 +92,7 @@ Before deploying Sokrates<sup>t</sup>, you need to set up the following external
 5. **Langfuse** (Optional) - AI observability and tracing
    - Self-hosted: [Langfuse Self-Hosting Guide](https://langfuse.com/docs/deployment/self-host)
    - Or use [Langfuse Cloud](https://cloud.langfuse.com/)
+   - Uses the Langfuse JS SDK v5 (server >= 3.63; SDK v6 needs a v4 server)
 
 6. **Umami** (Optional) - Privacy-focused web analytics
    - Self-hosted: [Umami Installation Guide](https://umami.is/docs/install)
@@ -174,7 +179,8 @@ SOKRATEST_API_KEY=your_secure_random_key
 # Langfuse (Optional - for AI tracing)
 LANGFUSE_SECRET_KEY=your_langfuse_secret
 LANGFUSE_PUBLIC_KEY=your_langfuse_public
-LANGFUSE_BASEURL=https://your-langfuse-instance.com
+LANGFUSE_BASE_URL=https://your-langfuse-instance.com
+# LANGFUSE_TRACING_ENVIRONMENT=production # defaults to NODE_ENV
 
 # Umami Analytics (Optional)
 NEXT_PUBLIC_UMAMI_SCRIPT_URL=https://umami.your-domain.com/script.js

@@ -1,6 +1,6 @@
 "use client";
 
-import { flexRender } from "@tanstack/react-table";
+import { FlexRender } from "@tanstack/react-table";
 
 import {
   Table,
@@ -25,12 +25,9 @@ const DataTableBody = () => {
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <FlexRender header={header} />
+                    )}
                   </TableHead>
                 );
               })}
@@ -51,7 +48,7 @@ const DataTableBody = () => {
                       width: cell.column.getSize(),
                     }}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <FlexRender cell={cell} />
                   </TableCell>
                 ))}
               </TableRow>

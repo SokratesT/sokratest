@@ -6,21 +6,32 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** Wraps files (e.g. from `use-file-picker`) in a `FileList`. */
+export function toFileList(files: File[]): FileList {
+  const dataTransfer = new DataTransfer();
+
+  for (const file of files) {
+    dataTransfer.items.add(file);
+  }
+
+  return dataTransfer.files;
+}
+
 /**
  * Extracts the base schema from the given Zod schema.
  *
- * @param {z.ZodTypeAny} schema - The Zod schema to extract the base schema from.
- * @return {z.ZodObject<any> | null} The base schema if found, otherwise null.
+ * @param {z.core.$ZodType} schema - The Zod schema to extract the base schema from.
+ * @return {z.ZodObject | null} The base schema if found, otherwise null.
  */
-function extractBaseSchema(schema: z.ZodTypeAny): z.ZodObject<any> | null {
+function extractBaseSchema(schema: z.core.$ZodType): z.ZodObject | null {
   if (schema instanceof z.ZodObject) {
     return schema;
   }
   if (schema instanceof z.ZodOptional) {
-    return extractBaseSchema(schema._def.innerType);
+    return extractBaseSchema(schema.unwrap());
   }
-  if (schema instanceof z.ZodEffects && schema._def.schema) {
-    return extractBaseSchema(schema._def.schema);
+  if (schema instanceof z.ZodPipe) {
+    return extractBaseSchema(schema.in);
   }
   return null;
 }
@@ -28,33 +39,31 @@ function extractBaseSchema(schema: z.ZodTypeAny): z.ZodObject<any> | null {
 /**
  * Checks if a field is required in the given schema.
  *
- * @param {z.ZodType<any>} schema - The schema to check against.
+ * @param {z.core.$ZodType} schema - The schema to check against.
  * @param {string} fieldPath - The name of the field to check.
  * @return {boolean} Indicates if the field is required.
  */
 export function isFieldRequired(
-  schema: z.ZodTypeAny,
+  schema: z.core.$ZodType,
   fieldPath: string,
 ): boolean {
   const baseSchema = extractBaseSchema(schema);
   if (!baseSchema) return true;
 
-  const shape = baseSchema._def.shape();
   const keys = fieldPath.split(".");
 
-  let currentField = shape;
+  let currentShape: z.core.$ZodShape | undefined = baseSchema.shape;
   for (const key of keys) {
-    if (!currentField[key]) {
+    const field: z.core.$ZodType | undefined = currentShape?.[key];
+
+    if (!field) {
       return true;
     }
 
-    if (
-      currentField[key] instanceof z.ZodObject ||
-      currentField[key] instanceof z.ZodEffects
-    ) {
-      currentField = extractBaseSchema(currentField[key])?._def.shape();
+    if (field instanceof z.ZodObject || field instanceof z.ZodPipe) {
+      currentShape = extractBaseSchema(field)?.shape;
     } else {
-      return !(currentField[key] instanceof z.ZodOptional);
+      return !(field instanceof z.ZodOptional);
     }
   }
 

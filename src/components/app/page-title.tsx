@@ -1,18 +1,24 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const PageTitle = () => {
-  const [documentTitle, setDocumentTitle] = useState<string | undefined>(
-    undefined,
-  );
-  const pathname = usePathname();
+const subscribe = (onChange: () => void) => {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.head, {
+    subtree: true,
+    childList: true,
+    characterData: true,
+  });
+  return () => observer.disconnect();
+};
 
-  useEffect(() => {
-    setDocumentTitle(document.title);
-  }, [pathname]);
+const PageTitle = () => {
+  const documentTitle = useSyncExternalStore(
+    subscribe,
+    () => document.title,
+    () => undefined,
+  );
 
   return documentTitle ? documentTitle : <Skeleton className="h-6 w-24" />;
 };

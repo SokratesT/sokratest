@@ -1,8 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin, organization as organizationPlugin } from "better-auth/plugins";
-import { createTransport } from "nodemailer";
-import type SMTPTransport from "nodemailer/lib/smtp-transport";
+import { createTransport, type SMTPTransportOptions } from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "@/db/drizzle";
 import { getUserCoursesOnLogin } from "@/db/queries/course";
@@ -124,7 +123,7 @@ export const auth = betterAuth({
   },
 });
 
-const smtpConfig: SMTPTransport.Options = {
+const smtpConfig: SMTPTransportOptions = {
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT) || 587,
   secure: false, // upgrade later with STARTTLS

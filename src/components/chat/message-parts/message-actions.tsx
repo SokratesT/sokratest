@@ -1,5 +1,4 @@
-import type { Message } from "ai";
-import type { ApiGetScoresResponseData } from "langfuse";
+import type { GetScoresResponseData } from "@langfuse/core";
 import { CopyIcon, PencilIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
@@ -8,6 +7,7 @@ import {
   ChatBubbleAction,
   ChatBubbleActionWrapper,
 } from "@/components/ui/chat/chat-bubble";
+import { type ChatUIMessage, getMessageText } from "@/lib/ai/chat-message";
 
 export const MessageActions = ({
   message,
@@ -15,9 +15,9 @@ export const MessageActions = ({
   score,
   handleModeChange,
 }: {
-  message: Message;
+  message: ChatUIMessage;
   chatId: string;
-  score?: ApiGetScoresResponseData;
+  score?: GetScoresResponseData.Numeric;
   handleModeChange: () => void;
 }) => {
   const [, copy] = useCopyToClipboard();
@@ -36,10 +36,7 @@ export const MessageActions = ({
   const copyAction = {
     icon: CopyIcon,
     type: "Copy",
-    fn: () =>
-      handleCopy(
-        message.parts?.find((part) => part.type === "text")?.text ?? "",
-      ),
+    fn: () => handleCopy(getMessageText(message)),
   };
 
   if (message.role === "user") {

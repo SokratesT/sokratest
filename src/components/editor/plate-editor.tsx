@@ -1,12 +1,20 @@
 "use client";
 
-import { Plate } from "@udecode/plate/react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { useCreateEditor } from "@/components/editor/use-create-editor";
-import { Editor, EditorContainer } from "@/components/plate-ui/editor";
+import type { Value } from "platejs";
+import { Plate, usePlateEditor } from "platejs/react";
+import { EditorKit } from "@/components/editor/editor-kit";
+import { Editor, EditorContainer } from "@/components/ui/editor";
 import { cn } from "@/lib/utils";
 import { defaultEditorText } from "./default-editor-text";
+
+const parseValue = (value: string | undefined): Value => {
+  try {
+    if (!value) return defaultEditorText;
+    return JSON.parse(value);
+  } catch (_e) {
+    return defaultEditorText;
+  }
+};
 
 const PlateEditor = ({
   options,
@@ -19,31 +27,23 @@ const PlateEditor = ({
   readOnly?: boolean;
   className?: string;
 }) => {
-  const parsedValue = () => {
-    try {
-      if (!options?.value) return defaultEditorText;
-      return JSON.parse(options.value);
-    } catch (_e) {
-      return defaultEditorText;
-    }
-  };
-
-  const editor = useCreateEditor({ value: parsedValue() });
+  const editor = usePlateEditor({
+    plugins: EditorKit,
+    value: parseValue(options?.value),
+  });
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <Plate
-        readOnly={readOnly}
-        editor={editor}
-        onChange={(value) => onChange?.(JSON.stringify(value.value))}
+    <Plate
+      readOnly={readOnly}
+      editor={editor}
+      onChange={({ value }) => onChange?.(JSON.stringify(value))}
+    >
+      <EditorContainer
+        className={cn(!readOnly && "rounded-md border", className)}
       >
-        <EditorContainer
-          className={cn(!readOnly && "rounded-md border", className)}
-        >
-          <Editor variant={readOnly ? "none" : "default"} readOnly={readOnly} />
-        </EditorContainer>
-      </Plate>
-    </DndProvider>
+        <Editor variant={readOnly ? "none" : "default"} readOnly={readOnly} />
+      </EditorContainer>
+    </Plate>
   );
 };
 

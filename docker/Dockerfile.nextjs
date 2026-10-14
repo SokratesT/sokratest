@@ -55,7 +55,7 @@ COPY --from=deps /usr/local/bin/bun /usr/local/bin/bun
 
 # Install undici into the standalone app directory.
 # NOTE: This will create/update a node_modules entry in the runtime image without modifying the build output.
-RUN bun add --no-save undici
+RUN bun add --no-save undici@7.30.0
 
 # Don't run production as root
 USER nextjs

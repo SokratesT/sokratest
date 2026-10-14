@@ -19,7 +19,7 @@ const changePasswordSchema = z
     confirmPassword: sharedSchemas.password,
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords must match",
+    error: "Passwords must match",
     path: ["confirmPassword"],
   });
 

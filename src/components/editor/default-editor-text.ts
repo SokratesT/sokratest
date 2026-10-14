@@ -1,6 +1,6 @@
-import { ParagraphPlugin } from "@udecode/plate/react";
+import { KEYS, type Value } from "platejs";
 
-export const defaultEditorText = [
+export const defaultEditorText: Value = [
   {
     children: [{ text: "The start of something great..." }],
     type: "h1",
@@ -15,6 +15,6 @@ export const defaultEditorText = [
         text: " to access the quick menu for headings, lists, and other formatting options.",
       },
     ],
-    type: ParagraphPlugin.key,
+    type: KEYS.p,
   },
 ];

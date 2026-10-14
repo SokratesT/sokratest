@@ -1,6 +1,6 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
-import type { ChatRequestOptions, Message } from "ai";
-import type { ApiGetScoresResponseData } from "langfuse";
+import type { GetScoresResponseData } from "@langfuse/core";
+import { isToolUIPart } from "ai";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
@@ -9,6 +9,7 @@ import {
   ChatBubbleMessage,
 } from "@/components/ui/chat/chat-bubble";
 import type { Chat } from "@/db/schema/chat";
+import type { ChatUIMessage } from "@/lib/ai/chat-message";
 import { cn } from "@/lib/utils";
 import { AnnotationBlock } from "./annotation-block";
 import { MessageActions } from "./message-parts/message-actions";
@@ -16,32 +17,18 @@ import { ReasoningPart } from "./message-parts/reasoning-part";
 import { TextPart } from "./message-parts/text-part";
 import { ToolBlock } from "./tool-blocks/tool-block";
 
-interface ToolStream {
-  [key: string]: {
-    content: string | undefined;
-  };
-}
-
 const MessageBlock = ({
   message,
   chatId,
-  toolStream,
-  setMessages,
-  reload,
+  sendMessage,
   status,
   score,
 }: {
-  message: Message;
+  message: ChatUIMessage;
   chatId: Chat["id"];
-  toolStream: ToolStream | null;
-  setMessages: (
-    messages: Message[] | ((messages: Message[]) => Message[]),
-  ) => void;
-  reload: (
-    chatRequestOptions?: ChatRequestOptions,
-  ) => Promise<string | null | undefined>;
-  status: UseChatHelpers["status"];
-  score?: ApiGetScoresResponseData;
+  sendMessage: UseChatHelpers<ChatUIMessage>["sendMessage"];
+  status: UseChatHelpers<ChatUIMessage>["status"];
+  score?: GetScoresResponseData.Numeric;
 }) => {
   const [mode, setMode] = useState<"view" | "edit">("view");
 
@@ -54,6 +41,22 @@ const MessageBlock = ({
   };
 
   const variant = message.role === "user" ? "sent" : "received";
+
+  const hasContent = message.parts.some(
+    (part) => part.type === "text" || part.type === "reasoning",
+  );
+
+  const references = message.parts.flatMap((part) =>
+    part.type === "data-reference" ? [part.data] : [],
+  );
+
+  const toolStreams = new Map(
+    message.parts.flatMap((part) =>
+      part.type === "data-toolStream" && part.id
+        ? [[part.id, part.data.text] as const]
+        : [],
+    ),
+  );
 
   return (
     <ChatBubble
@@ -70,7 +73,7 @@ const MessageBlock = ({
           data-role={message.role}
         >
           <ChatBubbleMessage
-            isLoading={message.parts?.length === 0 && status === "streaming"}
+            isLoading={!hasContent && status === "streaming"}
             variant={variant}
             className={cn(
               {
@@ -80,10 +83,10 @@ const MessageBlock = ({
               "sticky",
             )}
           >
-            {message.parts?.map((part) => (
+            {message.parts.map((part) => (
               <div key={part.type + message.id}>
                 {part.type === "reasoning" && (
-                  <ReasoningPart reasoning={part.reasoning} />
+                  <ReasoningPart reasoning={part.text} />
                 )}
 
                 {part.type === "text" && (
@@ -94,25 +97,22 @@ const MessageBlock = ({
                     setMode={setMode}
                     message={message}
                     chatId={chatId}
-                    setMessages={setMessages}
-                    reload={reload}
+                    sendMessage={sendMessage}
                     status={status}
                   />
                 )}
 
-                {part.type === "tool-invocation" && (
+                {isToolUIPart(part) && (
                   <ToolBlock
-                    key={part.toolInvocation.toolCallId}
-                    tool={part.toolInvocation}
-                    toolStream={
-                      toolStream?.[part.toolInvocation.toolCallId]?.content
-                    }
+                    key={part.toolCallId}
+                    tool={part}
+                    toolStream={toolStreams.get(part.toolCallId)}
                   />
                 )}
               </div>
             ))}
 
-            <AnnotationBlock annotations={message.annotations} />
+            <AnnotationBlock references={references} />
             <MessageActions
               message={message}
               chatId={chatId}

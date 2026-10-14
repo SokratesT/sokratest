@@ -40,6 +40,8 @@
   --sidebar-ring: hsl(190deg 40% 20%);
   --background: hsl(190deg 50% 95%);
   --foreground: hsl(190deg 40% 20%);
+  --highlight: oklch(0.852 0.199 91.936);
+  --brand: oklch(0.623 0.214 259.815);
 }
 .dark {
   --background: hsl(190deg 30% 15%);
@@ -75,6 +77,8 @@
   --sidebar-border: hsl(190deg 30% 25%);
   --sidebar-ring: hsl(190deg 40% 20%);
   --radius: 0.5rem;
+  --highlight: oklch(0.852 0.199 91.936);
+  --brand: oklch(0.707 0.165 254.624);
 }
 
 @theme inline {
@@ -156,6 +160,10 @@
   }
   
   --animate-shiny-text: shiny-text 5s infinite;
+
+  --color-brand: var(--brand);
+
+  --color-highlight: var(--highlight);
  
   @keyframes shiny-text {
     0%,

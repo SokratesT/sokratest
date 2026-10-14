@@ -2,9 +2,9 @@
 
 import {
   type ColumnDef,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
+  functionalUpdate,
+  type RowData,
+  useTable,
 } from "@tanstack/react-table";
 import { useMemo, useTransition } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -12,9 +12,14 @@ import { usePaginationSearchParams } from "@/lib/nuqs/search-params.pagination";
 import { useSortingSearchParams } from "@/lib/nuqs/search-params.sorting";
 import { cn } from "@/lib/utils";
 import { TableProvider } from "./data-table-context";
+import {
+  type DataTableFeatures,
+  type DataTableMeta,
+  dataTableFeatures,
+} from "./data-table-features";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData extends RowData> {
+  columns: ColumnDef<DataTableFeatures, TData>[];
   data: TData[];
 }
 
@@ -22,16 +27,16 @@ interface DataTableOptions<TData> {
   rowCount: number;
   uidAccessor: keyof TData;
   placeholderClassName?: React.ComponentProps<"div">["className"];
-  meta?: Record<string, any>;
+  meta?: DataTableMeta;
 }
 
-const DataTable = <TData, TValue>({
+const DataTable = <TData extends RowData>({
   children,
   columns,
   data,
   options,
   ...props
-}: DataTableProps<TData, TValue> & { options: DataTableOptions<TData> } & {
+}: DataTableProps<TData> & { options: DataTableOptions<TData> } & {
   children: React.ReactNode;
   props?: React.HTMLAttributes<HTMLDivElement>;
 }) => {
@@ -66,23 +71,18 @@ const DataTable = <TData, TValue>({
     [isLoading, columns],
   );
 
-  const table = useReactTable({
+  const table = useTable({
+    features: dataTableFeatures,
     data: tableData,
     meta,
     columns: tableColumns,
-    getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     manualSorting: true,
-    manualFiltering: true,
     rowCount: rowCount,
     onPaginationChange: setPagination,
     onSortingChange: (updater) => {
-      // A bit awkward, but this satisfies typescript
-      if (typeof updater === "function") {
-        setSorting({ sort: updater(sorting.sort ?? []) });
-      }
+      setSorting({ sort: functionalUpdate(updater, sorting.sort ?? []) });
     },
-    getSortedRowModel: getSortedRowModel(),
     state: {
       sorting: sorting.sort ?? undefined,
       pagination,

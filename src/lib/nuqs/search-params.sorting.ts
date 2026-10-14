@@ -14,7 +14,7 @@ const sortingUrlKeys = {
 };
 
 const sortingParsers = (startTransition?: React.TransitionStartFunction) => ({
-  sort: parseAsJson(sortingSchema.parse)
+  sort: parseAsJson(sortingSchema)
     .withDefault([{ desc: false, id: "createdAt" }])
     .withOptions({ shallow: false, startTransition }),
 });
