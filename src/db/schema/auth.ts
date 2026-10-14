@@ -119,6 +119,7 @@ export const invitation = pgTable("invitation", {
   role: text("role").$type<OrganizationRole>(),
   status: text("status").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
   inviterId: uuid("inviter_id")
     .notNull()
     .references(() => user.id),
