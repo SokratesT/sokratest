@@ -42,7 +42,7 @@ Sokrates<sup>t</sup> is a Next.js-based learning platform with AI-powered docume
 | **Authentication** | Better Auth |
 | **Database** | PostgreSQL (with pgvector) |
 | **Vector Database** | Qdrant |
-| **Object Storage** | MinIO (or any S3-compatible) |
+| **Object Storage** | SeaweedFS (or any S3-compatible) |
 | **Background Jobs** | Trigger.dev |
 | **Document Processing** | Docling API |
 | **AI Models** | OpenAI-compatible API (configured for GWDG SAIA) |
@@ -101,7 +101,7 @@ Before deploying Sokrates<sup>t</sup>, you need to set up the following external
 The following services are included in the `docker-compose.yml` and **do not** require external setup:
 
 - **PostgreSQL** (with pgvector extension)
-- **MinIO** (S3-compatible object storage)
+- **SeaweedFS** (S3-compatible object storage)
 
 ---
 
@@ -142,10 +142,10 @@ POSTGRES_PORT=5432
 
 #### Storage (Defaults from docker-compose)
 ```env
-S3_ENDPOINT=minio
-S3_PORT=9000
-S3_ACCESS_KEY=minioadmin
-S3_SECRET_KEY=minioadmin
+S3_ENDPOINT=seaweedfs
+S3_PORT=8333
+S3_ACCESS_KEY=s3_access_key
+S3_SECRET_KEY=s3_secret_key
 S3_USE_SSL=false
 ```
 
@@ -191,7 +191,7 @@ SMTP_PASSWORD=password
 
 ### 3. Deploy with Docker Compose
 
-The easiest way to deploy Sokrates<sup>t</sup> is using Docker Compose, which includes PostgreSQL and MinIO:
+The easiest way to deploy Sokrates<sup>t</sup> is using Docker Compose, which includes PostgreSQL and SeaweedFS:
 
 ```bash
 docker-compose up -d
@@ -200,14 +200,13 @@ docker-compose up -d
 This will:
 1. Build the Next.js application
 2. Start PostgreSQL
-3. Start MinIO for object storage
+3. Start SeaweedFS for object storage
 4. Run database migrations automatically
 5. Launch the application on port 3000
 
 #### Access the Services
 
 - **Application**: http://localhost:3000
-- **MinIO Console**: http://localhost:9001
 - **PostgreSQL**: localhost:5432
 
 ### 4. Configure Trigger.dev Tasks
@@ -501,9 +500,10 @@ Instructors and Admins can configure course settings:
 
 ## Troubleshooting
 
-### MinIO Connection Issues
-If you have issues connecting to MinIO, ensure:
-- The `S3_ENDPOINT` matches your deployment (e.g., `minio:9000` for Docker, `localhost:9000` for local)
+### SeaweedFS Connection Issues
+If you have issues connecting to SeaweedFS, ensure:
+- `S3_ENDPOINT` and `S3_PORT` match your deployment (e.g., `seaweedfs` and `8333` for Docker)
+- `S3_ACCESS_KEY` and `S3_SECRET_KEY` are set, as SeaweedFS uses them as its S3 credentials
 - `S3_USE_SSL` is set correctly (`false` for local development)
 - Buckets are created (application auto-creates on first run)
 - Running locally via docker, you will need to map the same domain internally for the image and your local machine (e.g. simply using `localhost` would point to two different locations)
@@ -535,12 +535,12 @@ If you have issues connecting to MinIO, ensure:
 
 1. **Change default credentials** in production:
    - PostgreSQL password
-   - MinIO credentials
+   - SeaweedFS (S3) credentials
    - `BETTER_AUTH_SECRET` and `SOKRATEST_API_KEY` (use strong random strings, e.g. via openssl)
 
 2. **Use HTTPS** in production for all external endpoints
 
-3. **Object Storage**: Configure proper access policies for MinIO buckets. All buckets should be private by default.
+3. **Object Storage**: Configure proper access policies for SeaweedFS buckets. All buckets should be private by default.
 
 ---
 
