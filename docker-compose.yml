@@ -112,6 +112,8 @@ services:
       AWS_ACCESS_KEY_ID: ${S3_ACCESS_KEY}
       AWS_SECRET_ACCESS_KEY: ${S3_SECRET_KEY}
       S3_BUCKET: sokratest,processed-files
+      # Coolify's env_file leaks the app's S3_PORT, which weed reads as -s3.port.
+      S3_PORT: "8333"
     expose:
       - "8333"
     volumes:
