@@ -2,6 +2,32 @@
 -- Every step only touches rows/parts that are still in the old shape, so the
 -- file can be re-run safely (steps 2-4 are skipped once the columns are gone).
 
+-- 0. The columns are `json`, which accepts the `\u0000` escape; `jsonb` does
+--    not, and every step below casts to jsonb. Strip the escape first.
+UPDATE "chat_message"
+SET "parts" = replace("parts"::text, E'\\u0000', '')::json
+WHERE position(E'\\u0000' in "parts"::text) > 0;
+--> statement-breakpoint
+DO $$
+BEGIN
+	IF EXISTS (
+		SELECT 1 FROM information_schema.columns
+		WHERE table_schema = current_schema() AND table_name = 'chat_message' AND column_name = 'attachments'
+	) THEN
+		UPDATE "chat_message"
+		SET "attachments" = replace("attachments"::text, E'\\u0000', '')::json
+		WHERE position(E'\\u0000' in "attachments"::text) > 0;
+	END IF;
+	IF EXISTS (
+		SELECT 1 FROM information_schema.columns
+		WHERE table_schema = current_schema() AND table_name = 'chat_message' AND column_name = 'annotations'
+	) THEN
+		UPDATE "chat_message"
+		SET "annotations" = replace("annotations"::text, E'\\u0000', '')::json
+		WHERE position(E'\\u0000' in "annotations"::text) > 0;
+	END IF;
+END $$;
+--> statement-breakpoint
 -- 1. Convert AI SDK 4 parts in place. Text and step-start parts keep their
 --    shape; reasoning, tool invocation, source and file parts are rewritten.
 --    Tool invocations without a result (aborted calls) are dropped.
