@@ -1,37 +1,31 @@
 "use client";
 
 import type { UseChatHelpers } from "@ai-sdk/react";
-import type { ChatRequestOptions, Message } from "ai";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { deleteTrailingMessages } from "@/db/actions/ai-actions";
 import type { Chat } from "@/db/schema/chat";
+import { type ChatUIMessage, getMessageText } from "@/lib/ai/chat-message";
 
 type MessageEditorProps = {
   chatId: Chat["id"];
-  message: Message;
+  message: ChatUIMessage;
   setMode: React.Dispatch<React.SetStateAction<"view" | "edit">>;
-  setMessages: (
-    messages: Message[] | ((messages: Message[]) => Message[]),
-  ) => void;
-  reload: (
-    chatRequestOptions?: ChatRequestOptions,
-  ) => Promise<string | null | undefined>;
-  status: UseChatHelpers["status"];
+  sendMessage: UseChatHelpers<ChatUIMessage>["sendMessage"];
+  status: UseChatHelpers<ChatUIMessage>["status"];
 };
 
 const MessageEditor = ({
   chatId,
   message,
   setMode,
-  setMessages,
-  reload,
+  sendMessage,
   status,
 }: MessageEditorProps) => {
   const [draftContent, setDraftContent] = useState<string>(
-    message.parts?.find((part) => part.type === "text")?.text || "",
+    getMessageText(message),
   );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isLoading = status === "streaming" || status === "submitted";
@@ -67,33 +61,9 @@ const MessageEditor = ({
       messageId: messageId,
     });
 
-    setMessages((messages) => {
-      const index = messages.findIndex((m) => m.id === message.id);
-
-      if (index !== -1) {
-        const updatedMessage: Message = {
-          ...message,
-          parts: message.parts?.map((part) => {
-            if (part.type === "text") {
-              return {
-                ...part,
-                text: draftContent,
-              };
-            }
-
-            return part;
-          }),
-          content: draftContent,
-        };
-
-        return [...messages.slice(0, index), updatedMessage];
-      }
-
-      return messages;
-    });
-
     setMode("view");
-    reload();
+    // Replaces the edited message and drops all messages after it
+    sendMessage({ text: draftContent, messageId });
   };
 
   return (

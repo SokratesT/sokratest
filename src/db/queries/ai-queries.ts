@@ -1,14 +1,10 @@
 import "server-only";
 
-import type { CoreAssistantMessage, CoreToolMessage } from "ai";
 import { and, asc, eq, gte } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { chat } from "@/db/schema/chat";
 import { type ChatMessage, chatMessage } from "@/db/schema/chat-message";
 import { withAuthQuery } from "./utils/with-auth-query";
-
-type ResponseMessageWithoutId = CoreToolMessage | CoreAssistantMessage;
-type ResponseMessage = ResponseMessageWithoutId & { id: string };
 
 export async function saveChat({
   id,
@@ -109,16 +105,4 @@ export async function deleteMessagesByChatIdAfterTimestamp({
     );
     throw error;
   }
-}
-
-export function getTrailingMessageId({
-  messages,
-}: {
-  messages: Array<ResponseMessage>;
-}): string | null {
-  const trailingMessage = messages.at(-1);
-
-  if (!trailingMessage) return null;
-
-  return trailingMessage.id;
 }

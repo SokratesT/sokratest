@@ -1,7 +1,11 @@
+import { OpenTelemetry } from "@ai-sdk/otel";
 import { registerOTel } from "@vercel/otel";
+import { registerTelemetry } from "ai";
 import { LangfuseExporter } from "langfuse-vercel";
 
 export function register() {
+  registerTelemetry(new OpenTelemetry({ runtimeContext: true }));
+
   registerOTel({
     serviceName: "langfuse-sokratest-next-remote",
     traceExporter: new LangfuseExporter({

@@ -9,7 +9,6 @@ import { FormDatePicker } from "@/components/forms/fields/formDatePicker";
 import { FormInputField } from "@/components/forms/fields/formInputField";
 import { FormSelect } from "@/components/forms/fields/formSelect";
 import { Placeholder } from "@/components/placeholders/placeholder";
-import { DialogTrigger } from "@/components/plate-ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +25,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form, FormField } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";

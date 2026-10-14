@@ -84,30 +84,29 @@ async function processImageFile(
   return await logger.trace(`process-image-${name}`, async () => {
     const mimeType = `image/${fileExtension}`;
     const imageType = name.startsWith("table") ? "table" : "picture";
-    const dataUrl = `data:${mimeType};base64,${base64Image}`;
 
     const result = await generateText({
       model: getSaiaModel({
         input: ["image"],
         model: "gemma-3-27b-it",
       }).provider,
-      maxTokens: 1024,
-      system:
+      maxOutputTokens: 1024,
+      instructions:
         imageType === "table" ? describeTableImagePrompt : describeImagePrompt,
       messages: [
         {
           role: "user",
-          content: [{ type: "image", image: dataUrl }],
+          content: [{ type: "file", mediaType: mimeType, data: base64Image }],
         },
       ],
     });
 
-    const step = result.steps.find((step) => step.stepType === "initial");
+    const [step] = result.steps;
     if (!step) return undefined;
 
     return {
       description: step.text,
-      tokens: step.usage.completionTokens,
+      tokens: step.usage.outputTokens ?? 0,
       name,
       type: mimeType.split("/")[1] as FileType,
     };

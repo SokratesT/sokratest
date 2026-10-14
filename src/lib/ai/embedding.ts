@@ -6,6 +6,7 @@ export const generateEmbedding = async (value: string): Promise<number[]> => {
   const { embedding } = await embed({
     model: getSaiaEmbeddingModel({ model: "e5-mistral-7b-instruct" }).provider,
     value: input,
+    telemetry: { isEnabled: false },
   });
 
   return embedding;

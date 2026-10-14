@@ -1,7 +1,6 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
-import type { ChatRequestOptions, Message } from "ai";
 import { CompassIcon, RefreshCcwIcon } from "lucide-react";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
 import { AppTourButton } from "@/components/next-step/app-tour-button";
@@ -9,26 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { UserPreferencesType } from "@/db/schema/auth";
 import { useUmami } from "@/hooks/use-umami";
+import type { ChatUIMessage } from "@/lib/ai/chat-message";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/settings/routes";
 import { SendButton, StopButton } from "./chat-buttons";
 
 interface ChatInputProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  status?: UseChatHelpers["status"];
+  status?: UseChatHelpers<ChatUIMessage>["status"];
   chatId: string;
-  handleSubmit: (
-    event?: {
-      preventDefault?: () => void;
-    },
-    chatRequestOptions?: ChatRequestOptions,
-  ) => void;
+  sendMessage: UseChatHelpers<ChatUIMessage>["sendMessage"];
   handleReload: () => void;
-  setMessages: (
-    messages: Message[] | ((messages: Message[]) => Message[]),
-  ) => void;
-  input: string;
-  setInput: (value: string) => void;
+  setMessages: UseChatHelpers<ChatUIMessage>["setMessages"];
   stop: () => void;
   hasMessages: boolean;
   preferences: UserPreferencesType;
@@ -38,17 +29,16 @@ const ChatInput = ({
   className,
   status,
   chatId,
-  handleSubmit,
+  sendMessage,
   handleReload,
   setMessages,
-  input,
-  setInput,
   stop,
   hasMessages,
   preferences,
   ...props
 }: ChatInputProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [input, setInput] = useState("");
   const { width } = useWindowSize();
   const { trackEvent } = useUmami();
   const isLoading = status === "streaming" || status === "submitted";
@@ -100,6 +90,8 @@ const ChatInput = ({
   };
 
   const submitForm = useCallback(() => {
+    if (!input) return;
+
     window.history.replaceState(
       {},
       "",
@@ -108,13 +100,10 @@ const ChatInput = ({
 
     trackEvent("chat-request", { chatId });
 
-    handleSubmit(
-      /* undefined, {
-        experimental_attachments: attachments,
-      } */
-    );
+    sendMessage({ text: input /* files: attachments */ });
 
     // setAttachments([]);
+    setInput("");
     setLocalStorageInput("");
     resetHeight();
 
@@ -123,7 +112,8 @@ const ChatInput = ({
     }
   }, [
     // attachments,
-    handleSubmit,
+    input,
+    sendMessage,
     // setAttachments,
     setLocalStorageInput,
     width,

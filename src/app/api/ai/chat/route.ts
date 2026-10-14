@@ -1,20 +1,29 @@
 import {
-  appendResponseMessages,
-  createDataStreamResponse,
-  type JSONValue,
-  type Message,
+  consumeStream,
+  convertToModelMessages,
+  createUIMessageStream,
+  createUIMessageStreamResponse,
+  safeValidateUIMessages,
   smoothStream,
   streamText,
+  type ToolSet,
+  toUIMessageStream,
 } from "ai";
 import { v4 as uuidv4 } from "uuid";
-import { getTrailingMessageId, saveMessages } from "@/db/queries/ai-queries";
+import { saveMessages } from "@/db/queries/ai-queries";
 import { getSession } from "@/db/queries/auth";
 import { getCourseConfig } from "@/db/queries/course";
+import {
+  type ChatUIMessage,
+  chatDataPartSchemas,
+  getMessageText,
+} from "@/lib/ai/chat-message";
 import {
   getSaiaModel,
   type ModelsWithText,
   saiaModels,
 } from "@/lib/ai/saia-models";
+import { withTelemetryMetadata } from "@/lib/ai/telemetry";
 import { createNewChat, getMostRecentUserMessage } from "@/lib/ai/utils";
 import { createSocraticSystemPrompt } from "@/settings/prompts";
 import { getDocumentReferencesByIds, getRelevantChunks } from "./ai-helper";
@@ -29,6 +38,7 @@ export async function POST(request: Request) {
       return new Response("Unauthorized", { status: 401 });
     }
 
+    const userId = session.user.id;
     const activeCourseId = session.session.activeCourseId;
     const activeOrganizationId = session.session.activeOrganizationId;
 
@@ -40,8 +50,22 @@ export async function POST(request: Request) {
       return new Response("No active organization", { status: 400 });
     }
 
-    const { id: chatId, messages }: { id: string; messages: Array<Message> } =
-      await request.json();
+    const {
+      id: chatId,
+      messages: requestMessages,
+    }: { id: string; messages: unknown } = await request.json();
+
+    const validatedMessages = await safeValidateUIMessages<ChatUIMessage>({
+      messages: requestMessages,
+      dataSchemas: chatDataPartSchemas,
+    });
+
+    if (!validatedMessages.success) {
+      console.error("Invalid chat messages:", validatedMessages.error);
+      return new Response("Invalid messages", { status: 400 });
+    }
+
+    const messages = validatedMessages.data;
 
     const result = await getCourseConfig(activeCourseId);
 
@@ -57,11 +81,11 @@ export async function POST(request: Request) {
       return new Response("No user message found", { status: 400 });
     }
 
-    if (!messages || messages.length === 1) {
+    if (messages.length === 1) {
       createNewChat({
-        message: userMessage.content,
+        message: getMessageText(userMessage),
         chatId,
-        userId: session.user.id,
+        userId,
         courseId: activeCourseId,
       });
     }
@@ -73,18 +97,18 @@ export async function POST(request: Request) {
           id: userMessage.id,
           role: "user",
           parts: userMessage.parts,
-          attachments: userMessage.experimental_attachments ?? [],
-          annotations: userMessage.annotations ?? [],
           createdAt: new Date(),
         },
       ],
     });
 
+    const modelMessages = await convertToModelMessages(messages);
+
     const relevantChunks = await getRelevantChunks({
-      messages,
+      messages: modelMessages,
       courseId: activeCourseId,
       chatId,
-      userId: session.user.id,
+      userId,
       limit: Number(courseConfig.config.maxReferences) ?? 5,
     });
 
@@ -92,13 +116,20 @@ export async function POST(request: Request) {
       relevantChunks.map((chunk) => chunk.documentId),
     );
 
-    return createDataStreamResponse({
-      execute: async (dataStream) => {
-        const assistantMessageId = uuidv4();
+    const assistantMessageId = uuidv4();
 
-        references.forEach((reference) => {
-          dataStream.writeMessageAnnotation(reference as unknown as JSONValue);
-        });
+    const stream = createUIMessageStream<ChatUIMessage>({
+      originalMessages: messages,
+      execute: ({ writer }) => {
+        writer.write({ type: "start", messageId: assistantMessageId });
+
+        for (const reference of references) {
+          writer.write({
+            type: "data-reference",
+            id: reference.id,
+            data: reference,
+          });
+        }
 
         // Validate and get the model ID from course configuration
         const modelIdFromConfig = courseConfig.config.model;
@@ -113,90 +144,68 @@ export async function POST(request: Request) {
             : "llama-3.3-70b-instruct",
         });
 
-        const streamOperationResult = streamText({
-          // Renamed 'result' to 'streamOperationResult'
+        const streamResult = streamText({
           model: modelProvider,
-          system: createSocraticSystemPrompt({
+          instructions: createSocraticSystemPrompt({
             context: relevantChunks.map((chunk) => ({
               documentId: String(
-                references.indexOf(
-                  // biome-ignore lint/style/noNonNullAssertion: <Previously ensured to exist>
-                  references.find((r) => r.id === chunk.documentId)!,
-                ) + 1,
+                references.findIndex((r) => r.id === chunk.documentId) + 1,
               ),
               text: chunk.text,
             })),
             courseTitle: courseConfig.title,
             override: courseConfig.config.systemPrompt,
           }),
-          messages,
-          experimental_generateMessageId: () => assistantMessageId,
+          messages: modelMessages,
           experimental_transform: smoothStream({ chunking: "word" }),
-          experimental_telemetry: {
-            isEnabled: true,
-            metadata: {
-              langfuseTraceId: assistantMessageId,
-              sessionId: chatId,
-              courseId: activeCourseId,
-              userId: session.user.id,
-              tags: ["user", "chat"],
-            },
-          },
+          ...withTelemetryMetadata({
+            langfuseTraceId: assistantMessageId,
+            sessionId: chatId,
+            courseId: activeCourseId,
+            userId,
+            tags: ["user", "chat"],
+          }),
           // Tools are not working with some SAIA models
-          /* maxSteps: 5,
-          toolCallStreaming: true,
+          /* stopWhen: isStepCount(5),
           tools: {
-            queryRag: queryRagTool({ dataStream, courseId: activeCourseId }),
+            queryRag: queryRagTool({ writer, courseId: activeCourseId }),
           }, */
-          onFinish: async ({ response }) => {
-            if (session.user?.id) {
-              try {
-                const assistantId = getTrailingMessageId({
-                  messages: response.messages.filter(
-                    (message) => message.role === "assistant",
-                  ),
-                });
-
-                if (!assistantId) {
-                  throw new Error("No assistant message found!");
-                }
-
-                const [, assistantMessage] = appendResponseMessages({
-                  messages: [userMessage],
-                  responseMessages: response.messages,
-                });
-
-                await saveMessages({
-                  messages: [
-                    {
-                      id: assistantId,
-                      chatId,
-                      role: assistantMessage.role,
-                      parts: assistantMessage.parts,
-                      annotations: references ?? [],
-                      attachments:
-                        assistantMessage.experimental_attachments ?? [],
-                      createdAt: new Date(),
-                    },
-                  ],
-                });
-              } catch (error) {
-                console.error("Error saving assistant message:", error);
-              }
-            }
-          },
         });
 
-        streamOperationResult.consumeStream();
-
-        streamOperationResult.mergeIntoDataStream(dataStream, {
-          sendReasoning: true,
-        });
+        writer.merge(
+          toUIMessageStream<ToolSet, ChatUIMessage>({
+            stream: streamResult.stream,
+            sendReasoning: true,
+            sendStart: false,
+          }),
+        );
+      },
+      onEnd: async ({ responseMessage }) => {
+        try {
+          await saveMessages({
+            messages: [
+              {
+                id: responseMessage.id,
+                chatId,
+                role: responseMessage.role,
+                parts: responseMessage.parts,
+                createdAt: new Date(),
+              },
+            ],
+          });
+        } catch (error) {
+          console.error("Error saving assistant message:", error);
+        }
       },
       onError: (error) => {
-        console.error("Error in data stream execution:", error);
+        console.error("Error in UI message stream execution:", error);
         return "Oops, an error occurred while processing your request!";
       },
+    });
+
+    return createUIMessageStreamResponse({
+      stream,
+      consumeSseStream: consumeStream,
     });
   } catch (error) {
     console.error("Error in POST /api/ai/chat:", error);

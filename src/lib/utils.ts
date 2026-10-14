@@ -6,6 +6,17 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** Wraps files (e.g. from `use-file-picker`) in a `FileList`. */
+export function toFileList(files: File[]): FileList {
+  const dataTransfer = new DataTransfer();
+
+  for (const file of files) {
+    dataTransfer.items.add(file);
+  }
+
+  return dataTransfer.files;
+}
+
 /**
  * Extracts the base schema from the given Zod schema.
  *
