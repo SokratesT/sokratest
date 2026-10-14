@@ -1,6 +1,6 @@
 "use server";
 
-import { string, z } from "zod";
+import { string, z } from "zod/v4";
 import {
   deleteMessagesByChatIdAfterTimestamp,
   getMessageById,

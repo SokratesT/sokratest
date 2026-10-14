@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { userInsertSchema } from "./profile";
 import { sharedSchemas } from "./shared";
 
@@ -10,11 +10,11 @@ export const signupSchema = z
     confirmPassword: sharedSchemas.password,
     invitationId: z.string(),
     privacyConsent: z.boolean().refine((val) => val === true, {
-      message: "You must accept the privacy policy",
+      error: "You must accept the privacy policy",
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords must match",
+    error: "Passwords must match",
     path: ["confirmPassword"],
   });
 

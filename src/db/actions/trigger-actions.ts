@@ -3,7 +3,7 @@
 import { tasks } from "@trigger.dev/sdk";
 import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { db } from "@/db/drizzle";
 import { document } from "@/db/schema/document";
 import {

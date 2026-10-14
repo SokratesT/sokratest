@@ -3,7 +3,7 @@
 import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { db } from "@/db/drizzle";
 import { course, courseMember } from "@/db/schema/course";
 import { courseInvitation } from "@/db/schema/course-invitation";
@@ -144,7 +144,7 @@ export const rejectCourseInvitation = authActionClient
       action: "update",
     },
   })
-  .schema(z.object({ id: z.string().uuid() }))
+  .schema(z.object({ id: z.uuid() }))
   .use(checkPermissionMiddleware)
   .action(async ({ parsedInput: { id } }) => {
     await db

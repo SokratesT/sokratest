@@ -9,9 +9,7 @@ const ourFileRouter = {
     .middleware(() => {
       return {};
     })
-    .onUploadComplete(({ file }) => {
-      return { file };
-    }),
+    .onUploadComplete(() => {}),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

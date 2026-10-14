@@ -116,7 +116,7 @@ export const MediaPlaceholderElement = withHOC(
             placeholderId: element.id as string,
             // biome-ignore lint/style/noNonNullAssertion: <Needs refactor, but fine for now>
             type: element.mediaType!,
-            url: uploadedFile.url,
+            url: uploadedFile.ufsUrl,
           };
 
           editor.tf.insertNodes(node, { at: path });

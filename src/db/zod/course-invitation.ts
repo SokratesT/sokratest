@@ -3,7 +3,7 @@ import {
   createSelectSchema,
   createUpdateSchema,
 } from "drizzle-zod";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { courseInvitation } from "@/db/schema/course-invitation";
 
 const insertBaseSchema = createInsertSchema(courseInvitation);
@@ -15,9 +15,7 @@ export const courseInvitationsInsertSchema = z.object({
   items: z
     .array(
       z.object({
-        email: insertBaseSchema.shape.email.email(
-          "Field must be a valid email",
-        ),
+        email: z.email("Field must be a valid email"),
       }),
     )
     .min(1, "Please add at least one email")
@@ -28,7 +26,7 @@ export const courseInvitationsInsertSchema = z.object({
 
       if (uniqueEmails.size !== emails.length) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Emails must be unique",
           path: ["root"],
         });

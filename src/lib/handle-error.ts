@@ -1,5 +1,5 @@
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export function getErrorMessage(err: unknown) {
   const unknownError = "Something went wrong, please try again later.";

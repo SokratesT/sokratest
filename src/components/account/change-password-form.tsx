@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { FormPasswordField } from "@/components/forms/fields/formPasswordField";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
@@ -19,7 +19,7 @@ const changePasswordSchema = z
     confirmPassword: sharedSchemas.password,
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords must match",
+    error: "Passwords must match",
     path: ["confirmPassword"],
   });
 

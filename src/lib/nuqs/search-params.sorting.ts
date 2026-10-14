@@ -1,6 +1,6 @@
 import { useQueryStates } from "nuqs";
 import { createSearchParamsCache, parseAsJson } from "nuqs/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const sortingSchema = z.array(
   z.object({

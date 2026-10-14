@@ -1,22 +1,13 @@
-import type {
-  CodeItem,
-  DoclingDocument,
-  Formatting,
-  FormulaItem,
-  GroupItem1,
-  ImageRef,
-  InlineGroup,
-  ListItem,
-  OrderedList,
-  PictureItem,
-  ProvenanceItem,
-  RefItem,
-  SectionHeaderItem,
-  TableCell,
-  TableItem,
-  TextItem,
-  TitleItem,
-  UnorderedList,
+import {
+  type DoclingDocument,
+  type Formatting,
+  type ImageRef,
+  isDocling,
+  type PictureItem,
+  type ProvenanceItem,
+  type RefItem,
+  type TableCell,
+  type TableItem,
 } from "@docling/docling-core";
 
 // Define base and specific types for the discriminated union
@@ -27,35 +18,29 @@ interface SectionContentBase {
 
 // Specific type for PictureItem labels (e.g., 'picture', 'chart')
 interface PictureChartTypeSectionContent extends SectionContentBase {
-  label: PictureItem["label"]; // This will be 'picture' | 'chart'
+  label: NonNullable<PictureItem["label"]>; // This will be 'picture' | 'chart'
   index: number; // Required
   image: ImageRef | undefined | null; // Required
 }
 
 // Specific type for TableItem label (e.g., 'table')
 interface TableTypeSectionContent extends SectionContentBase {
-  label: TableItem["label"];
+  label: NonNullable<TableItem["label"]>;
   index: number; // Required
   image: ImageRef | undefined | null;
 }
 
-// Specific type for all other item labels
-type ContentItems =
-  | TextItem
-  | TitleItem
-  | SectionHeaderItem
-  | ListItem
-  | CodeItem
-  | FormulaItem
-  | OrderedList
-  | UnorderedList
-  | InlineGroup
-  | GroupItem1
-  | TableItem
-  | PictureItem;
+// Every item a body reference can resolve to (see getSection)
+type ContentItems = NonNullable<
+  DoclingDocument["texts" | "pictures" | "tables" | "groups"]
+>[number];
 
+// Specific type for all other item labels
 interface OtherTypeSectionContent extends SectionContentBase {
-  label: Exclude<ContentItems, PictureItem | TableItem>["label"];
+  label: Exclude<
+    NonNullable<ContentItems["label"]>,
+    NonNullable<PictureItem["label"] | TableItem["label"]>
+  >;
 }
 
 // The new discriminated union type for SectionContent
@@ -188,19 +173,7 @@ export const serializeDoclingDocument = (
  * @returns A SectionContent object with markdown and page number, or undefined if the content type is not handled or options prevent it.
  */
 const extractContent = (
-  content:
-    | TextItem
-    | PictureItem
-    | TitleItem
-    | SectionHeaderItem
-    | ListItem
-    | CodeItem
-    | FormulaItem
-    | OrderedList
-    | UnorderedList
-    | InlineGroup
-    | GroupItem1
-    | TableItem,
+  content: ContentItems,
   doclingDocument: DoclingDocument,
   options: Omit<SerializationOptions, "mergePages">,
 ): SectionContent | undefined => {
@@ -233,6 +206,7 @@ const extractContent = (
       break;
     }
     case "list_item":
+      if (!isDocling.ListItem(content)) break;
       return {
         markdown: `${content.marker} ${formatText(content.formatting, content.text)} \n\n`,
         page: extractPageNumber(content.prov),
@@ -282,6 +256,7 @@ const extractContent = (
         label: content.label,
       };
     case "section_header": {
+      if (!isDocling.SectionHeaderItem(content)) break;
       const level = content.level || 2; // Default to level 2 if not provided
       return {
         markdown: `#${"#".repeat(level)} ${formatText(content.formatting, content.text)}\n\n`,
